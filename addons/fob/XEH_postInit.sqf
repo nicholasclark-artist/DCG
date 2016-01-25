@@ -23,6 +23,13 @@ unassignCurator GVAR(curator);
 PVEH_DEPLOY addPublicVariableEventHandler {(_this select 1) call FUNC(setup)};
 PVEH_REQUEST addPublicVariableEventHandler {(_this select 1) call FUNC(requestHandler)};
 PVEH_REASSIGN addPublicVariableEventHandler {(_this select 1) assignCurator GVAR(curator)};
+PVEH_PATROL addPublicVariableEventHandler {
+	{
+		if (_x isKindOf "Man" && {_x isEqualTo leader group _x}) then {
+			[units group _x,GVAR(range),false] call EFUNC(main,setPatrol);
+		};
+	} forEach (curatorEditableObjects GVAR(curator));
+};
 addMissionEventHandler ["HandleDisconnect",{
 	if ((_this select 2) isEqualTo GVAR(UID)) then {unassignCurator GVAR(curator)};
 	false
@@ -30,7 +37,7 @@ addMissionEventHandler ["HandleDisconnect",{
 
 _data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
 if !(_data isEqualTo []) then {
-	[objNull,_data select 1] call FUNC(setup);
+	[objNull,_data select 0,_data select 1] call FUNC(setup);
 	{
 		_veh = (_x select 0) createVehicle [0,0,0];
 		_veh setDir (_x select 2);

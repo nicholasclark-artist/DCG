@@ -3,7 +3,7 @@ Author: Nicholas Clark (SENSEI)
 
 Last modified: 1/23/2016
 
-Description:
+Description: setup fob on server
 
 Return: nothing
 __________________________________________________________________*/
@@ -21,18 +21,24 @@ __________________________________________________________________*/
 
 if !(isServer) exitWith {};
 
-params ["_unit",["_points",1]];
+params ["_unit","_pos",["_points",1]];
 
-_pos = getPosATL _unit;
 _pos set [2,0];
 _revealed = [];
 _mrkArray = [];
 
+// create fob location on all machines
 [_pos,{
  	GVAR(location) = createLocation ["NameLocal", _this, GVAR(range), GVAR(range)];
  	GVAR(location) setText format ["%1", GVAR(name)];
 }] remoteExecCall ["BIS_fnc_call",0,true];
 
+// assign unit and send unit curator UID
+_unit assignCurator GVAR(curator);
+GVAR(UID) = getPlayerUID _unit;
+(owner _unit) publicVariableClient QGVAR(UID);
+
+// setup curator
 removeAllCuratorAddons GVAR(curator);
 GVAR(curator) addCuratorAddons GVAR(addons);
 GVAR(curator) addCuratorPoints _points;
@@ -42,21 +48,22 @@ GVAR(curator) setCuratorWaypointCost 0;
 GVAR(curator) addCuratorEditingArea [0,_pos,GVAR(range)];
 GVAR(curator) addCuratorCameraArea [0,_pos,GVAR(range)];
 GVAR(curator) setCuratorCameraAreaCeiling 40;
-_unit assignCurator GVAR(curator);
-GVAR(UID) = getPlayerUID _unit;
-(owner _unit) publicVariableClient QGVAR(UID);
+[GVAR(curator),"object",["UnitPos","Rank","Lock"]] call BIS_fnc_setCuratorAttributes;
 
+// create fob flag
 GVAR(flag) = "Flag_NATO_F" createVehicle _pos;
 GVAR(flag) setFlagTexture GVAR(flagTexturePath);
 
-[GVAR(curator),"object",["UnitPos","Rank","Lock"]] call BIS_fnc_setCuratorAttributes;
-
+// setup eventhandlers
 GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
 GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
 		private ["_playerSide","_costs","_side","_vehClass","_cost"];
+
+		// _playerSide is the side of the player's class, not necessarily the player's side
 		_playerSide = getNumber (configFile >> "CfgVehicles" >> typeOf getAssignedCuratorUnit GVAR(curator) >> "side");
 		_costs = [];
 		{
+			// TODO following code may be missing a few vehicle classes that are relevant to an fob
 			call {
 				_side = getNumber (configFile >> "CfgVehicles" >> _x >> "side");
 				_vehClass = toLower getText (configFile >> "CfgVehicles" >> _x >> "vehicleClass");
@@ -106,10 +113,9 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
 		GVAR(hq) = true;
 		["HQ deployed.\nAerial reconnaissance online.",true] remoteExecCall [QEFUNC(main,displayText), owner (getAssignedCuratorUnit GVAR(curator)), false];
 	};
-	/*if (CHECK_ADDON_2(approval)) then {
-		EGVAR(approval,points) = EGVAR(approval,points) + 1;
-		publicVariable QEGVAR(approval,points);
-	};*/
+	if (CHECK_ADDON_2(approval)) then {
+		// TODO add approval increase
+	};
 }];
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectDeleted";
@@ -120,23 +126,23 @@ GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
 			["HQ removed.\nAerial reconnaissance offline.",true] remoteExecCall [QEFUNC(main,displayText), owner (getAssignedCuratorUnit GVAR(curator)), false];
 		};
 	};
-	/*if (CHECK_ADDON_2(approval)) then {
-		EGVAR(approval,points) = EGVAR(approval,points) - 1;
-		publicVariable QEGVAR(approval,points);
-	};*/
+	if (CHECK_ADDON_2(approval)) then {
+		// TODO add approval decrease
+	};
 }];
 
+// recon PFH
 [{
 	params ["_args","_idPFH"];
 	_args params ["_revealed","_mrkArray","_flag"];
 
-	if ({typeOf _x in ARRAY_HQ} count (curatorEditableObjects GVAR(curator)) > 0) exitWith {
+	if ({typeOf _x in ARRAY_HQ} count (curatorEditableObjects GVAR(curator)) > 0) exitWith { // if unit adds an HQ, start recon
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[{
 			params ["_args","_idPFH"];
 			_args params ["_revealed","_mrkArray","_flag"];
 
-			if (GVAR(location) isEqualTo locationNull) exitWith {
+			if (GVAR(location) isEqualTo locationNull) exitWith { // exit when fob is dismantled
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 				{
 					deleteMarker _x;

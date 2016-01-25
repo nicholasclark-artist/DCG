@@ -19,7 +19,7 @@ if ((getPosATL player isFlatEmpty [3, 0, 0.4, 15, 0, false, player]) isEqualTo [
 [] spawn {
 	[format ["Deploying %1...", GVAR(name)],true] call EFUNC(main,displayText);
 	sleep 3;
-	missionNamespace setVariable [PVEH_DEPLOY,[player,1]];
+	missionNamespace setVariable [PVEH_DEPLOY,[player,getPosATL player,1]];
 	publicVariableServer PVEH_DEPLOY;
 	if (!isNil {KEY}) then {
 		KEY_HINT;
