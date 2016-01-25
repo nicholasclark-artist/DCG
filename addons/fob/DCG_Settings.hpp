@@ -1,0 +1,56 @@
+/*
+    Types (SCALAR, BOOL, STRING, ARRAY)
+*/
+
+class DOUBLES(PREFIX,settings) {
+    class GVAR(enable) {
+        typeName = "SCALAR";
+        typeDetail = "";
+        value = 1;
+    };
+    class GVAR(name) {
+        typeName = "STRING";
+        typeDetail = "";
+        value = "FOB Pirelli";
+    };
+    class GVAR(range) {
+        typeName = "SCALAR";
+        typeDetail = "";
+        value = 100;
+    };
+    class GVAR(rangeRecon) {
+        typeName = "SCALAR";
+        typeDetail = "";
+        value = 2500;
+    };
+    class GVAR(cooldownRecon) {
+        typeName = "SCALAR";
+        typeDetail = "";
+        value = 1800;
+    };
+    class GVAR(flagTexturePath) {
+        typeName = "STRING";
+        typeDetail = "";
+        value = "\A3\Data_F\Flags\flag_nato_co.paa";
+    };
+    class GVAR(addons) {
+        typeName = "ARRAY";
+        typeDetail = "";
+        value[] = {"A3_Characters_F_BLUFOR","A3_Soft_F_MRAP_01","A3_Soft_F_HEMTT","A3_Structures_F_Mil_Cargo","A3_Structures_F_Mil_Fortification","A3_Structures_F_Mil_Helipads","A3_Structures_F_Mil_Shelters","A3_Structures_F_Civ_Lamps","A3_Structures_F_Mil_BagBunker","A3_Structures_F_Mil_BagFence","A3_Structures_F_Civ_Camping","ace_medical"};
+    };
+    class GVAR(playerSideOnly) {
+        typeName = "BOOL";
+        typeDetail = "";
+        value = 1;
+    };
+    class GVAR(placingMultiplier) {
+        typeName = "SCALAR";
+        typeDetail = "";
+        value = -0.025;
+    };
+    class GVAR(deletingMultiplier) {
+        typeName = "SCALAR";
+        typeDetail = "";
+        value = 0.025;
+    };
+};

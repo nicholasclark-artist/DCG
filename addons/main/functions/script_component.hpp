@@ -1,0 +1,1 @@
+#include "\d\dcg\addons\main\script_component.hpp"

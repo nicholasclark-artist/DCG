@@ -1,0 +1,480 @@
+Author: SENSEI
+
+Version: 3.1.0.2
+
+Description: Dynamic Combat Generator Change Log
+
+License:
+	Copyright 2015 Nicholas Clark (SENSEI). All rights reserved.
+	This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+	To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/.
+
+ADDON RELEASE
+	v3.1.0.2
+		added dcg addon format
+		added save/load mission progress
+		added support for other player sides
+		changed main_fnc_findRandomPos - now returns positionAGL
+		changed patrol addon - two layer system including patrols throughout map and dynamically spawned patrols around players
+		updated civilian addon - civilians react to gunfire
+		updated hud - gui accurately reflects crew roles including FFV
+		updated fob addon - improved performance, added placeable AI units
+		updated occupy addon - improved performance
+		updated transport addon - multiple transports can be called simultaneously, requestor now selects both LZs on initial request
+		fixed bug in radio addon - ACRE code is not ran globally
+		removed ACE dependency
+
+MISSION RELEASE
+	v3.0.9
+		added weather - based on map data and selected season
+		added roadside IEDs
+		added fn_findOverwatchPos - finds nearby position with a defined elevation difference and line of sight to original position
+		added sen_unitpools.sqf - easy unit pool editing, place file in \userconfig\dcg\sen_unitpools.sqf
+		added support for BIS_fnc_dynamicGroups
+		added doctors to MOB Dodge Medical Center
+		changed Ammo Station placement - moved to Depot
+		changed Defuse Explosive task - disarm action moved from player to detonator
+		changed safezone functionality - removed fired eventhandler checks, now while in safezone, current weapon is put on safety and player is immune to damage
+		changed transport system functionality - due to a system breaking bug in the previous implementation, the first player to board the copilot seat will have control over the transport HLZ
+		changed task system - now runs until all tasks are called
+		changed vehicle hud - fits default ACE font
+		updated fn_setPatrolUnit - unit will return to patrol after disengaging from combat
+		updated fn_setPatrolVeh - driver will return to patrol after disengaging from combat
+		updated Ammo Station - includes ACE repair parts
+		updated code to use CBA's per frame handler
+		updated FOB system - placing helipad calls in friendly reinforcements (single use)
+		updated code for 1.50
+		updated RHS, LOP support
+		updated fn_spawnGroup - spawn vehicles with cargo units if possible
+		updated teleport actions between MOB and FOB
+		updated functions with ACE progress bar
+		updated fn_getNearPlayers - improved code performance
+		updated fn_spawnSniper - improved code performance
+		updated mission parameters
+		updated ACE basic medical level support - all players can use medical equipment
+		updated ACE settings
+		updated fn_cleanupMOB - now cleans up dropped items
+		updated Stabilize Civilian task - improved scripted damage for basic and advanced medical system
+		updated ACRE integration
+		updated Field Manual
+		fixed bug in Defend Against Rebel Attack task - task does not check if players are on server
+		fixed bug in fn_spawnTower - unit is reluctant to fire weapon
+		fixed bug in fn_setPatrolVeh - air unit patrol radius is capped at 1000m
+		fixed bug in fn_findRandomPos - returned position is almost always at minimum range
+		fixed bug in Arsenal Box init - Clean MOB Dodge action can delete Arsenal Box
+		fixed bug in Stabilize Civilian task - civilian automatically wakes up while using basic medical system
+		fixed bug in VVS - clear vehicle cargo does not function correctly
+		fixed bug in VVS - medical vehicles are not set as ACE medical vehicles
+		fixed bug in SEN_occupy.sqf - enemy units are occasionally damaged on spawn
+		fixed bug in fn_findRuralHousePos - returned position can be in safezone
+		removed ACRE/TFAR radios from Arsenal
+		removed vanilla addactions - replaced with ACE interaction menu
+		removed fn_setAction
+		removed fn_removeAction
+		removed fn_settingsPost
+		removed fn_getIntel - redundant, use ACE action on object instead
+
+	v3.0.8
+		added mission parameters
+		added fn_setUnitHostage
+		changed approval values
+		changed fn_setStrength - tweaked enemy strength values
+		changed fn_fobSetup - tweaked approval bonus
+		updated task system
+		updated Debriefing task
+		updated Field Manual
+		updated fn_spawnCivSuicide - suicide bombers have audio cue based on distance to target player
+		fixed bug in VVS - vehicles potentially do not spawn or explode on use
+		fixed bug in fn_setPatrolVeh - vehicle fuel is not reset
+		fixed bug in fn_spawnGroup - air units are spawned when arguement calls for land units
+		fixed bug in FOB system - FOB constructor is not reassigned to curator on respawn
+		removed FHQ_TT
+
+	v3.0.7
+		added extended event handler support - all objects of class Civilian are part of approval system
+		added mission parameters - including ACE3 parameters
+		added fn_setParams - calls code defined in SEN_params.hpp
+		added SEN_occupyTrgAct.sqf - handles occupied location surrender
+		added fn_setUnitSurrender - handles occupied location surrender
+		changed FOB system - uses curator module to construct FOB
+		changed FOB system - aerial recon marks enemies (see Field Manual)
+		changed FOB system - influences civilian approval (see Field Manual)
+		changed occupied location system - opposition surrenders once most enemies are killed, officer is marked once location is liberated (see Field Manual)
+		changed fn_transfer - renamed to fn_setOwner for naming convention consistency
+		updated (C) Stabilize and Transport Injured Civilian task - support for ACE3 basic medical system
+		updated Headless Client support
+		updated fn_transportHandler - players can select transport type (classname defined in fn_settingsPre)
+		updated fn_transportHandler - checks for helipad in FOB Pirelli
+		updated fn_transportHandler - transport will search for spawn position away from occupied location
+		updated fn_findRandomPos - ability to find position in certain direction
+		updated fn_setTaskCiv - rebel task spawns are independent of civilian task spawns
+		updated fn_spawnCiv - suicide bombers can use vehicles
+		updated Field Manual
+		fixed bug in SEN_cleanup.sqf - deleted markers are not properly removed from marker array
+		fixed bug in SEN_cleanup.sqf - buildings can be deleted with a player inside
+		fixed bug in (C) Defend Against Rebel Attack task - rebels do not engage players before reaching target position
+		fixed bug in (C) Deliver Medical Supplies task - supplies potentially spawn inside another object
+		fixed bug in SEN_ACE3Actions.sqf - player can consecutively trigger action before the last action completes
+		fixed bug in SEN_ACE3Actions.sqf - potential CTD when opening field manual
+		fixed bug in fn_onCivQuestioned - questioning civilians does not return enemies in vehicles
+		fixed bug in fn_getPlayers - headless client is returned in array
+		fixed bug in VVS - potential vehicle explosion on spawn
+		fixed bug in fn_fobRequestHandler - non-local objects lag when curator user edits them
+		fixed bug in fn_spawnCiv - ACE3 interaction menu doesn't work on civilians (agents)
+		fixed bug in fn_spawnReinforcements - vehicle does not complete landing sequence on occasion
+		fixed bug in fn_setAcreRadio - radio channels are not properly set when using the "Take Radio" action
+		fixed bug in Headless Client support - groups are not properly cached when spawned on HC
+		fixed bug in Chernarus and Takistan ports - some essential base objects are not invulnerable
+		removed Plank
+
+	v3.0.6
+		added fn_settingsPre - runs preInit, previously fn_settings
+		added fn_settingsPost - runs postInit, replaced main.sqf
+		added field manual to ACE3 interaction menu
+		changed Arsenal - removed gear scripts, should fix loadouts and lag
+		changed SEN_ace_settings.hpp - lowered ai damage threshold, disabled ai unconscious state, increased advanced ballistics and wind deflection simulation intervals
+		changed SEN_occupy.sqf - replaced SEN_patrol.sqf
+		changed SEN_occupy.sqf - increased range that units patrol
+		changed SEN_animal.sqf - increased animal count and spawn radius
+		updated functions with 1.48 commands
+		updated fn_setTfrRadio and fn_setAcreRadio - shows role description in hint
+		updated fn_setStrength - better support for low player counts
+		updated fn_spawnSquad - simplified code and reflects changes in fn_setStrength
+		updated tasks - better support for small maps
+		updated fn_getApprovalNumber - new method of calculating suicide and rebel attacks
+		updated Rescue VIP task - support for Chernarus buildings
+		updated Rescue Civilian task - support for Chernarus buildings
+		fixed bug in fn_setPatrolVeh - units not properly exiting patrol loop
+		fixed bug in fn_setPatrolUnit - units not properly exiting patrol loop
+		fixed bug in SEN_medFOB.sqf - medical supplies are not properly placed in medical building
+		fixed bug in SEN_occupy.sqf - building destruction is injuring garrisoned units, moved to fn_settingsPost
+		fixed bug in Destroy Ammo Cache task - a reasonable amount of explosives does not destroy cache
+		fixed bug in Defuse Explosives task - laptop position is undefined in some cases
+		fixed bug in Defuse Explosives task - defusal variables are undefined on client
+		fixed bug in civilian interaction - approval rating is not updated clientside
+		removed depreciated functions from SEN_cfgFunctions.hpp
+		removed main.sqf
+		removed SEN_patrol.sqf
+
+	v3.0.5
+		added ACE3 support
+		added RHS support - dynamic usage of RHS units if addon on server/HC
+		added SEN_animal.sqf - terrain based wildlife
+		added Arsenal
+		added Take Radio action to Arsenal box
+		added Destroy Ammo Cache task
+		added Retrieve Device Intel task
+		added Identify Deceased Politician task
+		added Dodge Medical Center to MOB Dodge
+		updated ACRE2 support
+		updated transport functionality with voice cues
+		updated fn_spawnCiv - patrol optimization and use of createAgent instead of createUnit
+		updated enemy bases with more detailed versions - fn_spawnBase.sqf, fn_spawnSmallBase.sqf
+		updated FOB system to support ACE3 rallypoints
+		updated field manual
+		updated civilian questioning functions
+		fixed bug in VVS - VVS doesn't allow RHS content
+		fixed bug in VVS - error showing when opening VVS at Ammo Station
+		fixed bug in fn_findRuralFlatPos.sqf - unsuitable positions returned
+		removed CSE support
+		removed weather scripts - replaced by ACE3 weather system
+		removed VAS
+
+	v3.0.4
+		updated SEN_civ.sqf - civilian traffic is now cached
+		updated map compatibility - enemy patrol count, civilian trigger distances now consider map size
+		updated fn_spawnGroup - mostly optimization, minimized lag on unit/vehicle spawn
+		updated fn_setPatrolUnit - mostly optimization, units select less positions and properly wait at each position
+		fixed bug in SEN_civ.sqf - spawn distance does not scale with map size
+		removed vanilla gps restriction
+		removed fn_findTown - redundant
+
+	v3.0.3
+		added check for vanilla medical gear - removed on pickup
+		changed transport system functionality - players must select a starting HLZ when requesting transport. See field manual for more explanation
+		updated transport system - fn_transportHandler.sqf now removes unit from cargo before returning to base if they are not part of original crew
+		updated ACRE2 integration
+		updated messages and hints to use CSE message system
+		updated fn_log.sqf
+		updated VAS to handle CSE item errors - CSE items are read from cfgMagazines and added using addMagazine instead of addItem causing issues in CMS and field ration system (patched until CSE removes items from cfgMagazines)
+		removed fn_hint.sqf - redundant
+		removed field ration module - removed until ration values are increased
+		fixed bug in fn_spawnCivSuicide.sqf - suicide bomber does not properly chase target player
+		fixed bug in VVS - medical vehicles are not properly defined as CSE medical vehicles
+		fixed bug in Stabilize Injured Civilian Task - injured civilian not placed in unconscious state
+
+	v3.0.2
+		added TFAR support
+		added Approval system - rating system that further ties together enemy activity, civilian interaction and the FOB system
+		added fn_getApproval.sqf
+		added fn_getApprovalNumber.sqf
+		added fn_checkApproval.sqf
+		added Check Civilian Approval action to DCG Menu
+		added Stabilize and Transport Injured Civilian task
+		added fail state to Defend Supply Cache task
+		added fn_spawnReinforcements.sqf
+		added friendly reinforcements to FOB Pirelli
+		added default mapsize value if mapSize config value is undefined
+		added destroyed buildings to occupied locations
+		added wrecked and burning vehicles to occupied locations
+		added random time of day parameter
+		added occupied location visual effects parameter
+		added AI units to CMS
+		changed FOB system structure counts
+		updated compatibility for unit/vehicle addons - see main.sqf
+		updated Defend Against Rebel Attack task - rebels can destroy FOB Pirelli
+		updated Realism Mode to disable 3rd person view
+		updated fn_spawnBase - previously fn_spawnFort
+		updated fn_spawnStatic - includes fortified mortars, static GMGs and bunkered HMGs, previously fn_spawnRoofStatic
+		updated VAS to check for addon radio only if the player has addon enabled
+		updated VVS to support addon content - see scripts\VVS\configuration.sqf
+		updated VVS to set medical vehicles as CSE medical vehicles
+		updated FOB system - vehicle station is not automatically constructed
+		updated FOB system - structures follow terrain surface normals automatically
+		updated FOB system - added placement sounds
+		updated Headless Client support
+		removed pitch and bank settings from FOB system
+		removed fn_checkForFOB - redundant
+		removed SEN_cleanup.sqf - replaced by BI corpseManager
+		fixed bug in SEN_occupyTrg.sqf - liberating an occupied location does not increase approval
+		fixed bug in FOB system - FOB constructor able to create multiple FOBs
+		fixed bug in initPlayerLocal.sqf - player rating loop does not run
+		fixed bug in editor intel settings - Independent side enemies do not attack players
+
+	v3.0.1
+		updated Headless Client support - WIP
+		changed CMS damage thresholds - increased for players and AI
+		removed Headless Client mission parameter - redundant
+		fixed bug in Defuse Explosives task - SEN_codeInput undefined on client
+		fixed bug in Defuse Explosives task - task objects are not cleaned up
+		fixed bug in fn_getIntel - use of getpos instead of getposATL causing issues
+		fixed bug in Defend Supply Cache task - enemies do not spawn in waves
+		fixed bug in fn_spawnSniper - sniper team spawns on flat ground, instead of on a hill
+
+	v3.0.0
+		public release
+
+PRIVATE RELEASE
+	v2.9.9
+		added crater and ruin objects to SEN_cleanup.sqf
+		added ACRE_PRC148 channel presets to SEN_acre2.sqf
+		added fn_preInit (players go from multiplayer lobby to ingame)
+		added Field Manual to DCG Menu
+		removed cse tablet restriction from VAS
+		changed air and boat cache distance to 2600m (just beyond view distance)
+		updated ZBE Cache to 4.6
+		fixed bug where FOB constructor's building count would reset on respawn
+		fixed bug in Airlift Repair Supplies that caused airlift position to be incorrect
+		fixed weather mission parameter
+
+	v2.9.8
+		updated for CSE 0.10.0
+		updated Field Manual
+		updated fn_spawnSniper (limit sniper positions to overwatch positions with LOS to town, ex. hills surrounding town)
+		updated fn_cleanup
+
+	v2.9.7
+		added lightning and high winds to weather forcast
+		added motorized patrols
+		added "Move to MOB Dodge" action at FOB flag
+		added fn_spawnSniper
+		added flashlights to independent units
+		added gather intel to DCG Menu
+		added ZBE Cache
+		updated clean MOB script (includes dead objects)
+		updated conversation system (WIP)
+		updated fn_checkEmptyPos
+		updated task system (optimized for less network traffic)
+		updated transport functions (now use CH-67 and spawn at a distance from requestor instead of map corner)
+		reworked rebel task (players are given "Defend Against Rebel Attack" task)
+		reworked FOB HQ (map marker color change on HQ placement)
+		reworked civilian interaction
+		reworked fn_spawnGroup
+		reworked fn_setPatrolGroup
+		reworked defuse task
+		removed Naught unitCaching
+		removed night vision from independent units
+		removed several editor placed markers/objects (now handled dynamically)
+		fixed bug in fn_spawnTower (towers and unit in tower now face a random direction, not always north)
+		fixed bug in rescue hostage task
+		fixed bug in fn_findPosArray
+		fixed bug with player rating
+		fixed lag spike in fn_transportHandler
+
+	v2.9.6
+		code optimization
+		updated debug features
+		updated defuse bomb task
+		updated Field Manual
+		added check pack weight to action menu
+		added airlift supplies task
+		added VVS
+		added RPG-32 to enemy inventory
+		added defend supply cache task
+		added framework for FOB specific tasks
+		added framework for conversation system
+		added FOB control request system
+		reworked fn_checkPosEmpty (now checks terrain gradient)
+		reworked CMS bandage time
+		reworked CMS aidkit (medic only)
+		reworked radio communications
+		reworked transport system
+		reworked FOB system (new base building system)
+		reworked safezone script
+		reworked deliver medical supplies task (previously deliver humanitarian aid)
+		reworked pilot AI
+		reworked enemy patrols
+		fixed missing classnames in VAS blacklist
+		fixed bug in cleanup script
+		fixed bug in CSE basic revive
+		fixed bug in debriefing
+		fixed bug in elder task
+		fixed bug in vip task
+		removed CSE dependency from mission (CSE dependency moved server side, changes/updates to CSE will still appear in this changelog)
+		removed R3F Log
+
+	v2.9.5
+		added cleanup script using 1.32 script commands
+		fixed Arma 1.32 compatibility
+		fixed bug in fn_findHousePos
+		fixed bug in defuse task
+
+	v2.9.4
+		added Field Manual
+		added CSE stamina module
+		added CSE helmet cam to "Take Additional Gear" action
+		added transport request (basic framework)
+		added autonomous vehicles to air asset staging area
+		added dynamic weather
+		added inventory check for vanilla medical supplies
+		reworked gear system (reverted to VAS / fixed bugs in VAS)
+		reworked onRespawn eventhandler, acre radio is added to inventory on respawn
+		fixed repaired vehicles being deleted by cleanup script
+
+	v2.9.3
+		added check civilian approval to DCG Menu (in CSE Action Menu)
+		added several mission interactions to CSE Action Menu
+		fixed bug in defuse task
+
+	v2.9.2
+		added CSE radial menu integration (WIP, moved officer and civilian addactions to CSE)
+		added DCG menu framework to CSE radial menu with custom icon assets
+		added DCG Gear System (modified Arsenal)
+		added loadout check on player join (see briefing section DCG GEAR and ADDONS)
+		updated Chernarus and Altis versions
+		fixed ACRE2 respawn loadout incompatibility
+		fixed player instant kill probability
+		fixed player unit "regroup,enemy spotted" chatter (possible conflict with AGM_noRadio)
+		fixed medics losing CSE medic variables after respawn
+		fixed destructible notice boards
+		reworked briefing
+		removed ASORGS
+
+	v2.9.1
+		code optimization
+		updated Altis and Chernarus versions
+		updated debug features (teleport on mapClick)
+		updated briefing
+		updated elder tasks
+		updated version system
+		updated gear system
+		fixed ACRE2 gear loadout incompatibility
+		fixed functionality in reset FOB script
+		fixed functionality in move to FOB script
+		fixed functionality in FOB map marker script
+		fixed functionality in clean MOB script
+		fixed rescue civilian task not completing
+		fixed mission date randomization
+		removed CSE weapon resting until improved
+		removed VAS
+		reworked unit uncache distance
+
+	v2.9
+		updated briefing
+		updated Chernarus port
+		optimized task system
+		fixed fire not despawning at rescue hostage task
+		fixed move to FOB addaction
+		fixed player corpses staying after player respawn
+		added DCG civilian vehicle spawn system
+		reworked artillery task
+		reworked earplug usefulness
+		removed vanilla FA and Med kits from VAS
+
+	v2.8
+		code optimization
+		updated briefing
+		added ACRE2 integration
+		added "take radio" and "take tablet" addactions at armory (temp. solution)
+		added DCG civilian spawn system
+		added civilian elder task (approval based, multiple outcomes)
+		added dynamic markers for occuppied towns
+		added earplug script
+		added fade to black script
+		reworked Defuse Bomb task
+		reworked civilian rebel scripts
+		removed COS
+
+	v2.7
+		code optimization
+		added CSE BlueForce Tracking
+		added Altis and Chernarus ports
+		added parameter to set enemy side
+		reworked VIP task (can now dynamically spawn, no predefined areas)
+		reworked FOB teleport (now on flag pole in briefing area)
+		removed playermarker script
+
+	v2.6
+		added civilian approval system
+		added suicide bombers (approval based)
+		added civilian rebels (approval based)
+		added civilian rescue and escort hostages task
+		added CSE integration
+		added 3rd party vehicles to R3F logistics scripts
+		added TAW VD
+		added Interior Light script
+		reworked player respawn
+
+	v2.5
+		fixed headless client support
+		removed TAW VD
+
+	v2.4
+		added headless client check (if HC parameter is ON but HC is not present, the mission will continue server side)
+		added more types of static weapons found in Occupied Towns
+		added "Move to FOB Pirelli" action at Briefing Area laptop
+		fixed bug in defusal task where task would not fail if timer expired
+		fixed civilian spawns
+
+	v2.3
+		code optimization
+		fixed defuse bomb task (defusal laptop will no longer tell player correct wire to cut. Either input correct code or guess correct wire)
+		fixed small text when grabbing defusal code
+		reworked player slots to fit Basic Team Structure and Tactics guide
+		reworked task timers (displays per minute instead of per second, saves on network traffic)
+		reworked fatigue system
+		reworked anti air presense
+		removed Armory from FOB (this previously made ammo bearers useless)
+
+	v2.2
+		added headless client support
+		added vehicle cleanup script at briefing laptop
+		added vehicle towing
+		added arsenal viewer at armory / still using VAS
+		added get in/get out actions to VIP
+		added lights to base at night
+		added more stations at base
+		added fps limit, if server fps drops, mission scripts will slow down until fps levels out
+		added civilian tasks
+		added dynamic enemy count based on player count
+		fixed music que during tasks
+		fixed VIP taking unwanted seats in vehicles
+		fixed defuse bomb task not finding suitable spawn location
+		reworked all tasks that require building positions, using lineIntersectsObjs to filter buildings
+		reworked task timers
+		reworked base setup
+		reworked enemy air units
+		reworked infantry patrols (they should stop and check nearby buildings) and vehicle patrols (more predictable routes, easier for player to recon)
+		reworked player slots
+
+PREVIOUS VERSIONS (v0.1 - 2.1) WERE NOT RELEASED

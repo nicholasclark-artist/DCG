@@ -1,0 +1,1 @@
+#include "\d\dcg\addons\civilian\script_component.hpp"

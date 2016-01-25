@@ -1,0 +1,1 @@
+#include "\d\dcg\addons\occupy\script_component.hpp"
