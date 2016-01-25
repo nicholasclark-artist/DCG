@@ -61,5 +61,4 @@ if !(_data isEqualTo []) then {
 	};
 }, 0, []] call CBA_fnc_addPerFrameHandler;
 
-
 ADDON = true;

@@ -17,4 +17,4 @@
 #define COST_STRUCT 2
 #define COST_ITEM 0.5
 #define COST_FORT 0.25
-#define COST_SIGN 0.25
+#define COST_SIGN 0.5

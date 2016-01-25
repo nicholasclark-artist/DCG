@@ -1,0 +1,53 @@
+#include "scripts\hud\dialog.hpp"
+#include "scripts\VVS\menu.h"
+
+class Header {
+    gameType = COOP;
+    minPlayers = 1;
+    maxPlayers = 40;
+};
+
+allowFunctionsRecompile = 1;
+
+overviewPicture = "media\loading.paa";
+loadScreen = "media\logo.paa";
+author = "SENSEI";
+onLoadName = "DCG";
+onLoadMission = "Dynamic Combat Generator";
+briefing = 0;
+disabledAI = 1;
+enableDebugConsole = 1;
+respawnTemplates[] = {"MenuPosition"};
+respawnOnStart = 1;
+RespawnDialog = 1;
+respawn = 3;
+respawndelay = 15;
+corpseManagerMode = 1;
+corpseLimit = 10;
+corpseRemovalMinTime = 60;
+corpseRemovalMaxTime = 600;
+wreckManagerMode = 1;
+wreckLimit = 5;
+wreckRemovalMinTime = 60;
+wreckRemovalMaxTime = 600;
+
+class CfgTaskEnhancements {
+   enable       = 1; // 0: disable new task features (default), 1: enable new task features & add new task markers and task widgets into the map
+   3d           = 1; // 0: do not use new 3D markers (default), 1: replace task waypoints with new 3D markers
+   3dDrawDist   = 250; // 3d marker draw distance (default: 2000)
+   share        = 0; // 0: do not count assigned players (default), 1: count how many players have the task assigned
+   propagate    = 0; // 0: do not propagate (default), 1: propagate shared tasks to subordinates
+};
+
+class Params {
+	#include "cfgParams.hpp"
+};
+class CfgFunctions {
+  #include "scripts\VVS\Functions.h"
+};
+class RscTitles {
+	#include "scripts\hud\hud_titles.sqf"
+};
+class CfgSounds {
+	#include "cfgSounds.hpp"
+};
