@@ -6,6 +6,9 @@ Description:
 set units on patrol
 
 Arguments:
+0: array of units <ARRAY>
+1: max distance from original position a unit will patrol <NUMBER>
+2: patrol as group or individual <BOOL>
 
 Return:
 boolean
