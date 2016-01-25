@@ -16,14 +16,14 @@ class EditorData
 	};
 	class LayerIndexProvider
 	{
-		nextID=313;
+		nextID=326;
 	};
 	class Camera
 	{
-		pos[]={14638.758,45.870922,16796.047};
-		dir[]={-0.28247222,-0.47990635,-0.83075297};
-		up[]={-0.15460269,0.87701255,-0.4546735};
-		aside[]={-0.94683295,-4.8304428e-006,0.32192457};
+		pos[]={15513.769,16.760895,17339.574};
+		dir[]={0.99355572,-0.047084168,0.10336159};
+		up[]={0.046893474,0.99888343,0.0048779761};
+		aside[]={0.10347463,1.2169039e-007,-0.9946537};
 	};
 };
 binarizationWanted=0;
@@ -139,6 +139,25 @@ class CustomAttributes
 		name="Multiplayer";
 		class Attribute0
 		{
+			property="RespawnButton";
+			expression="true";
+			class Value
+			{
+				class data
+				{
+					class type
+					{
+						type[]=
+						{
+							"SCALAR"
+						};
+					};
+					value=1;
+				};
+			};
+		};
+		class Attribute1
+		{
 			property="RespawnTemplates";
 			expression="true";
 			class Value
@@ -184,25 +203,6 @@ class CustomAttributes
 							};
 						};
 					};
-				};
-			};
-		};
-		class Attribute1
-		{
-			property="RespawnButton";
-			expression="true";
-			class Value
-			{
-				class data
-				{
-					class type
-					{
-						type[]=
-						{
-							"SCALAR"
-						};
-					};
-					value=1;
 				};
 			};
 		};
@@ -7185,10 +7185,10 @@ class Mission
 		class Item299
 		{
 			dataType="Marker";
-			position[]={15525.935,14.436279,17359.74};
+			position[]={15512.431,14.536865,17339.83};
 			name="dcg_depotLand_respawn";
 			type="Empty";
-			angle=181.91295;
+			angle=102.87106;
 			id=1551;
 		};
 		class Item300
@@ -7206,7 +7206,7 @@ class Mission
 			position[]={14596.695,17.91,16796.355};
 			name="dcg_depotAir_respawn";
 			type="Empty";
-			angle=123.41;
+			angle=123.40996;
 			id=1553;
 		};
 	};

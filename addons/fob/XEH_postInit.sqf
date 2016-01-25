@@ -55,7 +55,7 @@ if !(_data isEqualTo []) then {
 			if (hasInterface) then {
 				waitUntil {time > 5 && {!isNull (findDisplay 46)} && {!isNull player} && {alive player}}; // hack to fix "respawn on start" missions
 				[QUOTE(ADDON),"Forward Operating Base","",QUOTE(true),QUOTE(call FUNC(getChildren)),player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]] call EFUNC(main,setAction);
-				[QUOTE(DOUBLES(ADDON,patrol)),"Set FOB Groups on Patrol",QUOTE(call FUNC(setPatrol)),QUOTE(player isEqualTo (getAssignedCuratorUnit GVAR(curator))),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
+				[QUOTE(DOUBLES(ADDON,patrol)),"Set FOB Groups on Patrol",format ["missionNamespace setVariable ['%1',true]; publicVariableServer '%1'", PVEH_PATROL],QUOTE(player isEqualTo (getAssignedCuratorUnit GVAR(curator))),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
 
 				player addEventHandler ["respawn",{
 					if ((getPlayerUID (_this select 0)) isEqualTo GVAR(UID)) then {

@@ -35,18 +35,6 @@ if (CHECK_ADDON_1("ace_medical")) then {
 	};
 };
 
-// PFHs
-call compile preprocessFileLineNumbers "scripts\hud\hud_teamlist.sqf";
-
-if (GVAR(disableCam)) then {
-	[{
-		if (GVAR(disableCam) && {cameraOn isEqualTo player} && {cameraView isEqualTo "EXTERNAL"}) then {
-			["Third person camera is disabled.",true] call EFUNC(main,displayText);
-			player switchCamera "INTERNAL";
-		};
-	}, 1, []] call CBA_fnc_addPerFrameHandler;
-};
-
 if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
 	[{
 	    if (CHECK_DIST2D(locationPosition EGVAR(main,mobLocation),getPosATL player,EGVAR(main,mobRadius))) then {
@@ -69,6 +57,19 @@ if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
 	        };
 	    };
 	}, 5, []] call CBA_fnc_addPerFrameHandler;
+};
+
+// vehicle hud
+call compile preprocessFileLineNumbers "scripts\hud\hud_teamlist.sqf";
+
+// disable 3rd person cam
+if (GVAR(disableCam)) then {
+	[{
+		if (GVAR(disableCam) && {cameraOn isEqualTo player} && {cameraView isEqualTo "EXTERNAL"}) then {
+			["Third person camera is disabled.",true] call EFUNC(main,displayText);
+			player switchCamera "INTERNAL";
+		};
+	}, 1, []] call CBA_fnc_addPerFrameHandler;
 };
 
 // briefing

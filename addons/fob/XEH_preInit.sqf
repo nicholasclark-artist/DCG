@@ -18,7 +18,6 @@ PREP(requestAnswer);
 PREP(requestReceive);
 PREP(requestHandler);
 PREP(setup);
-PREP(setPatrol);
 PREP(getChildren);
 PREP(canDeploy);
 
@@ -34,7 +33,6 @@ publicVariable QFUNC(requestAnswer);
 publicVariable QFUNC(getChildren);
 publicVariable QFUNC(deploy);
 publicVariable QFUNC(canDeploy);
-publicVariable QFUNC(setPatrol);
 publicVariable QGVAR(location);
 publicVariable QGVAR(UID);
 publicVariable QGVAR(response);
