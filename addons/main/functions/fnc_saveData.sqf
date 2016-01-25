@@ -82,7 +82,7 @@ if (CHECK_ADDON_2(fob)) then {
 
 if (CHECK_ADDON_2(patrol)) then {
 	private ["_data","_fnc_getData","_grpData"];
-	if (CHECK_HC) then {
+	if !(isNil {HEADLESSCLIENT}) then {
 		{
 			publicVariableServer QEGVAR(patrol,groups);
 		} remoteExecCall ["BIS_fnc_call", owner HEADLESSCLIENT, false];

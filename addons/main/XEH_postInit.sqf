@@ -31,7 +31,7 @@ if (CHECK_MARKER(QUOTE(DOUBLES(PREFIX,base)))) then {
 
 // cleanup PFH
 if (GVAR(cleanup)) then {
-	if (CHECK_HC) then {
+	if !(isNil {HEADLESSCLIENT}) then {
 		{
 			[{
 				{

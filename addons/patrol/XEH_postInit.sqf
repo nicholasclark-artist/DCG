@@ -31,7 +31,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			}, 5, _data] spawn CBA_fnc_addPerFrameHandler;
 		};
 
-		if (CHECK_HC) then {
+		if !(isNil {HEADLESSCLIENT}) then {
 			(owner HEADLESSCLIENT) publicVariableClient QGVAR(groups);
 			(owner HEADLESSCLIENT) publicVariableClient QGVAR(groupsDynamic);
 			remoteExecCall [QFUNC(PFH), owner HEADLESSCLIENT, false];

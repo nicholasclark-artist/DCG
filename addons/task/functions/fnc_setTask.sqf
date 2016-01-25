@@ -38,7 +38,7 @@ if (DCG_taskList isEqualTo []) exitWith {
 		"steal"
 	];
 	_locations = call DCG_fnc_findLocation;
-	if (CHECK_HC) then {
+	if !(isNil {HEADLESSCLIENT}) then {
 		{
 			_x remoteExec ["DCG_fnc_setOccupied", owner HEADLESSCLIENT, false];
 			["Spawning occupied location on headless client."] call DCG_fnc_log;

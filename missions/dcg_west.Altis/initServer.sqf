@@ -16,7 +16,7 @@ waitUntil {DOUBLES(PREFIX,main)}; // wait until main addon completes postInit
 createCenter EGVAR(main,enemySide); // required if an enemy side unit is not placed in editor
 
 // headless client check
-LOG_DEBUG_1("Headless client is %1.",CHECK_HC);
+LOG_DEBUG_1("Headless client is %1.",!(isNil {HEADLESSCLIENT}));
 
 // debug
 if (CHECK_DEBUG) then {
