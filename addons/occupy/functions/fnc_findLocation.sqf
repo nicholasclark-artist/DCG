@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI), Killzone Kid
 
-Last modified: 1/22/2016
+Description:
+find and occupy location
 
-Description: find and occupy location
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 

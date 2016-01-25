@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/28/2015
+Description:
+formats time
 
-Description: formats time
+Arguments:
 
-Return: string
+Return:
+string
 __________________________________________________________________*/
 private ["_hour","_min","_sec","_ret"];
 params ["_time",["_showHour",false]];

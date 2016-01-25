@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/4/2016
+Description:
+runs when players enter occupied location
 
-Description: runs when players enter occupied location
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define INTERVAL 30

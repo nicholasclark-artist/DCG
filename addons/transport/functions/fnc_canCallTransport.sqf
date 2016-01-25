@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/12/2015
+Description:
+check if player can call transport
 
-Description: check if player can call transport
+Arguments:
 
-Return: boolean
+Return:
+boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
 

@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/2/2016
+Description:
+sets parameters
 
-Description: sets parameters
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 

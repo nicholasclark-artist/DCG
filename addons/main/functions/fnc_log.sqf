@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 11/1/2015
+Description:
+logs message to RPT
 
-Description: logs message to RPT
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define PREFIX_DEBUG toUpper (_this select 0)

@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/23/2015
+Description:
+check if player can deploy fob
 
-Description: can deploy fob
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 

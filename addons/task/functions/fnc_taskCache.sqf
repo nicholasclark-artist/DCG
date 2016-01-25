@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/16/2015
+Description:
+destroy ammo cache
 
-Description: destroy ammo cache
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 if !(isServer) exitWith {};
 

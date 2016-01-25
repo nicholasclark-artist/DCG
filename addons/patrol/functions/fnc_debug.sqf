@@ -1,11 +1,12 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/29/2015
-
 Description:
 
-Return: nothing
+Arguments:
+
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 

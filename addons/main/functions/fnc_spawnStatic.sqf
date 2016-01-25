@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/9/2016
+Description:
+spawn emplacements
 
-Description: spawn emplacements
+Arguments:
 
-Return: array
+Return:
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define DEBUG_MRK \

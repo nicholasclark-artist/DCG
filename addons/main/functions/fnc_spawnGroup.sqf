@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/7/2015
+Description:
+spawns group
 
-Description: spawns group
+Arguments:
 
-Return: group or array
+Return:
+group or array
 __________________________________________________________________*/
 #include "script_component.hpp"
 

@@ -1,9 +1,5 @@
 /*
 Author: Nicholas Clark (SENSEI)
-
-Last modified: 1/15/2016
-
-Description: map data from weatherspark.com
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SUMMER [6,7,8]

@@ -1,9 +1,5 @@
 /*
 Author: Nicholas Clark (SENSEI)
-
-Last modified: 11/2/2015
-
-Description:
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define ZDIST 65

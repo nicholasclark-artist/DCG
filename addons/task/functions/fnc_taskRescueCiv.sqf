@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/19/2015
+Description:
+rescue civilians and escort to town safely
 
-Description: rescue civilians and escort to town safely
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 if !(isServer) exitWith {};
 

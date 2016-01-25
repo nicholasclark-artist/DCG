@@ -1,13 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/15/2015
+Description:
+set radio settings, must be ran globally
 
-Description: set radio settings
+Arguments:
 
-Note: settings must be set globally
-
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define P_ACRE "acre_main"

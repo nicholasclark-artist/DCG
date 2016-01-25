@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/19/2015
+Description:
+stabilize injured civilians and transport to medical station
 
-Description: stabilize injured civilians and transport to medical station
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 if !(isServer) exitWith {};
 

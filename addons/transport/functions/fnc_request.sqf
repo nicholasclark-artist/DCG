@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 11/3/2015
+Description:
+handles player transport request
 
-Description: handles player transport request
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define STR_EXFIL "Open your map and select a LZ for extraction."

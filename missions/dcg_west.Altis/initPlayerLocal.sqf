@@ -1,9 +1,8 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/14/2015
-
-Note: init order not guaranteed
+Description:
+init order not guaranteed
 __________________________________________________________________*/
 #include "script_component.hpp"
 

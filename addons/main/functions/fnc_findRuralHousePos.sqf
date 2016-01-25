@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 11/13/2015
+Description:
+finds an interior house position outside a town
 
-Description: finds an interior house position outside a town
+Arguments:
 
-Return: array
+Return:
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define EXPRESSION "(1 + houses)"

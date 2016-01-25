@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/1/2015
+Description:
+send PVEH to server to delete saved data
 
-Description: send PVEH to server to delete saved data
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define DELETE_HINT "Are you sure you want to permenantly delete ALL saved mission data?"

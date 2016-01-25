@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/19/2015
+Description:
+steal intel from device
 
-Description: steal intel from device
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 
 /*

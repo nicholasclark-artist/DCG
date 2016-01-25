@@ -1,9 +1,10 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/4/2016
+Description:
+occupy locations
 
-Description: occupy locations
+Arguments:
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SETVAR_UNIT(UNIT) UNIT setVariable [format ["occupyUnit_%1", _name],true]

@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 10/22/2015
+Description:
+sets task
 
-Description: sets task
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 // TODO Test running tasks in scheduled and non scheduled environment. Non scheduled seems to cause client lag
 #include "script_component.hpp"

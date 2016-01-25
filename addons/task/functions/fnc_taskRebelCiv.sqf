@@ -1,9 +1,10 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/24/2015
+Description:
+spawns rebel force on player or FOB
 
-Description: spawns rebel force on player or FOB
+Arguments:
 __________________________________________________________________*/
 if !(isServer) exitWith {};
 

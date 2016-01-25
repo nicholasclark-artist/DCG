@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/22/2015
+Description:
+set player action
 
-Description: set player action
+Arguments:
 
-Return: array
+Return:
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 

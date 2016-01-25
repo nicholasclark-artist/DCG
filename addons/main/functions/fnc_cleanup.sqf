@@ -1,13 +1,14 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/30/2015
+Description:
+add to cleanup loop, does not support nested arrays
 
-Description: add to cleanup handler
+Arguments:
+0: item to cleanup <ARRAY, STRING, OBJECT>
 
-Note: does not support nested arrays
-
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 

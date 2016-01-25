@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 10/17/2015
+Description:
+defend supply cache
 
-Description: defend supply cache
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 if !(isServer) exitWith {};
 

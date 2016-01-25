@@ -1,13 +1,14 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 10/3/2015
+Description:
+set unit in cardiac arrest, needs delay if called directly after spawning unit
 
-Description: set unit in cardiac arrest
+Arguments:
+0: unit to receive damage <ARRAY>
 
-Note: needs delay if called directly after spawning unit
-
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 

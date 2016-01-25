@@ -1,9 +1,5 @@
 /*
 Author: Nicholas Clark (SENSEI)
-
-Last modified: 1/22/2016
-
-Description:
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define TASK_TITLE(LOC) format ["Liberate %1", LOC]

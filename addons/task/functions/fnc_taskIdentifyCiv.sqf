@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/19/2015
+Description:
+identify dead politician
 
-Description: identify dead politician
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 if !(isServer) exitWith {};
 

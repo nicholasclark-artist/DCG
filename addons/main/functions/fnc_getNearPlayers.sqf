@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/1/2015
+Description:
+gets near players
 
-Description: gets near players
+Arguments:
 
-Return: array
+Return:
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 

@@ -1,13 +1,18 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/12/2015
+Description:
+handles transport functionality on client
 
-Description: handles transport functionality
+Arguments:
+0: transport classname <STRING>
+1: exfil position <ARRAY>
+2: infil position <ARRAY>
+3: exfil marker <STRING>
+4: infil marker <STRING>
 
-Note: functions runs on client
-
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define COOLDOWN_PFH \

@@ -1,11 +1,13 @@
 /*
 Author: Killzone Kid, SENSEI
 
-Last modified: 12/14/2015
+Description:
+check if in building
 
-Description: check if in building
+Arguments:
 
-Return: array
+Return:
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 

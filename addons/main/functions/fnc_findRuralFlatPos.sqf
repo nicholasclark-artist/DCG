@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 11/11/2015
+Description:
+finds a flat rural position
 
-Description: finds a flat rural position
+Arguments:
 
-Return: array
+Return:
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define EXPRESSION "(1 - forest) * (2 + meadow) * (1 - sea) * (1 - houses) * (1 - hills)"

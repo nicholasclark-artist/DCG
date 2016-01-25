@@ -3,9 +3,8 @@ Author: Nicholas Clark (SENSEI)
 
 Start date: May 2014
 
-Last modified: 1/24/2016
-
-Description: mission intended to use alongside Dynamic Combat Generator
+Description:
+mission intended to use alongside Dynamic Combat Generator
 
 To Do:
 	add steam workshop version

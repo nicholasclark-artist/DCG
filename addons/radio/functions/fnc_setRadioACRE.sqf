@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/12/2015
+Description:
+assigns acre radio and channels
 
-Description: assigns acre radio and channels
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define KITBAG "B_Kitbag_cbr"

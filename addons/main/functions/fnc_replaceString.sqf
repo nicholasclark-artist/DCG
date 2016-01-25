@@ -1,11 +1,13 @@
 /*
 Author: dreadedentity
 
-Last modified: 1/22/2016
+Description:
+find and replace within string
 
-Description: find and replace within string
+Arguments:
 
-Return: string
+Return:
+string
 __________________________________________________________________*/
 private ["_input","_replace","_replaceWith","_output","_location","_front","_end"];
 

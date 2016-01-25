@@ -1,11 +1,13 @@
 /*
 Author: esteldunedain, SENSEI
 
-Last modified: 11/5/2015
+Description:
+loads server parameters
 
-Description: loads server parameters
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 

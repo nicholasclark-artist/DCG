@@ -1,11 +1,13 @@
 /*
 Author:
 
-Last modified: 10/21/2015
+Description:
+removes particle
 
-Description: removes particle
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 

@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 8/5/2014
+Description:
+transfers objects to a requested owner
 
-Description: transfers objects to a requested owner
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 if (!isServer) exitWith {};
 

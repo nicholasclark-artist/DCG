@@ -1,13 +1,18 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/22/2015
+Description:
+find overwatch positions, position argument must be positionASL
 
-Description: find overwatch positions
+Arguments:
+0: center position <ARRAY>
+1: number of positions to find <ARRAY>
+2: minimum distance from center <NUMBER>
+3: maximum distance from center <NUMBER>
+4: height difference from center <NUMBER>
 
-Note: _pos must be positionASL
-
-Return: array
+Return:
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 

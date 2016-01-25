@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/22/2015
+Description:
+receive request for FOB control
 
-Description: receive request for FOB control
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define FORMAT_SETUP \

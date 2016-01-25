@@ -1,9 +1,10 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified:
+Description:
+handles approval points
 
-Description: handles approval points
+Arguments:
 
 Return:
 __________________________________________________________________*/

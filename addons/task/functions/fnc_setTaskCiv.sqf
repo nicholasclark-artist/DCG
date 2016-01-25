@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/16/2015
+Description:
+sets civilians task
 
-Description: sets civilians task
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 // TODO: Test running tasks in scheduled and non scheduled environment. Non scheduled seems to cause client lag
 

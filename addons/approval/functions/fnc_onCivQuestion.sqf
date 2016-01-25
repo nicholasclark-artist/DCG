@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 7/28/2015
+Description:
+question civilians
 
-Description: question civilians
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 private ["_civ","_nearEnemies","_range","_near","_enemy","_local"];
 

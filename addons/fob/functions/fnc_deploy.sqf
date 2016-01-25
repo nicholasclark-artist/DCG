@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/23/2016
+Description:
+deploy FOB
 
-Description: deploy FOB
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define KEY ((actionKeys "curatorInterface") select 0)

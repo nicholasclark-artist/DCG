@@ -1,9 +1,5 @@
 /*
 Author: Nicholas Clark (SENSEI)
-
-Last modified: 1/1/2015
-
-Description:
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define CREATE_MOB \

@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 7/24/2015
+Description:
+switches an array of units to another side and groups them
 
-Description: switches an array of units to another side and groups them
+Arguments:
 
-Return: group
+Return:
+group
 __________________________________________________________________*/
 #include "script_component.hpp"
 

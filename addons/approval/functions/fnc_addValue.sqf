@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/20/2016
+Description:
+add amount to value
 
-Description: add amount to value
+Arguments:
 
-Return: number
+Return:
+number
 __________________________________________________________________*/
 #include "script_component.hpp"
 

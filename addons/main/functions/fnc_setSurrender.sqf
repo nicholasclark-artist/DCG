@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/15/2016
+Description:
+set unit in surrender stance
 
-Description: set unit in surrender stance
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SURRENDER(UNIT,ANIM) \

@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/20/2016
+Description:
+set unit as hostile
 
-Description: set unit as hostile
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define BOMBS ["R_TBG32V_F","HelicopterExploSmall"]

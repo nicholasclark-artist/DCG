@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/4/2015
+Description:
+send PVEH to server to save data
 
-Description: send PVEH to server to save data
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SAVE_HINT "Are you sure you want to overwrite the saved data for this mission?"

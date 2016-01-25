@@ -1,9 +1,10 @@
 /*
 Author: Zorrobyte
 
-Last modified: 1/24/2016
+Description:
+unit caching script. edited by Nicholas Clark (SENSEI)
 
-Description: unit caching script. edited by Nicholas Clark (SENSEI)
+Arguments:
 
 ZBE_Caching by Zorrobyte is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
 __________________________________________________________________*/

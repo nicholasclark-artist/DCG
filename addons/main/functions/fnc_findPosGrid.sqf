@@ -1,13 +1,20 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/22/2015
+Description:
+create grid of positions
 
-Description: create grid of positions
+Arguments:
+0: center position <ARRAY>
+1: distance between positions <NUMBER>
+2: max distance from center <NUMBER>
+3: min distance from center <NUMBER>
+4: min distance from objects <NUMBER>
+5: allow water <BOOL>
+6: shuffle position array <BOOL>
 
-Note: return is positionASL
-
-Return: array
+Return:
+array (positionASL)
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define POS_COUNT floor (_range/_dist)

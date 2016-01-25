@@ -1,11 +1,13 @@
 /*
 Author: esteldunedain, SENSEI
 
-Last modified: 10/30/2015
+Description:
+Load a setting from config
 
-Description: Load a setting from config
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 

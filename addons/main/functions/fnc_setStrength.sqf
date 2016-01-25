@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 8/16/2015
+Description:
+set number based on player count
 
-Description: set number based on player count
+Arguments:
 
-Return: number
+Return:
+number
 __________________________________________________________________*/
 #include "script_component.hpp"
 

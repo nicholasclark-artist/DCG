@@ -1,14 +1,15 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 9/30/2015
+Description:
+gets list of players
+allPlayers command is faster, but it returns an empty array (on dedicated) until some time after time = 0
+This function also excludes headless clients, unlike allPlayers
 
-Description: gets list of players
+Arguments:
 
-Note: allPlayers command is faster, but it returns an empty array (on dedicated) until some time after time > 0
-	  This function also excludes headless clients, unlike allPlayers
-
-Return: array
+Return:
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 

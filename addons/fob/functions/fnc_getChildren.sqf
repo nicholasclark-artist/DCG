@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/23/2015
+Description:
+get action children
 
-Description: get action children
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define DEPLOY_ID QUOTE(DOUBLES(ADDON,deploy))

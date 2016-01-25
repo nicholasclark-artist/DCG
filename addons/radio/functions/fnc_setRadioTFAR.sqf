@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 12/12/2015
+Description:
+assigns TFAR radio and channels
 
-Description: assigns TFAR radio and channels
+Arguments:
 
-Return: nothing
+Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define CH_CMD 1

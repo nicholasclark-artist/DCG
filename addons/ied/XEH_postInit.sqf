@@ -1,9 +1,5 @@
 /*
 Author: Nicholas Clark (SENSEI)
-
-Last modified: 1/15/2016
-
-Description:
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define DEBUG_IED \

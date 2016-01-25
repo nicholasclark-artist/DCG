@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI)
 
-Last modified: 1/12/2016
+Description:
+set units on patrol
 
-Description: set units on patrol
+Arguments:
 
-Return: boolean
+Return:
+boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define MINRANGE _range*0.4

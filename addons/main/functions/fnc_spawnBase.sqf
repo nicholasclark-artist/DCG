@@ -1,11 +1,13 @@
 /*
 Author: Nicholas Clark (SENSEI), Silola (data collected using x-cam)
 
-Last modified: 7/16/2015
+Description:
+spawns base
 
-Description: spawns base
+Arguments:
 
-Return: array
+Return:
+array
 __________________________________________________________________*/
 if !(isServer) exitWith {};
 
