@@ -16,14 +16,14 @@ class EditorData
 	};
 	class LayerIndexProvider
 	{
-		nextID=287;
+		nextID=313;
 	};
 	class Camera
 	{
-		pos[]={15517.284,118.40295,17328.375};
-		dir[]={0.028653786,-0.74533403,0.66626394};
-		up[]={0.032036707,0.6663509,0.7448104};
-		aside[]={0.99914396,-8.9145851e-006,-0.042957492};
+		pos[]={14638.758,45.870922,16796.047};
+		dir[]={-0.28247222,-0.47990635,-0.83075297};
+		up[]={-0.15460269,0.87701255,-0.4546735};
+		aside[]={-0.94683295,-4.8304428e-006,0.32192457};
 	};
 };
 binarizationWanted=0;
@@ -1494,8 +1494,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={15527.607,15.400719,17352.408};
-						angles[]={0,5.5345964,0};
+						position[]={15527.07,15.402772,17353.814};
+						angles[]={0,6.2351999,0};
 					};
 					side="Civilian";
 					flags=3;
@@ -1503,7 +1503,7 @@ class Mission
 					{
 						skill=0.2;
 						ammo=0;
-						init="this setBehaviour ""CARELESS""; [this,""LEAN"",""ASIS""] call BIS_fnc_ambientAnim; [""dcg_VVSDepotLand"",""Open Depot Station"",""[""""dcg_depotLand"""",""""Depot""""] spawn VVS_fnc_openVVS;"",""true"","""",this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;";
+						init="[""dcg_VVSDepotLand"",""Open Depot Station"",""[""""dcg_depotLand"""",""""Depot""""] spawn VVS_fnc_openVVS;"",""true"","""",this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;";
 					};
 					id=87;
 					type="C_Marshal_F";
@@ -1543,7 +1543,7 @@ class Mission
 											"BOOL"
 										};
 									};
-									value=1;
+									value=0;
 								};
 							};
 						};
@@ -3073,6 +3073,29 @@ class Mission
 					};
 					id=945;
 					type="C_scientist_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="allowDamage";
+							expression="_this allowdamage _value;";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"BOOL"
+										};
+									};
+									value=0;
+								};
+							};
+						};
+						nAttributes=1;
+					};
 				};
 				class Item1
 				{
@@ -3090,6 +3113,29 @@ class Mission
 					};
 					id=943;
 					type="C_scientist_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="allowDamage";
+							expression="_this allowdamage _value;";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"BOOL"
+										};
+									};
+									value=0;
+								};
+							};
+						};
+						nAttributes=1;
+					};
 				};
 			};
 			class Attributes
@@ -3120,6 +3166,29 @@ class Mission
 					};
 					id=947;
 					type="C_man_w_worker_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="allowDamage";
+							expression="_this allowdamage _value;";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"BOOL"
+										};
+									};
+									value=0;
+								};
+							};
+						};
+						nAttributes=1;
+					};
 				};
 				class Item1
 				{
@@ -3136,6 +3205,29 @@ class Mission
 					};
 					id=1352;
 					type="C_man_w_worker_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="allowDamage";
+							expression="_this allowdamage _value;";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"BOOL"
+										};
+									};
+									value=0;
+								};
+							};
+						};
+						nAttributes=1;
+					};
 				};
 			};
 			class Attributes
@@ -4185,7 +4277,7 @@ class Mission
 					{
 						skill=0.2;
 						ammo=0;
-						init="this setBehaviour ""CARELESS""; [""dcg_VVSDepotAir"",""Open Depot Station"",""[""""dcg_depotAir"""",""""Air""""] spawn VVS_fnc_openVVS;"",""true"","""",this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;";
+						init="[""dcg_VVSDepotAir"",""Open Depot Station"",""[""""dcg_depotAir"""",""""Air""""] spawn VVS_fnc_openVVS;"",""true"","""",this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;";
 					};
 					id=1018;
 					type="C_Marshal_F";
@@ -4250,7 +4342,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14622.579,17.911438,16771.594};
+						position[]={14622.58,17.911438,16771.594};
 						angles[]={0,0.64500391,0};
 					};
 					side="Civilian";
@@ -4280,7 +4372,7 @@ class Mission
 											"BOOL"
 										};
 									};
-									value=1;
+									value=0;
 								};
 							};
 						};
@@ -4311,7 +4403,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14620.634,18.036436,16810.15};
+						position[]={14620.634,18.036438,16810.15};
 						angles[]={0,4.9210606,0};
 					};
 					side="Civilian";
@@ -4340,7 +4432,7 @@ class Mission
 											"BOOL"
 										};
 									};
-									value=1;
+									value=0;
 								};
 							};
 						};
@@ -4384,7 +4476,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={15208.25,18.535805,17336.143};
+						position[]={15208.25,18.535439,17336.143};
 						angles[]={0,2.3030667,0};
 					};
 					side="Civilian";
@@ -4393,7 +4485,7 @@ class Mission
 					{
 						skill=0.2;
 						ammo=0;
-						init="this setBehaviour ""CARELESS""; [this,""SIT_U1"",""NONE""] call BIS_fnc_ambientAnim;  [""dcg_armory"",""Open Armory"",""if (isClass (configfile >> """"CfgPatches"""" >> """"acre_main"""")) then {{player removeItem _x} forEach (call acre_api_fnc_getCurrentRadioList);}; [""""Open"""",true] spawn dcg_main_fnc_arsenal;"",""true"","""",this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;  if (isClass (configfile >> ""CfgPatches"" >> ""dcg_radio"")) then {   [""dcg_arsenalRadio"",""Take Radio"",""call dcg_radio_fnc_setRadio"",""true"","""",this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;   [""dcg_arsenalPackRadio"",""Take Pack Radio"",""    if (isClass (configfile >> """"CfgPatches"""" >> """"acre_main"""")) then {     if !([player, dcg_radio_acre_support] call acre_api_fnc_hasKindOfRadio) then {      if (player canAddItemToBackpack dcg_radio_acre_support) then {       player addItemToBackpack dcg_radio_acre_support;       hintSilent format [""""Added %1 to backpack."""",[configFile >> """"cfgWeapons"""" >> dcg_radio_acre_support] call BIS_fnc_displayName];      } else {       if ((backpack player) isEqualTo '') then {        player addBackpack """"B_Kitbag_cbr"""";        player addItemToBackpack dcg_radio_acre_support;        hintSilent format [""""Added %1 to backpack."""",[configFile >> """"cfgWeapons"""" >> dcg_radio_acre_support] call BIS_fnc_displayName];       };      };     } else {      hintSilent """"You already have a pack radio."""";     };    };   "",""true"","""",this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;  };";
+						init="[""dcg_armory"",""Open Armory"",""if (isClass (configfile >> """"CfgPatches"""" >> """"acre_main"""")) then {{player removeItem _x} forEach (call acre_api_fnc_getCurrentRadioList);}; [""""Open"""",true] spawn dcg_main_fnc_arsenal;"",""true"","""",this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;  if (isClass (configfile >> ""CfgPatches"" >> ""dcg_radio"")) then {   [""dcg_arsenalRadio"",""Take Radio"",""call dcg_radio_fnc_setRadio"",""true"","""",this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;   [""dcg_arsenalPackRadio"",""Take Pack Radio"",""    if (isClass (configfile >> """"CfgPatches"""" >> """"acre_main"""")) then {     if !([player, dcg_radio_acre_support] call acre_api_fnc_hasKindOfRadio) then {      if (player canAddItemToBackpack dcg_radio_acre_support) then {       player addItemToBackpack dcg_radio_acre_support;       hintSilent format [""""Added %1 to backpack."""",[configFile >> """"cfgWeapons"""" >> dcg_radio_acre_support] call BIS_fnc_displayName];      } else {       if ((backpack player) isEqualTo '') then {        player addBackpack """"B_Kitbag_cbr"""";        player addItemToBackpack dcg_radio_acre_support;        hintSilent format [""""Added %1 to backpack."""",[configFile >> """"cfgWeapons"""" >> dcg_radio_acre_support] call BIS_fnc_displayName];       };      };     } else {      hintSilent """"You already have a pack radio."""";     };    };   "",""true"","""",this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;  };";
 					};
 					id=1027;
 					type="C_Marshal_F";
@@ -4433,7 +4525,7 @@ class Mission
 											"BOOL"
 										};
 									};
-									value=1;
+									value=0;
 								};
 							};
 						};
@@ -4508,8 +4600,8 @@ class Mission
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={15208.226,19.153318,17336.143};
-				angles[]={0,5.605701,6.2824869};
+				position[]={15207.635,19.150986,17336.732};
+				angles[]={0,5.605701,6.282495};
 			};
 			side="Empty";
 			class Attributes
@@ -7096,7 +7188,7 @@ class Mission
 			position[]={15525.935,14.436279,17359.74};
 			name="dcg_depotLand_respawn";
 			type="Empty";
-			angle=181.91298;
+			angle=181.91295;
 			id=1551;
 		};
 		class Item300
@@ -7105,7 +7197,7 @@ class Mission
 			position[]={15213.173,17.968462,17330.203};
 			name="dcg_armory_respawn";
 			type="Empty";
-			angle=322.74182;
+			angle=322.74176;
 			id=1552;
 		};
 		class Item301

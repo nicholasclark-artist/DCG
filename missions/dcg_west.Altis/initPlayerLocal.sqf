@@ -74,7 +74,6 @@ if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
 // briefing
 [] spawn {
 	// _fixMenu = "<execute expression ='[] call compile preprocessFileLineNumbers ""\d\ace\addons\interact_menu\XEH_clientInit.sqf"";'>Force Load ACE Interaction Menu<execute/>"; // doesn't work
-	_openFM = "<execute expression ='[] spawn {openMap [false, false]; (findDisplay 46) createDisplay ""RscDisplayFieldManual""}'>Open Field Manual<execute/>";
 
 	player createDiaryRecord ["Diary", ["Special Thanks", "<br/>
 			Bohemia Interactive<br/><br/>
@@ -84,11 +83,8 @@ if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
 			ACE3"]
 	];
 	player createDiaryRecord ["Diary", ["External Content", "<br/>
-			ACE3 by ACE3 Dev Team<br/><br/>
 			VVS by Tonic<br/><br/>
-			ZBE Caching by Zorrobyte<br/><br/>
 			Vehicle HUD script by Tier1ops<br/><br/>
-			X-Cam by Siloa<br/><br/>
 			Defuse the bomb by cobra4v320"]
 	];
 	player createDiaryRecord ["Diary", ["DCG Mission Info", format ["<br/>
@@ -96,12 +92,7 @@ if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
 		Version: %1<br/><br/>
 		Known Issues:<br/>
 		ACE interaction menu may not initialize at mission start, ACE3 Github issue #1171<br/><br/>
-		License:<br/>
-		Copyright 2015 Nicholas Clark (SENSEI). All rights reserved.<br/>
-		This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.<br/>
-		To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/.<br/><br/>
-		%2<br/>
-		",QUOTE(VERSION),_openFM]]
+		",QUOTE(VERSION)]]
 	];
 	closeDialog 0;
 	_ret = [
