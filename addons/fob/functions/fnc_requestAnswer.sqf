@@ -1,10 +1,13 @@
 /*
-Author: Nicholas Clark (SENSEI)
+Author:
+Nicholas Clark (SENSEI)
 
 Description:
 answer request for FOB control
 
 Arguments:
+0: name of unit answering request <STRING>
+1: answer type <NUMBER>
 
 Return:
 none

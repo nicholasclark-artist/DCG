@@ -1,5 +1,6 @@
 /*
-Author: Nicholas Clark (SENSEI)
+Author:
+Nicholas Clark (SENSEI)
 
 Description:
 rescue civilians and escort to town safely

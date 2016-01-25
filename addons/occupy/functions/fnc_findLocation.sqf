@@ -1,5 +1,6 @@
 /*
-Author: Nicholas Clark (SENSEI), Killzone Kid
+Author:
+Nicholas Clark (SENSEI), Killzone Kid
 
 Description:
 find and occupy location

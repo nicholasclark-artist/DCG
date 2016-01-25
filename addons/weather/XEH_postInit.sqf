@@ -1,5 +1,6 @@
 /*
-Author: Nicholas Clark (SENSEI)
+Author:
+Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SUMMER [6,7,8]

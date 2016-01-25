@@ -1,5 +1,6 @@
 /*
-Author: Killzone Kid, SENSEI
+Author:
+Killzone Kid, SENSEI
 
 Description:
 check if in building

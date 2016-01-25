@@ -1,5 +1,6 @@
 /*
-Author: Nicholas Clark (SENSEI)
+Author:
+Nicholas Clark (SENSEI)
 
 Description:
 switches an array of units to another side and groups them

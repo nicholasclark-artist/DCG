@@ -1,5 +1,6 @@
 /*
-Author: Nicholas Clark (SENSEI)
+Author:
+Nicholas Clark (SENSEI)
 
 Description:
 load saved data for passed addon

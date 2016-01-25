@@ -1,5 +1,6 @@
 /*
-Author: Nicholas Clark (SENSEI)
+Author:
+Nicholas Clark (SENSEI)
 
 Description:
 set number based on player count

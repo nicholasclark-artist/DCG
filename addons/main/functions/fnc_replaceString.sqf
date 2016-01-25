@@ -1,5 +1,6 @@
 /*
-Author: dreadedentity
+Author:
+dreadedentity
 
 Description:
 find and replace within string

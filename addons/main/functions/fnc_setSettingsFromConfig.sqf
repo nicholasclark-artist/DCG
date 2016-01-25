@@ -1,5 +1,6 @@
 /*
-Author: esteldunedain, SENSEI
+Author:
+esteldunedain, SENSEI
 
 Description:
 Load a setting from config

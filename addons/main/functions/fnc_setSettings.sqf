@@ -1,5 +1,6 @@
 /*
-Author: esteldunedain, SENSEI
+Author:
+esteldunedain, SENSEI
 
 Description:
 loads server parameters

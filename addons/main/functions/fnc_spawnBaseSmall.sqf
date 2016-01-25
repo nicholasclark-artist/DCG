@@ -1,5 +1,6 @@
 /*
-Author: Nicholas Clark (SENSEI), Silola (data collected using x-cam)
+Author:
+Nicholas Clark (SENSEI), Silola (data collected using x-cam)
 
 Description:
 spawns small base

@@ -1,5 +1,6 @@
 /*
-Author: Zorrobyte
+Author:
+Zorrobyte
 
 Description:
 unit caching script. edited by Nicholas Clark (SENSEI)
