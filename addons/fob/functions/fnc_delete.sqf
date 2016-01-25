@@ -22,4 +22,3 @@ GVAR(UID) = "";
 {_x call EFUNC(main,cleanup)} forEach (curatorEditableObjects GVAR(curator));
 deleteVehicle GVAR(flag);
 unassignCurator GVAR(curator);
-GVAR(hq) = false;

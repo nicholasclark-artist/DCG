@@ -6,6 +6,9 @@ Description:
 setup fob on server
 
 Arguments:
+0: unit to assign to curator <OBJECT>
+1: fob position <ARRAY>
+2: points available to curator <NUMBER>
 
 Return:
 none
@@ -57,9 +60,10 @@ GVAR(curator) setCuratorCameraAreaCeiling 40;
 GVAR(flag) = "Flag_NATO_F" createVehicle _pos;
 GVAR(flag) setFlagTexture GVAR(flagTexturePath);
 
-// setup eventhandlers
-GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
-GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
+// setup eventhandlers, run on machine that owns curator
+{
+	GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
+	GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
 		private ["_playerSide","_costs","_side","_vehClass","_cost"];
 
 		// _playerSide is the side of the player's class, not necessarily the player's side
@@ -105,69 +109,61 @@ GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
 			_costs pushBack _cost;
 		} forEach (_this select 1);
 		_costs
-}];
+	}];
 
-GVAR(curator) removeAllEventHandlers "CuratorObjectPlaced";
-GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
-	if (typeOf (_this select 1) in ARRAY_MED) then {
-		(_this select 1) setVariable ["ace_medical_isMedicalFacility",true,true];
-	};
-	if (typeOf (_this select 1) in ARRAY_HQ && {!GVAR(hq)}) then {
-		GVAR(hq) = true;
-		["HQ deployed.\nAerial reconnaissance online.",true] remoteExecCall [QEFUNC(main,displayText), owner (getAssignedCuratorUnit GVAR(curator)), false];
-	};
-	if (CHECK_ADDON_2(approval)) then {
-		// TODO add approval increase
-	};
-}];
-
-GVAR(curator) removeAllEventHandlers "CuratorObjectDeleted";
-GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
-	if (typeOf (_this select 1) in ARRAY_HQ) then {
-		if ({typeOf _x in ARRAY_HQ} count (curatorEditableObjects GVAR(curator)) isEqualTo 0) then {
-			GVAR(hq) = false;
-			["HQ removed.\nAerial reconnaissance offline.",true] remoteExecCall [QEFUNC(main,displayText), owner (getAssignedCuratorUnit GVAR(curator)), false];
+	GVAR(curator) removeAllEventHandlers "CuratorObjectPlaced";
+	GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
+		if (typeOf (_this select 1) in ARRAY_MED) then {
+			(_this select 1) setVariable ["ace_medical_isMedicalFacility",true,true];
 		};
-	};
-	if (CHECK_ADDON_2(approval)) then {
-		// TODO add approval decrease
-	};
-}];
+		if (typeOf (_this select 1) in ARRAY_HQ && {{(typeOf _x in ARRAY_HQ)} count (curatorEditableObjects GVAR(curator)) isEqualTo 0}) then {
+			["HQ deployed.\nAerial reconnaissance online.",true] remoteExecCall [QEFUNC(main,displayText), owner (getAssignedCuratorUnit GVAR(curator)), false];
+		};
+		if (CHECK_ADDON_2(approval)) then {
+			// TODO add approval increase
+		};
+	}];
+
+	GVAR(curator) removeAllEventHandlers "CuratorObjectDeleted";
+	GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
+		if (typeOf (_this select 1) in ARRAY_HQ) then {
+			if ({typeOf _x in ARRAY_HQ} count (curatorEditableObjects GVAR(curator)) isEqualTo 0) then {
+				["HQ removed.\nAerial reconnaissance offline.",true] remoteExecCall [QEFUNC(main,displayText), owner (getAssignedCuratorUnit GVAR(curator)), false];
+			};
+		};
+		if (CHECK_ADDON_2(approval)) then {
+			// TODO add approval decrease
+		};
+	}];
+} remoteExecCall ["BIS_fnc_call",owner GVAR(curator),false];
 
 // recon PFH
 [{
 	params ["_args","_idPFH"];
 	_args params ["_revealed","_mrkArray","_flag"];
 
-	if ({typeOf _x in ARRAY_HQ} count (curatorEditableObjects GVAR(curator)) > 0) exitWith { // if unit adds an HQ, start recon
+	if (GVAR(location) isEqualTo locationNull) exitWith { // exit when fob is dismantled
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[{
-			params ["_args","_idPFH"];
-			_args params ["_revealed","_mrkArray","_flag"];
-
-			if (GVAR(location) isEqualTo locationNull) exitWith { // exit when fob is dismantled
-				[_idPFH] call CBA_fnc_removePerFrameHandler;
-				{
-					deleteMarker _x;
-				} forEach _mrkArray;
-			};
-			if (GVAR(hq)) then {
-				{
-					if (side _x isEqualTo EGVAR(main,enemySide) && {!(group _x in _revealed)} && {random 1 < 0.5}) exitWith {
-						_hour = str (date select 3);
-						_min = str (date select 4);
-						if (count _min < 2) then {_min = "0"+_min};
-						_format = _hour + ":" + _min;
-						_mrk = createMarker [format["%1_%2_%3",QUOTE(ADDON),getposATL (leader _x),diag_tickTime],getposATL (leader _x)];
-						_mrk setMarkerColor format ["Color%1",side _x];
-						_mrk setMarkerType "o_unknown";
-						_mrk setMarkerText format["%1",_format];
-						_mrk setMarkerSize [0.75,0.75];
-						_mrkArray pushBack _mrk;
-						_revealed pushBack (group _x);
-					};
-				} forEach (MARKER_POS nearEntities [["Man","LandVehicle","Ship"], GVAR(rangeRecon)]);
-			};
-		}, GVAR(cooldownRecon), [_revealed,_mrkArray,_flag]] call CBA_fnc_addPerFrameHandler;
+		{
+			deleteMarker _x;
+		} forEach _mrkArray;
 	};
-}, 5, [_revealed,_mrkArray,_flag]] call CBA_fnc_addPerFrameHandler;
+
+	if ({typeOf _x in ARRAY_HQ} count (curatorEditableObjects GVAR(curator)) > 0) then {
+		{
+			if (side _x isEqualTo EGVAR(main,enemySide) && {!(group _x in _revealed)} && {random 1 < 0.5}) exitWith {
+				_hour = str (date select 3);
+				_min = str (date select 4);
+				if (count _min < 2) then {_min = "0"+_min};
+				_format = _hour + ":" + _min;
+				_mrk = createMarker [format["%1_%2_%3",QUOTE(ADDON),getposATL (leader _x),diag_tickTime],getposATL (leader _x)];
+				_mrk setMarkerColor format ["Color%1",side _x];
+				_mrk setMarkerType "o_unknown";
+				_mrk setMarkerText format["%1",_format];
+				_mrk setMarkerSize [0.75,0.75];
+				_mrkArray pushBack _mrk;
+				_revealed pushBack (group _x);
+			};
+		} forEach (MARKER_POS nearEntities [["Man","LandVehicle","Ship"], GVAR(rangeRecon)]);
+	};
+}, GVAR(cooldownRecon), [_revealed,_mrkArray,_flag]] call CBA_fnc_addPerFrameHandler;

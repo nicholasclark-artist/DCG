@@ -21,7 +21,6 @@ PREP(canDeploy);
 GVAR(location) = locationNull;
 GVAR(UID) = "";
 GVAR(response) = -1;
-GVAR(hq) = false;
 GVAR(flag) = objNull;
 
 publicVariable QFUNC(request);
