@@ -1,4 +1,4 @@
-Author: SENSEI
+Author: Nicholas Clark (SENSEI)
 
 Version: 3.1.0.2
 

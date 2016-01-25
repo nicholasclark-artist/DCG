@@ -1,5 +1,5 @@
 /*
-Author: SENSEI, Silola (data collected using x-cam)
+Author: Nicholas Clark (SENSEI), Silola (data collected using x-cam)
 
 Last modified: 7/16/2015
 

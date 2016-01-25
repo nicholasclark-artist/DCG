@@ -1,5 +1,5 @@
 /*
-Author: SENSEI
+Author: Nicholas Clark (SENSEI)
 
 Last modified: 1/2/2016
 

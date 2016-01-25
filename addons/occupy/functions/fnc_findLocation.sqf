@@ -1,5 +1,5 @@
 /*
-Author: SENSEI, Killzone Kid
+Author: Nicholas Clark (SENSEI), Killzone Kid
 
 Last modified: 1/22/2016
 
