@@ -85,8 +85,7 @@ if (GVAR(disableCam)) then {
 	];
 	player createDiaryRecord ["Diary", ["External Content", "<br/>
 			VVS by Tonic<br/><br/>
-			Vehicle HUD script by Tier1ops<br/><br/>
-			Defuse the bomb by cobra4v320"]
+			Vehicle HUD script by Tier1ops<br/><br/>"]
 	];
 	player createDiaryRecord ["Diary", ["DCG Mission Info", format ["<br/>
 		Author: Nicholas Clark (SENSEI)<br/><br/>
@@ -95,14 +94,6 @@ if (GVAR(disableCam)) then {
 		ACE interaction menu may not initialize at mission start, ACE3 Github issue #1171<br/><br/>
 		",QUOTE(VERSION)]]
 	];
-	closeDialog 0;
-	_ret = [
-		parseText (format ["<img size='3' valign='top' align='center' image='media\logo.paa'/><br/><br/><t align='center'>Please refer to the Field Manual in your ACE interaction menu for mission details.</t><br/><br/><t align='center'>Installed Version: %1</t><br/><t align='center'><a color='#FFCC66' href='https://www.dropbox.com/sh/k1ykwhw8wgvfmir/AADfOghkU3jLi0G9IWj8VGCva?dl=0'>Click Here for Download Archive</a></t>",QUOTE(VERSION)]),
-		TITLE,
-		"Field Manual",
-		"Continue"
-	] call bis_fnc_GUImessage;
-	if (_ret) then {(findDisplay 46) createDisplay "RscDisplayFieldManual"};
 };
 
 uiSleep 5; // give postInit time to finish
@@ -113,7 +104,7 @@ if (CHECK_ADDON_1("acre_main")) then {
 		[] spawn {
 			call EFUNC(radio,setRadioACRE);
 		};
-		if (CHECK_ADDON_1("ace_safemode")) then {
+		if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
 			[(_this select 0), currentWeapon (_this select 0), currentMuzzle (_this select 0)] call ace_safemode_fnc_lockSafety;
 			(_this select 0) setVariable ["dcg_safeWeapon",false];
 		};
@@ -121,7 +112,7 @@ if (CHECK_ADDON_1("acre_main")) then {
 } else {
 	player addEventHandler ["respawn",{
 		deleteVehicle (_this select 1);
-		if (CHECK_ADDON_1("ace_safemode")) then {
+		if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
 			[(_this select 0), currentWeapon (_this select 0), currentMuzzle (_this select 0)] call ace_safemode_fnc_lockSafety;
 			(_this select 0) setVariable ["dcg_safeWeapon",false];
 		};
