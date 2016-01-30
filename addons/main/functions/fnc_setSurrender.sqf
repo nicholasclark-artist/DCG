@@ -29,7 +29,7 @@ if (typeOf _obj isKindOf "LandVehicle" || {typeOf _obj isKindOf "Ship"}) exitWit
 	_obj limitSpeed 0;
 	crew _obj allowGetIn false;
 	{
-		_x setVariable [QUOTE(DOUBLES(PREFIX,patrol_exit)),true];
+		_x setVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),0];
 		moveOut _x;
 		_x setVelocity [0, 0, 0];
 		_x setBehaviour "CARELESS";
@@ -38,6 +38,6 @@ if (typeOf _obj isKindOf "LandVehicle" || {typeOf _obj isKindOf "Ship"}) exitWit
 	} count (crew _obj);
 };
 
-_obj setVariable [QUOTE(DOUBLES(PREFIX,patrol_exit)),true];
+_obj setVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),0];
 doStop _obj;
 SURRENDER(_obj,"ACE_AmovPercMstpSsurWnonDnon");
