@@ -24,9 +24,11 @@ __________________________________________________________________*/
 	params ["_args","_idPFH"];
 	_args params ["_town"];
 
+	// exit if enemy surrenders
 	if (missionNamespace getVariable [SURRENDER_VAR,false]) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 	};
+
 	if (random 1 < REINFORCE_CHANCE) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_town select 1,EGVAR(main,enemySide),_town select 2] spawn EFUNC(main,spawnReinforcements);
@@ -46,11 +48,13 @@ __________________________________________________________________*/
 		};
 	} forEach ((_town select 1) nearEntities [ENTITY, (_town select 2)]);
 
-	// if enemy has lost a certain amount of units, exit with
+	// if enemy has lost a certain amount of units
 	if (_count <= _enemyCountMax*ENEMYMAX_MULTIPLIER) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 
 		[format ["The enemy is losing control of %1! Keep up the fight and they may surrender!",_town select 0],true] remoteExecCall [QEFUNC(main,displayText), allPlayers, false];
+		EGVAR(patrol,blacklist) pushBack [_position,_size]; // stop patrols from spawning in town
+
 		[{
 			params ["_args","_idPFH"];
 			_args params ["_town","_enemyCountMax","_objArray","_officer"];
@@ -60,6 +64,8 @@ __________________________________________________________________*/
 			_playerScore = 0;
 			_enemyScore = 0;
 			_enemyArray = [];
+
+			// get scores for all units in town
 			{
 				if (isPlayer (vehicle _x)) then {
 					if (vehicle _x isKindOf "Man") then {
@@ -79,9 +85,11 @@ __________________________________________________________________*/
 				};
 			} forEach (_position nearEntities [ENTITY, _size]);
 
+			// get chance for enemies to surrender
 			_chanceSurrender = 1 - (_enemyScore/(_playerScore max 1));
 			LOG_DEBUG_4("E_Score: %1, P_Score: %2, E_Count: %3, S_Chance: %4.",_enemyScore,_playerScore,count _enemyArray,_chanceSurrender);
 
+			// if enemy surrenders, exit
 			if (random 1 < _chanceSurrender) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 
@@ -105,7 +113,7 @@ __________________________________________________________________*/
 
 				// add approval
 				if (CHECK_ADDON_2(approval)) then {
-					_approval = 0;
+					/*_approval = 0;
 					call {
 						if (_type isEqualTo "NameCityCapital") exitWith {
 							_approval = 100;
@@ -115,12 +123,13 @@ __________________________________________________________________*/
 						};
 						_approval = 50;
 					};
-					_approval call EFUNC(approval,add);
+					_approval call EFUNC(approval,add);*/
 				};
 
 				// cleanup
 				missionNamespace setVariable [SURRENDER_VAR,nil];
 				GVAR(locations) = GVAR(locations) - [_town];
+				EGVAR(patrol,blacklist) deleteAt (EGVAR(patrol,blacklist) find [_position,_size]);
 				{
 					[getPosATL _x] call EFUNC(main,removeParticle);
 					deleteVehicle _x;

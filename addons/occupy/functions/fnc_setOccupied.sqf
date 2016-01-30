@@ -142,6 +142,7 @@ for "_i" from 0 to (ceil random 3) do {
 	};
 };
 
+// pushBack location to array and set task
 GVAR(locations) pushBack _this;
 [true,TASK_ID,[TASK_DESC,TASK_TITLE,""],_position,false,true,"Attack"] call EFUNC(main,setTask);
 
