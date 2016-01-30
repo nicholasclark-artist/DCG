@@ -6,6 +6,9 @@ __________________________________________________________________*/
 #define CREATE_MOB \
 	GVAR(mobLocation) = createLocation ["NameLocal", getMarkerPos QUOTE(DOUBLES(PREFIX,base)), GVAR(mobRadius), GVAR(mobRadius)]; \
 	GVAR(mobLocation) setText format ["%1", GVAR(mobName)]
+#define DEFAULTPOS [-5000,-5000]
+#define CREATE_DEFAULTMOB \
+	GVAR(mobLocation) = createLocation ["NameLocal", DEFAULTPOS, 100, 100]
 
 if !(isServer) exitWith {};
 
@@ -13,7 +16,9 @@ if (CHECK_MARKER(QUOTE(DOUBLES(PREFIX,base)))) then {
 	CREATE_MOB;
 	{CREATE_MOB;} remoteExecCall ["BIS_fnc_call",-2,true]; // can't PV locations, so recreate location on clients. Runs at time > 0
 } else {
-	LOG_DEBUG("Base marker does not exist. Cannot create MOB location.");
+	CREATE_DEFAULTMOB;
+	{CREATE_DEFAULTMOB;} remoteExecCall ["BIS_fnc_call",-2,true]; // can't PV locations, so recreate location on clients. Runs at time > 0
+	LOG_DEBUG_1("Base marker does not exist. Creating default MOB location at %1.",DEFAULTPOS);
 };
 
 // get map locations
@@ -77,11 +82,9 @@ if (GVAR(cleanup)) then {
 			};
 		};
 		// MOB items
-		if !(EGVAR(main,mobLocation) isEqualTo locationNull) then {
-			{
-				if (_x getVariable [QUOTE(DOUBLES(PREFIX,cleanup)),true]) then {deleteVehicle _x};
-			} forEach nearestObjects [locationPosition GVAR(mobLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],EGVAR(main,mobRadius)];
-		};
+		{
+			if (_x getVariable [QUOTE(DOUBLES(PREFIX,cleanup)),true]) then {deleteVehicle _x};
+		} forEach nearestObjects [locationPosition GVAR(mobLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],EGVAR(main,mobRadius)];
 	}, 180, []] call CBA_fnc_addPerFrameHandler;
 };
 
@@ -91,7 +94,7 @@ if (GVAR(cleanup)) then {
 		waitUntil {time > 5 && {!isNull (findDisplay 46)} && {!isNull player} && {alive player}}; // hack to fix "respawn on start" missions
 		[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"","true","",player,1,["ACE_SelfActions"]] call FUNC(setAction);
 		[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","","true","",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]] call FUNC(setAction);
-		[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(isServer || {serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]] call FUNC(setAction);
+		[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]] call FUNC(setAction);
 		[QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",QUOTE(call FUNC(deleteDataClient)),QUOTE(isServer || {serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]] call FUNC(setAction);
 	};
 } remoteExec ["BIS_fnc_call",0,true];
