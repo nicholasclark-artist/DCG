@@ -6,6 +6,10 @@ Description:
 spawns civilians
 
 Arguments:
+0: position to spawn civilians <ARRAY>
+1: number of units to spawn <NUMBER>
+2: number of vehicles to spawn <NUMBER>
+3: name of location <STRING>
 
 Return:
 none
@@ -23,15 +27,13 @@ _grp = [_pos,0,_unitCount,CIVILIAN] call EFUNC(main,spawnGroup);
 
 {
 	_x addEventHandler ["firedNear",{
-		if !((_this select 0) getVariable [QUOTE(DOUBLES(ADDON,civFiredNear)),false]) then {
-			(_this select 0) setVariable [QUOTE(DOUBLES(ADDON,civFiredNear)),true];
+		if !((_this select 0) getVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),-1] isEqualTo 0) then {
+			(_this select 0) setVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),0];
 			if (random 1 < 0.5) then {
-				(_this select 0) setVariable [QUOTE(DOUBLES(PREFIX,patrol_exit)),true];
 				(_this select 0) disableAI "MOVE";
 				(_this select 0) setCombatMode "BLUE";
 				(_this select 0) setUnitPos "DOWN";
 			} else {
-				(_this select 0) setVariable [QUOTE(DOUBLES(PREFIX,patrol_exit)),true];
 				(_this select 0) forceSpeed ((_this select 0) getSpeed "FAST");
 				(_this select 0) setUnitPos "MIDDLE";
 				(_this select 0) doMove ([getposASL (_this select 0),1000,2000] call EFUNC(main,findRandomPos));
@@ -72,7 +74,7 @@ if (_hostile) then {
 	_unit = ((_driverArray + _grp) select floor (random (count (_driverArray + _grp))));
 	_targets = [getPosATL _unit,GVAR(spawnDist)+50] call EFUNC(main,getNearPlayers);
 	if !(_targets isEqualTo []) then {
-		_unit setVariable [QUOTE(DOUBLES(PREFIX,patrol_exit)),true];
+		_unit setVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),0];
 		_unit = [[_unit]] call EFUNC(main,setSide);
 		[leader _unit,15,0,_targets select floor (random (count _targets))] call FUNC(setHostile);
 	};
