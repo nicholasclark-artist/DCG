@@ -44,7 +44,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 						DEBUG_IED;
 					};
 				};
-			} forEach ([EGVAR(main,center),1500,worldSize] call EFUNC(main,findPosGrid));
+			} forEach ([EGVAR(main,center),1500,worldSize,0,0,false,false] call EFUNC(main,findPosGrid));
 		} else {
 			for "_index" from 0 to count _data - 1 do {
 				(_data select _index) params ["_pos","_type"];
