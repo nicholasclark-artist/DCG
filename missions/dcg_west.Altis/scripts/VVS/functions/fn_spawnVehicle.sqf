@@ -48,4 +48,3 @@ if (getNumber (configfile >> "CfgVehicles" >> _className >> "attendant") isEqual
 	_vehicle setVariable ["ace_medical_isMedicalFacility", true, true];
 };
 _vehicle allowDamage true;
-//playSound "SEN_drill";
