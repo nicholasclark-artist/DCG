@@ -23,8 +23,8 @@ GVAR(saveDataCurrent) = [DATA_MISSION_ID]; // overwrite current data
 if (CHECK_ADDON_2(occupy)) then {
 	private ["_data","_locations","_tasks","_infCount","_vehCount","_airCount"];
 	_data = [];
-	_locations = [];
-	_tasks = [];
+	_locations = []; // active locations
+	_tasks = []; // completed location tasks
 
 	for "_i" from 0 to count EGVAR(occupy,locations) - 1 do {
 		(EGVAR(occupy,locations) select _i) params ["_name","_position","_size","_type"];
@@ -49,8 +49,8 @@ if (CHECK_ADDON_2(occupy)) then {
 		_locations pushBack [_name,_position,_size,_type,[_infCount,_vehCount,_airCount]];
 	};
 
-	{ // get list of liberated locations
-		if (_x select [0,4] isEqualTo "lib_") then {
+	{
+		if (_x select [0,4] isEqualTo "lib_" && {toUpper ([_x] call BIS_fnc_taskState) isEqualTo "SUCCEEDED"}) then {
 			_tasks pushBack _x;
 		};
 	} forEach ([allPlayers select 0] call BIS_fnc_tasksUnit);
@@ -80,39 +80,10 @@ if (CHECK_ADDON_2(fob)) then {
 	PUSHBACK_DATA(fob,_data);
 };
 
-if (CHECK_ADDON_2(patrol)) then {
-	private ["_data","_fnc_getData","_grpData"];
-	if !(isNil {HEADLESSCLIENT}) then {
-		{
-			publicVariableServer QEGVAR(patrol,groups);
-		} remoteExecCall ["BIS_fnc_call", owner HEADLESSCLIENT, false];
-	};
-
-	_data = [];
-
-	_fnc_getData = {
-		private ["_ret"];
-		_ret = [];
-		if (!(_this isEqualTo grpNull) && {count units _this > 0}) then {
-			_ret = [getpos leader _this, count units _this, parseNumber (vehicle leader _this != leader _this)];
-		};
-		_ret
-	};
-
-	{
-		_grpData = _x call _fnc_getData;
-		if !(_grpData isEqualTo []) then {
-			_data pushBack _grpData;
-		};
-		false
-	} count EGVAR(patrol,groups);
-
-	PUSHBACK_DATA(patrol,_data);
-};
-
 if (CHECK_ADDON_2(weather)) then {
 	private ["_data"];
 	_data = [overcast,date];
+
 	PUSHBACK_DATA(weather,_data);
 };
 
@@ -120,7 +91,10 @@ if (CHECK_ADDON_2(ied)) then {
 	private ["_data"];
 	_data = [];
 	{
-		_data pushBack [getpos _x,typeOf _x];
+		private "_pos";
+		_pos = getPos _x;
+		_pos deleteAt 2;
+		_data pushBack [_pos,typeOf _x];
 		false
 	} count EGVAR(ied,array);
 
