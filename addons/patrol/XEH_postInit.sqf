@@ -14,36 +14,14 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	if (DOUBLES(PREFIX,main) && {time > 5}) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
-		// load data
-		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
-		if !(_data isEqualTo []) then {
-			[{
-				params ["_data","_idPFH"];
-
-				if (count GVAR(groups) >= count _data) exitWith {
-					[_idPFH] call CBA_fnc_removePerFrameHandler;
-				};
-
-				(_data select (count GVAR(groups))) params ["_pos","_count","_type"];
-				_grp = [_pos,_type,_count] call EFUNC(main,spawnGroup);
-				[units _grp,LAYER1_RANGE,false] call EFUNC(main,setPatrol);
-				GVAR(groups) pushBack _grp;
-			}, 5, _data] spawn CBA_fnc_addPerFrameHandler;
-		};
-
+		GVAR(blacklist) pushBack [locationPosition EGVAR(main,mobLocation),EGVAR(main,mobRadius)]; // add main base to blacklist
 		if !(isNil {HEADLESSCLIENT}) then {
 			(owner HEADLESSCLIENT) publicVariableClient QGVAR(groups);
-			(owner HEADLESSCLIENT) publicVariableClient QGVAR(groupsDynamic);
 			remoteExecCall [QFUNC(PFH), owner HEADLESSCLIENT, false];
 		} else {
-			[] spawn FUNC(PFH);
-		};
-
-		if (CHECK_DEBUG) then {
-			call FUNC(debug);
+			call FUNC(PFH);
 		};
 
 		ADDON = true;
 	};
 }, 0, []] call CBA_fnc_addPerFrameHandler;
-

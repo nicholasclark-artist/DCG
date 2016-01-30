@@ -12,4 +12,4 @@ PREP(PFH);
 PREP(debug);
 
 GVAR(groups) = [];
-GVAR(groupsDynamic) = [];
+GVAR(blacklist) = [];

@@ -11,16 +11,16 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(interval) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 600;
+        value = 300;
     };
-    class GVAR(groupsDynamicMaxCount) {
+    class GVAR(groupsMaxCount) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 10;
+        value = 20;
     };
-    class GVAR(armoredChance) {
+    class GVAR(vehChance) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 0.1;
+        value = 0.15;
     };
 };

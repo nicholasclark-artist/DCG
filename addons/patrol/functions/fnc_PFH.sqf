@@ -12,74 +12,95 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-[{
-	// LAYER 1
-	// check layer 1
-	{
-		if (_x isEqualTo grpNull) then {
-			GVAR(groups) deleteAt _forEachIndex;
+private ["_fnc_inLOS"];
+
+if (CHECK_DEBUG) then {
+	call FUNC(debug);
+};
+
+_fnc_inLOS = {
+	_pos = _this select 0;
+	_unit = _this select 1;
+
+	_posUnit = AGLToASL (_unit modelToWorld [0,0,3]);
+	_ret = true;
+
+	if ([getPosASL _unit,getDir _unit,90,_pos] call BIS_fnc_inAngleSector) then {
+		if !(terrainIntersectASL [_pos, _posUnit]) then {
+		    if (lineIntersects [_pos, _posUnit, _unit]) then {
+		        _ret = false;
+		    };
+		} else {
+		    _ret = false;
 		};
-	} forEach GVAR(groups);
+	} else {
+		_ret = false;
+	};
 
-	// spawn layer 1 when group array empty
-	if (GVAR(groups) isEqualTo []) then {
-		_posArray = [EGVAR(main,center),1000,worldSize] call EFUNC(main,findPosGrid);
-		if !(_posArray isEqualTo []) then {
-			{
-				if !(CHECK_DIST2D(_x,locationPosition EGVAR(main,mobLocation),EGVAR(main,mobRadius))) then {
-					_posArray deleteAt _forEachIndex;
+	_ret
+};
+
+[{
+	params ["_args","_idPFH"];
+	_args params ["_fnc_inLOS"];
+	private ["_pos","_unit","_posUnit","_ret","_HCs","_players","_player","_posArray","_y","_grp"];
+
+	// delete null and lonely groups
+	if !(GVAR(groups) isEqualTo []) then {
+		for "_i" from (count GVAR(groups) - 1) to 0 step -1 do {
+			if (isNull (GVAR(groups) select _i) || {[getPosATL (leader (GVAR(groups) select _i)),PATROL_RANGE] call EFUNC(main,getNearPlayers) isEqualTo []}) then {
+				if !(isNull (GVAR(groups) select _i)) then {
+					{
+						deleteVehicle _x;
+					} forEach (units (GVAR(groups) select _i));
+					deleteGroup (GVAR(groups) select _i);
 				};
-			} forEach _posArray;
-			[{
-				params ["_posArray","_idPFH"];
-
-				if (count GVAR(groups) >= LAYER1_COUNT || {count GVAR(groups) >= count _posArray}) exitWith {
-					LOG_DEBUG("EXIT PATROL LOOP");
-					[_idPFH] call CBA_fnc_removePerFrameHandler;
-				};
-
-				_grp = [_posArray select (count GVAR(groups)),0,UNITCOUNT(4,8)] call EFUNC(main,spawnGroup);
-				[units _grp,LAYER1_RANGE,false] call EFUNC(main,setPatrol);
-				GVAR(groups) pushBack _grp;
-			}, 2.5, _posArray] call CBA_fnc_addPerFrameHandler;
+				GVAR(groups) deleteAt _i;
+			};
 		};
 	};
 
-	// LAYER 2
-	// check layer 2
-	{
-		if (_x isEqualTo grpNull || {[getPosATL (leader _x),LAYER2_RANGE] call EFUNC(main,getNearPlayers) isEqualTo []}) then {
-			if !(_x isEqualTo grpNull) then {
-				(units _x) call EFUNC(main,cleanup);
-			};
-			GVAR(groupsDynamic) deleteAt _forEachIndex;
-		};
-	} forEach GVAR(groupsDynamic);
-
-	// spawn layer 2
-	if (count GVAR(groupsDynamic) <= GVAR(groupsDynamicMaxCount)) then {
+	// spawn dynamic groups
+	if (count GVAR(groups) <= GVAR(groupsMaxCount)) then {
 		_HCs = entities "HeadlessClient_F";
 		_players = allPlayers - _HCs;
 
 		if !(_players isEqualTo []) then {
 			_player = _players select floor (random (count _players));
-			if !(CHECK_DIST2D(_player,locationPosition EGVAR(main,mobLocation),EGVAR(main,mobRadius))) then {
-				_posArray = [getpos _player,10,LAYER2_RANGE,LAYER2_MINRANGE,6] call EFUNC(main,findPosGrid);
+			_players = [getPosASL _player,100] call EFUNC(main,getNearPlayers);
+
+			if ({CHECK_DIST2D(_player,(_x select 0),(_x select 1))} count GVAR(blacklist) isEqualTo 0) then {
+				_posArray = [getpos _player,10,PATROL_RANGE,PATROL_MINRANGE,6] call EFUNC(main,findPosGrid);
 				{
-					if (terrainIntersect [_player modelToWorld [0,0,3],_x]) exitWith {
-						private ["_grp"];
-						if (random 1 < GVAR(armoredChance)) then {
-							_grp = [_x,1,1] call EFUNC(main,spawnGroup);
-							[_grp,LAYER2_RANGE*1.25] call EFUNC(main,setPatrol);
-							_grp = group (_grp select 0);
-						} else {
-							_grp = [_x,0,UNITCOUNT(4,8)] call EFUNC(main,spawnGroup);
-							[units _grp,LAYER2_RANGE*1.25,false] call EFUNC(main,setPatrol);
-						};
-						GVAR(groupsDynamic) pushBack _grp;
+					_y = _x;
+					if (
+					    	{CHECK_DIST2D(_y,(_x select 0),(_x select 1))} count GVAR(blacklist) > 0 ||
+					    	{!([_y,100] call EFUNC(main,getNearPlayers) isEqualTo [])} ||
+							{{[_y,_x] call _fnc_inLOS} count _players > 0}
+					   ) then {
+						_posArray deleteAt _forEachIndex;
 					};
 				} forEach _posArray;
+
+				if !(_posArray isEqualTo []) then {
+					_pos = _posArray select floor (random (count _posArray));
+					if (random 1 < GVAR(vehChance)) then {
+						_grp = [_pos,1,1] call EFUNC(main,spawnGroup);
+						[_grp,PATROL_RANGE] call EFUNC(main,setPatrol);
+						_grp = group (_grp select 0);
+					} else {
+						_grp = [_pos,0,UNITCOUNT(4,8)] call EFUNC(main,spawnGroup);
+						// set waypoint around target player
+						_wp = _grp addWaypoint [_player,100];
+						_wp setWaypointCompletionRadius 100;
+						_wp setWaypointBehaviour "SAFE";
+						_wp setWaypointFormation "STAG COLUMN";
+						_wp setWaypointSpeed "LIMITED";
+						_wp setWaypointStatements ["!(behaviour this isEqualTo ""COMBAT"")", format ["[thisList,%2,false] call %1;",QEFUNC(main,setPatrol),PATROL_RANGE]];
+					};
+					GVAR(groups) pushBack _grp;
+				};
 			};
 		};
 	};
-}, GVAR(interval) max 180, []] call CBA_fnc_addPerFrameHandler;
+}, GVAR(interval) max 180, [_fnc_inLOS]] call CBA_fnc_addPerFrameHandler;
