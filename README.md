@@ -19,9 +19,26 @@
 Please, use the [Issue Tracker](https://github.com/nicholasclark-artist/DCG/issues) to report a bug or propose a feature.
 
 ### Description
-Dynamic Combat Generator is a **server-side** Arma 3 mod designed to make a mission maker's life easier by supplying a collection of addons to quickly enhance any cooperative scenario.
+Dynamic Combat Generator is a **server-side** Arma 3 mod designed to make a mission designer's life easier by supplying a collection of addons to quickly enhance any cooperative scenario.
 
 ### Features
+- Modular design
+- Occupied locations with patrolling and garrisoned enemies
+- Enemy forces scale in strength based on occupied location
+- Dynamically spawned enemy patrols
+- Enemy static emplacements and sniper teams
+- Enemy count scales based on player count
+- Civilian interaction
+- Civilian traffic
+- Civilian rebels and suicide bombers
+- Approval system
+- FOB construction system
+- Transportation system
+- Dynamic weather
+- Unit caching
+- Headless client support
+- ACRE2 support
+- TFAR support
 
 ### Installation
 - The latest version [Community Based Addons](https://forums.bistudio.com/topic/168277-cba-community-base-addons-arma-3/) is required
