@@ -3,7 +3,7 @@
         <img src="https://img.shields.io/badge/Version-3.1.0.3-blue.svg?style=flat-square" alt="DCG Version">
     </a>
     <a href="https://github.com/nicholasclark-artist/DCG/issues">
-        <img src="https://img.shields.io/github/issues/badges/shields.svg?style=flat-square" alt="DCG Issues">
+        <img src="https://img.shields.io/github/issues/nicholasclark-artist/DCG.svg?style=flat-square" alt="DCG Issues">
     </a>
     <a href="https://github.com/nicholasclark-artist/DCG/wiki">
         <img src="https://img.shields.io/badge/DCG-Wiki-orange.svg?style=flat-square" alt="DCG Wiki">
