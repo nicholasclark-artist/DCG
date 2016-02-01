@@ -1,9 +1,9 @@
 <p align="center">
     <a href="https://github.com/nicholasclark-artist/DCG/releases">
-        <img src="https://img.shields.io/badge/Version-3.4.2-blue.svg?style=flat-square" alt="DCG Version">
+        <img src="https://img.shields.io/badge/Version-3.1.0.3-blue.svg?style=flat-square" alt="DCG Version">
     </a>
     <a href="https://github.com/nicholasclark-artist/DCG/issues">
-        <img src="https://img.shields.io/github/issues-raw/acemod/ACE3.svg?style=flat-square&label=Issues" alt="DCG Issues">
+        <img src="https://img.shields.io/github/issues-raw/badges/shields.svg?style=flat-square" alt="DCG Issues">
     </a>
     <a href="https://forums.bistudio.com/topic/176544-coop-dynamic-combat-generator/">
         <img src="https://img.shields.io/badge/BIF-Thread-lightgrey.svg?style=flat-square" alt="BIF Thread">
