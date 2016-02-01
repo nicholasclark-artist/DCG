@@ -48,4 +48,4 @@ Dynamic Combat Generator is a **server-side** Arma 3 mod designed to make a miss
 - Move server.pbo to the addons folder (@dcg\addons) and move the userconfig folder to the root Arma 3 folder
 
 ### Mission Setup
-There are a few steps to set up a mission for DCG. Take a look [Setting up a DCG compatible mission](https://github.com/nicholasclark-artist/DCG/wiki/Setting-up-a-DCG-compatible-mission).
+There are a few steps to set up a mission for DCG. Take a look at [Setting up a DCG compatible mission](https://github.com/nicholasclark-artist/DCG/wiki/Setting-up-a-DCG-compatible-mission).
