@@ -7,7 +7,7 @@ __________________________________________________________________*/
 #define EXPRESSIONS [["(1 - forest) * (2 + meadow) * (1 - sea) * (1 - houses) * (1 - hills)","meadow"],["(2 + forest) * (1 - sea) * (1 - houses)","forest"],["(2 + hills) * (1 - sea)","hills"],["(2 + houses) * (1 - sea)","houses"]]
 #define THRESHOLD ceil(EGVAR(main,range)*0.002)
 
-if !(isServer) exitWith {};
+if (!isServer || !isMultiplayer) exitWith {};
 
 if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");
@@ -19,7 +19,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 
 		_locations = [];
 		{
-			if !(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,mobLocation),EGVAR(main,mobRadius))) then {
+			if !(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) then {
 				_locations pushBack _x;
 			};
 			false
@@ -105,7 +105,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			_str = _selected select 1;
 			_pos = [EGVAR(main,center),0,EGVAR(main,range)] call EFUNC(main,findRandomPos);
 			_ret = selectBestPlaces [_pos,5000,_expression,70,1];
-			if (!(_ret isEqualTo []) && {!(CHECK_DIST2D((_ret select 0 select 0),locationPosition EGVAR(main,mobLocation),EGVAR(main,mobRadius)))} && {!(surfaceIsWater(_ret select 0 select 0))} && {{CHECK_DIST2D((_ret select 0 select 0),(_x select 0),GVAR(spawnDist))} count _posArray isEqualTo 0}) then {
+			if (!(_ret isEqualTo []) && {!(CHECK_DIST2D((_ret select 0 select 0),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} && {!(surfaceIsWater(_ret select 0 select 0))} && {{CHECK_DIST2D((_ret select 0 select 0),(_x select 0),GVAR(spawnDist))} count _posArray isEqualTo 0}) then {
 				_posArray pushBack [_ret select 0 select 0,_str];
 			};
 		}, 0.1, [_posArray]] call CBA_fnc_addPerFrameHandler;
