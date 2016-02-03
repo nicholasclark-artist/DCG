@@ -1,6 +1,4 @@
-<h2 style="text-align:center;">
-    Dynamic Combat Generator
-</h2>
+# Dynamic Combat Generator
 
 <p align="center">
     <a href="https://github.com/nicholasclark-artist/DCG/releases">
