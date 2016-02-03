@@ -37,7 +37,7 @@ if (CHECK_ADDON_1("ace_medical")) then {
 
 if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
 	[{
-	    if (CHECK_DIST2D(locationPosition EGVAR(main,mobLocation),getPosATL player,EGVAR(main,mobRadius))) then {
+	    if (CHECK_DIST2D(locationPosition EGVAR(main,baseLocation),getPosATL player,EGVAR(main,baseRadius))) then {
 	        if !(player getVariable ["dcg_safeWeapon",false]) then {
 	        	player setVariable ["dcg_safeWeapon",true];
 	        	player setVariable ["ace_medical_allowDamage",false];

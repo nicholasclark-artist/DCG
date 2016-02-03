@@ -28,18 +28,6 @@ if (CHECK_DEBUG) then {
 	}, 60, []] call CBA_fnc_addPerFrameHandler;
 };
 
-// safezone
-if !(EGVAR(main,mobLocation) isEqualTo locationNull) then {
-	[{
-		{
-			if (side _x isEqualTo EGVAR(main,enemySide) && {!isPlayer _x}) then {
-				deleteVehicle (vehicle _x);
-				deleteVehicle _x;
-			};
-		} forEach (locationPosition EGVAR(main,mobLocation) nearEntities [["Man","LandVehicle","Ship","Air"], EGVAR(main,mobRadius)]);
-	}, 60, []] call CBA_fnc_addPerFrameHandler;
-};
-
 // arsenal
 waitUntil {!isNil "bis_fnc_arsenal_data"};
 
