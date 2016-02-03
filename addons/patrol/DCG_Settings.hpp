@@ -8,7 +8,7 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 1;
     };
-    class GVAR(interval) {
+    class GVAR(cooldown) {
         typeName = "SCALAR";
         typeDetail = "";
         value = 300;
