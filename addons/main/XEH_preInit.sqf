@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(isServer) exitWith {};
+if (!isServer || !isMultiplayer) exitWith {};
 
 ADDON = false;
 
@@ -57,9 +57,10 @@ PREP(spawnStatic);
 
 GVAR(settings) = [];
 GVAR(locations) = [];
-GVAR(mobLocation) = locationNull;
+GVAR(baseLocation) = locationNull;
 GVAR(range) = worldSize*0.5;
 GVAR(center) = [GVAR(range),GVAR(range),0];
+GVAR(playerSide) = WEST;
 GVAR(enemySide) = EAST;
 GVAR(markerCleanup) = [];
 GVAR(objectCleanup) = [];

@@ -3,21 +3,36 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CREATE_MOB \
-	GVAR(mobLocation) = createLocation ["NameLocal", getMarkerPos QUOTE(DOUBLES(PREFIX,base)), GVAR(mobRadius), GVAR(mobRadius)]; \
-	GVAR(mobLocation) setText format ["%1", GVAR(mobName)]
+#define BASE_VAR DOUBLES(PREFIX,base)
+#define CREATE_BASE(BASE_POS) \
+	GVAR(baseLocation) = createLocation ["NameCity", BASE_POS, GVAR(baseRadius), GVAR(baseRadius)]; \
+	GVAR(baseLocation) setText format ["%1", GVAR(baseName)]
 #define DEFAULTPOS [-5000,-5000]
-#define CREATE_DEFAULTMOB \
-	GVAR(mobLocation) = createLocation ["NameLocal", DEFAULTPOS, 100, 100]
+#define CREATE_DEFAULT_BASE \
+	GVAR(baseLocation) = createLocation ["NameCity", DEFAULTPOS, 100, 100]
 
-if !(isServer) exitWith {};
+if (!isServer || !isMultiplayer) exitWith {};
 
-if (CHECK_MARKER(QUOTE(DOUBLES(PREFIX,base)))) then {
-	CREATE_MOB;
-	{CREATE_MOB;} remoteExecCall ["BIS_fnc_call",-2,true]; // can't PV locations, so recreate location on clients. Runs at time > 0
+if (CHECK_MARKER(QUOTE(BASE_VAR))) then { // check if base marker exists
+	CREATE_BASE(getMarkerPos QUOTE(BASE_VAR));
+	{CREATE_BASE(getMarkerPos QUOTE(BASE_VAR));} remoteExecCall ["BIS_fnc_call",-2,true]; // can't PV locations, so recreate location on clients. Runs at time > 0
+
+	[{
+		GVAR(baseLocation) setPosition (getMarkerPos QUOTE(BASE_VAR));
+	}, 1, []] call CBA_fnc_addPerFrameHandler;
 } else {
-	CREATE_DEFAULTMOB;
-	{CREATE_DEFAULTMOB;} remoteExecCall ["BIS_fnc_call",-2,true]; // can't PV locations, so recreate location on clients. Runs at time > 0
+	if !(isNil QUOTE(BASE_VAR)) then { // check if base object exists
+		CREATE_BASE(getPos BASE_VAR);
+		{CREATE_BASE(getPos BASE_VAR);} remoteExecCall ["BIS_fnc_call",-2,true]; // can't PV locations, so recreate location on clients. Runs at time > 0
+		[{
+			GVAR(baseLocation) setPosition (getPos BASE_VAR);
+		}, 1, []] call CBA_fnc_addPerFrameHandler;
+	};
+};
+
+if (isNull GVAR(baseLocation)) then {
+	CREATE_DEFAULT_BASE;
+	{CREATE_DEFAULT_BASE;} remoteExecCall ["BIS_fnc_call",-2,true];
 	LOG_DEBUG_1("Base marker does not exist. Creating default MOB location at %1.",DEFAULTPOS);
 };
 
@@ -29,10 +44,22 @@ if (CHECK_MARKER(QUOTE(DOUBLES(PREFIX,base)))) then {
 	_size = (((size _x) select 0) + ((size _x) select 1))/2;
 	_type = type _x;
 
-	if (!(CHECK_DIST2D(_position,locationPosition GVAR(mobLocation),GVAR(mobRadius))) && {!(_name in GVAR(blacklistLocations))} && {!(_name isEqualTo "")}) then {
+	if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(_name in GVAR(blacklistLocations))} && {!(_name isEqualTo "")}) then {
 		GVAR(locations) pushBack [_name,_position,_size,_type];
 	};
 } forEach (nearestLocations [GVAR(center), ["NameCityCapital","NameCity","NameVillage"], GVAR(range)]);
+
+// safezone PFH
+if (GVAR(baseSafezone)) then {
+	[{
+		{
+			if (side _x isEqualTo GVAR(enemySide) && {!isPlayer _x}) then {
+				deleteVehicle (vehicle _x);
+				deleteVehicle _x;
+			};
+		} forEach (locationPosition GVAR(baseLocation) nearEntities [["Man","LandVehicle","Ship","Air"], GVAR(baseRadius)]);
+	}, 60, []] call CBA_fnc_addPerFrameHandler;
+};
 
 // cleanup PFH
 if (GVAR(cleanup)) then {
@@ -81,17 +108,17 @@ if (GVAR(cleanup)) then {
 				};
 			};
 		};
-		// MOB items
+		// base items
 		{
 			if (_x getVariable [QUOTE(DOUBLES(PREFIX,cleanup)),true]) then {deleteVehicle _x};
-		} forEach nearestObjects [locationPosition GVAR(mobLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],EGVAR(main,mobRadius)];
+		} forEach (nearestObjects [locationPosition GVAR(baseLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],GVAR(baseRadius)]);
 	}, 180, []] call CBA_fnc_addPerFrameHandler;
 };
 
 // actions
 {
 	if (hasInterface) then {
-		waitUntil {time > 5 && {!isNull (findDisplay 46)} && {!isNull player} && {alive player}}; // hack to fix "respawn on start" missions
+		waitUntil {time > 5 && {!isNull (findDisplay 46)} && {!isNull player} && {alive player}}; // fix for "respawn on start" missions
 		[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"","true","",player,1,["ACE_SelfActions"]] call FUNC(setAction);
 		[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","","true","",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]] call FUNC(setAction);
 		[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]] call FUNC(setAction);

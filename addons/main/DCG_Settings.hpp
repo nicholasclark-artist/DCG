@@ -23,15 +23,20 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 1;
     };
-    class GVAR(mobName) {
+    class GVAR(baseName) {
         typeName = "STRING";
         typeDetail = "";
         value = "MOB Dodge";
     };
-    class GVAR(mobRadius) {
+    class GVAR(baseRadius) {
         typeName = "SCALAR";
         typeDetail = "";
         value = 1500;
+    };
+    class GVAR(baseSafezone) {
+        typeName = "BOOL";
+        typeDetail = "";
+        value = 1;
     };
     class GVAR(blacklistLocations) {
         typeName = "ARRAY";
