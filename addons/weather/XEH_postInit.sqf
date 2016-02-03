@@ -12,7 +12,7 @@ __________________________________________________________________*/
 #define EVENING [16,17,18,19]
 #define NIGHT [20,21,22,23,0,1,2,3,4]
 
-if !(isServer) exitWith {};
+if (!isServer || !isMultiplayer) exitWith {};
 
 if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");
