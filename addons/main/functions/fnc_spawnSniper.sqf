@@ -6,6 +6,12 @@ Description:
 spawn sniper
 
 Arguments:
+0: center position <ARRAY>
+1: number of snipers to spawn <NUMBER>
+2: min distance from center to spawn sniper <NUMBER>
+3: max distance from center to spawn sniper <NUMBER>
+4: side that spawned sniper will belong to <SIDE>
+5: disable caching for spawned snipers <BOOL>
 
 Return:
 array

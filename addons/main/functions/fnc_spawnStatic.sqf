@@ -28,7 +28,7 @@ _side = param [4,GVAR(enemySide)];
 
 _objArray = [];
 _gunnerArray = [];
-_posArray = [_pos,20,_range,0,7] call FUNC(findPosGrid);
+_posArray = [_pos,50,_range,0,7] call FUNC(findPosGrid);
 
 call {
 	if (_side isEqualTo EAST) exitWith {

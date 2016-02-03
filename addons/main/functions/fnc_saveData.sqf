@@ -61,20 +61,42 @@ if (CHECK_ADDON_2(occupy)) then {
 };
 
 if (CHECK_ADDON_2(fob)) then {
-	private ["_data","_dataObj"];
+	private ["_data","_dataObj","_refund"];
 	_data = [];
 
 	if !(EGVAR(fob,location) isEqualTo locationNull) then {
 		_data pushBack (locationPosition EGVAR(fob,location));
 		_data pushBack (curatorPoints EGVAR(fob,curator));
 		_dataObj = [];
+		_refund = 0;
 		{
 			if (!(_x isKindOf "Man") && {count crew _x isEqualTo 0}) then {
 				_dataObj pushBack [typeOf _x,getPosASL _x,getDir _x];
+			} else {
+				call {
+					if (_x isKindOf "Man") exitWith {
+						_refund = _refund + abs(COST_MAN*EGVAR(fob,deletingMultiplier));
+					};
+					if (_x isKindOf "Car") exitWith {
+						_refund = _refund + abs(COST_CAR*EGVAR(fob,deletingMultiplier));
+					};
+					if (_x isKindOf "Tank") exitWith {
+						_refund = _refund + abs(COST_TANK*EGVAR(fob,deletingMultiplier));
+					};
+					if (_x isKindOf "Air") exitWith {
+						_refund = _refund + abs(COST_AIR*EGVAR(fob,deletingMultiplier));
+					};
+					if (_x isKindOf "Ship") exitWith {
+						_refund = _refund + abs(COST_SHIP*EGVAR(fob,deletingMultiplier));
+					};
+				};
 			};
 			false
 		} count (curatorEditableObjects EGVAR(fob,curator));
+
 		_data pushBack _dataObj;
+		_refund = ((_data select 1) + _refund) min 1;
+		_data set [1,_refund];
 	};
 
 	PUSHBACK_DATA(fob,_data);

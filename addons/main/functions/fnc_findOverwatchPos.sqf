@@ -27,7 +27,7 @@ params [
 ];
 
 _ret = [];
-_posArray = [_pos,35,_max,_min,1] call EFUNC(main,findPosGrid);
+_posArray = [_pos,75,_max,_min,1] call EFUNC(main,findPosGrid);
 
 {
 	if (count _ret isEqualTo _count) exitWith {};
