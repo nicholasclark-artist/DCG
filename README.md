@@ -1,6 +1,8 @@
+<h2 style="text-align:center;">
+    Dynamic Combat Generator
+</h2>
 
 <p align="center">
-    # Dynamic Combat Generator
     <a href="https://github.com/nicholasclark-artist/DCG/releases">
         <img src="https://img.shields.io/badge/Version-3.1.0.3-blue.svg?style=flat-square" alt="DCG Version">
     </a>
