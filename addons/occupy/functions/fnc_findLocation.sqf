@@ -18,7 +18,7 @@ params [["_data",[]]];
 
 if !(_data isEqualTo []) exitWith {
 	{
-		if !(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,mobLocation),EGVAR(main,mobRadius))) then {
+		if !(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) then {
 			_x spawn FUNC(setOccupied);
 		};
 	} forEach _data;
@@ -37,7 +37,7 @@ _fnc_shuffle = {
 _locations = [];
 
 {
-	if !(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,mobLocation),EGVAR(main,mobRadius))) then {
+	if !(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) then {
 		_locations pushBack _x;
 	};
 	false
