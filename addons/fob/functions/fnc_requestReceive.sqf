@@ -6,6 +6,7 @@ Description:
 receive request for FOB control
 
 Arguments:
+0: unit that initiated request <OBJECT>
 
 Return:
 none
@@ -25,6 +26,7 @@ GVAR(ID2) = -1;
 
 [format ["%1 requests control of %2.",name (_this select 0),GVAR(name)],true] call EFUNC(main,displayText);
 
+// request is answered inside the action
 GVAR(ID1) = [format ["%1_requestAccept",QUOTE(ADDON)],"Accept Request",format [
 	"
 		%1 = 1;
@@ -56,7 +58,7 @@ GVAR(ID2) = [format ["%1_requestAccept",QUOTE(ADDON)],"Accept Request",format [
 	};
 	if (diag_tickTime > _time) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		if (GVAR(response) isEqualTo -1) then {
+		if (GVAR(response) isEqualTo -1) then { // unit did not answer request
 			[player,1,GVAR(ID1)] call EFUNC(main,removeAction);
 			[player,1,GVAR(ID2)] call EFUNC(main,removeAction);
 			missionNamespace setVariable [PVEH_REQUEST,[player,GVAR(response)]];

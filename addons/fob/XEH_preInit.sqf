@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(isServer) exitWith {};
+if (!isServer || !isMultiplayer) exitWith {};
 
 ADDON = false;
 
@@ -17,6 +17,7 @@ PREP(requestHandler);
 PREP(setup);
 PREP(getChildren);
 PREP(canDeploy);
+PREP(curatorEH);
 
 GVAR(location) = locationNull;
 GVAR(UID) = "";
@@ -29,6 +30,7 @@ publicVariable QFUNC(requestAnswer);
 publicVariable QFUNC(getChildren);
 publicVariable QFUNC(deploy);
 publicVariable QFUNC(canDeploy);
+publicVariable QFUNC(curatorEH);
 publicVariable QGVAR(location);
 publicVariable QGVAR(UID);
 publicVariable QGVAR(response);
