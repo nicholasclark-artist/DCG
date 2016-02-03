@@ -35,7 +35,7 @@ zbe_centerPOS = [zbe_mapside, zbe_mapside, 0];
 
 [] spawn  {
 	while {true} do {
-		sleep 10;
+		sleep 15;
 		zbe_players = (switchableUnits + playableUnits);
 		{
 			_disable = _x getVariable "zbe_cacheDisabled";
