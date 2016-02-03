@@ -11,7 +11,7 @@ __________________________________________________________________*/
 		_mrk setMarkerColor "ColorRed"; \
 	}
 
-if !(isServer) exitWith {};
+if (!isServer || !isMultiplayer) exitWith {};
 
 if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");
@@ -38,7 +38,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 					_road = (_roads select floor (random (count _roads)));
 					_pos = _road modelToWorld [-3 + (floor random 6),0,0];
 					_pos set [2,0];
-					if !(CHECK_DIST2D(_pos,locationPosition EGVAR(main,mobLocation),EGVAR(main,mobRadius))) then {
+					if !(CHECK_DIST2D(_pos,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) then {
 						_ied = (_type select floor (random (count _type))) createVehicle _pos;
 						GVAR(array) pushBack _ied;
 						DEBUG_IED;
