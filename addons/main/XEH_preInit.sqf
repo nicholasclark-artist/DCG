@@ -27,6 +27,7 @@ PREP(loadDataAddon);
 PREP(loadInventory);
 PREP(log);
 PREP(inBuilding);
+PREP(inLOS);
 PREP(displayText);
 PREP(removeAction);
 PREP(removeParticle);
@@ -107,6 +108,7 @@ publicVariable QFUNC(spawnSniper);
 publicVariable QFUNC(spawnSquad);
 publicVariable QFUNC(spawnStatic);
 publicVariable QFUNC(inBuilding);
+publicVariable QFUNC(inLOS);
 
 publicVariable QGVAR(range);
 publicVariable QGVAR(center);
