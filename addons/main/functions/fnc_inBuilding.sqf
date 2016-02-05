@@ -1,11 +1,12 @@
 /*
 Author:
-Killzone Kid, SENSEI
+Killzone Kid, Nicholas Clark (SENSEI)
 
 Description:
 check if in building
 
 Arguments:
+0: position or object to check <ARRAY,OBJECT>
 
 Return:
 array
