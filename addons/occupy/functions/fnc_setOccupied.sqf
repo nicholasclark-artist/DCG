@@ -14,7 +14,7 @@ __________________________________________________________________*/
 #define TASK_DESC format ["Enemy forces have occupied %1! Liberate the settlement!",_name]
 #define WRECKS ["Land_Wreck_Truck_dropside_F","Land_Wreck_Truck_F","Land_Wreck_UAZ_F","Land_Wreck_Ural_F","Land_Wreck_Van_F","Land_Wreck_Skodovka_F","Land_Wreck_CarDismantled_F","Land_Wreck_Car3_F","Land_Wreck_Car_F"]
 #define PREP_INF(COUNT_INF) \
-	_grp = [[_position,0,30,0.5] call EFUNC(main,findRandomPos),0,COUNT_INF] call EFUNC(main,spawnGroup); \
+	_grp = [[_position,0,30,0.5] call EFUNC(main,findRandomPos),0,COUNT_INF,EGVAR(main,enemySide),false,0.5] call EFUNC(main,spawnGroup); \
 	[units _grp,_size] call EFUNC(main,setPatrol); \
 	{ \
 		SETVAR_UNIT(_x); \
@@ -23,9 +23,9 @@ __________________________________________________________________*/
 	} count units _grp
 #define PREP_VEH(CHANCE,COUNT_VEH) \
 	if (random 1 < CHANCE) then { \
-		_vehPos = [_position,0,200,8] call EFUNC(main,findRandomPos); \
-		if !(_vehPos isEqualTo _position) then { \
-			_vehArray = [_vehPos,1,COUNT_VEH] call EFUNC(main,spawnGroup); \
+		_posArray = [_position,50,_size,0,8,false,false] call EFUNC(main,findPosGrid); \
+		if !(_posArray isEqualTo []) then { \
+			_vehArray = [selectRandom _posArray,1,COUNT_VEH,EGVAR(main,enemySide),false,0.1] call EFUNC(main,spawnGroup); \
 			[_vehArray,_size*2] call EFUNC(main,setPatrol); \
 			{ \
 				SETVAR_UNIT(_x); \
@@ -36,7 +36,7 @@ __________________________________________________________________*/
 	}
 #define PREP_AIR(CHANCE,COUNT_AIR) \
 	if (random 1 < CHANCE) then { \
-		_airArray = [_position,2,COUNT_AIR] call EFUNC(main,spawnGroup); \
+		_airArray = [_position,2,COUNT_AIR,EGVAR(main,enemySide),false,0.1] call EFUNC(main,spawnGroup); \
 		[_airArray,2000] call EFUNC(main,setPatrol); \
 		{ \
 			SETVAR_UNIT(_x); \
@@ -55,6 +55,7 @@ __________________________________________________________________*/
 	} count (_static select 0); \
 	_objArray append (_static select 1)
 
+private ["_taskType","_grp","_count","_posArray","_vehArray","_airArray","_static","_objArray","_officer","_vehPos","_fx","_veh","_town","_mrk"];
 _this params ["_name","_position","_size","_type",["_data",nil]];
 
 _objArray = [];
@@ -115,12 +116,12 @@ _officer = objNull;
 call {
 	_grp = createGroup EGVAR(main,enemySide);
 	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
-		_officer = _grp createUnit [(EGVAR(main,officerPoolEast) select floor (random (count EGVAR(main,officerPoolEast)))), ASLtoAGL _position, [], 0, "NONE"];
+		_officer = _grp createUnit [selectRandom EGVAR(main,officerPoolEast), ASLtoAGL _position, [], 0, "NONE"];
 	};
 	if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
-		_officer = _grp createUnit [(EGVAR(main,officerPoolWest) select floor (random (count EGVAR(main,officerPoolWest)))), ASLtoAGL _position, [], 0, "NONE"];
+		_officer = _grp createUnit [selectRandom EGVAR(main,officerPoolWest), ASLtoAGL _position, [], 0, "NONE"];
 	};
-	_officer = _grp createUnit [(EGVAR(main,officerPoolInd) select floor (random (count EGVAR(main,officerPoolInd)))), ASLtoAGL _position, [], 0, "NONE"];
+	_officer = _grp createUnit [selectRandom EGVAR(main,officerPoolInd), ASLtoAGL _position, [], 0, "NONE"];
 };
 _officer setVariable [QUOTE(DOUBLES(ADDON,officer)),true];
 removeFromRemainsCollector [_officer];
@@ -133,7 +134,7 @@ for "_i" from 0 to (ceil random 3) do {
 	_vehPos = [_position,0,_size,4] call EFUNC(main,findRandomPos);
 	if (!(_vehPos isEqualTo _position) && {!isOnRoad _vehPos} && {!surfaceIsWater _vehPos}) then {
 		private ["_fx","_veh"];
-		_veh = (WRECKS select floor (random (count WRECKS))) createVehicle _vehPos;
+		_veh = (selectRandom WRECKS) createVehicle _vehPos;
 		_veh setDir random 360;
 		_veh setVectorUp surfaceNormal position _veh;
 		_fx = "test_EmptyObjectForSmoke" createVehicle getposATL _veh;

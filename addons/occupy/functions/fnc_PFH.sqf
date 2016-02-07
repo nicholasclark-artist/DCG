@@ -6,6 +6,10 @@ Description:
 runs when players enter occupied location
 
 Arguments:
+0: location data <ARRAY>
+1: enemy count at the time player enters location <NUMBER>
+2: vfx objects <ARRAY>
+3: officer unit <OBJECT>
 
 Return:
 none
@@ -14,7 +18,7 @@ __________________________________________________________________*/
 #define INTERVAL 30
 #define SURRENDER_MAXTIME 300
 #define SURRENDER_VAR format ["%1_%2_surrendered",PREFIX,_name]
-#define REINFORCE_CHANCE 0.05
+#define REINFORCE_CHANCE 0.1
 #define ENTITY ["Man","LandVehicle","Air","Ship"]
 #define ENEMYMAX_MULTIPLIER 0.5
 #define SURRENDER_MAXTIME 300
@@ -46,32 +50,32 @@ __________________________________________________________________*/
 		if (side _x isEqualTo EGVAR(main,enemySide)) then {
 			_count = _count + 1;
 		};
-	} forEach ((_town select 1) nearEntities [ENTITY, (_town select 2)]);
+	} forEach ((_town select 1) nearEntities [ENTITY, _town select 2]);
 
-	// if enemy has lost a certain amount of units
+	// if enemy has lost a certain amount of units, move to next phase
 	if (_count <= _enemyCountMax*ENEMYMAX_MULTIPLIER) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 
 		[format ["The enemy is losing control of %1! Keep up the fight and they may surrender!",_town select 0],true] remoteExecCall [QEFUNC(main,displayText), allPlayers, false];
-		EGVAR(patrol,blacklist) pushBack [_position,_size]; // stop patrols from spawning in town
+		EGVAR(patrol,blacklist) pushBack [_town select 1,_town select 2]; // stop patrols from spawning in town
 
 		[{
 			params ["_args","_idPFH"];
 			_args params ["_town","_enemyCountMax","_objArray","_officer"];
 			_town params ["_name","_position","_size","_type"];
-			private ["_playerScore","_enemyScore","_enemyArray"];
+			private ["_friendlyScore","_enemyScore","_enemyArray"];
 
-			_playerScore = 0;
+			_friendlyScore = 0;
 			_enemyScore = 0;
 			_enemyArray = [];
 
 			// get scores for all units in town
 			{
-				if (isPlayer (vehicle _x)) then {
+				if (side _x isEqualTo EGVAR(main,playerSide)) then {
 					if (vehicle _x isKindOf "Man") then {
-						_playerScore = _playerScore + 1;
+						_friendlyScore = _friendlyScore + 1;
 					} else {
-						_playerScore = _playerScore + 2;
+						_friendlyScore = _friendlyScore + 2;
 					};
 				} else {
 					if (side _x isEqualTo EGVAR(main,enemySide)) then {
@@ -86,8 +90,8 @@ __________________________________________________________________*/
 			} forEach (_position nearEntities [ENTITY, _size]);
 
 			// get chance for enemies to surrender
-			_chanceSurrender = 1 - (_enemyScore/(_playerScore max 1));
-			LOG_DEBUG_4("E_Score: %1, P_Score: %2, E_Count: %3, S_Chance: %4.",_enemyScore,_playerScore,count _enemyArray,_chanceSurrender);
+			_chanceSurrender = 1 - (_enemyScore/(_friendlyScore max 1));
+			LOG_DEBUG_4("E_Score: %1, F_Score: %2, E_Count: %3, S_Chance: %4.",_enemyScore,_friendlyScore,count _enemyArray,_chanceSurrender);
 
 			// if enemy surrenders, exit
 			if (random 1 < _chanceSurrender) exitWith {
