@@ -46,7 +46,7 @@ GVAR(curator) setCuratorCoef ["Delete", GVAR(deletingMultiplier)];
 GVAR(curator) setCuratorWaypointCost 0;
 GVAR(curator) addCuratorEditingArea [0,_pos,GVAR(range)];
 GVAR(curator) addCuratorCameraArea [0,_pos,GVAR(range)];
-GVAR(curator) setCuratorCameraAreaCeiling 40;
+GVAR(curator) setCuratorCameraAreaCeiling 80;
 [GVAR(curator),"object",["UnitPos","Rank","Lock"]] call BIS_fnc_setCuratorAttributes;
 
 // setup eventhandlers

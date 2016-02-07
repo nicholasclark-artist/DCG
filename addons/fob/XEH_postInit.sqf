@@ -6,7 +6,7 @@ __________________________________________________________________*/
 #define SET_PATROL \
 	{ \
 		if (_x isKindOf 'Man' && {_x isEqualTo leader group _x} && {!(_x getVariable ['dcg_isOnPatrol',-1] isEqualTo 1)}) then { \
-			[units group _x,GVAR(range),false] call EFUNC(main,setPatrol); \
+			[units group _x,GVAR(range)*0.5,false] call EFUNC(main,setPatrol); \
 			_x addEventHandler ['Local',{ \
 				if (_this select 1) then { \
 					_x setVariable ['dcg_isOnPatrol',0]; \
@@ -48,6 +48,7 @@ addMissionEventHandler ["HandleDisconnect",{
 				_veh = (_x select 0) createVehicle [0,0,0];
 				_veh setDir (_x select 2);
 				_veh setPosASL (_x select 1);
+				_veh setVectorUp (_x select 3);
 				GVAR(curator) addCuratorEditableObjects [[_veh],false];
 				false
 			} count (_data select 2);
