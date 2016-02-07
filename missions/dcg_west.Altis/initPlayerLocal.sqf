@@ -34,6 +34,13 @@ if (CHECK_ADDON_1("ace_medical")) then {
 		player setVariable ["ace_medical_medicClass",1];
 	};
 };
+if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
+	player addEventHandler ["respawn",{
+		deleteVehicle (_this select 1);
+		[(_this select 0), currentWeapon (_this select 0), currentMuzzle (_this select 0)] call ace_safemode_fnc_lockSafety;
+		(_this select 0) setVariable ["dcg_safeWeapon",false];
+	}];
+};
 
 if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
 	[{
@@ -74,55 +81,17 @@ if (GVAR(disableCam)) then {
 
 // briefing
 [] spawn {
-	// _fixMenu = "<execute expression ='[] call compile preprocessFileLineNumbers ""\d\ace\addons\interact_menu\XEH_clientInit.sqf"";'>Force Load ACE Interaction Menu<execute/>"; // doesn't work
-
-	player createDiaryRecord ["Diary", ["Special Thanks", "<br/>
-			Bohemia Interactive<br/><br/>
-			Tier1Ops<br/><br/>
-			CAVE Gaming Community<br/><br/>
-			Casual Arma Players<br/><br/>
-			ACE3"]
-	];
 	player createDiaryRecord ["Diary", ["External Content", "<br/>
 			VVS by Tonic<br/><br/>
 			Vehicle HUD script by Tier1ops<br/><br/>"]
 	];
-	player createDiaryRecord ["Diary", ["DCG Mission Info", format ["<br/>
+	player createDiaryRecord ["Diary", ["Mission Info", format ["<br/>
 		Author: Nicholas Clark (SENSEI)<br/><br/>
 		Version: %1<br/><br/>
 		Known Issues:<br/>
 		ACE interaction menu may not initialize at mission start, ACE3 Github issue #1171<br/><br/>
 		",QUOTE(VERSION)]]
 	];
-};
-
-uiSleep 5; // give postInit time to finish
-
-if (CHECK_ADDON_1("acre_main")) then {
-	player addEventHandler ["respawn",{
-		deleteVehicle (_this select 1);
-		[] spawn {
-			call EFUNC(radio,setRadioACRE);
-		};
-		if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
-			[(_this select 0), currentWeapon (_this select 0), currentMuzzle (_this select 0)] call ace_safemode_fnc_lockSafety;
-			(_this select 0) setVariable ["dcg_safeWeapon",false];
-		};
-	}];
-} else {
-	player addEventHandler ["respawn",{
-		deleteVehicle (_this select 1);
-		if (!CHECK_DEBUG && {CHECK_ADDON_1("ace_safemode")}) then {
-			[(_this select 0), currentWeapon (_this select 0), currentMuzzle (_this select 0)] call ace_safemode_fnc_lockSafety;
-			(_this select 0) setVariable ["dcg_safeWeapon",false];
-		};
-	}];
-};
-
-if !(VERSION_RELEASE) then {
-	[{
-		[format ["%1 %2 IS FOR PRIVATE USE ONLY!", toUpper QUOTE(PREFIX),QUOTE(VERSION)],true] call EFUNC(main,displayText);
-	}, 1200, []] call CBA_fnc_addPerFrameHandler;
 };
 
 endLoadingScreen;
