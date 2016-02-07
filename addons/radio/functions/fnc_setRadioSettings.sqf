@@ -15,7 +15,7 @@ __________________________________________________________________*/
 #define P_TFAR "task_force_radio"
 #define PRESET QUOTE(DOUBLES(PREFIX,preset))
 
-waitUntil {time > 10};
+waitUntil {time > 0};
 
 if (CHECK_ADDON_1(P_ACRE)) then {
 	[GVAR(acre_command), "default", PRESET] call acre_api_fnc_copyPreset;
@@ -90,9 +90,12 @@ if (CHECK_ADDON_1(P_TFAR)) then {
 	tf_same_sw_frequencies_for_side = true;
 	tf_same_lr_frequencies_for_side = true;
 };
+
 if (hasInterface) then {
-	// workaround for acre, if inventory full and can't add radio, acre throws rpt error: (Warning: Radio ID ACRE_PRC343_ID_1 was returned for a non-existent baseclass...)
-	// if ((backpack player) isEqualTo "") then {player addBackpack "B_Kitbag_cbr"};
-	waitUntil {!isNull (findDisplay 46) && {!isNull player} && {alive player}};
-	call FUNC(setRadio);
+	player addEventHandler ["respawn",{
+		[] spawn {
+			sleep 2.5;
+			call EFUNC(radio,setRadioACRE);
+		};
+	}];
 };
