@@ -50,4 +50,4 @@ The latest version [Community Based Addons](https://forums.bistudio.com/topic/16
 - If you wish to customize DCG's settings
     - find the "optional" folder in @dcg
     - Move server.pbo to the addons folder (@dcg\addons) and move the userconfig folder to the root Arma 3 folder
-- If you would like to set up a mission for DCG, take a quick look at [Setting up a DCG compatible mission](https://github.com/nicholasclark-artist/DCG/wiki/Setting-up-a-DCG-compatible-mission).
+- If you would like to set up a mission for DCG, take a quick look at [Setting up a DCG compatible mission](https://github.com/nicholasclark-artist/DCG/wiki/Setting-up-a-DCG-compatible-mission)
