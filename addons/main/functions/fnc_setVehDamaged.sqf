@@ -38,7 +38,7 @@ call {
 playSound3D ["A3\Sounds_F\Vehicles\air\noises\heli_damage_rotor_int_open_1.wss", _veh, false, getPosATL _veh, 2];
 _veh setHit [getText (configFile >> "cfgVehicles" >> typeOf _veh >> "HitPoints" >> "HitEngine" >> "name"), 1];
 if !(isNil "_hitpoints") then {
-	_hit = _hitpoints select floor (random (count _hitpoints));
+	_hit = selectRandom _hitpoints;
 	_veh setHit [getText (configFile >> "cfgVehicles" >> typeOf _veh >> "HitPoints" >> _hit >> "name"), 1];
 };
 _fx = "test_EmptyObjectForSmoke" createVehicle (getPosATL _veh);

@@ -3,26 +3,32 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-spawns group
+spawn group, this function must be ran in a scheduled environment
 
 Arguments:
+0: position where group will spawn <ARRAY>
+1: type of group <NUMBER>
+2: number of units in group <NUMBER>
+3: side of group <SIDE>
+4: disable group caching <BOOL>
+5: delay between unit spawns <NUMBER>
 
 Return:
 group or array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_pos","_type","_count","_side","_uncache","_grp","_driverArray","_unitPool","_vehPool","_airPool","_veh","_unit"];
-
-_pos = param [0,[0,0,0],[[]]];
-_type = param [1,0,[0]];
-_count = param [2,1,[0]];
-_side = param [3,GVAR(enemySide)];
-_uncache = param [4,false];
+private ["_grp","_unitPool","_vehPool","_airPool","_veh","_unit"];
+params [
+	"_pos",
+	["_type",0],
+	["_count",1],
+	["_side",GVAR(enemySide)],
+	["_uncache",false],
+	["_delay",1]
+];
 
 _grp = createGroup _side;
-_grp allowfleeing 0;
-_driverArray = [];
 
 call {
 	if (_side isEqualTo EAST) exitWith {
@@ -45,40 +51,43 @@ call {
 	_airPool = GVAR(airPoolInd);
 };
 
-for "_j" from 0 to (_count - 1) do {
+for "_i" from 1 to _count do {
 	call {
+		private ["_veh","_unit"];
 		if (_type isEqualTo 0) exitWith {
-			(_unitPool select floor (random (count _unitPool))) createUnit [_pos, _grp];
+			(selectRandom _unitPool) createUnit [_pos, _grp];
 		};
-
-		if (_type isEqualTo 2) then {
-			_veh = createVehicle [(_airPool select floor (random (count _airPool))), _pos, [], 0, "FLY"];
+		if (_type isEqualTo 1) then {
+			_veh = (selectRandom _vehPool) createVehicle _pos;
+			_veh setVectorUp surfaceNormal getPos _veh;
 		} else {
-			_veh = (_vehPool select floor (random (count _vehPool))) createVehicle _pos;
-			_veh setVectorUp [0,0,1];
+			_veh = createVehicle [selectRandom _airPool, _pos, [], 0, "FLY"];
 		};
 
-		_unit = _grp createUnit [(_unitPool select floor (random (count _unitPool))), _pos, [], 0, "NONE"];
+		_unit = _grp createUnit [selectRandom _unitPool, _pos, [], 0, "NONE"];
 		_unit moveInDriver _veh;
-		_driverArray pushBack _unit;
 
 		if !((_veh emptyPositions "gunner") isEqualTo 0) then {
-			_unit = _grp createUnit [(_unitPool select floor (random (count _unitPool))), _pos, [], 0, "NONE"];
+			_unit = _grp createUnit [selectRandom _unitPool, _pos, [], 0, "NONE"];
 			_unit moveInGunner _veh;
 		};
 
-		if !((_veh emptyPositions "cargo") isEqualTo 0) then {
-			for "_i" from 1 to ((_veh emptyPositions "cargo") min (floor (random ((6 - 2) + 1)) + 2)) do { // limit units in cargo for performance
-				_unit = _grp createUnit [(_unitPool select floor (random (count _unitPool))), _pos, [], 0, "NONE"];
+		if ((_veh emptyPositions "cargo") > 0) then {
+			for "_i" from 1 to ((_veh emptyPositions "cargo") min 4) do {
+				_unit = _grp createUnit [selectRandom _unitPool, _pos, [], 0, "NONE"];
 				_unit moveInCargo _veh;
 			};
 		};
 	};
+	sleep _delay;
 };
 
 if (_uncache) then {
 	CACHE_DISABLE(_grp,true);
 };
-if (_type isEqualTo 0) exitWith {_grp};
 
-_driverArray
+if (_type isEqualTo 0) exitWith {
+	_grp
+};
+
+units _grp

@@ -32,18 +32,18 @@ _posArray = [_pos,50,_range,0,7] call FUNC(findPosGrid);
 
 call {
 	if (_side isEqualTo EAST) exitWith {
-		_unit = GVAR(unitPoolEast) select floor (random (count GVAR(unitPoolEast)));
+		_unit = selectRandom GVAR(unitPoolEast);
 		_static1 = "Land_Cargo_Patrol_V1_F";
 		_static2 = "O_HMG_01_high_F";
 		_static3 = "O_Mortar_01_F";
 	};
 	if (_side isEqualTo WEST) exitWith {
-		_unit = GVAR(unitPoolWest) select floor (random (count GVAR(unitPoolWest)));
+		_unit = selectRandom GVAR(unitPoolWest);
 		_static1 = "Land_Cargo_Patrol_V1_F";
 		_static2 = "B_HMG_01_high_F";
 		_static3 = "B_Mortar_01_F";
 	};
-	_unit = GVAR(unitPoolInd) select floor (random (count GVAR(unitPoolInd)));
+	_unit = selectRandom GVAR(unitPoolInd);
 	_static1 = "Land_Cargo_Patrol_V1_F";
 	_static2 = "I_HMG_01_high_F";
 	_static3 = "I_Mortar_01_F";
@@ -72,7 +72,7 @@ call {
 		if (_type isEqualTo 2) exitWith { // bunkered static
 			_roads = _x nearRoads _range;
 			if (_roads isEqualTo []) exitWith {};
-			_road = _roads select floor (random (count _roads));
+			_road = selectRandom _roads;
 			_roadConnectedTo = (roadsConnectedTo _road);
 			if (_roadConnectedTo isEqualTo []) exitWith {};
 			_roadConnectedTo = _roadConnectedTo select 0;

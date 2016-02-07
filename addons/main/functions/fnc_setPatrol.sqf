@@ -14,17 +14,15 @@ Return:
 boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define PATROL_VAR QUOTE(DOUBLES(PREFIX,isOnPatrol))
 #define MINRANGE _range*0.4
 #define WAYPOINT_UNITREADY !(behaviour _unit isEqualTo "COMBAT")
 #define WAYPOINT_POS (_waypoint select 0)
 #define WAYPOINT_TIME (_waypoint select 1)
-#define WAYPOINT_TIMEMAX (_waypoint select 2)
-#define WAYPOINT_RESETPOS _waypoint set [0,[]]
-#define WAYPOINT_RESETTIME _waypoint set [1,0]; _waypoint set [2,0]
+#define WAYPOINT_BUFFER (_waypoint select 2)
+#define WAYPOINT_RESET _waypoint set [0,[]]; _waypoint set [1,0]; _waypoint set [2,0]
 #define WAYPOINT_EMPTY [[],0,0]
-#define WAYPOINT_ADD(DIST) _waypoint set [0,_pos]; _waypoint set [1,diag_tickTime]; _waypoint set [2,((getpos _unit distance2D _pos)/DIST)*60]
-#define WAYPOINT_BUFFER 5
-#define PATROL_VAR QUOTE(DOUBLES(PREFIX,isOnPatrol))
+#define WAYPOINT_ADD(DIST) _waypoint set [0,_pos]; _waypoint set [1,diag_tickTime + (((_unit distance2D _pos)/DIST)*60)]; _waypoint set [2,((_unit distance2D _pos)*0.1) max 5]
 
 private ["_pos","_grp","_posStart","_type","_d","_r","_roads","_veh","_road","_houses","_housePosArray"];
 params ["_units",["_range",100],["_individual",true]];
@@ -49,8 +47,8 @@ if (_units isEqualTo []) exitWith {false};
         for "_i" from 0 to (2 + (floor (random 3))) do {
             private ["_pos","_waypoint"];
             _pos = [_posPrev,_range*0.5,_range] call FUNC(findRandomPos);
-            _posPrev = _pos;
-            _waypoint = _grp addWaypoint [_pos,0];
+            _posPrev = ASLToAGL _pos;
+            _waypoint = _grp addWaypoint [ASLToAGL _pos,0];
             _waypoint setWaypointType "MOVE";
             _waypoint setWaypointCompletionRadius 20;
 
@@ -102,11 +100,10 @@ if (_units isEqualTo []) exitWith {false};
             if (WAYPOINT_UNITREADY) then {
                 if !(WAYPOINT_POS isEqualTo []) then { // unit has a waypoint
                     if (CHECK_DIST2D(WAYPOINT_POS,_unit,WAYPOINT_BUFFER)) then { // unit is close enough to waypoint, delete waypoint
-                        WAYPOINT_RESETPOS;
-                        WAYPOINT_RESETTIME;
+                        WAYPOINT_RESET;
                     };
                 };
-                if (_waypoint isEqualTo WAYPOINT_EMPTY || {diag_tickTime >= (WAYPOINT_TIME + WAYPOINT_TIMEMAX)}) then { // if unit near waypoint or unit did not reach waypoint in time, find new waypoint
+                if (_waypoint isEqualTo WAYPOINT_EMPTY || {diag_tickTime >= WAYPOINT_TIME}) then { // if unit near waypoint or unit did not reach waypoint in time, find new waypoint
                     if (_roads isEqualTo []) then {
                         _d = random 360;
                         _r = floor (random ((_range - MINRANGE) + 1)) + MINRANGE;
@@ -121,13 +118,13 @@ if (_units isEqualTo []) exitWith {false};
                             WAYPOINT_ADD(150);
                         };
                     } else {
-                        _pos = getPosATL (_roads select floor (random (count _roads)));
+                        _pos = getPosATL (selectRandom _roads);
                         _unit doMove _pos;
                         WAYPOINT_ADD(150);
                     };
                 };
             };
-        }, 30, [_x,getPosATL _x,_range,_waypoint,_roads,typeOf (vehicle _x)]] call CBA_fnc_addPerFrameHandler;
+        }, 15, [_x,getPosATL _x,_range,_waypoint,_roads,typeOf (vehicle _x)]] call CBA_fnc_addPerFrameHandler;
 
         _x setVariable [PATROL_VAR,1];
     };
@@ -150,17 +147,16 @@ if (_units isEqualTo []) exitWith {false};
             if (WAYPOINT_UNITREADY) then {
                 if !(WAYPOINT_POS isEqualTo []) then { // unit has a waypoint
                     if (CHECK_DIST2D(WAYPOINT_POS,_unit,WAYPOINT_BUFFER)) then { // unit is close enough to waypoint, delete waypoint
-                        WAYPOINT_RESETPOS;
-                        WAYPOINT_RESETTIME;
+                        WAYPOINT_RESET;
                     };
                 };
-                if (_waypoint isEqualTo WAYPOINT_EMPTY || {diag_tickTime >= (WAYPOINT_TIME + WAYPOINT_TIMEMAX)}) then { // if unit near waypoint or unit did not reach waypoint in time, find new waypoint
+                if (_waypoint isEqualTo WAYPOINT_EMPTY || {diag_tickTime >= WAYPOINT_TIME}) then { // if unit near waypoint or unit did not reach waypoint in time, find new waypoint
                     // TODO add code to reset units when they get stuck
                     if (!(_houses isEqualTo []) && {random 1 < 0.5}) then {
                         private ["_housePosArray"];
-                        _housePosArray = [_houses select floor(random (count _houses)), 3] call BIS_fnc_buildingPositions;
+                        _housePosArray = (selectRandom _houses) buildingPos -1;
                         if !(_housePosArray isEqualTo []) then {
-                            _pos = _housePosArray select floor(random (count _housePosArray));
+                            _pos = selectRandom _housePosArray;
                             _unit doMove _pos;
                             WAYPOINT_ADD(100); // set waypoint array, argumment determines how long unit has to reach waypoint
                         };

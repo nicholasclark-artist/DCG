@@ -21,8 +21,8 @@ _return = [];
 _houseArray = _center nearObjects ["House",_range];
 
 if !(_houseArray isEqualTo []) then {
-	_house = _houseArray select floor (random (count _houseArray));
-	_housePosArray = [_house] call bis_fnc_buildingPositions;
+	_house = selectRandom _houseArray;
+	_housePosArray = _house buildingPos -1;
 
 	if !(_housePosArray isEqualTo []) then {
 		{

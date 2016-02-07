@@ -65,7 +65,7 @@ if (_findHelipad) then {
 
 _lz set [2,0];
 _pos = [_lz,_distSpawn,_distSpawn+_buffer] call FUNC(findRandomPos);
-_veh = createVehicle [_vehPool select floor (random (count _vehPool)),_pos,[],0,"FLY"];
+_veh = createVehicle [selectRandom _vehPool,_pos,[],0,"FLY"];
 if (_veh emptyPositions "cargo" isEqualTo 0 || {!(_veh isKindOf "Helicopter")}) then {
 	deleteVehicle _veh;
 	_veh = createVehicle [_backup,_pos,[],0,"FLY"];
@@ -74,7 +74,7 @@ _veh flyInHeight 100;
 _veh lock 3;
 _grp = createGroup _side;
 _grp setBehaviour "CARELESS";
-_pilot = _grp createUnit [_unitPool select floor (random (count _unitPool)),_pos, [], 0, "NONE"];
+_pilot = _grp createUnit [selectRandom _unitPool,_pos, [], 0, "NONE"];
 _pilot moveInDriver _veh;
 _pilot allowfleeing 0;
 _grpPatrol = [_pos,0,(_veh emptyPositions "cargo") min 8,_side] call FUNC(spawnGroup);

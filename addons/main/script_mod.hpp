@@ -6,8 +6,7 @@
 #define BUILD 3
 #define VERSION MAJOR.MINOR.PATCHLVL.BUILD
 #define VERSION_AR MAJOR,MINOR,PATCHLVL,BUILD
-#define VERSION_RELEASE false // set to true before releasing
-#define REQUIRED_VERSION 1.52
+#define REQUIRED_VERSION 1.56
 #define TITLE "Dynamic Combat Generator"
 #define TITLESHORT "DCG"
 #define URL "https://github.com/nicholasclark-artist/dcg"

@@ -35,7 +35,7 @@ if (ace_medical_level isEqualTo 1) then {
 	    "shell"
 	];
 	for "_i" from 0 to 2 do {
-		[_unit, (_selection select (random ((count _selection) - 1))), 0.7 + (random 0.15), objNull, (_type select (random ((count _type) - 1)))] call ace_medical_fnc_handleDamage;
+		[_unit, selectRandom _selection, 0.7 + (random 0.15), objNull, selectRandom _type] call ace_medical_fnc_handleDamage;
 		//[_unit, (_selection select (random ((count _selection) - 1))), 0.7 + (random 0.15)] call ace_medical_fnc_setHitPointDamage;
 	};
 	[{
@@ -67,7 +67,7 @@ if (ace_medical_level isEqualTo 1) then {
 	    "explosive",
 	    "shell"
 	];
-	[_unit, (_selection select (random ((count _selection) - 1))), 0, objNull, (_type select (random ((count _type) - 1))), 0, 0.2] call ace_medical_fnc_handleDamage_advanced;
+	[_unit, selectRandom _selection, 0, objNull, selectRandom _type, 0, 0.2] call ace_medical_fnc_handleDamage_advanced;
 };
 
 /*

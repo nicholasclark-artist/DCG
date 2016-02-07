@@ -30,12 +30,12 @@ _return = [];
 
 call {
 	if (_side isEqualTo EAST) exitWith {
-		_sniper = (GVAR(sniperPoolEast) select floor (random (count GVAR(sniperPoolEast))));
+		_sniper = selectRandom GVAR(sniperPoolEast);
 	};
 	if (_side isEqualTo WEST) exitWith {
-		_sniper = (GVAR(sniperPoolWest) select floor (random (count GVAR(sniperPoolWest))));
+		_sniper = selectRandom GVAR(sniperPoolWest);
 	};
-	_sniper = (GVAR(sniperPoolInd) select floor (random (count GVAR(sniperPoolInd))));
+	_sniper = selectRandom GVAR(sniperPoolInd);
 };
 
 _overwatch = [_pos,_count,_min,_max] call FUNC(findOverwatchPos);

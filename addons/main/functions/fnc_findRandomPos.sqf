@@ -17,7 +17,7 @@ array (positionASL)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_center","_min","_max","_checkDist","_dir","_range","_pos"];
+private ["_center","_min","_max","_checkDist","_dir","_pos"];
 
 _center = param [0,[],[[]]];
 _min = param [1,0,[0]];
@@ -29,8 +29,7 @@ if (_dir isEqualTo -1) then {
 	_dir = random 360;
 };
 
-_range = floor (random ((_max - _min) + 1)) + _min;
-_pos = [(_center select 0) + (sin _dir) * _range, (_center select 1) + (cos _dir) * _range];
+_pos = _center getPos [floor (random ((_max - _min) + 1)) + _min, _dir];
 _pos = _pos isFlatEmpty [_checkDist,0,1,10,1,false,objNull];
 if (_pos isEqualTo []) exitWith {_center};
 if (floor (_pos select 2) < 0) then {
