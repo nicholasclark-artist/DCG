@@ -16,12 +16,12 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(count) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 15;
+        value = 18;
     };
     class GVAR(vehCount) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 2;
+        value = 3;
     };
     class GVAR(cityMultiplier) {
         typeName = "SCALAR";
@@ -31,11 +31,11 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(townMultiplier) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 0.25;
+        value = 0.3;
     };
     class GVAR(hostileChance) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 0.05;
+        value = 0.1;
     };
 };

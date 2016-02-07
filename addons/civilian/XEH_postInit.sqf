@@ -100,7 +100,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 				}, 10, [_posArray]] call CBA_fnc_addPerFrameHandler;
 			};
 
-			_selected = EXPRESSIONS select floor (random (count EXPRESSIONS));
+			_selected = selectRandom EXPRESSIONS;
 			_expression = _selected select 0;
 			_str = _selected select 1;
 			_pos = [EGVAR(main,center),0,EGVAR(main,range)] call EFUNC(main,findRandomPos);
