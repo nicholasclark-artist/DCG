@@ -11,7 +11,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 };
 
 [{
-	if (DOUBLES(PREFIX,main) && {time > 5}) exitWith {
+	if (DOUBLES(PREFIX,main)) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
 		GVAR(blacklist) pushBack [locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)]; // add main base to blacklist

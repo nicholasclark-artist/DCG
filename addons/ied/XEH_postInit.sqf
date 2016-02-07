@@ -35,11 +35,11 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 				_y deleteAt 2;
 				_roads = _y nearRoads 300;
 				if !(_roads isEqualTo []) then {
-					_road = (_roads select floor (random (count _roads)));
+					_road = selectRandom _roads;
 					_pos = _road modelToWorld [-3 + (floor random 6),0,0];
 					_pos set [2,0];
 					if !(CHECK_DIST2D(_pos,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) then {
-						_ied = (_type select floor (random (count _type))) createVehicle _pos;
+						_ied = (selectRandom _type) createVehicle _pos;
 						GVAR(array) pushBack _ied;
 						DEBUG_IED;
 					};
@@ -65,7 +65,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 					_ied = _x;
 					_explosions = ["R_TBG32V_F","HelicopterExploSmall"];
 					if ({CHECK_DIST2D(_x,_ied,4)} count allPlayers > 0) then {
-						(_explosions select floor (random (count _explosions))) createVehicle (getPosATL _ied);
+						(selectRandom _explosions) createVehicle (getPosATL _ied);
 						deleteVehicle _ied;
 						GVAR(array) deleteAt _forEachIndex;
 					};

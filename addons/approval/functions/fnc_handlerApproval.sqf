@@ -3,75 +3,73 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-handles approval points
+handles approval
 
 Arguments:
+0: unit or number used to base value change on <OBJECT, NUMBER>
+1: object that killed unit <OBJECT>
+2: to add or subtract value <BOOL>
 
 Return:
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-/*
-	situations value is changed
-		if _this = object, get obj data and change value
-		if _this = number, basic value change
-*/
-params ["_type"];
-
-// TODO handle if killer is player check outside func
-if (_type isEqualTo 0) exitWith {
-	private ["_victim","_killer","_value"];
-
-	_victim = _this select 1;
-	_killer = _this select 2;
+if ((_this select 0) isEqualType objNull) exitWith {
+	params ["_unit",["_killer",objNull],["_subtract",true]];
 	_value = 0;
 
-	if !(isPlayer _killer) exitWith {};
-
-	if (_victim isKindOf "Man") then {
-		// get type of man
-		call {
-			if (isPlayer _victim) exitWith {
-				_value = _value + VAL_PLAYER;
-			};
-			if (side _victim isEqualTo CIVILIAN) exitWith {
-				_value = _value + VAL_CIV;
-			};
-			_value = _value + VAL_MAN;
+	// get base value
+	call {
+		if (side _unit isEqualTo EGVAR(main,playerSide)) exitWith {
+			_value = _value + VAL_FRIENDLY;
 		};
+		if (side _unit isEqualTo CIVILIAN && {isPlayer _killer}) exitWith { // TODO make sure isPlayer objNull returns false
+			_value = _value + VAL_CIV;
+		};
+		if (side _unit isEqualTo EGVAR(main,enemySide)) exitWith {
+			_value = _value + VAL_ENEMY;
+		};
+	};
 
-		// add a percentage of value based on rank
+	// add a percentage of value based on rank
+	if !(side _unit isEqualTo CIVILIAN) then {
 		call {
-			if (rank _victim isEqualTo "PRIVATE") exitWith {
+			if (rank _unit isEqualTo "PRIVATE") exitWith {
 				_value = _value + (_value*0.05);
 			};
-			if (rank _victim isEqualTo "CORPORAL") exitWith {
+			if (rank _unit isEqualTo "CORPORAL") exitWith {
 				_value = _value + (_value*0.10);
 			};
-			if (rank _victim isEqualTo "SERGEANT") exitWith {
+			if (rank _unit isEqualTo "SERGEANT") exitWith {
 				_value = _value + (_value*0.15);
 			};
-			if (rank _victim isEqualTo "LIEUTENANT") exitWith {
+			if (rank _unit isEqualTo "LIEUTENANT") exitWith {
 				_value = _value + (_value*0.20);
 			};
-			if (rank _victim isEqualTo "CAPTAIN") exitWith {
+			if (rank _unit isEqualTo "CAPTAIN") exitWith {
 				_value = _value + (_value*0.25);
 			};
-			if (rank _victim isEqualTo "MAJOR") exitWith {
+			if (rank _unit isEqualTo "MAJOR") exitWith {
 				_value = _value + (_value*0.30);
 			};
-			if (rank _victim isEqualTo "COLONEL") exitWith {
+			if (rank _unit isEqualTo "COLONEL") exitWith {
 				_value = _value + (_value*0.35);
 			};
 		};
 	};
 
-	if !(side _victim isEqualTo EGVAR(main,enemySide)) then { // if object not on enemy side, subtract value
+	if (_subtract) then {
 		_value = 0 - _value;
 	};
 
-	_value call FUNC(addValue);
+	[_value] call FUNC(addValue);
 };
+
+if ((_this select 0) isEqualType 0) exitWith {
+	[_this select 0] call FUNC(addValue);
+};
+
 
 if (_type isEqualTo 1) exitWith { // calculate passive percentages
 	_chance = round (50 - (0.1*DCG_approval)) min 50;

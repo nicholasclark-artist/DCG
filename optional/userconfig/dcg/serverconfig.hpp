@@ -25,12 +25,12 @@ class dcg_main_cleanup {
     typeDetail = "";
     value = 1;
 };
-class dcg_main_mobName {
+class dcg_main_baseName {
     typeName = "STRING";
     typeDetail = "";
     value = "MOB Dodge";
 };
-class dcg_main_mobRadius {
+class dcg_main_baseRadius {
     typeName = "SCALAR";
     typeDetail = "";
     value = 1500;

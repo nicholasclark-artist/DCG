@@ -6,8 +6,8 @@
 #define VAL_ARMOR 2
 #define VAL_AIR 3
 #define VAL_SHIP 2
-#define VAL_MAN 1
-#define VAL_PLAYER 4
+#define VAL_ENEMY 1
+#define VAL_FRIENDLY 4
 #define VAL_CIV 6
 #define VAL_TASK 10
 #define VAL_TOWN 10

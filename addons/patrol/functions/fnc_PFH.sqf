@@ -12,37 +12,11 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_fnc_inLOS"];
-
 if (CHECK_DEBUG) then {
 	call FUNC(debug);
 };
 
-_fnc_inLOS = {
-	_pos = _this select 0;
-	_unit = _this select 1;
-
-	_posUnit = AGLToASL (_unit modelToWorld [0,0,3]);
-	_ret = true;
-
-	if ([getPosASL _unit,getDir _unit,90,_pos] call BIS_fnc_inAngleSector) then {
-		if !(terrainIntersectASL [_pos, _posUnit]) then {
-		    if (lineIntersects [_pos, _posUnit, _unit]) then {
-		        _ret = false;
-		    };
-		} else {
-		    _ret = false;
-		};
-	} else {
-		_ret = false;
-	};
-
-	_ret
-};
-
 [{
-	params ["_args","_idPFH"];
-	_args params ["_fnc_inLOS"];
 	private ["_pos","_unit","_posUnit","_ret","_HCs","_players","_player","_posArray","_y","_grp"];
 
 	// delete null and lonely groups
@@ -66,32 +40,34 @@ _fnc_inLOS = {
 		_players = allPlayers - _HCs;
 
 		if !(_players isEqualTo []) then {
-			_player = _players select floor (random (count _players));
-			_players = [getPosASL _player,100] call EFUNC(main,getNearPlayers);
+			_player = selectRandom _players; // get target player
+			_players = [getPosASL _player,100] call EFUNC(main,getNearPlayers); // get players in area around target
 
-			if ({CHECK_DIST2D(_player,(_x select 0),(_x select 1))} count GVAR(blacklist) isEqualTo 0) then {
+			if ({CHECK_DIST2D(_player,(_x select 0),(_x select 1))} count GVAR(blacklist) isEqualTo 0) then { // check if player is in a blacklist array
 				_posArray = [getpos _player,100,PATROL_RANGE,PATROL_MINRANGE,6] call EFUNC(main,findPosGrid);
-				{
+				// TODO check LOS for several players if players notice spawn
+				{ // remove positions in blacklist, that are near players or that players can see
 					_y = _x;
 					if ({CHECK_DIST2D(_y,(_x select 0),(_x select 1))} count GVAR(blacklist) > 0 ||
-					    {!([_y,100] call EFUNC(main,getNearPlayers) isEqualTo [])} ||
-						{{[_y,_x] call _fnc_inLOS} count _players > 0}) then {
+					    {count ([_y,100] call EFUNC(main,getNearPlayers)) > 0} ||
+						{[_y,_player] call EFUNC(main,inLOS)} /*||
+						{{[_y,_x] call EFUNC(main,inLOS)} count _players > 0}*/) then {
 						_posArray deleteAt _forEachIndex;
 					};
 				} forEach _posArray;
 
 				if !(_posArray isEqualTo []) then {
-					_pos = _posArray select floor (random (count _posArray));
-					_pos spawn {
+					[_player,selectRandom _posArray] spawn {
+						private ["_grp","_wp"];
 						if (random 1 < GVAR(vehChance)) then {
-							_grp = [_this,1,1] call EFUNC(main,spawnGroup);
+							_grp = [_this select 1,1,1] call EFUNC(main,spawnGroup);
 							[_grp,PATROL_RANGE] call EFUNC(main,setPatrol);
 							_grp = group (_grp select 0);
 						} else {
 							// TODO fix caching bug that breaks waypoint for all units in group except leader
-							_grp = [_this,0,UNITCOUNT(4,8)] call EFUNC(main,spawnGroup);
+							_grp = [_this select 1,0,UNITCOUNT(3,6),EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
 							// set waypoint around target player
-							_wp = _grp addWaypoint [_player,100];
+							_wp = _grp addWaypoint [_this select 0,100];
 							_wp setWaypointCompletionRadius 100;
 							_wp setWaypointBehaviour "SAFE";
 							_wp setWaypointFormation "STAG COLUMN";
@@ -104,4 +80,4 @@ _fnc_inLOS = {
 			};
 		};
 	};
-}, GVAR(cooldown) max 180, [_fnc_inLOS]] call CBA_fnc_addPerFrameHandler;
+}, GVAR(cooldown) max 180, []] call CBA_fnc_addPerFrameHandler;
