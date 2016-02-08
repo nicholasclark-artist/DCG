@@ -139,9 +139,9 @@ DATA_DELETEPVEH addPublicVariableEventHandler {
 };
 
 // AI caching
-if (GVAR(cache)) then {
+/*if (GVAR(cache)) then {
 	[2000,0,false,2000,6000,6000] execVM "\d\dcg\addons\main\scripts\zbe_cache\main.sqf";
-};
+};*/
 
 // set mission params as missionNameSpace variables
 call FUNC(setParams);
