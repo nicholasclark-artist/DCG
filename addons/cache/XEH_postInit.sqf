@@ -6,4 +6,6 @@ __________________________________________________________________*/
 
 if (!isServer || !isMultiplayer) exitWith {};
 
+call FUNC(handler);
+
 ADDON = true;
