@@ -13,11 +13,6 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 1;
     };
-    class GVAR(cache) {
-        typeName = "BOOL";
-        typeDetail = "";
-        value = 1;
-    };
     class GVAR(cleanup) {
         typeName = "BOOL";
         typeDetail = "";
