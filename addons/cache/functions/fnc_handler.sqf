@@ -22,7 +22,9 @@ __________________________________________________________________*/
 	for "_i" from 0 to (count _grps - 1) do {
 		_grp = _grps select _i;
 		GVAR(groups) pushBack _grp;
-		[leader _grp] call FUNC(leaderEH);
+		if !((leader _grp) getVariable [QUOTE(DOUBLES(ADDON,leaderHasEH)),false]) then {
+			[leader _grp] call FUNC(leaderEH);
+		};
 		_grpUnits = ((units _grp) - [leader _grp]);
 		_units append _grpUnits;
 	};

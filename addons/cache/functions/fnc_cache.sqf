@@ -20,8 +20,11 @@ if (!isPlayer _unit && {!("driver" in assignedVehicleRole _unit)}) then {
 	_unit hideObjectGlobal true;
 	_unit attachTo [leader _unit];
 
-	_unit addEventHandler ["killed", {
-		[_this select 0] call FUNC(uncache);
-	}];
-	LOG_DEBUG_2("caching %1 %2",_unit,typeof _unit);
+	if !(_unit getVariable [QUOTE(DOUBLES(ADDON,unitHasEH)),false]) then {
+		_unit setVariable [QUOTE(DOUBLES(ADDON,unitHasEH)),true];
+		_unit addEventHandler ["killed", {
+			[_this select 0] call FUNC(uncache);
+		}];
+	};
+	//LOG_DEBUG_2("caching %1 %2",_unit,typeof _unit);
 };

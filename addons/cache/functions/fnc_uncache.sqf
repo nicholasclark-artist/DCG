@@ -19,5 +19,5 @@ if (!isPlayer _unit && {!("driver" in assignedVehicleRole _unit)}) then {
 	_unit enableSimulationGlobal true;
 	_unit hideObjectGlobal false;
 	detach _unit;
-	LOG_DEBUG_2("uncaching %1 %2",_unit,typeof _unit);
+	//LOG_DEBUG_2("uncaching %1 %2",_unit,typeof _unit);
 };
