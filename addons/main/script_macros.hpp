@@ -95,7 +95,9 @@
 #define CHECK_MARKER(MARKER) getMarkerColor MARKER != ""
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> "CfgPatches" >> PATCH))
 #define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {TRIPLES(PREFIX,VAR,enable) isEqualTo 1})
+#define CHECK_DIST(POS1,POS2,DIST) POS1 distance POS2 <= DIST
 #define CHECK_DIST2D(POS1,POS2,DIST) POS1 distance2D POS2 <= DIST
+#define CHECK_VECTORDIST(POS1,POS2,DIST) POS1 vectorDistance POS2 <= DIST
 #define CACHE_DISABLE_VAR QUOTE(TRIPLES(PREFIX,cache,disableCaching))
 #define CACHE_DISABLE(GRP,BOOL) GRP setVariable [CACHE_DISABLE_VAR,BOOL,true]
 #define COST_MAN 2
