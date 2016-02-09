@@ -145,7 +145,7 @@ for "_i" from 0 to (ceil random 3) do {
 
 // pushBack location to array and set task
 GVAR(locations) pushBack _this;
-[true,TASK_ID,[TASK_DESC,TASK_TITLE,""],_position,false,true,"Attack"] call EFUNC(main,setTask);
+[true,TASK_ID,[TASK_DESC,TASK_TITLE,""],ASLtoAGL _position,false,true,"Attack"] call EFUNC(main,setTask);
 
 [{ // check for player PFH
 	params ["_args","_idPFH"];
