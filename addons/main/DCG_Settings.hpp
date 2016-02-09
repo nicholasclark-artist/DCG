@@ -56,7 +56,7 @@ class DOUBLES(PREFIX,settings) {
         typeName = "ARRAY";
         typeDetail = "POOL";
         value[] = {
-            {"ALL","O_Heli_Light_02_F","O_Heli_Attack_02_F","O_Heli_Light_02_v2_F"}
+            {"ALL","O_Heli_Light_02_F","O_Heli_Attack_02_F","O_Plane_CAS_02_F"}
         };
     };
     class GVAR(sniperPoolEast) {
@@ -91,7 +91,7 @@ class DOUBLES(PREFIX,settings) {
         typeName = "ARRAY";
         typeDetail = "POOL";
         value[] = {
-            {"ALL","I_Heli_light_03_F"}
+            {"ALL","I_Heli_light_03_F","I_Plane_Fighter_03_CAS_F","I_Plane_Fighter_03_AA_F"}
         };
     };
     class GVAR(sniperPoolInd) {
@@ -126,7 +126,7 @@ class DOUBLES(PREFIX,settings) {
         typeName = "ARRAY";
         typeDetail = "POOL";
         value[] = {
-            {"ALL","B_Heli_Transport_03_F","B_Heli_Transport_01_F","B_Heli_Light_01_F"}
+            {"ALL","B_Heli_Transport_03_F","B_Heli_Transport_01_F","B_Heli_Light_01_F","B_Plane_CAS_01_F","B_Heli_Attack_01_F","B_Heli_Light_01_armed_F"}
         };
     };
     class GVAR(sniperPoolWest) {
