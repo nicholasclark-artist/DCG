@@ -9,6 +9,7 @@ __________________________________________________________________*/
 
 if !(CHECK_ADDON_1("dcg_main")) exitWith {};
 
+EGVAR(main,playerSide) = WEST;
 enableSaving [false, false];
 enableSentences false;
 enableRadio false;
