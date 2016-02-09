@@ -40,19 +40,15 @@ _fnc_removeUnusedPools = {
 _fnc_setSettingValid = {
 	params ["_name","_typeName","_typeDetail","_value"];
 	if (toUpper _typeDetail isEqualTo "POOL") then {
-		if (_name in [GVAR(airPoolEast),GVAR(airPoolInd),GVAR(airPoolWest)]) then {
-			{
-				if !(_x isKindOf "Helicopter") then {_name deleteAt _forEachIndex};
-			} forEach _name;
-		};
-		{
-			if (typeName _x isEqualTo "STRING") then {
-				if !(isClass (configfile >> "CfgVehicles" >> _x)) then {
-					LOG_DEBUG_1("%1 does not exist on server.", _x);
-					_value deleteAt _forEachIndex;
+		for "_i" from (count _value - 1) to 0 step -1 do {
+			_class = _value select _i;
+			if (_class isEqualType "") then {
+				if !(isClass (configfile >> "CfgVehicles" >> _class)) then {
+					LOG_DEBUG_1("%1 does not exist on server.", _class);
+					_value deleteAt _i;
 				};
 			};
-		} forEach _value;
+		};
 		if (_value isEqualTo []) then {
 			LOG_DEBUG_1("%1 is empty.", _name);
 		};
@@ -89,3 +85,4 @@ publicVariable QGVAR(settings);
     publicVariable (_x select 0);
     false
 } count GVAR(settings);
+
