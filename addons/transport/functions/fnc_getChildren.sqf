@@ -1,6 +1,6 @@
 /*
 Author:
-Nicholas Clark (SENSEI)
+Nicholas Clark (SENSEI), Larrow
 
 Description:
 get transport children for interaction menu
@@ -12,16 +12,40 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_actions","_displayName","_action"];
+private ["_actions","_pool","_fnc_getCargo","_displayName","_action"];
 
 _actions = [];
+_pool = [];
 
-if (EGVAR(main,airPoolWest) isEqualTo []) exitWith {
-	_actions
+_fnc_getCargo = {
+	private ["_baseCfg","_numCargo"];
+	params ["_vehType"];
+
+	_baseCfg = configFile >> "CfgVehicles" >> _vehType;
+
+	_numCargo = count ("
+		if ( isText(_x >> 'proxyType') && { getText(_x >> 'proxyType') isEqualTo 'CPCargo' } ) then {
+			true
+		};
+	"configClasses ( _baseCfg >> "Turrets" )) + getNumber ( _baseCfg >> "transportSoldier" );
+
+	_numCargo
+};
+
+call {
+	if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
+		_pool = EGVAR(main,airPoolWest);
+	};
+	if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
+		_pool = EGVAR(main,airPoolEast);
+	};
+	if (EGVAR(main,playerSide) isEqualTo INDEPENDENT) exitWith {
+		_pool = EGVAR(main,airPoolInd);
+	};
 };
 
 {
-	if (isClass (configfile >> "CfgVehicles" >> _x)) then {
+	if (_x isKindOf "Helicopter" && {([_x] call _fnc_getCargo) > 0}) then {
 		_displayName = format ["Call in %1",getText (configfile >> "CfgVehicles" >> _x >> "displayName")];
 		if (CHECK_ADDON_1("ace_interact_menu")) then {
 			_action = [_x, _displayName, "", {[_this select 2] call FUNC(request)}, {true}, {}, _x] call ace_interact_menu_fnc_createAction;
@@ -31,6 +55,6 @@ if (EGVAR(main,airPoolWest) isEqualTo []) exitWith {
 			_actions pushBack _action;
 		};
 	};
-} forEach EGVAR(main,airPoolWest);
+} forEach _pool;
 
 _actions
