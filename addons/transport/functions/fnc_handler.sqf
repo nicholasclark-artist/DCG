@@ -46,6 +46,7 @@ publicVariable QGVAR(count);
 
 // check for helipad around both lz's
 _fnc_getNearHelipad = {
+	private ["_helipad","_isEmpty"];
 	params ["_pos",["_range",100],["_size",8]];
 
 	_helipad = (nearestObjects [_pos, ["Land_HelipadCircle_F","Land_HelipadCivil_F","Land_HelipadEmpty_F","Land_HelipadRescue_F","Land_HelipadSquare_F","Land_JumpTarget_F"], _range]) select 0;
