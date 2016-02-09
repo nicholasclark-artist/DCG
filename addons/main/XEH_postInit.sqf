@@ -13,27 +13,23 @@ __________________________________________________________________*/
 
 if (!isServer || !isMultiplayer) exitWith {};
 
-if (CHECK_MARKER(QUOTE(BASE_VAR))) then { // check if base marker exists
-	CREATE_BASE(getMarkerPos QUOTE(BASE_VAR));
-	{CREATE_BASE(getMarkerPos QUOTE(BASE_VAR));} remoteExecCall ["BIS_fnc_call",-2,true]; // can't PV locations, so recreate location on clients. Runs at time > 0
+// set mission params as missionNameSpace variables
+call FUNC(setParams);
 
-	[{
-		GVAR(baseLocation) setPosition (getMarkerPos QUOTE(BASE_VAR));
-	}, 1, []] call CBA_fnc_addPerFrameHandler;
-} else {
-	if !(isNil QUOTE(BASE_VAR)) then { // check if base object exists
-		CREATE_BASE(getPos BASE_VAR);
-		{CREATE_BASE(getPos BASE_VAR);} remoteExecCall ["BIS_fnc_call",-2,true]; // can't PV locations, so recreate location on clients. Runs at time > 0
-		[{
-			GVAR(baseLocation) setPosition (getPos BASE_VAR);
-		}, 1, []] call CBA_fnc_addPerFrameHandler;
-	};
+if (CHECK_MARKER(QUOTE(BASE_VAR))) then { // check if base marker exists
+	BASE_VAR = "Land_HelipadEmpty_F" createVehicle (getMarkerPos QUOTE(BASE_VAR)); // create base object
 };
 
-if (isNull GVAR(baseLocation)) then {
+if !(isNil QUOTE(BASE_VAR)) then { // check if base object exists
+	CREATE_BASE(getPos BASE_VAR);
+	{CREATE_BASE(getPos BASE_VAR);} remoteExecCall ["BIS_fnc_call",-2,true]; // can't PV locations, so recreate location on clients. Runs at time > 0
+	GVAR(baseLocation) attachObject BASE_VAR;
+};
+
+if (isNull GVAR(baseLocation)) then { // if base location does not exist
 	CREATE_DEFAULT_BASE;
 	{CREATE_DEFAULT_BASE;} remoteExecCall ["BIS_fnc_call",-2,true];
-	LOG_DEBUG_1("Base marker does not exist. Creating default MOB location at %1.",DEFAULTPOS);
+	LOG_DEBUG_1("Base object does not exist. Creating default base location at %1.",DEFAULTPOS);
 };
 
 // get map locations
@@ -137,9 +133,6 @@ DATA_DELETEPVEH addPublicVariableEventHandler {
 	profileNamespace setVariable [DATA_SAVEVAR,nil];
 	saveProfileNamespace;
 };
-
-// set mission params as missionNameSpace variables
-call FUNC(setParams);
 
 ADDON = true;
 publicVariable QUOTE(ADDON);
