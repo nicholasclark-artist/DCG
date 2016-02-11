@@ -6,16 +6,16 @@ Description:
 spawns animals
 
 Arguments:
+0: position to spawn animals <ARRAY>
+1: type of position <STRING>
 
 Return:
 none
 __________________________________________________________________*/
-if !(isServer) exitWith {};
-
 #include "script_component.hpp"
 
 private ["_agentArray","_type","_agent"];
-params ["_pos","_expression","_dist"];
+params ["_pos","_expression"];
 
 missionNamespace setVariable [format ["%1_%2",QUOTE(ADDON),_pos],true];
 _agentArray = [];
@@ -47,11 +47,11 @@ for "_i" from 0 to (_count - 1) do {
 
 [{
 	params ["_args","_idPFH"];
-	_args params ["_pos","_dist","_agentArray"];
+	_args params ["_pos","_agentArray"];
 
-	if ({_x distance _pos < _dist} count allPlayers isEqualTo 0) exitWith {
+	if ({_x distance _pos < GVAR(spawnDist)} count allPlayers isEqualTo 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		missionNamespace setVariable [format ["%1_%2",QUOTE(ADDON),_pos],false];
 		_agentArray call EFUNC(main,cleanup);
 	};
-}, 30, [_pos,_dist,_agentArray]] call CBA_fnc_addPerFrameHandler;
+}, 30, [_pos,_agentArray]] call CBA_fnc_addPerFrameHandler;
