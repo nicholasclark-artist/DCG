@@ -25,7 +25,7 @@ __________________________________________________________________*/
 #define WAYPOINT_ADD(DIST) _waypoint set [0,_pos]; _waypoint set [1,diag_tickTime + (((_unit distance2D _pos)/DIST)*60)]; _waypoint set [2,((_unit distance2D _pos)*0.1) max 5]
 
 private ["_pos","_grp","_posStart","_type","_d","_r","_roads","_veh","_road","_houses","_housePosArray"];
-params ["_units",["_range",100],["_individual",true]];
+params ["_units",["_range",100],["_individual",true],["_behavior","SAFE"]];
 
 if (_units isEqualTo []) exitWith {false};
 
@@ -39,7 +39,7 @@ if (_units isEqualTo []) exitWith {false};
             };
         } forEach _units;
 
-        _grp setBehaviour "SAFE";
+        _grp setBehaviour toUpper (_behavior);
         _posStart = getPosATL (leader _grp);
 
         private ["_posPrev"];
@@ -69,7 +69,7 @@ if (_units isEqualTo []) exitWith {false};
     };
 
     _waypoint = WAYPOINT_EMPTY;
-    _x setBehaviour "SAFE";
+    _x setBehaviour toUpper (_behavior);
 
     if (!((vehicle _x) isEqualTo _x) && {_x isEqualTo (driver (vehicle _x))}) then { // if unit is in a vehicle and is the driver
         private ["_veh","_roads"];
