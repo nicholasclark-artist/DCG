@@ -13,11 +13,6 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 1;
     };
-    class GVAR(cleanup) {
-        typeName = "BOOL";
-        typeDetail = "";
-        value = 1;
-    };
     class GVAR(baseName) {
         typeName = "STRING";
         typeDetail = "";
@@ -36,7 +31,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(blacklistLocations) {
         typeName = "ARRAY";
         typeDetail = "";
-        value[] = {};
+        value[] = {"anthrakia"};
     };
     class GVAR(unitPoolEast) {
         typeName = "ARRAY";

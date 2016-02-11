@@ -110,11 +110,3 @@
 #define COST_ITEM 0.75
 #define COST_FORT 0.5
 #define COST_SIGN 1
-
-#define STRENGTH(LOW,HIGH) (call EFUNC(main,setStrength) max LOW) min HIGH
-#define TASKEXIT(ID) call FUNC(setTask); ["Exit task, %1", ID] call FUNC(log);
-#define TASKCIVEXIT call FUNC(setTaskCiv);
-#define TASKCIVREBEL ["rebel"] call FUNC(setTaskCiv);
-#define TASK(ID,DESCRIPTION,TEXT,ICON) [WEST,[ID],[DESCRIPTION, TEXT, ""],objNull,false,0,true,ICON,false] call BIS_fnc_taskCreate;
-#define TASKWPOS(ID,DESCRIPTION,TEXT,POS,ICON) [WEST,[ID],[DESCRIPTION, TEXT, ""],POS,false,0,true,ICON,false] call BIS_fnc_taskCreate;
-#define SAD(GROUP,TARGET) _wp = GROUP addWaypoint [(leader GROUP) modeltoWorld [0,500,0], 0]; _wp setWaypointType "SAD"; _wp setWaypointSpeed "FULL"; _wp setWaypointCombatMode "RED"; [GROUP,_wp,TARGET] call FUNC(setWaypointPos);

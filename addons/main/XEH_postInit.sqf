@@ -18,6 +18,7 @@ call FUNC(setParams);
 
 if (CHECK_MARKER(QUOTE(BASE_VAR))) then { // check if base marker exists
 	BASE_VAR = "Land_HelipadEmpty_F" createVehicle (getMarkerPos QUOTE(BASE_VAR)); // create base object
+	publicVariable QUOTE(BASE_VAR);
 };
 
 if !(isNil QUOTE(BASE_VAR)) then { // check if base object exists
@@ -33,6 +34,8 @@ if (isNull GVAR(baseLocation)) then { // if base location does not exist
 };
 
 // get map locations
+GVAR(blacklistLocations) = GVAR(blacklistLocations) apply {toLower _x};
+
 {
 	_name = text _x;
 	_position = locationPosition _x;
@@ -40,7 +43,7 @@ if (isNull GVAR(baseLocation)) then { // if base location does not exist
 	_size = (((size _x) select 0) + ((size _x) select 1))/2;
 	_type = type _x;
 
-	if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(_name in GVAR(blacklistLocations))} && {!(_name isEqualTo "")}) then {
+	if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(toLower _name in GVAR(blacklistLocations))} && {!(_name isEqualTo "")}) then {
 		GVAR(locations) pushBack [_name,_position,_size,_type];
 	};
 } forEach (nearestLocations [GVAR(center), ["NameCityCapital","NameCity","NameVillage"], GVAR(range)]);
@@ -58,58 +61,56 @@ if (GVAR(baseSafezone)) then {
 };
 
 // cleanup PFH
-if (GVAR(cleanup)) then {
-	if !(isNil {HEADLESSCLIENT}) then {
-		{
-			[{
-				{
-					if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then { // only local groups can be deleted
-						deleteGroup _x;
-					};
-				} forEach allGroups;
-			}, 30, []] call CBA_fnc_addPerFrameHandler;
-		} remoteExecCall ["bis_fnc_call", owner HEADLESSCLIENT];
-	};
+if !(isNil {HEADLESSCLIENT}) then {
+	{
+		[{
+			{
+				if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then { // only local groups can be deleted
+					deleteGroup _x;
+				};
+			} forEach allGroups;
+		}, 30, []] call CBA_fnc_addPerFrameHandler;
+	} remoteExecCall ["bis_fnc_call", owner HEADLESSCLIENT];
+};
 
-	[{
-		private ["_obj"];
-		// groups
-		{
-			if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then { // only local groups can be deleted
-				deleteGroup _x;
-			};
-		} forEach allGroups;
-		// markers
-		if !(EGVAR(main,markerCleanup) isEqualTo []) then {
-			for "_i" from (count EGVAR(main,markerCleanup) - 1) to 0 step -1 do {
-				deleteMarker (EGVAR(main,markerCleanup) select _i);
-				EGVAR(main,markerCleanup) deleteAt _i;
-			};
+[{
+	private ["_obj"];
+	// groups
+	{
+		if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then { // only local groups can be deleted
+			deleteGroup _x;
 		};
-		// objects
-		if !(EGVAR(main,objectCleanup) isEqualTo []) then {
-			for "_i" from (count EGVAR(main,objectCleanup) - 1) to 0 step -1 do {
-				_obj = EGVAR(main,objectCleanup) select _i;
-				if (_obj isKindOf "LandVehicle" || {_obj isKindOf "Air"} || {_obj isKindOf "Ship"}) then {
-					if ({isPlayer _x} count (crew _obj) isEqualTo 0 && {count ([getPosATL _obj,300] call EFUNC(main,getNearPlayers)) isEqualTo 0}) then {
-						{deleteVehicle _x} forEach (crew _obj);
-						deleteVehicle _obj;
-						EGVAR(main,objectCleanup) deleteAt _i;
-					};
-				} else {
-					if (count ([getPosATL _obj,300] call EFUNC(main,getNearPlayers)) isEqualTo 0) then {
-						deleteVehicle _obj;
-						EGVAR(main,objectCleanup) deleteAt _i;
-					};
+	} forEach allGroups;
+	// markers
+	if !(GVAR(markerCleanup) isEqualTo []) then {
+		for "_i" from (count GVAR(markerCleanup) - 1) to 0 step -1 do {
+			deleteMarker (GVAR(markerCleanup) select _i);
+			GVAR(markerCleanup) deleteAt _i;
+		};
+	};
+	// objects
+	if !(GVAR(objectCleanup) isEqualTo []) then {
+		GVAR(objectCleanup) = GVAR(objectCleanup) select {!isNull _x}; // remove null elements
+		for "_i" from (count GVAR(objectCleanup) - 1) to 0 step -1 do {
+			_obj = GVAR(objectCleanup) select _i;
+			if (_obj isKindOf "LandVehicle" || {_obj isKindOf "Air"} || {_obj isKindOf "Ship"}) then {
+				if ({isPlayer _x} count (crew _obj) isEqualTo 0 && {count ([getPosATL _obj,300] call EFUNC(main,getNearPlayers)) isEqualTo 0}) then {
+					{deleteVehicle _x} forEach (crew _obj);
+					deleteVehicle _obj;
+				};
+			} else {
+				if (count ([getPosATL _obj,300] call EFUNC(main,getNearPlayers)) isEqualTo 0) then {
+					deleteVehicle _obj;
 				};
 			};
 		};
-		// base items
-		{
-			if (_x getVariable [QUOTE(DOUBLES(PREFIX,cleanup)),true]) then {deleteVehicle _x};
-		} forEach (nearestObjects [locationPosition GVAR(baseLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],GVAR(baseRadius)]);
-	}, 180, []] call CBA_fnc_addPerFrameHandler;
-};
+	};
+	// base items
+	{
+		if (_x getVariable [QUOTE(DOUBLES(PREFIX,cleanup)),true]) then {deleteVehicle _x};
+	} forEach (nearestObjects [locationPosition GVAR(baseLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],GVAR(baseRadius)]);
+}, 180, []] call CBA_fnc_addPerFrameHandler;
+
 
 // actions
 {
