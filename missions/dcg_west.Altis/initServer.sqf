@@ -14,6 +14,8 @@ waitUntil {DOUBLES(PREFIX,main)}; // wait until main addon completes postInit
 // misc
 ["Initialize"] call BIS_fnc_dynamicGroups; // BIS group management
 createCenter EGVAR(main,enemySide); // required if an enemy side unit is not placed in editor
+EGVAR(main,enemySide) setFriend [CIVILIAN, 1];
+EGVAR(main,playerSide) setFriend [CIVILIAN, 1];
 
 // debug
 if (CHECK_DEBUG) then {
