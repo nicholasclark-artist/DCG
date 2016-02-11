@@ -41,6 +41,6 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(vehCooldown) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 60;
+        value = 600;
     };
 };
