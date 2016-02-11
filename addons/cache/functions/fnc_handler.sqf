@@ -13,7 +13,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 [{
-	private ["_units","_grps","_grp","_grpUnits"];
+	private ["_units","_grps","_grp"];
 	_units = [];
 
 	// get groups to cache
@@ -25,8 +25,8 @@ __________________________________________________________________*/
 		if !((leader _grp) getVariable [QUOTE(DOUBLES(ADDON,leaderHasEH)),false]) then {
 			[leader _grp] call FUNC(leaderEH);
 		};
-		_grpUnits = ((units _grp) - [leader _grp]);
-		_units append _grpUnits;
+		_units = units _grp;
+		_units = _units select {!(_x isEqualTo leader _x)};
 	};
 
 	// cache units
@@ -37,24 +37,23 @@ __________________________________________________________________*/
 	};
 
 	// cached groups
+	GVAR(groups) = GVAR(groups) select {!isNull _x}; // remove null elements
 	for "_i" from (count GVAR(groups) - 1) to 0 step -1 do {
 		_grp = GVAR(groups) select _i;
-		if !(isNull _grp) then {
-			if ([_grp] call FUNC(canUncache)) exitWith {
-				_units = (units _grp) - [leader _grp];
-				{
-					[_x] call FUNC(uncache);
-				} forEach _units;
-				GVAR(groups) deleteAt _i;
-			};
-			// cache new units in cached group
+		if ([_grp] call FUNC(canUncache)) exitWith {
+			_units = units _grp;
+			_units = _units select {!(_x isEqualTo leader _x)};
 			{
-				if (!(_x isEqualTo leader _x) && {simulationEnabled _x}) then {
-					[_x] call FUNC(cache);
-				};
-			} forEach (units _grp);
-		} else {
+				[_x] call FUNC(uncache);
+			} forEach _units;
 			GVAR(groups) deleteAt _i;
 		};
+
+		// cache new units in cached group
+		{
+			if (!(_x isEqualTo leader _x) && {simulationEnabled _x}) then {
+				[_x] call FUNC(cache);
+			};
+		} forEach (units _grp);
 	};
 }, 15, []] call CBA_fnc_addPerFrameHandler;
