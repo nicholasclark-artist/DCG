@@ -76,6 +76,7 @@ for "_i" from 1 to _count do {
 			for "_i" from 1 to ((_veh emptyPositions "cargo") min 4) do {
 				_unit = _grp createUnit [selectRandom _unitPool, _pos, [], 0, "NONE"];
 				_unit moveInCargo _veh;
+				sleep _delay;
 			};
 		};
 	};
