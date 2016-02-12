@@ -9,7 +9,7 @@ if (!isServer || !isMultiplayer) exitWith {};
 ADDON = false;
 
 PREP(findLocation);
-PREP(PFH);
+PREP(handler);
 PREP(setOccupied);
 PREP(addIntel);
 
