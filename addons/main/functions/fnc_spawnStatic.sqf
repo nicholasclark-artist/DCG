@@ -52,7 +52,7 @@ call {
 {
 	if (count _gunnerArray isEqualTo _count) exitWith {};
 
-	if !(isOnRoad _x) then {
+	if !(isOnRoad (ASLToAGL _x)) then {
 		_type = ceil random 3;
 		if (_type isEqualTo 1) exitWith { // tower
 			_tower = _static1 createVehicle _x;
@@ -64,17 +64,18 @@ call {
 			_gunner setPosATL (_tower buildingpos 1);
 			_gunner setUnitPos "UP";
 			_gunner disableAI "MOVE";
+			_gunner disableAI "COVER";
 			_gunner setSkill ["spotDistance",0.90];
 			_gunnerArray pushBack _gunner;
 			_objArray pushBack _tower;
 			DEBUG_MRK;
 		};
 		if (_type isEqualTo 2) exitWith { // bunkered static
-			_roads = _x nearRoads _range;
+			_roads = _x nearRoads 200;
 			if (_roads isEqualTo []) exitWith {};
 			_road = selectRandom _roads;
 			_roadConnectedTo = (roadsConnectedTo _road);
-			if (_roadConnectedTo isEqualTo []) exitWith {};
+			if (_roadConnectedTo isEqualTo [] || {!(CHECK_DIST2D(getposASL _road,_pos,_range))}) exitWith {};
 			_roadConnectedTo = _roadConnectedTo select 0;
 			_staticPos = _road modelToWorld [-11,0,0];
 			_staticPos set [2,0];
