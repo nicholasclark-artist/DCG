@@ -18,39 +18,49 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 2;
     };
-    class GVAR(infCount) {
+    class GVAR(infCountCapital) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 40;
+        value = 30;
     };
-    class GVAR(vehCount) {
+    class GVAR(vehCountCapital) {
         typeName = "SCALAR";
         typeDetail = "";
         value = 2;
     };
-    class GVAR(airCount) {
+    class GVAR(airCountCapital) {
         typeName = "SCALAR";
         typeDetail = "";
         value = 1;
     };
-    class GVAR(sniperCount) {
+    class GVAR(infCountCity) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 4;
+        value = 15;
     };
-    class GVAR(staticCount) {
+    class GVAR(vehCountCity) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 3;
+        value = 1;
     };
-    class GVAR(cityMultiplier) {
+    class GVAR(airCountCity) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 0.5;
+        value = 1;
     };
-    class GVAR(townMultiplier) {
+    class GVAR(infCountVillage) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 0.25;
+        value = 8;
+    };
+    class GVAR(vehCountVillage) {
+        typeName = "SCALAR";
+        typeDetail = "";
+        value = 0;
+    };
+    class GVAR(airCountVillage) {
+        typeName = "SCALAR";
+        typeDetail = "";
+        value = 0;
     };
 };
