@@ -84,7 +84,6 @@ __________________________________________________________________*/
 			(leader _grp) setPosATL (selectRandom _posArray); \
 			(leader _grp) disableAI "MOVE"; \
 			(leader _grp) disableAI "COVER"; \
-			SETVAR_UNIT(leader _grp); \
 			_count = _count + 1; \
 		}; \
 	}
