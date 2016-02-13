@@ -89,7 +89,7 @@ call {
 				_y addWeapon _weapon;
 				{_y addMagazine _x} forEach _mags;
 			} forEach units _grp;
-			_wp = _grp addWaypoint [_tar,0];
+			_wp = _grp addWaypoint [getPosATL _tar,0];
 			_wp setWaypointBehaviour "AWARE";
 			_wp setWaypointFormation "STAG COLUMN";
 			_cond = "!(behaviour this isEqualTo ""COMBAT"")";
