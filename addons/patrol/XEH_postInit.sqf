@@ -17,9 +17,9 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		GVAR(blacklist) pushBack [locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)]; // add main base to blacklist
 		if !(isNil {HEADLESSCLIENT}) then {
 			(owner HEADLESSCLIENT) publicVariableClient QGVAR(groups);
-			remoteExecCall [QFUNC(PFH), owner HEADLESSCLIENT, false];
+			remoteExecCall [QFUNC(handler), owner HEADLESSCLIENT, false];
 		} else {
-			call FUNC(PFH);
+			call FUNC(handler);
 		};
 
 		ADDON = true;

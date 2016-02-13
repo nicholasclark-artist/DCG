@@ -8,7 +8,7 @@ if (!isServer || !isMultiplayer) exitWith {};
 
 ADDON = false;
 
-PREP(PFH);
+PREP(handler);
 PREP(debug);
 
 GVAR(groups) = [];
