@@ -202,4 +202,4 @@ if (CHECK_DEBUG) then {
 	_mrk setMarkerBrush "SolidBorder";
 };
 
-LOG_DEBUG_4("Location occupied: ",[_this,_count,_objArray,_officer]);
+LOG_DEBUG_4("%1, %2, %3, %4",_this,_count,_objArray,_officer);
