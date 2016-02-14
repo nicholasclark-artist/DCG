@@ -12,7 +12,7 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define EXPRESSION "(1 - forest) * (2 + meadow) * (1 - sea) * (1 - houses) * (1 - hills)"
-#define DIST 2000
+#define DIST worldSize*0.07
 
 private ["_ret"];
 params ["_anchor","_range"];

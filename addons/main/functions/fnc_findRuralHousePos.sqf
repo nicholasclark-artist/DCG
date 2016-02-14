@@ -12,7 +12,7 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define EXPRESSION "(1 + houses)"
-#define DIST 500
+#define DIST worldSize*0.07
 
 private ["_ret","_pos","_locations"];
 params ["_anchor","_range"];
