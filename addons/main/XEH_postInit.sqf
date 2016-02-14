@@ -33,9 +33,11 @@ if (isNull GVAR(baseLocation)) then { // if base location does not exist
 	LOG_DEBUG_1("Base object does not exist. Creating default base location at %1.",DEFAULTPOS);
 };
 
-// get map locations
+// set arrays to lowercase
 GVAR(blacklistLocations) = GVAR(blacklistLocations) apply {toLower _x};
+GVAR(simpleWorlds) = GVAR(simpleWorlds) apply {toLower _x};
 
+// get map locations
 {
 	_name = text _x;
 	_position = locationPosition _x;

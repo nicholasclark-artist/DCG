@@ -33,6 +33,11 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value[] = {"anthrakia"};
     };
+    class GVAR(simpleWorlds) {
+        typeName = "ARRAY";
+        typeDetail = "";
+        value[] = {"Chernarus","Chernarus_Summer"};
+    };
     class GVAR(unitPoolEast) {
         typeName = "ARRAY";
         typeDetail = "POOL";
