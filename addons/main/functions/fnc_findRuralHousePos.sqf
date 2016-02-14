@@ -6,6 +6,8 @@ Description:
 finds an interior house position outside a town
 
 Arguments:
+0: center position <ARRAY>
+1: search distance <NUMBER>
 
 Return:
 array
