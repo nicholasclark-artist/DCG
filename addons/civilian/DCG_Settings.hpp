@@ -13,29 +13,34 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 500;
     };
-    class GVAR(count) {
+    class GVAR(countCapital) {
         typeName = "SCALAR";
         typeDetail = "";
         value = 18;
     };
-    class GVAR(vehCount) {
+    class GVAR(countCity) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 3;
+        value = 10;
     };
-    class GVAR(cityMultiplier) {
+    class GVAR(countVillage) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 0.5;
-    };
-    class GVAR(townMultiplier) {
-        typeName = "SCALAR";
-        typeDetail = "";
-        value = 0.3;
+        value = 5;
     };
     class GVAR(hostileChance) {
         typeName = "SCALAR";
         typeDetail = "";
         value = 0.1;
+    };
+    class GVAR(vehMaxCount) {
+        typeName = "SCALAR";
+        typeDetail = "";
+        value = 8;
+    };
+    class GVAR(vehCooldown) {
+        typeName = "SCALAR";
+        typeDetail = "";
+        value = 600;
     };
 };

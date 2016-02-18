@@ -12,7 +12,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_center","_side","_dist","_distSpawn","_wpType","_patrol","_findHelipad","_buffer","_unitPool","_vehPool","_backup","_lz","_fnc_getNearHelipad","_pos","_range","_size","_helipad","_isEmpty","_posHelipad","_veh","_grp","_pilot","_grpPatrol","_wp1","_wp2","_args","_wp"];
+private ["_center","_side","_dist","_distSpawn","_wpType","_patrol","_findHelipad","_buffer","_fnc_getCargo","_baseCfg","_numCargo","_vehType","_fnc_getNearHelipad","_helipad","_isEmpty","_pos","_range","_size","_unitPool","_vehPool","_backup","_lz","_posHelipad","_type","_veh","_grp","_pilot","_grpPatrol","_wp1","_wp2","_args","_idPFH","_wp"];
 
 _center = param [0];
 _side = param [1,GVAR(enemySide)];
@@ -22,6 +22,36 @@ _wpType = param [4,"SAD",[""]];
 _patrol = param [5,false];
 _findHelipad = param [6,false];
 _buffer = 200;
+
+_fnc_getCargo = {
+	private ["_baseCfg","_numCargo"];
+	params ["_vehType"];
+
+	_baseCfg = configFile >> "CfgVehicles" >> _vehType;
+
+	_numCargo = count ("
+		if ( isText(_x >> 'proxyType') && { getText(_x >> 'proxyType') isEqualTo 'CPCargo' } ) then {
+			true
+		};
+	"configClasses ( _baseCfg >> "Turrets" )) + getNumber ( _baseCfg >> "transportSoldier" );
+
+	_numCargo
+};
+
+_fnc_getNearHelipad = {
+	private ["_helipad","_isEmpty"];
+	params ["_pos",["_range",100],["_size",8]];
+
+	_helipad = (nearestObjects [_pos, ["Land_HelipadCircle_F","Land_HelipadCivil_F","Land_HelipadEmpty_F","Land_HelipadRescue_F","Land_HelipadSquare_F","Land_JumpTarget_F"], _range]) select 0;
+
+	if !(isNil "_helipad") then {
+		_isEmpty = (getPosATL _helipad) isFlatEmpty [_size, 0, 0.5, 6, 0, false, _helipad];
+		if !(_isEmpty isEqualTo []) then {
+			_pos = getPosATL _helipad;
+		};
+	};
+	_pos
+};
 
 call {
 	if (_side isEqualTo EAST) exitWith {
@@ -46,30 +76,18 @@ if (_lz isEqualTo _center) exitWith {
 };
 
 if (_findHelipad) then {
-	_fnc_getNearHelipad = {
-		params ["_pos",["_range",100],["_size",8]];
-
-		_helipad = (nearestObjects [_pos, ["Land_HelipadCircle_F","Land_HelipadCivil_F","Land_HelipadEmpty_F","Land_HelipadRescue_F","Land_HelipadSquare_F","Land_JumpTarget_F"], _range]) select 0;
-
-		if !(isNil "_helipad") then {
-			_isEmpty = (getPosATL _helipad) isFlatEmpty [_size, 0, 0.5, 6, 0, false, _helipad];
-			if !(_isEmpty isEqualTo []) then {
-				_pos = getPosATL _helipad;
-			};
-		};
-		_pos
-	};
 	_posHelipad = [_lz] call _fnc_getNearHelipad;
 	_lz = _posHelipad;
 };
 
 _lz set [2,0];
 _pos = [_lz,_distSpawn,_distSpawn+_buffer] call FUNC(findRandomPos);
-_veh = createVehicle [selectRandom _vehPool,_pos,[],0,"FLY"];
-if (_veh emptyPositions "cargo" isEqualTo 0 || {!(_veh isKindOf "Helicopter")}) then {
-	deleteVehicle _veh;
-	_veh = createVehicle [_backup,_pos,[],0,"FLY"];
+_type = selectRandom _vehPool;
+if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
+	_type = _backup;
 };
+
+_veh = createVehicle [_type,_pos,[],0,"FLY"];
 _veh flyInHeight 100;
 _veh lock 3;
 _grp = createGroup _side;

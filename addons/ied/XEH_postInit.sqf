@@ -31,14 +31,12 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			};
 
 			{
-				_y = _x;
-				_y deleteAt 2;
-				_roads = _y nearRoads 300;
+				_roads = (ASLToAGL _x) nearRoads 500;
 				if !(_roads isEqualTo []) then {
 					_road = selectRandom _roads;
-					_pos = _road modelToWorld [-3 + (floor random 6),0,0];
-					_pos set [2,0];
-					if !(CHECK_DIST2D(_pos,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) then {
+					_pos = _road modelToWorld [-3 + (ceil random 6),0,0];
+					if (!(CHECK_DIST2D(_pos,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) && {(nearestLocations [_pos, ["NameCityCapital","NameCity","NameVillage"], 500]) isEqualTo []}) then {
+						_pos set [2,0];
 						_ied = (selectRandom _type) createVehicle _pos;
 						GVAR(array) pushBack _ied;
 						DEBUG_IED;
@@ -52,7 +50,6 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 				GVAR(array) pushBack _ied;
 				DEBUG_IED;
 			};
-
 		};
 
 		if !(CHECK_ADDON_1("ace_explosives")) then {

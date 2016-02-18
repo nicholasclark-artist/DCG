@@ -8,6 +8,12 @@ if (!isServer || !isMultiplayer) exitWith {};
 
 ADDON = false;
 
-PREP(spawn);
+PREP(handlerUnit);
+PREP(handlerVeh);
+PREP(handlerAnimal);
+PREP(spawnUnit);
+PREP(spawnVeh);
 PREP(spawnAnimal);
 PREP(setHostile);
+
+GVAR(vehicles) = [];

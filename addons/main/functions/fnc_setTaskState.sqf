@@ -6,6 +6,9 @@ Description:
 set task state
 
 Arguments:
+0: task id <STRING>
+1: state task will be set to <STRING>
+2: environment where function will run <NUMBER,OBJECT,SIDE,GROUP,ARRAY>
 
 Return:
 none

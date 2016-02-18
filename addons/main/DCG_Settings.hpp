@@ -13,16 +13,6 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 1;
     };
-    class GVAR(cache) {
-        typeName = "BOOL";
-        typeDetail = "";
-        value = 1;
-    };
-    class GVAR(cleanup) {
-        typeName = "BOOL";
-        typeDetail = "";
-        value = 1;
-    };
     class GVAR(baseName) {
         typeName = "STRING";
         typeDetail = "";
@@ -31,7 +21,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(baseRadius) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 1500;
+        value = 1800;
     };
     class GVAR(baseSafezone) {
         typeName = "BOOL";
@@ -42,6 +32,11 @@ class DOUBLES(PREFIX,settings) {
         typeName = "ARRAY";
         typeDetail = "";
         value[] = {};
+    };
+    class GVAR(simpleWorlds) {
+        typeName = "ARRAY";
+        typeDetail = "";
+        value[] = {"Chernarus","Chernarus_Summer"};
     };
     class GVAR(unitPoolEast) {
         typeName = "ARRAY";
@@ -61,7 +56,7 @@ class DOUBLES(PREFIX,settings) {
         typeName = "ARRAY";
         typeDetail = "POOL";
         value[] = {
-            {"ALL","O_Heli_Light_02_F","O_Heli_Attack_02_F","O_Heli_Light_02_v2_F"}
+            {"ALL","O_Heli_Light_02_F","O_Heli_Attack_02_F","O_Plane_CAS_02_F"}
         };
     };
     class GVAR(sniperPoolEast) {
@@ -96,7 +91,7 @@ class DOUBLES(PREFIX,settings) {
         typeName = "ARRAY";
         typeDetail = "POOL";
         value[] = {
-            {"ALL","I_Heli_light_03_F"}
+            {"ALL","I_Heli_light_03_F","I_Plane_Fighter_03_CAS_F","I_Plane_Fighter_03_AA_F"}
         };
     };
     class GVAR(sniperPoolInd) {
@@ -131,7 +126,7 @@ class DOUBLES(PREFIX,settings) {
         typeName = "ARRAY";
         typeDetail = "POOL";
         value[] = {
-            {"ALL","B_Heli_Transport_03_F","B_Heli_Transport_01_F","B_Heli_Light_01_F"}
+            {"ALL","B_Heli_Transport_03_F","B_Heli_Transport_01_F","B_Heli_Light_01_F","B_Plane_CAS_01_F","B_Heli_Attack_01_F","B_Heli_Light_01_armed_F"}
         };
     };
     class GVAR(sniperPoolWest) {

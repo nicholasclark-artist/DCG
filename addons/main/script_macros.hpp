@@ -95,10 +95,13 @@
 #define CHECK_MARKER(MARKER) getMarkerColor MARKER != ""
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> "CfgPatches" >> PATCH))
 #define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {TRIPLES(PREFIX,VAR,enable) isEqualTo 1})
+#define CHECK_DIST(POS1,POS2,DIST) POS1 distance POS2 <= DIST
 #define CHECK_DIST2D(POS1,POS2,DIST) POS1 distance2D POS2 <= DIST
-#define CACHE_DISABLE(GRP,BOOL) GRP setVariable ["zbe_cacheDisabled",BOOL,true]
-#define COST_MAN 2
-#define COST_CAR 4
+#define CHECK_VECTORDIST(POS1,POS2,DIST) POS1 vectorDistance POS2 <= DIST
+#define CACHE_DISABLE_VAR QUOTE(TRIPLES(PREFIX,cache,disableCaching))
+#define CACHE_DISABLE(GRP,BOOL) GRP setVariable [CACHE_DISABLE_VAR,BOOL,true]
+#define COST_MAN 4
+#define COST_CAR 6
 #define COST_TANK 8
 #define COST_AIR 10
 #define COST_SHIP 4
@@ -107,11 +110,3 @@
 #define COST_ITEM 0.75
 #define COST_FORT 0.5
 #define COST_SIGN 1
-
-#define STRENGTH(LOW,HIGH) (call EFUNC(main,setStrength) max LOW) min HIGH
-#define TASKEXIT(ID) call FUNC(setTask); ["Exit task, %1", ID] call FUNC(log);
-#define TASKCIVEXIT call FUNC(setTaskCiv);
-#define TASKCIVREBEL ["rebel"] call FUNC(setTaskCiv);
-#define TASK(ID,DESCRIPTION,TEXT,ICON) [WEST,[ID],[DESCRIPTION, TEXT, ""],objNull,false,0,true,ICON,false] call BIS_fnc_taskCreate;
-#define TASKWPOS(ID,DESCRIPTION,TEXT,POS,ICON) [WEST,[ID],[DESCRIPTION, TEXT, ""],POS,false,0,true,ICON,false] call BIS_fnc_taskCreate;
-#define SAD(GROUP,TARGET) _wp = GROUP addWaypoint [(leader GROUP) modeltoWorld [0,500,0], 0]; _wp setWaypointType "SAD"; _wp setWaypointSpeed "FULL"; _wp setWaypointCombatMode "RED"; [GROUP,_wp,TARGET] call FUNC(setWaypointPos);

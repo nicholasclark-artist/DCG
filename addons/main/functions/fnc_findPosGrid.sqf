@@ -22,7 +22,7 @@ __________________________________________________________________*/
 #define ANCHOR_OFFSET [(_anchor select 0) - (_range/2),(_anchor select 1) - (_range/2)]
 #define SHOW_DEBUG false
 
-private ["_ret","_retTemp","_fnc_createRow","_fnc_shuffle"];
+private ["_ret","_retTemp","_fnc_createRow"];
 params [
 	"_anchor",
 	["_dist",25,[0]],
@@ -46,16 +46,6 @@ _fnc_createRow = {
 	};
 
 	_ret
-};
-
-_fnc_shuffle = {
-    private ["_arr","_cnt"];
-    _arr = _this select 0;
-    _cnt = count _arr;
-    for "_i" from 1 to (_this select 1) do {
-        _arr pushBack (_arr deleteAt floor random _cnt);
-    };
-    _arr
 };
 
 for "_i" from 0 to POS_COUNT do {
@@ -97,7 +87,7 @@ if (SHOW_DEBUG) then {
 };
 
 if (_shuffle) then {
-	[_ret,(count _ret)*3] call _fnc_shuffle;
+	[_ret,(count _ret)*3] call FUNC(shuffle);
 };
 
 _ret

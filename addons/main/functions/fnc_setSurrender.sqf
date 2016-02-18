@@ -15,10 +15,7 @@ __________________________________________________________________*/
 	if (CHECK_ADDON_1("ace_captives")) then { \
 		[UNIT,true] call ace_captives_fnc_setSurrendered; \
 	} else { \
-		UNIT playMoveNow ANIM; \
-		if !(animationState UNIT isEqualTo ANIM) then { \
-			UNIT switchMove ANIM; \
-		}; \
+		[UNIT,ANIM] call FUNC(setAnim); \
 	}
 
 params ["_obj"];

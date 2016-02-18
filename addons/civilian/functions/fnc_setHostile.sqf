@@ -67,10 +67,10 @@ call {
 	};
 	// rebels
 	if (_type isEqualTo 1) exitWith {
-		private ["_posArray","_player","_tempGrp","_vest","_weapon","_mags","_grp","_wp","_cond"];
-		_posArray = [getpos _tar,50,500,200] call EFUNC(main,findPosGrid);
+		private ["_posArray","_tempGrp","_vest","_weapon","_mags","_grp","_y","_wp","_cond"];
+		_posArray = [getpos _tar,50,600,300] call EFUNC(main,findPosGrid);
 		{
-			if (count ([_x,100] call EFUNC(main,getNearPlayers)) > 0 || {[_x,_player] call EFUNC(main,inLOS)}) then {
+			if (!([_x,200] call EFUNC(main,getNearPlayers) isEqualTo []) || {[_x,_tar] call EFUNC(main,inLOS)}) then {
 				_posArray deleteAt _forEachIndex;
 			};
 		} forEach _posArray;
@@ -81,7 +81,7 @@ call {
 			_weapon = currentWeapon (leader _tempGrp);
 			_mags = magazines (leader _tempGrp);
 			deleteVehicle (leader _tempGrp);
-			_grp = [selectRandom _posArray,0,4 + ceil(random 2),CIVILIAN] call EFUNC(main,spawnGroup);
+			_grp = [selectRandom _posArray,0,((call EFUNC(main,setStrength)) max 6) min 16,CIVILIAN] call EFUNC(main,spawnGroup);
 			_grp = [units _grp] call EFUNC(main,setSide);
 			{
 				_y = _x;
@@ -89,7 +89,7 @@ call {
 				_y addWeapon _weapon;
 				{_y addMagazine _x} forEach _mags;
 			} forEach units _grp;
-			_wp = _grp addWaypoint [_player,0];
+			_wp = _grp addWaypoint [getPosATL _tar,0];
 			_wp setWaypointBehaviour "AWARE";
 			_wp setWaypointFormation "STAG COLUMN";
 			_cond = "!(behaviour this isEqualTo ""COMBAT"")";
