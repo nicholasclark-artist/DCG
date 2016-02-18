@@ -56,3 +56,6 @@ The latest version [Community Based Addons](https://forums.bistudio.com/topic/16
 - After extracting the files, @dcg, @cba_a3 and the userconfig folder should exist in the server's Arma 3 directory
 - If you wish to customize DCG's settings, edit serverconfig.hpp found in the userconfig folder. For more info on DCG's settings see, [Customizing DCG Settings](https://github.com/nicholasclark-artist/DCG/wiki/Customizing-DCG-Settings)
 - If you would like to set up a mission for DCG, take a quick look at [Setting up a DCG compatible mission](https://github.com/nicholasclark-artist/DCG/wiki/Setting-up-a-DCG-compatible-mission)
+
+### Can I Contribute to DCG?
+Dynamic Combat Generator is **open source**. Feel free to fork this repository and submit a pull request. Teamwork makes the dream work!
