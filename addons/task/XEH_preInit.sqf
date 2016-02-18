@@ -13,9 +13,10 @@ PREP(cancel);
 
 PREP(pVip);
 PREP(pCache);
+PREP(pOfficer);
 
-GVAR(primary) = "";
-GVAR(secondary) = "";
+GVAR(primary) = [];
+GVAR(secondary) = [];
 
 publicVariable QFUNC(cancel);
 publicVariable QGVAR(primary);
