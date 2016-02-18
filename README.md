@@ -36,6 +36,7 @@ Dynamic Combat Generator is an Arma 3 mod designed to help mission makers quickl
 - Civilian interaction
 - Dynamically spawned civilian traffic
 - Hostile civilians
+- Terrain based animal spawns
 - Approval system
 - FOB construction system
 - Transportation system
