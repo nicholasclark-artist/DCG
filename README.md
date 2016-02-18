@@ -12,7 +12,7 @@
     <a href="https://github.com/nicholasclark-artist/DCG/wiki">
         <img src="https://img.shields.io/badge/DCG-Wiki-orange.svg?style=flat-square" alt="DCG Wiki">
     </a>
-    <a href="https://forums.bistudio.com/topic/176544-coop-dynamic-combat-generator/">
+    <a href="https://forums.bistudio.com/topic/188156-dynamic-combat-generator/">
         <img src="https://img.shields.io/badge/BIF-Thread-red.svg?style=flat-square" alt="BIF Thread">
     </a>
     <a href="https://github.com/nicholasclark-artist/DCG/blob/master/LICENSE">
