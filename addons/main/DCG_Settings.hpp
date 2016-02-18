@@ -21,7 +21,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(baseRadius) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 1500;
+        value = 1800;
     };
     class GVAR(baseSafezone) {
         typeName = "BOOL";
@@ -31,7 +31,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(blacklistLocations) {
         typeName = "ARRAY";
         typeDetail = "";
-        value[] = {"anthrakia"};
+        value[] = {};
     };
     class GVAR(simpleWorlds) {
         typeName = "ARRAY";
