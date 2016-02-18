@@ -6,6 +6,7 @@ Description:
 primary task - destroy cache
 
 Arguments:
+0: forced task position <ARRAY>
 
 Return:
 none
@@ -15,16 +16,18 @@ __________________________________________________________________*/
 #define MRK_DIST 350
 #define ENEMY_MINCOUNT 8
 
-private ["_position","_caches","_base","_drivers","_grp","_cache","_taskID","_taskDescription","_taskTitle","_taskPos","_mrk"];
+private ["_caches","_base","_drivers","_grp","_cache","_taskID","_taskDescription","_taskTitle","_taskPos","_mrk"];
+params [["_position",[]]];
 
-_position = [];
 _caches = [];
 _base = [];
 _drivers = [];
 _grp = grpNull;
 
 // CREATE TASK
-_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findRuralPos);
+if (_position isEqualTo []) then {
+	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findRuralPos);
+};
 
 // exit if vars are empty
 if (_position isEqualTo []) exitWith {
@@ -69,12 +72,16 @@ if (CHECK_DEBUG) then {
 	_mrk setMarkerText "CACHE";
 };
 
+// PUBLISH TASK
+GVAR(primary) = [QFUNC(pCache),_position];
+publicVariable QGVAR(primary);
+
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
 	_args params ["_taskID","_caches","_grp","_drivers","_base"];
 
-	if (GVAR(primary) isEqualTo "") exitWith {
+	if (GVAR(primary) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		((units _grp) + _drivers + _caches + _base) call EFUNC(main,cleanup);

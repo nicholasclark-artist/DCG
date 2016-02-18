@@ -7,13 +7,14 @@ select task to spawn, this function must be spawned
 
 Arguments:
 0: task type <NUMBER>
-1: if task should run after cooldown <BOOL>
+1: cooldown before spawning task. if number is less than zero, cooldown set in serverSettings will be used <NUMBER>
 
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+private ["_task"];
 params [["_type",1],["_cooldown",-1]];
 
 if (_cooldown < 0) then {
@@ -24,14 +25,14 @@ if (_cooldown < 0) then {
 
 // primary task
 if (_type > 0) then {
-	GVAR(primary) = selectRandom GVAR(primaryTasks);
-	if !(isNil QGVAR(primary)) then {
-		[] spawn (missionNamespace getVariable [GVAR(primary),{}]);
+	_task = selectRandom GVAR(primaryTasks);
+	if !(isNil "_task") then {
+		[] spawn (missionNamespace getVariable [_task,{}]);
 	};
 } else {
 	// secondary task
-	GVAR(secondary) = selectRandom GVAR(secondaryTasks);
-	if !(isNil QGVAR(secondary)) then {
-		[] spawn (missionNamespace getVariable [GVAR(secondary),{}]);
+	_task = selectRandom GVAR(secondaryTasks);
+	if !(isNil "_task") then {
+		[] spawn (missionNamespace getVariable [_task,{}]);
 	};
 };

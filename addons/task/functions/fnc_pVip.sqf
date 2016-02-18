@@ -6,6 +6,7 @@ Description:
 primary task - rescue VIP
 
 Arguments:
+0: forced task position <ARRAY>
 
 Return:
 none
@@ -16,9 +17,9 @@ __________________________________________________________________*/
 #define RETURN_DIST 20
 #define ENEMY_MINCOUNT 8
 
-private ["_position","_drivers","_town","_base","_grp","_vip","_taskID","_taskTitle","_taskDescription","_taskPos","_mrk","_success"];
+private ["_drivers","_town","_base","_grp","_vip","_taskID","_taskTitle","_taskDescription","_taskPos","_mrk","_success"];
+params [["_position",[]]];
 
-_position = [];
 _drivers = [];
 _town = [];
 _base = [];
@@ -27,12 +28,14 @@ _vip = objNull;
 
 // CREATE TASK
 // check world type and find suitable position
-if (toLower worldName in EGVAR(main,simpleWorlds)) then {
-	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findRuralPos);
-} else {
-	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findRuralPos);
-	if !(_position isEqualTo []) then {
-		_position = (_position select 1);
+if (_position isEqualTo []) then {
+	if (toLower worldName in EGVAR(main,simpleWorlds)) then {
+		_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findRuralPos);
+	} else {
+		_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findRuralPos);
+		if !(_position isEqualTo []) then {
+			_position = (_position select 1);
+		};
 	};
 };
 
@@ -57,6 +60,7 @@ if (toLower worldName in EGVAR(main,simpleWorlds)) then {
 
 // spawn vip
 _vip = (createGroup civilian) createUnit ["C_Nikos", _position, [], 0, "NONE"];
+_vip setDir random 360;
 _vip setPosATL _position;
 [_vip,"Acts_AidlPsitMstpSsurWnonDnon02"] call EFUNC(main,setAnim);
 
@@ -84,6 +88,10 @@ if (CHECK_DEBUG) then {
 	_mrk setMarkerText "VIP";
 };
 
+// PUBLISH TASK
+GVAR(primary) = [QFUNC(pVip),_position];
+publicVariable QGVAR(primary);
+
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
@@ -91,7 +99,7 @@ if (CHECK_DEBUG) then {
 
 	_success = false;
 
-	if (GVAR(primary) isEqualTo "") exitWith {
+	if (GVAR(primary) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		((units _grp) + _drivers + [_vip] + _base) call EFUNC(main,cleanup);

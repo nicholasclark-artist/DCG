@@ -18,7 +18,8 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value[] = {
             QUOTE(FUNC(pVip)),
-            QUOTE(FUNC(pCache))
+            QUOTE(FUNC(pCache)),
+            QUOTE(FUNC(pOfficer))
         };
     };
     class GVAR(secondaryTasks) {

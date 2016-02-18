@@ -29,7 +29,7 @@ if ((_this select 0) > 0) then {
 		] call bis_fnc_GUImessage;
 
 		if (_ret) then {
-			GVAR(primary) = "";
+			GVAR(primary) = [];
 			publicVariable QGVAR(primary);
 			[CONFIRMED_HINT,true] call EFUNC(main,displayText);
 		};
@@ -46,7 +46,7 @@ if ((_this select 0) > 0) then {
 		] call bis_fnc_GUImessage;
 
 		if (_ret) then {
-			GVAR(secondary) = "";
+			GVAR(secondary) = [];
 			publicVariable QGVAR(secondary);
 			[CONFIRMED_HINT,true] call EFUNC(main,displayText);
 		};
