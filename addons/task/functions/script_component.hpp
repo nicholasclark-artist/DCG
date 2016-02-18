@@ -1,1 +1,1 @@
-#include "\d\dcg\addons\main\script_component.hpp"
+#include "\d\dcg\addons\task\script_component.hpp"
