@@ -21,10 +21,8 @@ _dataProfile = DATA_GETVAR; // main data variable
 GVAR(saveDataCurrent) = [DATA_MISSION_ID]; // overwrite current data
 
 if (CHECK_ADDON_2(occupy)) then {
-	private ["_data","_locations","_tasks","_infCount","_vehCount","_airCount"];
-	_data = [];
+	private ["_data","_locations","_infCount","_vehCount","_airCount","_players"];
 	_locations = []; // active locations
-	_tasks = []; // completed location tasks
 
 	for "_i" from 0 to count EGVAR(occupy,locations) - 1 do {
 		(EGVAR(occupy,locations) select _i) params ["_name","_position","_size","_type"];
@@ -49,13 +47,7 @@ if (CHECK_ADDON_2(occupy)) then {
 		_locations pushBack [_name,_position,_size,_type,[_infCount,_vehCount,_airCount]];
 	};
 
-	{
-		if (_x select [0,4] isEqualTo "lib_" && {toUpper ([_x] call BIS_fnc_taskState) isEqualTo "SUCCEEDED"}) then {
-			_tasks pushBack _x;
-		};
-	} forEach ([allPlayers select 0] call BIS_fnc_tasksUnit);
-
-	_data = [_locations,_tasks];
+	_data = [_locations];
 
 	PUSHBACK_DATA(occupy,_data);
 };
@@ -121,6 +113,13 @@ if (CHECK_ADDON_2(ied)) then {
 	} count EGVAR(ied,array);
 
 	PUSHBACK_DATA(ied,_data);
+};
+
+if (CHECK_ADDON_2(task)) then {
+	private ["_data"];
+	_data = [EGVAR(task,primary),EGVAR(task,secondary)];
+
+	PUSHBACK_DATA(task,_data);
 };
 
 // following code must run last
