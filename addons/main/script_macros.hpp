@@ -100,8 +100,8 @@
 #define CHECK_VECTORDIST(POS1,POS2,DIST) POS1 vectorDistance POS2 <= DIST
 #define CACHE_DISABLE_VAR QUOTE(TRIPLES(PREFIX,cache,disableCaching))
 #define CACHE_DISABLE(GRP,BOOL) GRP setVariable [CACHE_DISABLE_VAR,BOOL,true]
-#define COST_MAN 2
-#define COST_CAR 4
+#define COST_MAN 4
+#define COST_CAR 6
 #define COST_TANK 8
 #define COST_AIR 10
 #define COST_SHIP 4
