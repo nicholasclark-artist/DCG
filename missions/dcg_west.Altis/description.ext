@@ -7,10 +7,10 @@ class Header {
     maxPlayers = 40;
 };
 
-allowFunctionsRecompile = 1;
+// allowFunctionsRecompile = 1;
 
-overviewPicture = "media\dcg_logo.paa";
-loadScreen = "media\dcg_logo.paa";
+overviewPicture = "media\dcg_logo_S.paa";
+loadScreen = "media\dcg_logo_S.paa";
 author = "SENSEI";
 onLoadName = "DCG";
 onLoadMission = "Dynamic Combat Generator";
@@ -52,12 +52,12 @@ class CfgSounds {
 	#include "cfgSounds.hpp"
 };
 
-class CfgSettings {
-    class CBA {
-        class Caching {
-            compile = 0;
-            xeh = 0;
-            functions = 0;
-        };
-    };
-};
+//class CfgSettings {
+//    class CBA {
+//        class Caching {
+//            compile = 0;
+//            xeh = 0;
+//            functions = 0;
+//        };
+//    };
+//};
