@@ -46,7 +46,7 @@ if (_terrain isEqualTo "" || _expression isEqualTo "") exitWith {
 	_pos = _x select 0;
 	if ((nearestLocations [_pos, ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo []) then {
 		if !(_terrain isEqualTo "house") then {
-			if !(_pos isFlatEmpty [4,0,0.3,15,0,false,objNull] isEqualTo []) then {
+			if !(_pos isFlatEmpty [4,0,0.242,40,0,false,objNull] isEqualTo []) then {
 				_ret = _pos;
 			};
 		} else {
