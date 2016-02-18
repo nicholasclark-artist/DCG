@@ -1,4 +1,6 @@
-# Dynamic Combat Generator
+<p align="center">
+    <img src="https://github.com/nicholasclark-artist/DCG/blob/dev/addons/main/media/dcg_logo.png" width="512">
+</p>
 
 <p align="center">
     <a href="https://github.com/nicholasclark-artist/DCG/releases">
@@ -21,7 +23,7 @@
 Please, use the [Issue Tracker](https://github.com/nicholasclark-artist/DCG/issues) to report a bug or propose a feature.
 
 ### What is DCG?
-Dynamic Combat Generator is an Arma 3 mod designed to make a mission designer's life easier by supplying a collection of addons to quickly enhance any cooperative scenario.
+Dynamic Combat Generator is an Arma 3 mod designed to help mission makers quickly enhance their cooperative scenarios by supplying a collection of easy to use, modular addons.
 
 ### What's Included in DCG?
 - Modularity
