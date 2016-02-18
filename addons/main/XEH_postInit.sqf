@@ -117,7 +117,9 @@ if !(isNil {HEADLESSCLIENT}) then {
 // actions
 {
 	if (hasInterface) then {
-		waitUntil {time > 5 && {!isNull (findDisplay 46)} && {!isNull player} && {alive player}}; // fix for "respawn on start" missions
+		// fix "respawn on start" missions
+		_time = diag_tickTime;
+		waitUntil {diag_tickTime > _time + 10 && {!isNull (findDisplay 46)} && {!isNull player} && {alive player}};
 		[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"","true","",player,1,["ACE_SelfActions"]] call FUNC(setAction);
 		[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","","true","",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]] call FUNC(setAction);
 		[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]] call FUNC(setAction);
