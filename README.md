@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/nicholasclark-artist/DCG/blob/master/addons/main/media/dcg_logo.png" width="640">
+    <img src="https://github.com/nicholasclark-artist/DCG/blob/master/addons/main/media/dcg_logo_lq.png" width="640">
 </p>
 
 <p align="center">
