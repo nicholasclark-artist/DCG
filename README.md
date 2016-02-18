@@ -49,7 +49,7 @@ Dynamic Combat Generator is an Arma 3 mod designed to help mission makers quickl
 - Coop mission for Altis, Takistan, Chernarus maps
 
 ### How Do I Use DCG?
-The latest version [Community Based Addons](https://forums.bistudio.com/topic/168277-cba-community-base-addons-arma-3/) is required on the server and client.
+The latest version of [Community Based Addons](https://forums.bistudio.com/topic/168277-cba-community-base-addons-arma-3/) is required on the server and client.
 
 **Server Setup**
 - Extract the DCG and CBA zip files to the server's Arma 3 folder
