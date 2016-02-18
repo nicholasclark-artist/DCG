@@ -43,7 +43,7 @@ Dynamic Combat Generator is a **server-side** Arma 3 mod designed to make a miss
 - TFAR support
 
 ### How Do I Use DCG?
-The latest version [Community Based Addons](https://forums.bistudio.com/topic/168277-cba-community-base-addons-arma-3/) is required
+The latest version [Community Based Addons](https://forums.bistudio.com/topic/168277-cba-community-base-addons-arma-3/) is required on the server and client.
 
 - Extract the DCG and CBA zip files to the server's Arma 3 folder
 - After extracting the files, @dcg and @cba_a3 should exist in the server's Arma 3 folder
