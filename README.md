@@ -51,6 +51,7 @@ Dynamic Combat Generator is an Arma 3 mod designed to help mission makers quickl
 ### How Do I Use DCG?
 The latest version [Community Based Addons](https://forums.bistudio.com/topic/168277-cba-community-base-addons-arma-3/) is required on the server and client.
 
+**Server Setup**
 - Extract the DCG and CBA zip files to the server's Arma 3 folder
 - After extracting the files, @dcg, @cba_a3 and the userconfig folder should exist in the server's Arma 3 directory
 - If you wish to customize DCG's settings, edit serverconfig.hpp found in the userconfig folder. For more info on DCG's settings see, [Customizing DCG Settings](https://github.com/nicholasclark-artist/DCG/wiki/Customizing-DCG-Settings)
