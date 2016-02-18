@@ -43,6 +43,7 @@ Dynamic Combat Generator is an Arma 3 mod designed to help mission makers quickl
 - Dynamic weather
 - Unit caching
 - Headless client support
+- ACE3 support
 - ACRE2 support
 - TFAR support
 - Coop mission for Altis, Takistan, Chernarus maps
