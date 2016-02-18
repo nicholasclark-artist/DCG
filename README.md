@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/nicholasclark-artist/DCG/blob/dev/addons/main/media/dcg_logo.png" width="512">
+    <img src="https://github.com/nicholasclark-artist/DCG/blob/dev/addons/main/media/dcg_logo.png" width="640">
 </p>
 
 <p align="center">
@@ -28,13 +28,14 @@ Dynamic Combat Generator is an Arma 3 mod designed to help mission makers quickl
 ### What's Included in DCG?
 - Modularity
 - Save/load functionality
-- Occupied locations with patrolling and garrisoned enemies
+- Occupied cities with patrolling and garrisoned enemies
 - Scaling enemy strength
 - Dynamically spawned patrols
 - Enemy static emplacements and sniper teams
+- Populated cities
 - Civilian interaction
-- Civilian traffic
-- Civilian rebels and suicide bombers
+- Dynamically spawned civilian traffic
+- Hostile civilians
 - Approval system
 - FOB construction system
 - Transportation system
