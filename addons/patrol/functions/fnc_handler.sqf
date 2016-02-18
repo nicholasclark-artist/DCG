@@ -65,7 +65,7 @@ if (CHECK_DEBUG) then {
 							_grp = group (_grp select 0);
 						} else {
 							// TODO fix caching bug that breaks waypoint for all units in group except leader
-							_grp = [_this select 1,0,UNITCOUNT(3,6),EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
+							_grp = [_this select 1,0,UNITCOUNT(4,6),EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
 							// set waypoint around target player
 							_wp = _grp addWaypoint [getPosATL (_this select 0),100];
 							_wp setWaypointCompletionRadius 100;
