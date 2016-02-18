@@ -9,8 +9,8 @@ class Header {
 
 // allowFunctionsRecompile = 1;
 
-overviewPicture = "media\dcg_logo_S.paa";
-loadScreen = "media\dcg_logo_S.paa";
+overviewPicture = "media\dcg_logo_L.paa";
+loadScreen = "media\dcg_logo_L.paa";
 author = "SENSEI";
 onLoadName = "DCG";
 onLoadMission = "Dynamic Combat Generator";
