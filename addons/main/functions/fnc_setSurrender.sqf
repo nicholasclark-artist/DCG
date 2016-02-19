@@ -16,7 +16,7 @@ __________________________________________________________________*/
 		[UNIT,true] call ace_captives_fnc_setSurrendered; \
 	} else { \
 		[UNIT,ANIM] call FUNC(setAnim); \
-	}
+	};
 
 params ["_obj"];
 
@@ -30,11 +30,11 @@ if (typeOf _obj isKindOf "LandVehicle" || {typeOf _obj isKindOf "Ship"}) exitWit
 		moveOut _x;
 		_x setVelocity [0, 0, 0];
 		_x setBehaviour "CARELESS";
-		SURRENDER(_x,"ACE_AmovPercMstpSsurWnonDnon");
+		SURRENDER(_x,"ACE_AmovPercMstpSsurWnonDnon")
 		false
 	} count (crew _obj);
 };
 
 _obj setVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),0];
 doStop _obj;
-SURRENDER(_obj,"ACE_AmovPercMstpSsurWnonDnon");
+SURRENDER(_obj,"ACE_AmovPercMstpSsurWnonDnon")

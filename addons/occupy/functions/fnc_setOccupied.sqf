@@ -40,7 +40,7 @@ __________________________________________________________________*/
 		SETVAR_UNIT(_x); \
 		_count = _count + 1; \
 		false \
-	} count units _grp
+	} count units _grp;
 #define PREP_VEH(CHANCE,COUNT_VEH) \
 	if (random 1 < CHANCE) then { \
 		_posArray = [_position,50,_size,0,8,false,false] call EFUNC(main,findPosGrid); \
@@ -53,7 +53,7 @@ __________________________________________________________________*/
 				false \
 			} count _vehArray; \
 		}; \
-	}
+	};
 #define PREP_AIR(CHANCE,COUNT_AIR) \
 	if (random 1 < CHANCE) then { \
 		_airArray = [_position,2,COUNT_AIR,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup); \
@@ -63,9 +63,9 @@ __________________________________________________________________*/
 			_count = _count + (count units group _x); \
 			false \
 		} count _airArray; \
-	}
+	};
 #define PREP_SNIPER(MAX_COUNT) \
-	[_position,ceil random MAX_COUNT,_size,_size+1000] call EFUNC(main,spawnSniper)
+	[_position,ceil random MAX_COUNT,_size,_size+1000] call EFUNC(main,spawnSniper);
 #define PREP_STATIC(COUNT_STATIC) \
 	_static = [_position, _size, COUNT_STATIC] call EFUNC(main,spawnStatic); \
 	{ \
@@ -73,7 +73,7 @@ __________________________________________________________________*/
 		_count = _count + 1; \
 		false \
 	} count (_static select 0); \
-	_objArray append (_static select 1)
+	_objArray append (_static select 1);
 #define PREP_GARRISON(MAX_COUNT) \
 	_houses = _position nearObjects ["House", _size]; \
 	for "_i" from 1 to MAX_COUNT do { \
@@ -86,7 +86,7 @@ __________________________________________________________________*/
 			(leader _grp) disableAI "COVER"; \
 			_count = _count + 1; \
 		}; \
-	}
+	};
 
 private ["_grp","_count","_posArray","_vehArray","_airArray","_static","_objArray","_houses","_taskType","_officer","_vehPos","_fx","_veh","_town","_mrk"];
 _this params ["_name","_position","_size","_type",["_data",nil]];
@@ -100,54 +100,54 @@ call {
 	if (_type isEqualTo "NameCityCapital") exitWith {
 		_taskType = "Capital";
 		if (isNil "_data") then {
-			PREP_INF(ceil GVAR(infCountCapital));
-			PREP_VEH(CHANCE_VEH_CAP,ceil GVAR(vehCountCapital));
-			PREP_AIR(CHANCE_AIR_CAP,ceil GVAR(airCountCapital));
-			PREP_SNIPER(SNIPER_CAP);
-			PREP_STATIC(STATIC_CAP);
+			PREP_INF(ceil GVAR(infCountCapital))
+			PREP_VEH(CHANCE_VEH_CAP,ceil GVAR(vehCountCapital))
+			PREP_AIR(CHANCE_AIR_CAP,ceil GVAR(airCountCapital))
+			PREP_SNIPER(SNIPER_CAP)
+			PREP_STATIC(STATIC_CAP)
 		} else {
-			PREP_INF(ceil (_data select 0));
-			PREP_VEH(CHANCE_VEH_CAP,ceil (_data select 1));
-			PREP_AIR(CHANCE_AIR_CAP,ceil (_data select 2));
-			PREP_SNIPER(SNIPER_CAP);
-			PREP_STATIC(STATIC_CAP);
+			PREP_INF(ceil (_data select 0))
+			PREP_VEH(CHANCE_VEH_CAP,ceil (_data select 1))
+			PREP_AIR(CHANCE_AIR_CAP,ceil (_data select 2))
+			PREP_SNIPER(SNIPER_CAP)
+			PREP_STATIC(STATIC_CAP)
 		};
-		PREP_GARRISON(15);
+		PREP_GARRISON(15)
 	};
 
 	if (_type isEqualTo "NameCity") exitWith {
 		_taskType = "City";
 		if (isNil "_data") then {
-			PREP_INF(ceil GVAR(infCountCity));
-			PREP_VEH(CHANCE_VEH_CITY,ceil GVAR(vehCountCity));
-			PREP_AIR(CHANCE_AIR_CITY,ceil GVAR(airCountCity));
+			PREP_INF(ceil GVAR(infCountCity))
+			PREP_VEH(CHANCE_VEH_CITY,ceil GVAR(vehCountCity))
+			PREP_AIR(CHANCE_AIR_CITY,ceil GVAR(airCountCity))
 			PREP_SNIPER(SNIPER_CITY);
 			PREP_STATIC(STATIC_CITY);
 		} else {
-			PREP_INF(ceil (_data select 0));
-			PREP_VEH(CHANCE_VEH_CITY,ceil (_data select 1));
-			PREP_AIR(CHANCE_AIR_CITY,ceil (_data select 2));
+			PREP_INF(ceil (_data select 0))
+			PREP_VEH(CHANCE_VEH_CITY,ceil (_data select 1))
+			PREP_AIR(CHANCE_AIR_CITY,ceil (_data select 2))
 			PREP_SNIPER(SNIPER_CITY);
 			PREP_STATIC(STATIC_CITY);
 		};
-		PREP_GARRISON(10);
+		PREP_GARRISON(10)
 	};
 
 	_taskType = "Village";
 	if (isNil "_data") then {
-		PREP_INF(ceil GVAR(infCountVillage));
-		PREP_VEH(CHANCE_VEH_VILLAGE,ceil GVAR(vehCountVillage));
-		PREP_AIR(CHANCE_AIR_VILLAGE,ceil GVAR(airCountVillage));
+		PREP_INF(ceil GVAR(infCountVillage))
+		PREP_VEH(CHANCE_VEH_VILLAGE,ceil GVAR(vehCountVillage))
+		PREP_AIR(CHANCE_AIR_VILLAGE,ceil GVAR(airCountVillage))
 		PREP_SNIPER(SNIPER_VILLAGE);
 		PREP_STATIC(STATIC_VILLAGE);
 	} else {
-		PREP_INF(ceil (_data select 0));
-		PREP_VEH(CHANCE_VEH_VILLAGE,ceil (_data select 1));
-		PREP_AIR(CHANCE_AIR_VILLAGE,ceil (_data select 2));
+		PREP_INF(ceil (_data select 0))
+		PREP_VEH(CHANCE_VEH_VILLAGE,ceil (_data select 1))
+		PREP_AIR(CHANCE_AIR_VILLAGE,ceil (_data select 2))
 		PREP_SNIPER(SNIPER_VILLAGE);
 		PREP_STATIC(STATIC_VILLAGE);
 	};
-	PREP_GARRISON(5);
+	PREP_GARRISON(5)
 };
 
 call {

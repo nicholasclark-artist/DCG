@@ -2587,9 +2587,7 @@ switch _mode do {
 		_allowAll = [_this,1,false,[false]] call bis_fnc_param;
 		_condition = [_this,2,{true},[{}]] call bis_fnc_param;
 
-		if ({} isequalto {}) then {
 		_box setvariable ["bis_fnc_arsenal_condition",_condition,true];
-		};
 
 		if (_allowAll) then {
 		[_box,true,true,false] call bis_fnc_addVirtualWeaponCargo;

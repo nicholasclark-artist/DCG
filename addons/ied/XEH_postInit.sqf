@@ -9,7 +9,7 @@ __________________________________________________________________*/
 		_mrk setMarkerType "mil_triangle"; \
 		_mrk setMarkerSize [0.5,0.5]; \
 		_mrk setMarkerColor "ColorRed"; \
-	}
+	};
 
 if (!isServer || !isMultiplayer) exitWith {};
 
@@ -39,7 +39,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 						_pos set [2,0];
 						_ied = (selectRandom _type) createVehicle _pos;
 						GVAR(array) pushBack _ied;
-						DEBUG_IED;
+						DEBUG_IED
 					};
 				};
 			} forEach ([EGVAR(main,center),1500,worldSize,0,0,false,false] call EFUNC(main,findPosGrid));
@@ -48,7 +48,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 				(_data select _index) params ["_pos","_type"];
 				_ied = _type createVehicle _pos;
 				GVAR(array) pushBack _ied;
-				DEBUG_IED;
+				DEBUG_IED
 			};
 		};
 

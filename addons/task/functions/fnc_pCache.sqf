@@ -54,7 +54,7 @@ _grp = [_position,0,ENEMY_MINCOUNT max (call EFUNC(main,setStrength)),EGVAR(main
 [units _grp] call EFUNC(main,setPatrol);
 
 if (random 1 < 0.5) then {
-	_drivers = [[_position,0,200,6] call FUNC(findRandomPos),1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+	_drivers = [[_position,0,200,6] call EFUNC(main,findRandomPos),1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 	[_drivers,500] call EFUNC(main,setPatrol);
 };
 

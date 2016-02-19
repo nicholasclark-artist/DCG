@@ -16,7 +16,7 @@ __________________________________________________________________*/
 		[true,COST] \
 	} else { \
 		[false,COST]; \
-	}
+	};
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
 GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
@@ -31,34 +31,34 @@ GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
 			_side = getNumber (configFile >> "CfgVehicles" >> _x >> "side");
 			_vehClass = toLower getText (configFile >> "CfgVehicles" >> _x >> "vehicleClass");
 			if (_vehClass in ["men","menstory","menrecon","mendiver","mensniper","mensupport"]) exitWith {
-				SET_COST(COST_MAN);
+				SET_COST(COST_MAN)
 			};
 			if (_vehClass in ["car","support"]) exitWith {
-				SET_COST(COST_CAR);
+				SET_COST(COST_CAR)
 			};
 			if (_vehClass in ["armored"]) exitWith {
-				SET_COST(COST_TANK);
+				SET_COST(COST_TANK)
 			};
 			if (_vehClass in ["air"]) exitWith {
-				SET_COST(COST_AIR);
+				SET_COST(COST_AIR)
 			};
 			if (_vehClass in ["ship","submarine"]) exitWith {
-				SET_COST(COST_SHIP);
+				SET_COST(COST_SHIP)
 			};
 			if (_vehClass in ["ammo"]) exitWith {
-				SET_COST(COST_AMMO);
+				SET_COST(COST_AMMO)
 			};
 			if (_vehClass in ["structures","structures_military","structures_village","structures_infrastructure","structures_industrial"]) exitWith {
-				SET_COST(COST_STRUCT);
+				SET_COST(COST_STRUCT)
 			};
 			if (_vehClass in ["fortifications"]) exitWith {
-				SET_COST(COST_FORT);
+				SET_COST(COST_FORT)
 			};
 			if (_vehClass in ["signs"]) exitWith {
-				SET_COST(COST_SIGN);
+				SET_COST(COST_SIGN)
 			};
 			if (_vehClass in ["small_items","objects","furniture","tents"]) exitWith {
-				SET_COST(COST_ITEM);
+				SET_COST(COST_ITEM)
 			};
 			_cost = [true,1];
 		};
