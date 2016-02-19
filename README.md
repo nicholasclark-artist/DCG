@@ -18,6 +18,9 @@
     <a href="https://github.com/nicholasclark-artist/DCG/blob/master/LICENSE">
         <img src="https://img.shields.io/badge/License-GPLv2-lightgrey.svg?style=flat-square" alt="DCG License">
     </a>
+    <a href="https://travis-ci.org/nicholasclark-artist/DCG">
+        <img src="https://img.shields.io/travis/nicholasclark-artist/DCG.svg?style=flat-square&label=Build" alt="DCG Build Status">
+    </a>
 </p>
 
 Please, use the [Issue Tracker](https://github.com/nicholasclark-artist/DCG/issues) to report a bug or propose a feature.
