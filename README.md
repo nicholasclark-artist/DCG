@@ -6,6 +6,9 @@
     <a href="https://github.com/nicholasclark-artist/DCG/releases">
         <img src="https://img.shields.io/badge/Version-3.1.0.3-blue.svg?style=flat-square" alt="DCG Version">
     </a>
+    <a href="https://github.com/nicholasclark-artist/DCG/releases/download/v3.1.0.3/dcg_3_1_0_3.zip">
+        <img src="https://img.shields.io/badge/Download-DCG-blue.svg?style=flat-square" alt="DCG Download">
+    </a>
     <a href="https://github.com/nicholasclark-artist/DCG/issues">
         <img src="https://img.shields.io/github/issues/nicholasclark-artist/DCG.svg?style=flat-square" alt="DCG Issues">
     </a>
@@ -13,7 +16,7 @@
         <img src="https://img.shields.io/badge/DCG-Wiki-orange.svg?style=flat-square" alt="DCG Wiki">
     </a>
     <a href="https://forums.bistudio.com/topic/188156-dynamic-combat-generator/">
-        <img src="https://img.shields.io/badge/BIF-Thread-red.svg?style=flat-square" alt="BIF Thread">
+        <img src="https://img.shields.io/badge/BIF-Thread-orange.svg?style=flat-square" alt="BIF Thread">
     </a>
     <a href="https://github.com/nicholasclark-artist/DCG/blob/master/LICENSE">
         <img src="https://img.shields.io/badge/License-GPLv2-lightgrey.svg?style=flat-square" alt="DCG License">
