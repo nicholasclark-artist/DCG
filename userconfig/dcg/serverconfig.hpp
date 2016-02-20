@@ -23,7 +23,7 @@ class dcg_main_baseName {
 class dcg_main_baseRadius {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 1500;
+	value = 1800;
 };
 class dcg_main_baseSafezone {
 	typeName = "BOOL";
@@ -34,7 +34,14 @@ class dcg_main_blacklistLocations {
 	typeName = "ARRAY";
 	typeDetail = "";
 	value[] = {
-		"anthrakia"
+	};
+};
+class dcg_main_simpleWorlds {
+	typeName = "ARRAY";
+	typeDetail = "";
+	value[] = {
+		"Chernarus",
+		"Chernarus_Summer"
 	};
 };
 class dcg_main_unitPoolEast {
@@ -308,6 +315,31 @@ class dcg_radio_squadNet {
 		{"b_sl","b_med","b1_ftl","b1_ar","b1_aar","b1_at","b1_ab","b1_eng","b2_ftl","b2_ar","b2_aar","b2_at","b2_ab","b2_eng"},
 		{"rh1_co","rh1_driver","rh1_gunner"},
 		{"r_1","r_2","r_3","r_4"}
+	};
+};
+class dcg_task_enable {
+	typeName = "SCALAR";
+	typeDetail = "";
+	value = 1;
+};
+class dcg_task_cooldown {
+	typeName = "SCALAR";
+	typeDetail = "";
+	value = 900;
+};
+class dcg_task_primaryTasks {
+	typeName = "ARRAY";
+	typeDetail = "";
+	value[] = {
+		"dcg_task_fnc_pVip",
+		"dcg_task_fnc_pCache",
+		"dcg_task_fnc_pOfficer"
+	};
+};
+class dcg_task_secondaryTasks {
+	typeName = "ARRAY";
+	typeDetail = "";
+	value[] = {
 	};
 };
 class dcg_transport_enable {
