@@ -27,7 +27,6 @@ _grp = grpNull;
 _vip = objNull;
 
 // CREATE TASK
-// check world type and find suitable position
 if (_position isEqualTo []) then {
 	if (toLower worldName in EGVAR(main,simpleWorlds)) then {
 		_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findRuralPos);
@@ -40,15 +39,16 @@ if (_position isEqualTo []) then {
 };
 
 // find return location
-if (CHECK_ADDON_2(occupy)) then {
-	if (count EGVAR(main,locations) > count EGVAR(occupy,locations)) then {
-		_town = selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations))});
+if !(EGVAR(main,locations) isEqualTo []) then {
+	if (CHECK_ADDON_2(occupy)) then {
+		if (count EGVAR(main,locations) > count EGVAR(occupy,locations)) then {
+			_town = selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations))});
+		};
+	} else {
+		_town = selectRandom EGVAR(main,locations);
 	};
-} else {
-	_town = selectRandom EGVAR(main,locations);
-};
+}:
 
-// exit if vars are empty
 if (_position isEqualTo [] || {_town isEqualTo []}) exitWith {
 	[1,0] spawn FUNC(select);
 };
@@ -58,13 +58,11 @@ if (toLower worldName in EGVAR(main,simpleWorlds)) then {
 	_position = [_position,0,15,0.5] call EFUNC(main,findRandomPos);
 };
 
-// spawn vip
 _vip = (createGroup civilian) createUnit ["C_Nikos", _position, [], 0, "NONE"];
 _vip setDir random 360;
 _vip setPosATL _position;
 [_vip,"Acts_AidlPsitMstpSsurWnonDnon02"] call EFUNC(main,setAnim);
 
-// spawn enemy
 _grp = [_position,0,ENEMY_MINCOUNT max (call EFUNC(main,setStrength)),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 [units _grp] call EFUNC(main,setPatrol);
 

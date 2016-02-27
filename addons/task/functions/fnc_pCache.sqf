@@ -61,7 +61,7 @@ if (random 1 < 0.5) then {
 // SET TASK
 _taskPos = [_position,MRK_DIST*0.85,MRK_DIST] call EFUNC(main,findRandomPos);
 _taskID = format ["pCache_%1",diag_tickTime];
-_taskTitle = "Destroy Cache";
+_taskTitle = "(P) Destroy Cache";
 _taskDescription = format ["An enemy camp housing an ammunitions cache has been spotted near %1. These supplies are critical to the opposition's efforts. Destroy the cache and weaken the enemy.", mapGridPosition _taskPos];
 
 [true,_taskID,[_taskDescription,_taskTitle,""],_taskPos,false,true,"Attack"] call EFUNC(main,setTask);
