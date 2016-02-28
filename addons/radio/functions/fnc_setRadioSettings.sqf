@@ -11,13 +11,13 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define P_ACRE "acre_main"
-#define P_TFAR "task_force_radio"
 #define PRESET QUOTE(DOUBLES(PREFIX,preset))
+
+if !(hasInterface) exitWith {};
 
 waitUntil {time > 0};
 
-if (CHECK_ADDON_1(P_ACRE)) then {
+if (CHECK_ADDON_1("acre_main")) then {
 	[GVAR(acre_command), "default", PRESET] call acre_api_fnc_copyPreset;
 	[GVAR(acre_squad), "default", PRESET] call acre_api_fnc_copyPreset;
 	[GVAR(acre_support), "default", PRESET] call acre_api_fnc_copyPreset;
@@ -82,20 +82,19 @@ if (CHECK_ADDON_1(P_ACRE)) then {
 	[GVAR(acre_squad), PRESET] call acre_api_fnc_setPreset;
 	[GVAR(acre_command), PRESET] call acre_api_fnc_setPreset;
 	[GVAR(acre_support), PRESET] call acre_api_fnc_setPreset;
-};
-if (CHECK_ADDON_1(P_TFAR)) then {
-	tf_give_personal_radio_to_regular_soldier = false;
-	tf_no_auto_long_range_radio = true;
-	tf_give_microdagr_to_soldier = false;
-	tf_same_sw_frequencies_for_side = true;
-	tf_same_lr_frequencies_for_side = true;
-};
 
-if (hasInterface) then {
 	player addEventHandler ["respawn",{
 		[] spawn {
 			sleep 2.5;
 			call EFUNC(radio,setRadioACRE);
 		};
 	}];
+};
+
+if (CHECK_ADDON_1("task_force_radio")) then {
+	tf_give_personal_radio_to_regular_soldier = false;
+	tf_no_auto_long_range_radio = true;
+	tf_give_microdagr_to_soldier = false;
+	tf_same_sw_frequencies_for_side = true;
+	tf_same_lr_frequencies_for_side = true;
 };
