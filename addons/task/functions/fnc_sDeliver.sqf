@@ -12,13 +12,21 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define HANDLER_SLEEP 10
+#define RETURN_DIST 20
+#define ENEMY_MINCOUNT 4
+#define ENEMY_MAXCOUNT 12
 
+private ["_posConvoy","_posDeliver","_locConvoy","_locDeliver","_veh","_type","_cargo","_grp","_location","_roads","_taskID","_taskTitle","_taskDescription","_wp","_cond"];
 params [["_posArray",[]]];
 
 _posConvoy = [];
 _posDeliver = [];
-_vehicles = [];
+_locConvoy = "";
+_locDeliver = "";
+_veh = objNull;
 _type = "";
+_cargo = "";
 _grp = grpNull;
 
 // CREATE TASK
@@ -32,12 +40,20 @@ if (count _posArray > 1) then {
 if (count (EGVAR(main,locations) > 1) && {_posConvoy isEqualTo []}) then {
 	if (CHECK_ADDON_2(occupy)) then {
 		if (count EGVAR(main,locations) >= (count EGVAR(occupy,locations)) + 2) then {
-			_posConvoy = (selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations))})) select 1;
-			_posDeliver = (selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations)) && !(_x isEqualTo _posConvoy)})) select 1;
+			_location = selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations))});
+			_locConvoy = _location select 0;
+			_posConvoy = _location select 1;
+			_location = selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations)) && !(_x isEqualTo _posConvoy)});
+			_locDeliver = _location select 0;
+			_posDeliver = _location select 1;
 		};
 	} else {
-		_posConvoy = (selectRandom EGVAR(main,locations)) select 1;
-		_posDeliver = (selectRandom (EGVAR(main,locations) select {!(_x isEqualTo _posConvoy)})) select 1;
+		_location = selectRandom EGVAR(main,locations);
+		_locConvoy = _location select 0;
+		_posConvoy = _location select 1;
+		_location = selectRandom (EGVAR(main,locations) select {!(_x isEqualTo _posConvoy)});
+		_locDeliver = _location select 0;
+		_posDeliver = _location select 1;
 	};
 }:
 
@@ -64,89 +80,92 @@ if (count _posArray < 2) exitWith {
 
 call {
 	if (EGVAR(main,playerSide) isEqualTo EAST) then {
-		_type = "O_Truck_02_box_F"; side
+		_type = "O_Truck_02_box_F";
 	};
 	if (EGVAR(main,playerSide) isEqualTo RESISTANCE) then {
 		_type = "I_Truck_02_box_F";
 	};
-
 	_type = "B_Truck_01_box_F";
 };
+
+_veh = _type createVehicle _posConvoy;
+_veh setDir random 360;
+_veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.9,0.05,0.05,1)"];
+[_veh] call EFUNC(main,setVehDamaged);
+
+if (CHECK_ADDON_1("ace_cargo")) then {
+	if (CHECK_ADDON_1("ace_medical")) then {
+		_cargo = "ACE_medicalSupplyCrate_advanced";
+	} else {
+		_cargo = "Medikit";
+	};
+	for "_i" from 1 to 5 do {
+		[_cargo, _veh] call ace_cargo_fnc_loadItem;
+	};
+} else {
+	clearWeaponCargoGlobal _veh;
+	clearMagazineCargoGlobal _veh;
+	clearItemCargoGlobal _veh;
+	_veh addItemCargoGlobal ["Medikit", 5];
+};
+
+_grp = [_posConvoy,0,4,EGVAR(main,playerSide)] call EFUNC(main,spawnGroup);
+{
+	if (random 1 < 0.5) then {
+		_x setUnitPos "MIDDLE";
+	};
+} forEach units _grp;
 
 // SET TASK
 _taskID = format ["sDeliver_%1",diag_tickTime];
 _taskTitle = "(S) Deliver Supplies";
-_taskDescription = format["A convoy enroute to deliver medical supplies to %1 broke down somewhere around %2. Repair the convoy and complete the delivery.",_town select 0,mapGridPosition _position];
+_taskDescription = format["A convoy enroute to deliver medical supplies to %1 broke down somewhere near %2. Repair the convoy and complete the delivery.",_locDeliver,_locConvoy];
 
 // PUBLISH TASK
-GVAR(primary) = [QFUNC(sDeliver),_position];
-publicVariable QGVAR(primary);
+GVAR(secondary) = [QFUNC(sDeliver),_posArray];
+publicVariable QGVAR(secondary);
 
 // TASK HANDLER
-
-_count = 3;
-_aidArray = [];
-_pos = [_town select 1,0,50] call DCG_fnc_findRandomPos;
-
-for "_i" from 1 to _count do {
-	_aid = "ACE_medicalSupplyCrate_advanced" createVehicle (getMarkerPos "DCG_depotSpawn_mrk");
-	_aid setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.9,0.05,0.05,1)"];
-	_aid setVariable ["DCG_noClean", true, true];
-	_aidArray pushBack _aid;
-};
-_halfway = ((_aidArray select 0) distance2D _pos)/2;
-
-TASKWPOS(_taskID,_taskDescription,_taskText,_pos,"C")
-
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_pos","_halfway","_aidArray","_count"];
+	_args params ["_taskID","_posDeliver","_veh","_grp"];
 
-	if ({!alive _x} count _aidArray > 0) exitWith {
+	if (GVAR(secondary) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "FAILED"] call BIS_fnc_taskSetState;
-		_aidArray call DCG_fnc_cleanup;
-		call DCG_fnc_setTaskCiv;
+		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+		((units _grp) + _veh) call EFUNC(main,cleanup);
+		[0] spawn FUNC(select);
 	};
-	if ((_aidArray select 0) distance2D _pos < _halfway) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		_posAid = getPosATL (_aidArray select 0);
-		_posAid set [2,0];
-		if (random 1 < 0.20) then {
-			private "_veh";
-			{
-				if ((_aidArray select 0) in ((vehicle _x) getVariable ["ace_cargo_loaded",[]])) exitWith {
-					_veh = vehicle _x;
-				};
-			} forEach allPlayers;
 
-			if !(isNil "_veh") then {
-				[_veh] call DCG_fnc_setVehDamaged;
-				_grp = [[_posAid,250,300] call DCG_fnc_findRandomPos,0,STRENGTH(8,15)] call DCG_fnc_spawnGroup;
-				SAD(_grp,(_aidArray select 0))
+	if !(alive _veh) exitWith {
+		[_idPFH] call CBA_fnc_removePerFrameHandler;
+		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
+		((units _grp) + _veh) call EFUNC(main,cleanup);
+		[0] spawn FUNC(select);
+	};
+
+	if (CHECK_DIST2D(_posDeliver,_veh,RETURN_DIST) && {speed _veh < 1}) exitWith {
+		[_idPFH] call CBA_fnc_removePerFrameHandler;
+		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
+		((units _grp) + _veh) call EFUNC(main,cleanup);
+		[0] spawn FUNC(select);
+
+		if (random 1 < 0.5) then {
+			_posArray = [getpos _veh,50,400,300] call EFUNC(main,findPosGrid);
+			{
+				if !([_x,200] call EFUNC(main,getNearPlayers) isEqualTo []) then {
+					_posArray deleteAt _forEachIndex;
+				};
+			} forEach _posArray;
+
+			if !(_posArray isEqualTo []) then {
+				_grp = [selectRandom _posArray,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength)] call EFUNC(main,spawnGroup);
+				_wp = _grp addWaypoint [getposATL _veh,0];
+				_wp setWaypointBehaviour "AWARE";
+				_wp setWaypointFormation "STAG COLUMN";
+				_cond = "!(behaviour this isEqualTo ""COMBAT"")";
+				_wp setWaypointStatements [_cond, format ["thisList call %1;",QEFUNC(main,cleanup)]];
 			};
 		};
-		[{
-			params ["_args","_idPFH"];
-			_args params ["_taskID","_pos","_aidArray","_count"];
-
-			if ({!alive _x} count _aidArray > 0) exitWith {
-				[_idPFH] call CBA_fnc_removePerFrameHandler;
-				[_taskID, "FAILED"] call BIS_fnc_taskSetState;
-				_aidArray call DCG_fnc_cleanup;
-				call DCG_fnc_setTaskCiv;
-			};
-			if ({(getPosATL _x) distance _pos < MINDIST} count _aidArray isEqualTo _count) exitWith {
-				[_idPFH] call CBA_fnc_removePerFrameHandler;
-				if (random 1 < 0.70) then {[_pos,DCG_enemySide] call DCG_fnc_spawnReinforcements};
-				[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
-				_bonus = round (35 + random 20);
-				DCG_approval = DCG_approval + _bonus;
-				publicVariable "DCG_approval";
-				["DCG_approvalBonus",[_bonus,'Assisting the local population has increased your approval!']] remoteExecCall ["BIS_fnc_showNotification", allPlayers, false];
-				_aidArray call DCG_fnc_cleanup;
-				call DCG_fnc_setTaskCiv;
-			};
-		}, 5, [_taskID,_pos,_aidArray,_count]] call CBA_fnc_addPerFrameHandler;
 	};
-}, 5, [_taskID,_pos,_halfway,_aidArray,_count]] call CBA_fnc_addPerFrameHandler;
+}, HANDLER_SLEEP, [_taskID,_posDeliver,_veh,_grp]] call CBA_fnc_addPerFrameHandler;
