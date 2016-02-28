@@ -82,7 +82,7 @@
 #define DATA_DELETEPVEH QUOTE(DOUBLES(MAIN_ADDON,deleteDataPVEH))
 #define DATA_SETVAR(VAR1) profileNamespace setVariable [DATA_SAVEVAR,VAR1]
 #define DATA_GETVAR profileNamespace getVariable [DATA_SAVEVAR,[]]
-#define DATA_MISSION_ID format ["%1_%2", toLower worldName, toLower missionName]
+#define DATA_MISSION_ID format ["%1_%2", toUpper worldName, toUpper missionName]
 #define LOG_DEBUG(MSG) [QUOTE(ADDON),[MSG]] call EFUNC(main,log)
 #define LOG_DEBUG_1(MSG,ARG1) [QUOTE(ADDON),[MSG,ARG1]] call EFUNC(main,log)
 #define LOG_DEBUG_2(MSG,ARG1,ARG2) [QUOTE(ADDON),[MSG,ARG1,ARG2]] call EFUNC(main,log)

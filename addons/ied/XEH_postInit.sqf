@@ -5,7 +5,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define DEBUG_IED \
 	if (CHECK_DEBUG) then { \
-		_mrk = createMarker [format["%1_%2",QUOTE(ADDON),getPosATL _ied],_pos]; \
+		_mrk = createMarker [format["%1_%2",QUOTE(ADDON),getPosATL _ied],getPosATL _ied]; \
 		_mrk setMarkerType "mil_triangle"; \
 		_mrk setMarkerSize [0.5,0.5]; \
 		_mrk setMarkerColor "ColorRed"; \
@@ -20,16 +20,17 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 [{
 	if (DOUBLES(PREFIX,main)) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
+
 		_type = [];
+
+		if (CHECK_ADDON_1("ace_explosives")) then {
+			_type = ["IEDLandBig_Range_Ammo","IEDLandSmall_Range_Ammo","IEDUrbanBig_Range_Ammo","IEDUrbanSmall_Range_Ammo"];
+		} else {
+			_type = ["IEDUrbanBig_F","IEDLandBig_F"];
+		};
 
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
 		if (_data isEqualTo []) then {
-			if (CHECK_ADDON_1("ace_explosives")) then {
-				_type = ["IEDLandBig_Range_Ammo","IEDLandSmall_Range_Ammo","IEDUrbanBig_Range_Ammo","IEDUrbanSmall_Range_Ammo"];
-			} else {
-				_type = ["IEDUrbanBig_F","IEDLandBig_F"];
-			};
-
 			{
 				_roads = (ASLToAGL _x) nearRoads 500;
 				if !(_roads isEqualTo []) then {
@@ -45,8 +46,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			} forEach ([EGVAR(main,center),1500,worldSize,0,0,false,false] call EFUNC(main,findPosGrid));
 		} else {
 			for "_index" from 0 to count _data - 1 do {
-				(_data select _index) params ["_pos","_type"];
-				_ied = _type createVehicle _pos;
+				_ied = (selectRandom _type) createVehicle (_data select _index);
 				GVAR(array) pushBack _ied;
 				DEBUG_IED
 			};

@@ -108,7 +108,7 @@ if (CHECK_ADDON_2(ied)) then {
 		private "_pos";
 		_pos = getPos _x;
 		_pos deleteAt 2;
-		_data pushBack [_pos,typeOf _x];
+		_data pushBack _pos;
 		false
 	} count EGVAR(ied,array);
 
@@ -125,7 +125,7 @@ if (CHECK_ADDON_2(task)) then {
 // following code must run last
 if !(_dataProfile isEqualTo []) then {
 	{
-		if ((_x select 0) isEqualTo DATA_MISSION_ID) exitWith {
+		if (toUpper (_x select 0) isEqualTo DATA_MISSION_ID) exitWith {
 			_dataProfile set [_forEachIndex,GVAR(saveDataCurrent)];
 		};
 		_dataProfile pushBack GVAR(saveDataCurrent);
