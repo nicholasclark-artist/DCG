@@ -46,7 +46,7 @@ _fnc_fixSettingValue = {
     if (toUpper _typeDetail isEqualTo "POOL") then {
         _pool = [];
         {
-            if (toUpper (_x select 0) isEqualTo "ALL" || {toUpper (_x select 0) isEqualTo toUpper worldName}) then {
+            if (toUpper (_x select 0) isEqualTo "ALL" || {toUpper (_x select 0) isEqualTo toUpper worldName} || {toUpper (_x select 0) isEqualTo toUpper missionName}) then {
                 _x deleteAt 0;
                 _pool append _x;
             };
