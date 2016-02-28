@@ -18,6 +18,7 @@ params [["_posArray",[]]];
 _posConvoy = [];
 _posDeliver = [];
 _vehicles = [];
+_type = "";
 _grp = grpNull;
 
 // CREATE TASK
@@ -30,7 +31,7 @@ if (count _posArray > 1) then {
 
 if (count (EGVAR(main,locations) > 1) && {_posConvoy isEqualTo []}) then {
 	if (CHECK_ADDON_2(occupy)) then {
-		if (count EGVAR(main,locations) > count EGVAR(occupy,locations)) then {
+		if (count EGVAR(main,locations) >= (count EGVAR(occupy,locations)) + 2) then {
 			_posConvoy = (selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations))})) select 1;
 			_posDeliver = (selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations)) && !(_x isEqualTo _posConvoy)})) select 1;
 		};
@@ -44,12 +45,42 @@ if (_posConvoy isEqualTo [] || {_posDeliver isEqualTo []}) exitWith {
 	[0,0] spawn FUNC(select);
 };
 
+if (_posArray isEqualTo []) then {
+	_roads = _posConvoy nearRoads 200;
+	if !(_roads isEqualTo []) then {
+		_posConvoy = getPos (selectRandom _roads);
+		_posArray pushBack _posConvoy;
+	};
+	_roads = _posDeliver nearRoads 50;
+	if !(_roads isEqualTo []) then {
+		_posDeliver = getPos (selectRandom _roads);
+		_posArray pushBack _posDeliver;
+	};
+};
+
+if (count _posArray < 2) exitWith {
+	[0,0] spawn FUNC(select);
+};
+
+call {
+	if (EGVAR(main,playerSide) isEqualTo EAST) then {
+		_type = "O_Truck_02_box_F"; side
+	};
+	if (EGVAR(main,playerSide) isEqualTo RESISTANCE) then {
+		_type = "I_Truck_02_box_F";
+	};
+
+	_type = "B_Truck_01_box_F";
+};
+
 // SET TASK
 _taskID = format ["sDeliver_%1",diag_tickTime];
-_taskTitle = "Deliver Supplies";
+_taskTitle = "(S) Deliver Supplies";
 _taskDescription = format["A convoy enroute to deliver medical supplies to %1 broke down somewhere around %2. Repair the convoy and complete the delivery.",_town select 0,mapGridPosition _position];
 
 // PUBLISH TASK
+GVAR(primary) = [QFUNC(sDeliver),_position];
+publicVariable QGVAR(primary);
 
 // TASK HANDLER
 
