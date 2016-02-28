@@ -108,7 +108,7 @@ if (CHECK_ADDON_2(ied)) then {
 		private "_pos";
 		_pos = getPos _x;
 		_pos deleteAt 2;
-		_data pushBack [_pos,typeOf _x];
+		_data pushBack _pos;
 		false
 	} count EGVAR(ied,array);
 
