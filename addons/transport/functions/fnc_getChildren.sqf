@@ -39,7 +39,7 @@ call {
 	if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
 		_pool = EGVAR(main,airPoolEast);
 	};
-	if (EGVAR(main,playerSide) isEqualTo INDEPENDENT) exitWith {
+	if (EGVAR(main,playerSide) isEqualTo RESISTANCE) exitWith {
 		_pool = EGVAR(main,airPoolInd);
 	};
 };
