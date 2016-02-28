@@ -15,6 +15,7 @@ __________________________________________________________________*/
 #define HANDLER_SLEEP 10
 #define MRK_DIST 350
 #define ENEMY_MINCOUNT 12
+#define ENEMY_MAXCOUNT 20
 
 private ["_classes","_officer","_base","_grp","_mrk","_taskPos","_taskID","_taskTitle","_taskDescription"];
 params [["_position",[]]];
@@ -37,19 +38,16 @@ call {
 	_classes = EGVAR(main,officerPoolInd);
 };
 
-// exit if vars are empty
 if (_position isEqualTo [] || {_classes isEqualTo []}) exitWith {
 	[1,false] spawn FUNC(select);
 };
 
-// create base for officer
 _base = [_position,random 1] call EFUNC(main,spawnBase);
 
 _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, _position, [], 0, "NONE"];
 [[_officer],30] call EFUNC(main,setPatrol);
 
-// spawn enemy
-_grp = [_position,0,ENEMY_MINCOUNT max (call EFUNC(main,setStrength)),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+_grp = [_position,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 [units _grp,50] call EFUNC(main,setPatrol);
 
 if (CHECK_DEBUG) then {

@@ -81,7 +81,7 @@ call {
 			_weapon = currentWeapon (leader _tempGrp);
 			_mags = magazines (leader _tempGrp);
 			deleteVehicle (leader _tempGrp);
-			_grp = [selectRandom _posArray,0,((call EFUNC(main,setStrength)) max 6) min 16,CIVILIAN] call EFUNC(main,spawnGroup);
+			_grp = [selectRandom _posArray,0,[6,16] call EFUNC(main,setStrength),CIVILIAN] call EFUNC(main,spawnGroup);
 			_grp = [units _grp] call EFUNC(main,setSide);
 			{
 				_y = _x;

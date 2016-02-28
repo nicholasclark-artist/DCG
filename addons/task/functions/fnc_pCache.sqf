@@ -15,6 +15,7 @@ __________________________________________________________________*/
 #define HANDLER_SLEEP 10
 #define MRK_DIST 350
 #define ENEMY_MINCOUNT 8
+#define ENEMY_MAXCOUNT 20
 
 private ["_caches","_base","_drivers","_grp","_cache","_taskID","_taskDescription","_taskTitle","_taskPos","_mrk"];
 params [["_position",[]]];
@@ -29,7 +30,6 @@ if (_position isEqualTo []) then {
 	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findRuralPos);
 };
 
-// exit if vars are empty
 if (_position isEqualTo []) exitWith {
 	[1,0] spawn FUNC(select);
 };
@@ -37,7 +37,6 @@ if (_position isEqualTo []) exitWith {
 _base = [_position,0.5 + random 0.5] call EFUNC(main,spawnBase);
 _position = [_position,0,15,0.5] call EFUNC(main,findRandomPos);
 
-// spawn caches
 for "_i" from 0 to 2 do {
 	_cache = "O_supplyCrate_F" createVehicle _position;
 	_cache setDir random 360;
@@ -49,8 +48,7 @@ for "_i" from 0 to 2 do {
 	}];
 };
 
-// spawn enemy
-_grp = [_position,0,ENEMY_MINCOUNT max (call EFUNC(main,setStrength)),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+_grp = [_position,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 [units _grp] call EFUNC(main,setPatrol);
 
 if (random 1 < 0.5) then {

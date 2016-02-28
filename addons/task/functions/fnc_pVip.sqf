@@ -16,6 +16,7 @@ __________________________________________________________________*/
 #define MRK_DIST 350
 #define RETURN_DIST 20
 #define ENEMY_MINCOUNT 8
+#define ENEMY_MAXCOUNT 20
 
 private ["_drivers","_town","_base","_grp","_vip","_taskID","_taskTitle","_taskDescription","_taskPos","_mrk","_success"];
 params [["_position",[]]];
@@ -63,7 +64,7 @@ _vip setDir random 360;
 _vip setPosATL _position;
 [_vip,"Acts_AidlPsitMstpSsurWnonDnon02"] call EFUNC(main,setAnim);
 
-_grp = [_position,0,ENEMY_MINCOUNT max (call EFUNC(main,setStrength)),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+_grp = [_position,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 [units _grp] call EFUNC(main,setPatrol);
 
 if (random 1 < 0.5) then {
