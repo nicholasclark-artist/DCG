@@ -14,7 +14,7 @@ __________________________________________________________________*/
 				}; \
 			}]; \
 		}; \
-	} forEach (curatorEditableObjects GVAR(curator))
+	} forEach (curatorEditableObjects GVAR(curator));
 
 if (!isServer || !isMultiplayer) exitWith {};
 
@@ -22,8 +22,10 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");
 };
 
-if (isNil QGVAR(curator)) exitWith { // curator must be initialized in mission
-	LOG_DEBUG("Curator does not exist.");
+if (isNil QGVAR(curator)) exitWith {
+	_center = createCenter sideLogic;
+	GVAR(curator) = (createGroup _center) createUnit ["ModuleCurator_F",[0,0,0], [], 0, "FORM"];
+	LOG_DEBUG_1("Curator does not exist. Creating %1.",QGVAR(curator));
 };
 
 unassignCurator GVAR(curator);
@@ -38,7 +40,7 @@ addMissionEventHandler ["HandleDisconnect",{
 }];
 
 [{
-	if (DOUBLES(PREFIX,main) && {time > 0}) exitWith { // must run after time == 0
+	if (DOUBLES(PREFIX,main) && {time > 0}) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
