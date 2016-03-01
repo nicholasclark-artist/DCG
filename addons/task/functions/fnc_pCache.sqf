@@ -35,16 +35,20 @@ if (_position isEqualTo []) exitWith {
 };
 
 _base = [_position,0.5 + random 0.5] call EFUNC(main,spawnBase);
-_position = [_position,0,15,0.5] call EFUNC(main,findRandomPos);
 
 for "_i" from 0 to 2 do {
 	_cache = "O_supplyCrate_F" createVehicle _position;
 	_cache setDir random 360;
 	_caches pushBack _cache;
 	_cache addEventHandler ["HandleDamage", {
-		if ((_this select 4) isKindof "PipeBombBase" && {(_this select 2) > 0.6}) then {
-			(_this select 0) setdamage 1;
+		_ret = 0;
+		if ((_this select 4) isKindof "PipeBombBase") then {
+			_ret = 1;
+		} else {
+			_ret = 0;
 		};
+
+		_ret
 	}];
 };
 

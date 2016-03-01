@@ -39,7 +39,7 @@ call {
 };
 
 if (_position isEqualTo [] || {_classes isEqualTo []}) exitWith {
-	[1,false] spawn FUNC(select);
+	[1,0] spawn FUNC(select);
 };
 
 _base = [_position,random 1] call EFUNC(main,spawnBase);

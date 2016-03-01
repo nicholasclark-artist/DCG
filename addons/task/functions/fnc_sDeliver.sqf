@@ -37,7 +37,7 @@ if (count _posArray > 1) then {
 	};
 };
 
-if (count (EGVAR(main,locations) > 1) && {_posConvoy isEqualTo []}) then {
+if (count EGVAR(main,locations) > 1 && {_posConvoy isEqualTo []}) then {
 	if (CHECK_ADDON_2(occupy)) then {
 		if (count EGVAR(main,locations) >= (count EGVAR(occupy,locations)) + 2) then {
 			_location = selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations))});
@@ -55,7 +55,7 @@ if (count (EGVAR(main,locations) > 1) && {_posConvoy isEqualTo []}) then {
 		_locDeliver = _location select 0;
 		_posDeliver = _location select 1;
 	};
-}:
+};
 
 if (_posConvoy isEqualTo [] || {_posDeliver isEqualTo []}) exitWith {
 	[0,0] spawn FUNC(select);
@@ -90,7 +90,7 @@ call {
 
 _veh = _type createVehicle _posConvoy;
 _veh setDir random 360;
-_veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.9,0.05,0.05,1)"];
+_veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.2,0.05,0.05,1)"];
 [_veh] call EFUNC(main,setVehDamaged);
 
 if (CHECK_ADDON_1("ace_cargo")) then {
@@ -119,7 +119,9 @@ _grp = [_posConvoy,0,4,EGVAR(main,playerSide)] call EFUNC(main,spawnGroup);
 // SET TASK
 _taskID = format ["sDeliver_%1",diag_tickTime];
 _taskTitle = "(S) Deliver Supplies";
-_taskDescription = format["A convoy enroute to deliver medical supplies to %1 broke down somewhere near %2. Repair the convoy and complete the delivery.",_locDeliver,_locConvoy];
+_taskDescription = format["A convoy enroute to deliver medical supplies to %1 (%2) broke down somewhere near %3. Repair the convoy and complete the delivery.",_locDeliver, mapGridPosition _locDeliver, _locConvoy];
+
+[true,_taskID,[_taskDescription,_taskTitle,""],_posConvoy,false,true,"Support"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
 GVAR(secondary) = [QFUNC(sDeliver),_posArray];
@@ -133,21 +135,21 @@ publicVariable QGVAR(secondary);
 	if (GVAR(secondary) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + _veh) call EFUNC(main,cleanup);
+		((units _grp) + [_veh]) call EFUNC(main,cleanup);
 		[0] spawn FUNC(select);
 	};
 
 	if !(alive _veh) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
-		((units _grp) + _veh) call EFUNC(main,cleanup);
+		((units _grp) + [_veh]) call EFUNC(main,cleanup);
 		[0] spawn FUNC(select);
 	};
 
 	if (CHECK_DIST2D(_posDeliver,_veh,RETURN_DIST) && {speed _veh < 1}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
-		((units _grp) + _veh) call EFUNC(main,cleanup);
+		((units _grp) + [_veh]) call EFUNC(main,cleanup);
 		[0] spawn FUNC(select);
 
 		if (random 1 < 0.5) then {
