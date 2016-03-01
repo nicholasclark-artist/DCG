@@ -340,6 +340,7 @@ class dcg_task_secondaryTasks {
 	typeName = "ARRAY";
 	typeDetail = "";
 	value[] = {
+		"dcg_task_fnc_sDeliver"
 	};
 };
 class dcg_transport_enable {
