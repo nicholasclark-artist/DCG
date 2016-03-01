@@ -27,12 +27,14 @@ if (_cooldown < 0) then {
 if (_type > 0) then {
 	_task = selectRandom GVAR(primaryTasks);
 	if !(isNil "_task") then {
+		LOG_DEBUG_1("Spawning task %1.",_task);
 		[] spawn (missionNamespace getVariable [_task,{}]);
 	};
 } else {
 	// secondary task
 	_task = selectRandom GVAR(secondaryTasks);
 	if !(isNil "_task") then {
+		LOG_DEBUG_1("Spawning task %1.",_task);
 		[] spawn (missionNamespace getVariable [_task,{}]);
 	};
 };
