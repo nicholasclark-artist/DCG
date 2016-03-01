@@ -14,6 +14,7 @@ PREP(cancel);
 PREP(pVip);
 PREP(pCache);
 PREP(pOfficer);
+PREP(sDeliver);
 
 GVAR(primary) = [];
 GVAR(secondary) = [];
