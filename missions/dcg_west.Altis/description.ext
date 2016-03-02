@@ -7,8 +7,6 @@ class Header {
     maxPlayers = 40;
 };
 
-// allowFunctionsRecompile = 1;
-
 overviewPicture = "media\dcg_logo_L.paa";
 loadScreen = "media\dcg_logo_L.paa";
 author = "SENSEI";
@@ -52,12 +50,15 @@ class CfgSounds {
 	#include "cfgSounds.hpp"
 };
 
-//class CfgSettings {
-//    class CBA {
-//        class Caching {
-//            compile = 0;
-//            xeh = 0;
-//            functions = 0;
-//        };
-//    };
-//};
+// DEBUG
+allowFunctionsRecompile = 1;
+
+class CfgSettings {
+    class CBA {
+        class Caching {
+            compile = 0;
+            xeh = 0;
+            functions = 0;
+        };
+    };
+};
