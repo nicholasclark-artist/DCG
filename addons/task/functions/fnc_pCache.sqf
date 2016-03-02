@@ -39,7 +39,7 @@ _base = [_position,0.5 + random 0.5] call EFUNC(main,spawnBase);
 for "_i" from 0 to 1 do {
 	_cache = "O_supplyCrate_F" createVehicle _position;
 	_cache setDir random 360;
-	_cache setPosATL _position;
+	_cache setPos _position;
 	_cache setVectorUp surfaceNormal getPos _cache;
 	_caches pushBack _cache;
 	_cache addEventHandler ["HandleDamage", {
