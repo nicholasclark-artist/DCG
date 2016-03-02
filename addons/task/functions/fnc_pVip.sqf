@@ -48,7 +48,7 @@ if !(EGVAR(main,locations) isEqualTo []) then {
 	} else {
 		_town = selectRandom EGVAR(main,locations);
 	};
-}:
+};
 
 if (_position isEqualTo [] || {_town isEqualTo []}) exitWith {
 	[1,0] spawn FUNC(select);

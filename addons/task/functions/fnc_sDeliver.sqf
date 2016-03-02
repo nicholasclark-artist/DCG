@@ -119,7 +119,7 @@ _grp = [_posConvoy,0,4,EGVAR(main,playerSide)] call EFUNC(main,spawnGroup);
 // SET TASK
 _taskID = format ["sDeliver_%1",diag_tickTime];
 _taskTitle = "(S) Deliver Supplies";
-_taskDescription = format["A convoy enroute to deliver medical supplies to %1 (%2) broke down somewhere near %3. Repair the convoy and complete the delivery.",_locDeliver, mapGridPosition _locDeliver, _locConvoy];
+_taskDescription = format["A convoy enroute to deliver medical supplies to %1 (%2) broke down somewhere near %3. Repair the convoy and complete the delivery.",_locDeliver, mapGridPosition _posDeliver, _locConvoy];
 
 [true,_taskID,[_taskDescription,_taskTitle,""],_posConvoy,false,true,"Support"] call EFUNC(main,setTask);
 

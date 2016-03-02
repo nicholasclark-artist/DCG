@@ -36,9 +36,11 @@ if (_position isEqualTo []) exitWith {
 
 _base = [_position,0.5 + random 0.5] call EFUNC(main,spawnBase);
 
-for "_i" from 0 to 2 do {
+for "_i" from 0 to 1 do {
 	_cache = "O_supplyCrate_F" createVehicle _position;
 	_cache setDir random 360;
+	_cache setPosATL _position;
+	_cache setVectorUp surfaceNormal getPos _cache;
 	_caches pushBack _cache;
 	_cache addEventHandler ["HandleDamage", {
 		_ret = 0;
@@ -53,11 +55,11 @@ for "_i" from 0 to 2 do {
 };
 
 _grp = [_position,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
-[units _grp] call EFUNC(main,setPatrol);
+[units _grp,50] call EFUNC(main,setPatrol);
 
 if (random 1 < 0.5) then {
 	_drivers = [[_position,0,200,6] call EFUNC(main,findRandomPos),1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
-	[_drivers,500] call EFUNC(main,setPatrol);
+	[_drivers,300] call EFUNC(main,setPatrol);
 };
 
 // SET TASK
