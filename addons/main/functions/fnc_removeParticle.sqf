@@ -5,26 +5,28 @@ Description:
 removes particle
 
 Arguments:
+0: center position or object to search from <ARRAY, OBJECT>
+1: range to search for particles <NUMBER>
 
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_pos",["_range",5]];
+params ["_center",["_range",10]];
 
 {
-	if (typeOf _x isEqualTo "#particlesource") then {
+	if (toUpper (getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "vehicleClass")) isEqualTo "EMITTERS") then {
 		_x addMPEventHandler ["MPKilled", {
-			_this = _this select 0;
 			{
 				deleteVehicle _x;
-			} forEach (_this getVariable ["effects", []]);
+			} forEach ((_this select 0) getVariable ["effects", []]);
+
 			if (isServer) then {
-				deleteVehicle _this;
+				deleteVehicle (_this select 0);
 			};
 		}];
 
 		_x setDamage 1;
 	};
-} forEach (_pos nearObjects _range);
+} forEach (_center nearEntities _range);
