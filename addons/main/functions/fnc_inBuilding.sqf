@@ -26,8 +26,8 @@ lineIntersectsSurfaces [
 	_pos,
 	_pos vectorAdd [0, 0, 50],
 	_ignore, objNull, true, 1, "GEOM", "NONE"
-] select 0 params ["","","",["_house",objNull]];
+] select 0 params ["","","","_house"];
 
-if (_house isKindOf "House") exitWith {true};
+if (!isNil "_house" && {_house isKindOf "House"}) exitWith {true};
 
 false
