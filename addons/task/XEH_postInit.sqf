@@ -28,15 +28,13 @@ if (!isServer || !isMultiplayer) exitWith {};
 			_data params ["_primary","_secondary"];
 
 			if !(_primary isEqualTo []) then {
-				_task = compile (_primary select 0);
-				[_primary select 1] spawn _task;
+				[_primary select 1] spawn (missionNamespace getVariable [_primary select 0,{}]);
 			} else {
 				[1,0] spawn FUNC(select);
 			};
 
 			if !(_secondary isEqualTo []) then {
-				_task = compile (_secondary select 0);
-				[_secondary select 1] spawn _task;
+				[_secondary select 1] spawn (missionNamespace getVariable [_secondary select 0,{}]);
 			} else {
 				[0,10] spawn FUNC(select);
 			};

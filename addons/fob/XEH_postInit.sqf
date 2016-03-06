@@ -22,15 +22,8 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");
 };
 
-if (isNil QGVAR(curator)) exitWith {
-	_center = createCenter sideLogic;
-	GVAR(curator) = (createGroup _center) createUnit ["ModuleCurator_F",[0,0,0], [], 0, "FORM"];
-	LOG_DEBUG_1("Curator does not exist. Creating %1.",QGVAR(curator));
-};
-
 unassignCurator GVAR(curator);
 
-// eventhandlers
 PVEH_DEPLOY addPublicVariableEventHandler {(_this select 1) call FUNC(setup)};
 PVEH_REQUEST addPublicVariableEventHandler {(_this select 1) call FUNC(requestHandler)};
 PVEH_REASSIGN addPublicVariableEventHandler {(_this select 1) assignCurator GVAR(curator)};

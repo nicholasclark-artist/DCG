@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-checks if group should be uncached
+checks if group can be uncached
 
 Arguments:
 0: group to be uncached <GROUP>

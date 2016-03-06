@@ -76,15 +76,17 @@ __________________________________________________________________*/
 	_objArray append (_static select 1);
 #define PREP_GARRISON(MAX_COUNT) \
 	_houses = _position nearObjects ["House", _size]; \
-	for "_i" from 1 to MAX_COUNT do { \
-		_posArray = (selectRandom _houses) buildingPos -1; \
-		if !(_posArray isEqualTo []) then { \
-			_grp = [[0,0,0],0,1,EGVAR(main,enemySide),false,1.5] call EFUNC(main,spawnGroup); \
-			(leader _grp) setDir random 360; \
-			(leader _grp) setPosATL (selectRandom _posArray); \
-			(leader _grp) disableAI "MOVE"; \
-			(leader _grp) disableAI "COVER"; \
-			_count = _count + 1; \
+	if !(_houses isEqualTo []) then { \
+		for "_i" from 1 to MAX_COUNT do { \
+			_posArray = (selectRandom _houses) buildingPos -1; \
+			if !(_posArray isEqualTo []) then { \
+				_grp = [[0,0,0],0,1,EGVAR(main,enemySide),false,1.5] call EFUNC(main,spawnGroup); \
+				(leader _grp) setDir random 360; \
+				(leader _grp) setPosATL (selectRandom _posArray); \
+				(leader _grp) disableAI "MOVE"; \
+				(leader _grp) disableAI "COVER"; \
+				_count = _count + 1; \
+			}; \
 		}; \
 	};
 

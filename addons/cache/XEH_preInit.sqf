@@ -8,11 +8,11 @@ if (!isServer || !isMultiplayer) exitWith {};
 
 ADDON = false;
 
-PREP(getGroups);
 PREP(handler);
 PREP(cache);
-PREP(canUncache);
 PREP(uncache);
-PREP(leaderEH);
+PREP(canCache);
+PREP(canUncache);
+PREP(addEventhandler);
 
 GVAR(groups) = [];
