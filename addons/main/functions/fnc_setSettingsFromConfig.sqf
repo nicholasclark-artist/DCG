@@ -90,7 +90,7 @@ if (isNil _name) then {
     // get correct pool for map and check if values exists on server
     _value = [_name,_typeName,_typeDetail,_value] call _fnc_fixSettingValue;
 
-    LOG_DEBUG_4("%1, %2, %3, %4", _name, _typeName, _typeDetail, _value);
+    //LOG_DEBUG_4("%1, %2, %3, %4", _name, _typeName, _typeDetail, _value);
 
     // Init the variable
     missionNamespace setVariable [_name,_value];
@@ -120,7 +120,7 @@ if (isNil _name) then {
     // get correct pool for map and check if values exists on server
     _value = [_name,_typeName,_typeDetail,_value] call _fnc_fixSettingValue;
 
-    LOG_DEBUG_4("%1, %2, %3, %4", _name, _typeName, _typeDetail, _value);
+    //LOG_DEBUG_4("%1, %2, %3, %4", _name, _typeName, _typeDetail, _value);
 
     // Update the variable
     missionNamespace setVariable [_name,_value];
