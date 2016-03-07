@@ -17,9 +17,10 @@ __________________________________________________________________*/
 #define ENEMY_MINCOUNT 12
 #define ENEMY_MAXCOUNT 20
 
-private ["_classes","_officer","_base","_grp","_mrk","_taskPos","_taskID","_taskTitle","_taskDescription"];
+private ["_drivers","_classes","_officer","_base","_grp","_vehPos","_mrk","_taskPos","_taskID","_taskTitle","_taskDescription"];
 params [["_position",[]]];
 
+_drivers = [];
 _classes = [];
 _officer = objNull;
 
@@ -50,6 +51,14 @@ _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes
 _grp = [_position,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 [units _grp,50] call EFUNC(main,setPatrol);
 
+if (random 1 < 0.5) then {
+	_vehPos = [_position,0,200,6] call EFUNC(main,findRandomPos);
+	if !(_vehPos isEqualTo _position) then {
+		_drivers = [_vehPos,1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+		[_drivers,300] call EFUNC(main,setPatrol);
+	};
+};
+
 if (CHECK_DEBUG) then {
 	_mrk = createMarker [format ["vip_%1", diag_tickTime],getpos _officer];
 	_mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)];
@@ -72,19 +81,19 @@ publicVariable QGVAR(primary);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_officer","_grp","_base"];
+	_args params ["_taskID","_officer","_grp","_drivers","_base"];
 
 	if (GVAR(primary) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + [_officer] + _base) call EFUNC(main,cleanup);
+		((units _grp) + [_officer] + _base + _drivers) call EFUNC(main,cleanup);
 		[1] spawn FUNC(select);
 	};
 
 	if !(alive _officer) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
-		((units _grp) + [_officer] + _base) call EFUNC(main,cleanup);
+		((units _grp) + [_officer] + _base + _drivers) call EFUNC(main,cleanup);
 		[1] spawn FUNC(select);
 	};
-}, HANDLER_SLEEP, [_taskID,_officer,_grp,_base]] call CBA_fnc_addPerFrameHandler;
+}, HANDLER_SLEEP, [_taskID,_officer,_grp,_drivers,_base]] call CBA_fnc_addPerFrameHandler;

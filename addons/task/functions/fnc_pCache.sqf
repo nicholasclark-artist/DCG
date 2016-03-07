@@ -17,7 +17,7 @@ __________________________________________________________________*/
 #define ENEMY_MINCOUNT 8
 #define ENEMY_MAXCOUNT 20
 
-private ["_caches","_base","_drivers","_grp","_cache","_taskID","_taskDescription","_taskTitle","_taskPos","_mrk"];
+private ["_caches","_base","_drivers","_grp","_cache","_ret","_vehPos","_taskPos","_taskID","_taskTitle","_taskDescription","_mrk"];
 params [["_position",[]]];
 
 _caches = [];
@@ -58,8 +58,11 @@ _grp = [_position,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength)
 [units _grp,50] call EFUNC(main,setPatrol);
 
 if (random 1 < 0.5) then {
-	_drivers = [[_position,0,200,6] call EFUNC(main,findRandomPos),1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
-	[_drivers,300] call EFUNC(main,setPatrol);
+	_vehPos = [_position,0,200,6] call EFUNC(main,findRandomPos);
+	if !(_vehPos isEqualTo _position) then {
+		_drivers = [_vehPos,1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+		[_drivers,300] call EFUNC(main,setPatrol);
+	};
 };
 
 // SET TASK
