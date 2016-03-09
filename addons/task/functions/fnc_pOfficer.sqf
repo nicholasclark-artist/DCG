@@ -60,7 +60,7 @@ if (random 1 < 0.5) then {
 };
 
 if (CHECK_DEBUG) then {
-	_mrk = createMarker [format ["vip_%1", diag_tickTime],getpos _officer];
+	_mrk = createMarker [format ["officer_%1", diag_tickTime],getpos _officer];
 	_mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)];
 	_mrk setMarkerType "mil_dot";
 	_mrk setMarkerText "Officer";

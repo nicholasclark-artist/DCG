@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-deliver supplies to town
+secondary task - deliver supplies
 
 Arguments:
 0: forced task position <ARRAY>
@@ -148,7 +148,7 @@ publicVariable QGVAR(secondary);
 
 	if (CHECK_DIST2D(_posDeliver,_veh,RETURN_DIST) && {speed _veh < 1}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
+		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		((units _grp) + [_veh]) call EFUNC(main,cleanup);
 		[0] spawn FUNC(select);
 
