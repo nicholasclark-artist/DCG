@@ -24,7 +24,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		_type = [];
 
 		if (CHECK_ADDON_1("ace_explosives")) then {
-			_type = ["IEDLandBig_Range_Ammo","IEDLandSmall_Range_Ammo","IEDUrbanBig_Range_Ammo","IEDUrbanSmall_Range_Ammo"];
+			_type = ["ACE_IEDLandBig_Range_Ammo","ACE_IEDLandSmall_Range_Ammo","ACE_IEDUrbanBig_Range_Ammo","ACE_IEDUrbanSmall_Range_Ammo"];
 		} else {
 			_type = ["IEDUrbanBig_F","IEDLandBig_F"];
 		};
