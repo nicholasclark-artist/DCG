@@ -18,6 +18,7 @@ __________________________________________________________________*/
 #define COUNTDOWN 600
 #define ENEMY_MAXCOUNT ([8,25] call EFUNC(main,setStrength))
 
+private ["_enemies","_base","_type","_truck","_hitpoints","_driver","_grp","_taskID","_taskTitle","_taskDescription","_time","_wp"];
 params [["_position",[]]];
 
 _enemies = [];
@@ -51,10 +52,10 @@ call {
 	_type = "B_Truck_01_ammo_F";
 };
 
-_truck = _type createVehicle ([_position,0,30,6] call EFUNC(main,findRandomPos));
+_truck = _type createVehicle ([_position,0,30,3] call EFUNC(main,findRandomPos));
+_truck lock 3;
 _truck allowDamage false;
 _truck setDir random 360;
-_onRepair = QUOTE((group driver (_this select 0)) move ([getPos (_this select 0),4000,5000] call EFUNC(main,findRandomPos)));
 _hitpoints = [_truck] call EFUNC(main,setVehDamaged);
 _driver = (createGroup CIVILIAN) createUnit ["C_man_w_worker_F", [0,0,0], [], 0, "NONE"];
 _driver moveInDriver _truck;
@@ -80,6 +81,7 @@ GVAR(primary) = [QFUNC(pDefend),_position];
 publicVariable QGVAR(primary);
 
 // TASK HANDLER
+// TODO check if handler runs in unscheduled env
 [{
 	params ["_args","_idPFH"];
 	_args params ["_taskID","_truck","_hitpoints","_grp","_enemies","_base"];
@@ -118,6 +120,7 @@ publicVariable QGVAR(primary);
 			  	{
 			  		_truck setHit [getText (configFile >> "cfgVehicles" >> typeOf _truck >> "HitPoints" >> _x >> "name"), 0.25];
 			  	} forEach _hitpoints;
+			  	(group driver _truck) move [getPos (_this select 0),4000,5000] call EFUNC(main,findRandomPos);
 				[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 				((units _grp) + _enemies + [_truck] + _base) call EFUNC(main,cleanup);
 				[1] spawn FUNC(select);
