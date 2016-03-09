@@ -19,14 +19,16 @@ class DOUBLES(PREFIX,settings) {
         value[] = {
             QFUNC(pVip),
             QFUNC(pCache),
-            QFUNC(pOfficer)
+            QFUNC(pOfficer),
+            QFUNC(pDefend)
         };
     };
     class GVAR(secondaryTasks) {
         typeName = "ARRAY";
         typeDetail = "";
         value[] = {
-            QFUNC(sDeliver)
+            QFUNC(sDeliver),
+            QFUNC(sRepair)
         };
     };
 };

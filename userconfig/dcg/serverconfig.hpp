@@ -333,14 +333,16 @@ class dcg_task_primaryTasks {
 	value[] = {
 		"dcg_task_fnc_pVip",
 		"dcg_task_fnc_pCache",
-		"dcg_task_fnc_pOfficer"
+		"dcg_task_fnc_pOfficer",
+		"dcg_task_fnc_pDefend"
 	};
 };
 class dcg_task_secondaryTasks {
 	typeName = "ARRAY";
 	typeDetail = "";
 	value[] = {
-		"dcg_task_fnc_sDeliver"
+		"dcg_task_fnc_sDeliver",
+		"dcg_task_fnc_sRepair"
 	};
 };
 class dcg_transport_enable {
