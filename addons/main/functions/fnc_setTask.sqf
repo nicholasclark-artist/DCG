@@ -6,9 +6,16 @@ Description:
 set task
 
 Arguments:
+0: environment where function will run <NUMBER,OBJECT,SIDE,GROUP,ARRAY,BOOL>
+1: task id <STRING>
+2: task description <ARRAY>
+3: task position <ARRAY>
+4: set as current task <BOOL>
+5: show task notification <BOOL>
+6: task type defined in CfgTaskTypes <STRING>
 
 Return:
-none
+bool
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -35,11 +42,15 @@ if (getNumber (missionConfigFile >> "CfgTaskEnhancements" >> "enable") isEqualTo
     };
 
     [[_id,_desc,_pos],{
-        _task = player createSimpleTask (_this select 0);
-        _task setSimpleTaskDescription [(_this select 1) select 0, (_this select 1) select 1, (_this select 1) select 2];
-        if (!((_this select 2) isEqualTo [0,0,0]) && {!((_this select 2) isEqualTo [])}) then {
-            _task setSimpleTaskDestination (_this select 2);
+        if (hasInterface) then {
+            _task = player createSimpleTask (_this select 0);
+            _task setSimpleTaskDescription [(_this select 1) select 0, (_this select 1) select 1, (_this select 1) select 2];
+            if (!((_this select 2) isEqualTo [0,0,0]) && {!((_this select 2) isEqualTo [])}) then {
+                _task setSimpleTaskDestination (_this select 2);
+            };
+            _task setTaskState "Assigned";
         };
-        _task setTaskState "Assigned";
     }] remoteExecCall ["BIS_fnc_call",_target,true];
 };
+
+true
