@@ -5,12 +5,11 @@ Nicholas Clark (SENSEI)
 Description:
 mission included with Dynamic Combat Generator
 __________________________________________________________________*/
-#include "script_component.hpp"
-
-if !(CHECK_ADDON_1("dcg_main")) exitWith {};
-
-EGVAR(main,playerSide) = WEST;
+dcg_main_playerSide = WEST;
 enableSaving [false, false];
 enableSentences false;
 enableRadio false;
-["Preload"] call EFUNC(main,arsenal);
+
+waitUntil {!isNil "dcg_main" && {dcg_main}}; // wait until main addon completes postInit
+
+["Preload"] call dcg_main_fnc_arsenal;
