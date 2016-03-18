@@ -18,7 +18,7 @@ __________________________________________________________________*/
 #define ENEMY_MAXCOUNT 20
 #define END_TASK GVAR(primary) = []; publicVariable QGVAR(primary); [1] spawn FUNC(select);
 
-private ["_caches","_base","_drivers","_grp","_cache","_ret","_vehPos","_taskPos","_taskID","_taskTitle","_taskDescription","_mrk"];
+private ["_caches","_base","_drivers","_grp","_cache","_ret","_vehPos","_taskPos","_taskID","_taskTitle","_taskDescription","_mrk","_posCache"];
 params [["_position",[]]];
 
 _caches = [];
@@ -38,9 +38,10 @@ if (_position isEqualTo []) exitWith {
 _base = [_position,0.5 + random 0.5] call EFUNC(main,spawnBase);
 
 for "_i" from 0 to 1 do {
-	_cache = "O_supplyCrate_F" createVehicle _position;
+	_posCache = [_position,0,10,1] call EFUNC(main,findRandomPos);
+	_cache = "O_supplyCrate_F" createVehicle _posCache;
 	_cache setDir random 360;
-	_cache setPos _position;
+	_cache setPos _posCache;
 	_cache setVectorUp surfaceNormal getPos _cache;
 	_caches pushBack _cache;
 	_cache addEventHandler ["HandleDamage", {
