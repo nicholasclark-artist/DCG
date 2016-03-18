@@ -56,10 +56,12 @@ _fx attachTo [_veh,[0,0,0]];
 	params ["_args","_idPFH"];
 	_args params ["_veh","_ret","_onRepair"];
 
-	if (({_veh getHit (getText (configFile >> "cfgVehicles" >> typeOf _veh >> "HitPoints" >> _x >> "name")) isEqualTo 1} count _ret) isEqualTo 0) exitWith {
+	if (isNull _veh || {!alive _veh} || {({_veh getHit (getText (configFile >> "cfgVehicles" >> typeOf _veh >> "HitPoints" >> _x >> "name")) isEqualTo 1} count _ret) isEqualTo 0}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[getPosATL _veh] call FUNC(removeParticle);
-		[_veh,_ret] call compile _onRepair;
+		if (!isNull _veh && {alive _veh}) then {
+			[_veh,_ret] call compile _onRepair;
+		};
 	};
 }, 0.2, [_veh,_ret,_onRepair]] call CBA_fnc_addPerFrameHandler;
 
