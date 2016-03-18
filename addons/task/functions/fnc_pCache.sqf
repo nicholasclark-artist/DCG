@@ -16,6 +16,7 @@ __________________________________________________________________*/
 #define MRK_DIST 350
 #define ENEMY_MINCOUNT 8
 #define ENEMY_MAXCOUNT 20
+#define END_TASK GVAR(primary) = []; publicVariable QGVAR(primary); [1] spawn FUNC(select);
 
 private ["_caches","_base","_drivers","_grp","_cache","_ret","_vehPos","_taskPos","_taskID","_taskTitle","_taskDescription","_mrk"];
 params [["_position",[]]];
@@ -99,6 +100,6 @@ publicVariable QGVAR(primary);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		((units _grp) + _drivers + _caches + _base) call EFUNC(main,cleanup);
-		[1] spawn FUNC(select);
+		END_TASK
 	};
 }, HANDLER_SLEEP, [_taskID,_caches,_grp,_drivers,_base]] call CBA_fnc_addPerFrameHandler;

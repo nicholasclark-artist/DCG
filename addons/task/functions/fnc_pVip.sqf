@@ -17,6 +17,7 @@ __________________________________________________________________*/
 #define RETURN_DIST 20
 #define ENEMY_MINCOUNT 8
 #define ENEMY_MAXCOUNT 20
+#define END_TASK GVAR(primary) = []; publicVariable QGVAR(primary); [1] spawn FUNC(select);
 
 private ["_drivers","_town","_base","_grp","_vip","_taskID","_taskTitle","_taskDescription","_taskPos","_mrk","_success","_vehPos"];
 params [["_position",[]]];
@@ -112,7 +113,7 @@ publicVariable QGVAR(primary);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		((units _grp) + _drivers + [_vip] + _base) call EFUNC(main,cleanup);
-		[1] spawn FUNC(select);
+		END_TASK
 	};
 
 	// if vip is returned to town and is alive/awake
@@ -132,6 +133,6 @@ publicVariable QGVAR(primary);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		((units _grp) + _drivers + [_vip] + _base) call EFUNC(main,cleanup);
-		[1] spawn FUNC(select);
+		END_TASK
 	};
 }, HANDLER_SLEEP, [_taskID,_vip,_grp,_drivers,_town,_base]] call CBA_fnc_addPerFrameHandler;

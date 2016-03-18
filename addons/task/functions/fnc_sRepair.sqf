@@ -13,7 +13,8 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define HANDLER_SLEEP 10
-#define MRK_DIST 150
+#define MRK_DIST 300
+#define END_TASK GVAR(secondary) = []; publicVariable QGVAR(secondary); [0] spawn FUNC(select);
 
 private ["_vehicles","_roads","_temp","_drivers","_taskID","_taskTitle","_taskDescription"];
 params [["_position",[]]];
@@ -42,9 +43,9 @@ if (_position isEqualTo []) exitWith {
 _drivers = [_position,1,2,EGVAR(main,playerSide)] call EFUNC(main,spawnGroup);
 
 {
+	[vehicle _x,QUOTE(GVAR(DOUBLES(sRepair,success)) = GVAR(DOUBLES(sRepair,success)) + 1)] call EFUNC(main,setVehDamaged);
 	(crew (vehicle _x)) allowGetIn false;
 	(group _x) leaveVehicle (vehicle _x);
-	[vehicle _x,QUOTE(GVAR(DOUBLES(sRepair,success)) = GVAR(DOUBLES(sRepair,success)) + 1)] call EFUNC(main,setVehDamaged);
 	_vehicles pushBack (vehicle _x);
 } forEach _drivers;
 
@@ -53,7 +54,7 @@ _taskID = format ["sRepair_%1",diag_tickTime];
 _taskTitle = "(S) Repair Patrol";
 _taskDescription = format["A friendly patrol, scouting near %1, is in need of repair supplies. Gather the necessary tools and assist the patrol.", mapGridPosition _position];
 
-[true,_taskID,[_taskDescription,_taskTitle,""],[_position,MRK_DIST*0.5,MRK_DIST] call EFUNC(main,findRandomPos),false,true,"Support"] call EFUNC(main,setTask);
+[true,_taskID,[_taskDescription,_taskTitle,""],[_position,MRK_DIST*0.7,MRK_DIST] call EFUNC(main,findRandomPos),false,true,"Support"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
 GVAR(secondary) = [QFUNC(sRepair),_position];
@@ -75,13 +76,13 @@ publicVariable QGVAR(secondary);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		(_drivers + _vehicles) call EFUNC(main,cleanup);
-		[0] spawn FUNC(select);
+		END_TASK
 	};
 
 	if (GVAR(DOUBLES(sRepair,success)) isEqualTo count _vehicles) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		(_drivers + _vehicles) call EFUNC(main,cleanup);
-		[0] spawn FUNC(select);
+		END_TASK
 	};
 }, HANDLER_SLEEP, [_taskID,_vehicles,_drivers]] call CBA_fnc_addPerFrameHandler;

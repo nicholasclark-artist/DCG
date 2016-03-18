@@ -16,6 +16,7 @@ __________________________________________________________________*/
 #define RETURN_DIST 20
 #define ENEMY_MINCOUNT 4
 #define ENEMY_MAXCOUNT 12
+#define END_TASK GVAR(secondary) = []; publicVariable QGVAR(secondary); [0] spawn FUNC(select);
 
 private ["_posConvoy","_posDeliver","_locConvoy","_locDeliver","_veh","_type","_cargo","_grp","_location","_roads","_taskID","_taskTitle","_taskDescription","_wp","_cond"];
 params [["_posArray",[]]];
@@ -119,7 +120,7 @@ _grp = [_posConvoy,0,4,EGVAR(main,playerSide)] call EFUNC(main,spawnGroup);
 // SET TASK
 _taskID = format ["sDeliver_%1",diag_tickTime];
 _taskTitle = "(S) Deliver Supplies";
-_taskDescription = format["A convoy enroute to deliver medical supplies to %1 (%2) broke down somewhere near %3. Repair the convoy and complete the delivery.",_locDeliver, mapGridPosition _posDeliver, _locConvoy];
+_taskDescription = format["A convoy enroute to deliver medical supplies to %1 broke down somewhere near %3. Repair the convoy and complete the delivery.",_locDeliver, _locConvoy];
 
 [true,_taskID,[_taskDescription,_taskTitle,""],_posConvoy,false,true,"Support"] call EFUNC(main,setTask);
 
@@ -143,14 +144,14 @@ publicVariable QGVAR(secondary);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		((units _grp) + [_veh]) call EFUNC(main,cleanup);
-		[0] spawn FUNC(select);
+		END_TASK
 	};
 
 	if (CHECK_DIST2D(_posDeliver,_veh,RETURN_DIST) && {speed _veh < 1}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		((units _grp) + [_veh]) call EFUNC(main,cleanup);
-		[0] spawn FUNC(select);
+		END_TASK
 
 		if (random 1 < 0.5) then {
 			_posArray = [getpos _veh,50,400,300] call EFUNC(main,findPosGrid);
