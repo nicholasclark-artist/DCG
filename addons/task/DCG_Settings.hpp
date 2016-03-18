@@ -17,16 +17,18 @@ class DOUBLES(PREFIX,settings) {
         typeName = "ARRAY";
         typeDetail = "";
         value[] = {
-            QUOTE(FUNC(pVip)),
-            QUOTE(FUNC(pCache)),
-            QUOTE(FUNC(pOfficer))
+            QFUNC(pVip),
+            QFUNC(pCache),
+            QFUNC(pOfficer),
+            QFUNC(pDefend)
         };
     };
     class GVAR(secondaryTasks) {
         typeName = "ARRAY";
         typeDetail = "";
         value[] = {
-
+            QFUNC(sDeliver),
+            QFUNC(sRepair)
         };
     };
 };

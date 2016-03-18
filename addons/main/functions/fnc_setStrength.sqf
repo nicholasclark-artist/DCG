@@ -6,6 +6,8 @@ Description:
 set number based on player count
 
 Arguments:
+0: minimum strength <NUMBER>
+1: maximum strength <NUMBER>
 
 Return:
 number
@@ -13,9 +15,14 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 private ["_strength", "_playerCount"];
+params [
+	["_min",0],
+	["_max",10000]
+];
 
 _playerCount = count (call FUNC(getPlayers));
 _strength = ceil ((_playerCount max 1) * abs(log(((_playerCount max 1)/3)/256)));
+_strength = (_strength max _min) min _max;
 
 _strength
 

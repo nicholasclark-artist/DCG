@@ -22,7 +22,7 @@ if ((_this select 0) > 0) then {
 	[] spawn {
 		closeDialog 0;
 		_ret = [
-			parseText (format ["<t align='center'>%1</t>",CANCEL_HINT("primary")]),
+			parseText (format ["<t align='center'>%1</t>",CANCEL_HINT("primary (P)")]),
 			TITLE,
 			"Yes",
 			"No"
@@ -39,7 +39,7 @@ if ((_this select 0) > 0) then {
 	[] spawn {
 		closeDialog 0;
 		_ret = [
-			parseText (format ["<t align='center'>%1</t>",CANCEL_HINT("secondary")]),
+			parseText (format ["<t align='center'>%1</t>",CANCEL_HINT("secondary (S)")]),
 			TITLE,
 			"Yes",
 			"No"

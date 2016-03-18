@@ -15,8 +15,10 @@ __________________________________________________________________*/
 #define HANDLER_SLEEP 10
 #define MRK_DIST 350
 #define ENEMY_MINCOUNT 8
+#define ENEMY_MAXCOUNT 20
+#define END_TASK GVAR(primary) = []; publicVariable QGVAR(primary); [1] spawn FUNC(select);
 
-private ["_caches","_base","_drivers","_grp","_cache","_taskID","_taskDescription","_taskTitle","_taskPos","_mrk"];
+private ["_caches","_base","_drivers","_grp","_cache","_ret","_vehPos","_taskPos","_taskID","_taskTitle","_taskDescription","_mrk","_posCache"];
 params [["_position",[]]];
 
 _caches = [];
@@ -29,39 +31,46 @@ if (_position isEqualTo []) then {
 	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findRuralPos);
 };
 
-// exit if vars are empty
 if (_position isEqualTo []) exitWith {
 	[1,0] spawn FUNC(select);
 };
 
 _base = [_position,0.5 + random 0.5] call EFUNC(main,spawnBase);
-_position = [_position,0,15,0.5] call EFUNC(main,findRandomPos);
 
-// spawn caches
-for "_i" from 0 to 2 do {
-	_cache = "O_supplyCrate_F" createVehicle _position;
+for "_i" from 0 to 1 do {
+	_posCache = [_position,0,10,1] call EFUNC(main,findRandomPos);
+	_cache = "O_supplyCrate_F" createVehicle _posCache;
 	_cache setDir random 360;
+	_cache setPos _posCache;
+	_cache setVectorUp surfaceNormal getPos _cache;
 	_caches pushBack _cache;
 	_cache addEventHandler ["HandleDamage", {
-		if ((_this select 4) isKindof "PipeBombBase" && {(_this select 2) > 0.6}) then {
-			(_this select 0) setdamage 1;
+		_ret = 0;
+		if ((_this select 4) isKindof "PipeBombBase") then {
+			_ret = 1;
+		} else {
+			_ret = 0;
 		};
+
+		_ret
 	}];
 };
 
-// spawn enemy
-_grp = [_position,0,ENEMY_MINCOUNT max (call EFUNC(main,setStrength)),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
-[units _grp] call EFUNC(main,setPatrol);
+_grp = [_position,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+[units _grp,50] call EFUNC(main,setPatrol);
 
 if (random 1 < 0.5) then {
-	_drivers = [[_position,0,200,6] call EFUNC(main,findRandomPos),1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
-	[_drivers,500] call EFUNC(main,setPatrol);
+	_vehPos = [_position,0,200,6] call EFUNC(main,findRandomPos);
+	if !(_vehPos isEqualTo _position) then {
+		_drivers = [_vehPos,1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+		[_drivers,300] call EFUNC(main,setPatrol);
+	};
 };
 
 // SET TASK
 _taskPos = [_position,MRK_DIST*0.85,MRK_DIST] call EFUNC(main,findRandomPos);
 _taskID = format ["pCache_%1",diag_tickTime];
-_taskTitle = "Destroy Cache";
+_taskTitle = "(P) Destroy Cache";
 _taskDescription = format ["An enemy camp housing an ammunitions cache has been spotted near %1. These supplies are critical to the opposition's efforts. Destroy the cache and weaken the enemy.", mapGridPosition _taskPos];
 
 [true,_taskID,[_taskDescription,_taskTitle,""],_taskPos,false,true,"Attack"] call EFUNC(main,setTask);
@@ -92,6 +101,6 @@ publicVariable QGVAR(primary);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		((units _grp) + _drivers + _caches + _base) call EFUNC(main,cleanup);
-		[1] spawn FUNC(select);
+		END_TASK
 	};
 }, HANDLER_SLEEP, [_taskID,_caches,_grp,_drivers,_base]] call CBA_fnc_addPerFrameHandler;
