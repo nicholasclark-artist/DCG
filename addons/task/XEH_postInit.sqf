@@ -6,6 +6,10 @@ __________________________________________________________________*/
 
 if (!isServer || !isMultiplayer) exitWith {};
 
+if (GVAR(enable) isEqualTo 0) exitWith {
+	LOG_DEBUG("Addon is disabled.");
+};
+
 [{
 	if (DOUBLES(PREFIX,main) && {time > 45}) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
