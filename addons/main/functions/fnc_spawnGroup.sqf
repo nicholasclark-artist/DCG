@@ -18,7 +18,7 @@ group or array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_grp","_unitPool","_vehPool","_airPool","_veh","_unit"];
+private ["_grp","_unitPool","_vehPool","_airPool","_veh","_unit","_drivers"];
 params [
 	"_pos",
 	["_type",0],
@@ -29,6 +29,7 @@ params [
 ];
 
 _grp = createGroup _side;
+_drivers = [];
 
 call {
 	if (_side isEqualTo EAST) exitWith {
@@ -66,6 +67,7 @@ for "_i" from 1 to _count do {
 
 		_unit = _grp createUnit [selectRandom _unitPool, _pos, [], 0, "NONE"];
 		_unit moveInDriver _veh;
+		_drivers pushBack _unit;
 
 		if !((_veh emptyPositions "gunner") isEqualTo 0) then {
 			_unit = _grp createUnit [selectRandom _unitPool, _pos, [], 0, "NONE"];
@@ -91,4 +93,4 @@ if (_type isEqualTo 0) exitWith {
 	_grp
 };
 
-units _grp
+_drivers
