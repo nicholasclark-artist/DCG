@@ -13,7 +13,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_center",["_range",10]];
+params ["_center",["_range",5]];
 
 {
 	if (toUpper (getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "vehicleClass")) isEqualTo "EMITTERS") then {
