@@ -238,7 +238,7 @@ class dcg_patrol_enable {
 class dcg_patrol_cooldown {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 420;
+	value = 600;
 };
 class dcg_patrol_groupsMaxCount {
 	typeName = "SCALAR";
@@ -379,7 +379,6 @@ class dcg_weather_mapData {
 	typeName = "ARRAY";
 	typeDetail = "POOL";
 	value[] = {
-		{"ALL",0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
 		{"ALTIS",0.67,0.65,0.56,0.52,0.44,0.34,0.26,0.27,0.33,0.47,0.54,0.62},
 		{"STRATIS",0.67,0.65,0.56,0.52,0.44,0.34,0.26,0.27,0.33,0.47,0.54,0.62},
 		{"TAKISTAN",0.54,0.6,0.55,0.46,0.32,0.19,0.15,0.15,0.12,0.15,0.25,0.41},

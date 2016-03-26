@@ -23,7 +23,11 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
 		private ["_overcast","_date","_month","_hour"];
+
+		_overcast = 0;
+		_date = [];
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
+
 		if (_data isEqualTo []) then {
 			if (GVAR(season) isEqualTo -1) then {
 				GVAR(season) = selectRandom [0,1,2,3];
@@ -44,14 +48,21 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 				if (GVAR(time) isEqualTo 3) exitWith {_hour = selectRandom NIGHT};
 				_hour = selectRandom MORNING;
 			};
-			_overcast = ((GVAR(mapData) select (_month - 1)) + random 0.1) min 1;
-			_date = [2016, _month, ceil random 27, _hour, 00];
+
+			_date = [2016, _month, ceil random 27, _hour, round random 59];
+
+			if !(GVAR(mapData) isEqualTo []) then {
+				_overcast = ((GVAR(mapData) select (_month - 1)) + random 0.1) min 1;
+			} else {
+				_overcast = 0.5 + random 0.1;
+			};
 		} else {
 			_overcast = _data select 0;
 			_date = _data select 1;
 		};
 
 		setDate _date;
+
 		[[_overcast],{
 			waitUntil {time > 5};
 			(_this select 0) call BIS_fnc_setOvercast;
