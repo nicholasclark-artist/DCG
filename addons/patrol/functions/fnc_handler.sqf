@@ -45,13 +45,12 @@ if (CHECK_DEBUG) then {
 
 			if ({CHECK_DIST2D(_player,(_x select 0),(_x select 1))} count GVAR(blacklist) isEqualTo 0) then { // check if player is in a blacklist array
 				_posArray = [getpos _player,100,PATROL_RANGE,PATROL_MINRANGE,6] call EFUNC(main,findPosGrid);
-				// TODO check LOS for several players if players notice spawn
 				{ // remove positions in blacklist, that are near players or that players can see
 					_y = _x;
 					if ({CHECK_DIST2D(_y,(_x select 0),(_x select 1))} count GVAR(blacklist) > 0 ||
-					    {count ([_y,100] call EFUNC(main,getNearPlayers)) > 0} ||
-						{[_y,_player] call EFUNC(main,inLOS)} /*||
-						{{[_y,_x] call EFUNC(main,inLOS)} count _players > 0}*/) then {
+					    {count ([_y,100] call EFUNC(main,getNearPlayers)) > 0} /*||
+						{[_y,_player] call EFUNC(main,inLOS)}*/ ||
+						{{[_y,_x] call EFUNC(main,inLOS)} count _players > 0}) then {
 						_posArray deleteAt _forEachIndex;
 					};
 				} forEach _posArray;
