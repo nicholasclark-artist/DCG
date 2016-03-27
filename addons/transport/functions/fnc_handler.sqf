@@ -28,7 +28,7 @@ __________________________________________________________________*/
 		}; \
 	}, 1, [diag_tickTime + GVAR(cooldown)]] call CBA_fnc_addPerFrameHandler
 
-private ["_classname","_exfilMrk","_infilMrk","_helipad1","_helipad2","_helipadPos","_dir","_spawnPos","_transport","_wp","_args","_pilot","_time"];
+private ["_classname","_exfilMrk","_infilMrk","_helipad1","_helipad2","_helipadPos","_dir","_spawnPos","_transport","_wp","_pilot","_time"];
 
 LOG_DEBUG_1("Transport request: %1.",_this);
 
@@ -86,11 +86,9 @@ if !(isNil QEGVAR(occupy,occupiedLocations)) then {
 	_dir = random 360;
 };
 
-// spawn transport
 _spawnPos = [GVAR(exfil),5000,6000,0,_dir] call EFUNC(main,findRandomPos);
 _transport = createVehicle [_classname,_spawnPos,[],0,"FLY"];
 
-// copilot EH
 _transport addEventHandler ["GetIn",{
 	if (isPlayer (_this select 2) && {(_this select 2) isEqualTo ((_this select 0) turretUnit [0])} && {alive (driver (_this select 0))} && {canMove (_this select 0)}) then {
 		(_this select 0) removeAllEventHandlers "GetIn";
@@ -103,14 +101,14 @@ _transport addEventHandler ["GetIn",{
 				_args params [""_pilot""];
 
 				if (isTouchingGround (vehicle _pilot)) exitWith {
-					[_idPFH] call CBA_fnc_removePerFrameHandler;
+					[_id] call CBA_fnc_removePerFrameHandler;
 					playSound3D [""A3\dubbing_F\modules\supports\transport_accomplished.ogg"", _pilot, false, getPosASL _pilot, 2, 1, 100];
 					[{
 						params [""_args"",""_id""];
 						_args params [""_time"",""_pilot""];
 
 						if (diag_tickTime >= _time) exitWith {
-							[_idPFH] call CBA_fnc_removePerFrameHandler;
+							[_id] call CBA_fnc_removePerFrameHandler;
 							{
 								if (isPlayer _x) then {moveOut _x};
 							} forEach (crew (vehicle _pilot));
@@ -125,10 +123,10 @@ _transport addEventHandler ["GetIn",{
 }];
 
 call {
-	if ((side player) isEqualTo EAST) exitWith {
+	if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
 		_pilot = "O_Helipilot_F";
 	};
-	if ((side player) isEqualTo WEST) exitWith {
+	if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
 		_pilot = "B_Helipilot_F";
 	};
 	_pilot = "I_Helipilot_F";
