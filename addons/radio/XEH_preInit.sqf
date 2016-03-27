@@ -13,3 +13,9 @@ PREP(setRadio);
 PREP(setRadioSettings);
 PREP(setRadioACRE);
 PREP(setRadioTFAR);
+
+publicVariable QFUNC(checkLoadout);
+publicVariable QFUNC(setRadio);
+publicVariable QFUNC(setRadioSettings);
+publicVariable QFUNC(setRadioACRE);
+publicVariable QFUNC(setRadioTFAR);
