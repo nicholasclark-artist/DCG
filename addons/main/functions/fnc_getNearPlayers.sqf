@@ -6,6 +6,8 @@ Description:
 gets near players
 
 Arguments:
+0: center position <ARRAY>
+1: distance from center to check <NUMBER>
 
 Return:
 array
@@ -19,7 +21,9 @@ _range = _this select 1;
 _players = [];
 
 {
-	if (isPlayer _x) then {_players pushBack _x};
-} forEach (_pos nearEntities ["Man", _range]);
+	if (CHECK_DIST2D(_x,_pos,_range)) then {
+		_players pushBack _x;
+	};
+} forEach allPlayers;
 
 _players
