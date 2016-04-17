@@ -16,13 +16,12 @@ __________________________________________________________________*/
 #define VAR_SNAP QUOTE(DOUBLES(PREFIX,snap))
 #define GET_DATA(OBJ) _data pushBack [typeof OBJ, str (_anchor worldToModel (getPos OBJ)), str (getDir OBJ), OBJ getVariable [VAR_VECTORUP,0],OBJ getVariable [VAR_SNAP,1]]
 
-private ["_data","_anchor","_objects"];
+private ["_data","_anchor","_objects","_strength"];
 
 _data = [];
 _anchor = objNull;
 _objects = allMissionObjects "All";
 
-// get anchor object
 {
 	if (isClass (configfile >> "CfgVehicles" >> typeOf _x) && {(_x getVariable [VAR_ANCHOR,0]) isEqualTo 1}) exitWith {
 		_anchor = _x;
@@ -44,7 +43,15 @@ if (isNull _anchor) exitWith {
 	};
 } forEach (_objects - [_anchor]);
 
+_objects = nearestObjects [getposASL _anchor, ["ALL"], 1000];
+_strength = ((_objects select (count _objects - 1)) distance2D _anchor) + (count _objects * 0.5);
+
+_data = [_strength,_data];
+
 copyToClipboard str _data;
 
-// this setVariable ["dcg_vectorUp",1];
-// this setVariable ["dcg_anchor",1];
+/*
+this setVariable ["dcg_vectorUp",1];
+this setVariable ["dcg_anchor",1];
+this setVariable ["dcg_snap",0];
+*/

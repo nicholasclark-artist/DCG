@@ -13,45 +13,45 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 #include "\d\dcg\addons\main\DCG_Bases.hpp"
-#define THRESHOLD 0.15
+#define THRESHOLD 0.18
 
-private ["_base","_ret","_anchor","_obj","_anchorData"];
+private ["_base","_ret","_data","_min","_max","_value","_normalize","_anchor"];
 params ["_position",["_strength",0.5]];
 
 _base = [];
 _ret = [];
 
-_strength = _strength max 0;
+_strength = (_strength max 0) min 1;
 
-if (_strength > 1) then {
-    _strength = 1/_strength;
-};
+// normalize base data
+_min = (_data select 0) select 0;
+_max = (_data select (count _data - 1)) select 0;
+
+{
+    _value = _x select 0;
+    _normalize = (_value - _min)/(_max - _min);
+    _x set [0,_normalize];
+} forEach _data;
 
 _data = [_data,1] call FUNC(shuffle);
 
 // find base with strength close to passed strength
 {
-    if ((abs ((_x select 0) - _strength)) < THRESHOLD) exitWith {
-        _base = _x;
+    if (abs ((_x select 0) - _strength) < THRESHOLD) exitWith {
+        _base = _x select 1;
     };
-
-    _base = selectRandom _data;
-
+    _base = (selectRandom _data) select 1;
     false
 } count _data;
 
-// remove strength number
-_base deleteAt 0;
+_anchor = ((_base select 0) select 0) createVehicle _position;
+_anchor setDir (call compile ((_base select 0) select 2));
 
-_anchorData = _base select 0;
-_anchor = (_anchorData select 0) createVehicle _position;
-_anchor setDir (call compile (_anchorData select 2));
-
-if ((_anchorData select 4) > 0) then {
+if (((_base select 0) select 4) > 0) then {
     _anchor setPos [(getpos _anchor) select 0,(getpos _anchor) select 1,0];
 };
 
-if ((_anchorData select 3) > 0) then {
+if (((_base select 0) select 3) > 0) then {
     _anchor setVectorUp [0,0,1];
 } else {
     _anchor setVectorUp surfaceNormal getPos _anchor;
@@ -60,6 +60,7 @@ if ((_anchorData select 3) > 0) then {
 _ret pushBack _anchor;
 
 for "_i" from 1 to count _base - 1 do {
+    private ["_obj","_pos"];
     (_base select _i) params ["_type","_relPos","_dir","_vector","_snap"];
 
     _relPos = call compile _relPos;
