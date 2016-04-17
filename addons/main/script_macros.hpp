@@ -90,6 +90,7 @@
 #define LOG_DEBUG_4(MSG,ARG1,ARG2,ARG3,ARG4) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4]] call EFUNC(main,log)
 #define LOG_DEBUG_5(MSG,ARG1,ARG2,ARG3,ARG4,ARG5) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4,ARG5]] call EFUNC(main,log)
 #define LOG_DEBUG_6(MSG,ARG1,ARG2,ARG3,ARG4,ARG5,ARG6) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4,ARG5,ARG6]] call EFUNC(main,log)
+#define LOCATION_ARRAY (nearestLocations [[worldSize*0.5,worldSize*0.5], ["NameVillage","NameCity","NameCityCapital"], worldSize])
 #define HEADLESSCLIENT DOUBLES(PREFIX,HC)
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) getMarkerColor MARKER != ""

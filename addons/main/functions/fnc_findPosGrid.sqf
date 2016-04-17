@@ -28,7 +28,7 @@ params [
 	["_dist",25,[0]],
 	["_range",100,[0]],
 	["_rangeMin",0,[0]],
-	["_distObj",0,[0]],
+	["_distObj",-1,[0]],
 	["_water",false],
 	["_shuffle",true]
 ];
@@ -68,7 +68,7 @@ for "_i" from 0 to POS_COUNT do {
 	};
 
 	if (_check) then {
-		_posASL = _pos isFlatEmpty [_distObj,0,1,10,1,false,objNull];
+		_posASL = _pos isFlatEmpty [_distObj,-1,-1,1,-1];
 		if !(_posASL isEqualTo []) then {
 			if (floor (_posASL select 2) < 0) then {
 				_posASL set [2,0];

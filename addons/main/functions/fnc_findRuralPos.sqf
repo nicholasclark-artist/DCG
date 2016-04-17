@@ -14,7 +14,6 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define EXPRESSION "(1 + meadow) * (1 - forest) * (1 - sea) * (1 - houses) * (1 - hills) - (trees * 0.5)"
 #define DIST worldSize*0.05
 
 private ["_ret","_expression","_pos"];
@@ -46,7 +45,7 @@ if (_terrain isEqualTo "" || _expression isEqualTo "") exitWith {
 	_pos = _x select 0;
 	if ((nearestLocations [_pos, ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo []) then {
 		if !(_terrain isEqualTo "house") then {
-			if !(_pos isFlatEmpty [4,0,0.242,40,0,false,objNull] isEqualTo []) then {
+			if !(_pos isFlatEmpty [3,-1,0.27,40,0] isEqualTo []) then {
 				_ret = _pos;
 			};
 		} else {
@@ -58,3 +57,4 @@ if (_terrain isEqualTo "" || _expression isEqualTo "") exitWith {
 } forEach (selectBestPlaces [_anchor,_range,_expression,100,20]);
 
 _ret
+
