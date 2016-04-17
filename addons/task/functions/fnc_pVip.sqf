@@ -12,12 +12,6 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define HANDLER_SLEEP 10
-#define MRK_DIST 350
-#define RETURN_DIST 20
-#define ENEMY_MINCOUNT 8
-#define ENEMY_MAXCOUNT 20
-#define END_TASK GVAR(primary) = []; publicVariable QGVAR(primary); [1] spawn FUNC(select);
 
 private ["_drivers","_town","_base","_grp","_vip","_taskID","_taskTitle","_taskDescription","_taskPos","_mrk","_success","_vehPos"];
 params [["_position",[]]];
@@ -65,7 +59,7 @@ _vip setDir random 360;
 _vip setPosATL _position;
 [_vip,"Acts_AidlPsitMstpSsurWnonDnon02"] call EFUNC(main,setAnim);
 
-_grp = [_position,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+_grp = [_position,0,[PMIN,PMAX] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 [units _grp] call EFUNC(main,setPatrol);
 
 if (random 1 < 0.5) then {
@@ -77,7 +71,7 @@ if (random 1 < 0.5) then {
 };
 
 // SET TASK
-_taskPos = [_position,MRK_DIST*0.85,MRK_DIST] call EFUNC(main,findRandomPos);
+_taskPos = ASLToAGL ([_position,MRK_DIST,MRK_DIST] call EFUNC(main,findRandomPos));
 _taskID = format ["pVIP_%1",diag_tickTime];
 _taskTitle = "(P) Rescue VIP";
 _taskDescription = format ["We have intel that the son of a local elder has been taken hostage by enemy forces somewhere near %1. Locate the VIP, %2, and safely escort him to %3.",mapGridPosition _taskPos, name _vip, _town select 0];
@@ -113,7 +107,7 @@ publicVariable QGVAR(primary);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		((units _grp) + _drivers + [_vip] + _base) call EFUNC(main,cleanup);
-		END_TASK
+		ENDP
 	};
 
 	// if vip is returned to town and is alive/awake
@@ -133,6 +127,6 @@ publicVariable QGVAR(primary);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		((units _grp) + _drivers + [_vip] + _base) call EFUNC(main,cleanup);
-		END_TASK
+		ENDP
 	};
 }, HANDLER_SLEEP, [_taskID,_vip,_grp,_drivers,_town,_base]] call CBA_fnc_addPerFrameHandler;

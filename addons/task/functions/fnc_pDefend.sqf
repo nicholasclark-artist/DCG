@@ -12,14 +12,9 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define HANDLER_SLEEP 10
-#define START_DIST 50
-#define FAIL_DIST 500
 #define COUNTDOWN 600
-#define ENEMY_MAXCOUNT ([8,25] call EFUNC(main,setStrength))
-#define END_TASK GVAR(primary) = []; publicVariable QGVAR(primary); [1] spawn FUNC(select);
 
-private ["_enemies","_base","_type","_truck","_hitpoints","_driver","_grp","_taskID","_taskTitle","_taskDescription","_time","_wp","_vehPos"];
+private ["_vehPos","_enemies","_base","_type","_truck","_hitpoints","_driver","_grp","_taskID","_taskTitle","_taskDescription","_enemyCount","_time","_wp"];
 params [["_position",[]]];
 
 _vehPos = [];
@@ -47,12 +42,17 @@ if !(isNull EGVAR(fob,location)) then {
 	_base = [_position,0.7 + random 0.3] call EFUNC(main,spawnBase);
 };
 
-for "_i" from 1 to 100 do {
-	_vehPos = [_position,0,30,6] call EFUNC(main,findRandomPos);
-	if !(_vehPos isEqualTo _position) exitWith {};
+_vehPos = _position;
+
+if ((_vehPos isFlatEmpty [6,-1,-1,1,-1]) isEqualTo []) then {
+	for "_i" from 1 to 100 do {
+		_vehPos = [_position,0,30,6] call EFUNC(main,findRandomPos);
+		if !(_vehPos isEqualTo _position) exitWith {};
+		_vehPos = [];
+	};
 };
 
-if (_position isEqualTo _vehPos) exitWith {
+if (_vehPos isEqualTo []) exitWith {9
 	_base call EFUNC(main,cleanup);
 	[1,0] spawn FUNC(select);
 };
@@ -87,7 +87,7 @@ _grp = [_position,0,8,EGVAR(main,playerSide)] call EFUNC(main,spawnGroup);
 // SET TASK
 _taskID = format ["pDefend_%1",diag_tickTime];
 _taskTitle = "(P) Defend Supplies";
-_taskDescription = format ["A friendly supply unit is waiting for transport at %1. Move to the area and provide security until the transport arrives.", mapGridPosition _position];
+_taskDescription = format ["A friendly unit is resupplying at %1. Move to the area and provide security while the transport is idle.", mapGridPosition _position];
 
 [true,_taskID,[_taskDescription,_taskTitle,""],_position,false,true,"SUPPORT"] call EFUNC(main,setTask);
 
@@ -110,10 +110,11 @@ publicVariable QGVAR(primary);
 	if ({CHECK_VECTORDIST(getPosASL _x,getPosASL _truck,START_DIST)} count allPlayers > 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[COUNTDOWN,60,"Defend Supplies","",call EFUNC(main,getPlayers)] call EFUNC(main,setTimer);
+		_enemyCount = [10,20] call EFUNC(main,setStrength);
 
 		[{
 			params ["_args","_idPFH"];
-			_args params ["_taskID","_truck","_hitpoints","_grp","_enemies","_base","_time"];
+			_args params ["_taskID","_truck","_hitpoints","_grp","_enemies","_enemyCount","_base","_time"];
 
 			if (GVAR(primary) isEqualTo []) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -128,7 +129,7 @@ publicVariable QGVAR(primary);
 				[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 				EGVAR(main,exitTimer) = true;
 				((units _grp) + _enemies + [_truck] + _base) call EFUNC(main,cleanup);
-				END_TASK
+				ENDP
 			};
 
 			if (diag_tickTime > _time + COUNTDOWN) exitWith {
@@ -136,23 +137,23 @@ publicVariable QGVAR(primary);
 			  	{
 			  		_truck setHit [getText (configFile >> "cfgVehicles" >> typeOf _truck >> "HitPoints" >> _x >> "name"), 0.25];
 			  	} forEach _hitpoints;
-			  	(group driver _truck) move [getPos (_this select 0),4000,5000] call EFUNC(main,findRandomPos);
+			  	(group driver _truck) move ([getPos _truck,4000,5000] call EFUNC(main,findRandomPos));
 				[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 				((units _grp) + _enemies + [_truck] + _base) call EFUNC(main,cleanup);
-				END_TASK
+				ENDP
 			};
 
 			{
 				if (isNull _x) then {_enemies deleteAt _forEachIndex};
 			} forEach _enemies;
 
-			if (random 1 < 0.5 && {count _enemies < ENEMY_MAXCOUNT}) then {
+			if (random 1 < 0.25 && {count _enemies < _enemyCount}) then {
 				// TODO fix sleep error, runs in unscheduled environment for some reason
-				_grp = [[getpos _truck,200,400] call EFUNC(main,findRandomPos),0,8,EGVAR(main,enemySide),false,0.5] call EFUNC(main,spawnGroup);
+				_grp = [[getpos _truck,200,400] call EFUNC(main,findRandomPos),0,8,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 				_enemies append (units _grp);
 				_wp = _grp addWaypoint [getpos _truck,30];
 			};
 			LOG_DEBUG_1("enemies %1", count _enemies);
-		}, HANDLER_SLEEP, [_taskID,_truck,_hitpoints,_grp,_enemies,_base,diag_tickTime]] call CBA_fnc_addPerFrameHandler;
+		}, HANDLER_SLEEP, [_taskID,_truck,_hitpoints,_grp,_enemies,_enemyCount,_base,diag_tickTime]] call CBA_fnc_addPerFrameHandler;
 	};
 }, HANDLER_SLEEP, [_taskID,_truck,_hitpoints,_grp,_enemies,_base]] call CBA_fnc_addPerFrameHandler;

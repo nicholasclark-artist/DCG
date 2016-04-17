@@ -3,18 +3,18 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-destroy artillery before time expires
+primary task - destroy artillery
 
 Arguments:
+0: forced task position <ARRAY>
 
 Return:
 none
 __________________________________________________________________*/
-if !(isServer) exitWith {};
-
 #include "script_component.hpp"
+#define COUNTDOWN 3600
 
-private ["_taskID","_taskText","_taskDescription","_artyRadius","_artyArray","_pos","_grpArray","_baseArray","_vehArray","_grp","_posArty","_arty","_gunner","_mrkArty","_hintInterval","_sound","_time"];
+params [["_position",[]]];
 
 _taskID = "arty";
 _taskText = "Eliminate Artillery";

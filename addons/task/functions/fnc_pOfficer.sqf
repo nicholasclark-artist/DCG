@@ -12,11 +12,6 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define HANDLER_SLEEP 10
-#define MRK_DIST 350
-#define ENEMY_MINCOUNT 12
-#define ENEMY_MAXCOUNT 20
-#define END_TASK GVAR(primary) = []; publicVariable QGVAR(primary); [1] spawn FUNC(select);
 
 private ["_drivers","_classes","_officer","_base","_grp","_vehPos","_mrk","_taskPos","_taskID","_taskTitle","_taskDescription"];
 params [["_position",[]]];
@@ -37,19 +32,21 @@ call {
 	if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
 		_classes = EGVAR(main,officerPoolWest);
 	};
-	_classes = EGVAR(main,officerPoolInd);
+	if (EGVAR(main,enemySide) isEqualTo RESISTANCE) exitWith {
+		_classes = EGVAR(main,officerPoolInd);
+	};
 };
 
 if (_position isEqualTo [] || {_classes isEqualTo []}) exitWith {
 	[1,0] spawn FUNC(select);
 };
 
-_base = [_position,random 1] call EFUNC(main,spawnBase);
+_base = [_position,0.4 + random 0.6] call EFUNC(main,spawnBase);
 
 _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, _position, [], 0, "NONE"];
-[[_officer],30] call EFUNC(main,setPatrol);
+[[_officer],20] call EFUNC(main,setPatrol);
 
-_grp = [_position,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+_grp = [_position,0,[PMIN,PMAX] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 [units _grp,50] call EFUNC(main,setPatrol);
 
 if (random 1 < 0.5) then {
@@ -68,7 +65,7 @@ if (CHECK_DEBUG) then {
 };
 
 // SET TASK
-_taskPos = [_position,MRK_DIST*0.85,MRK_DIST] call EFUNC(main,findRandomPos);
+_taskPos = ASLToAGL ([_position,MRK_DIST,MRK_DIST] call EFUNC(main,findRandomPos));
 _taskID = format ["pOfficer_%1",diag_tickTime];
 _taskTitle = "(P) Eliminate Officer";
 _taskDescription = format ["A high ranking enemy officer has been spotted near %1. Find and eliminate the officer.",mapGridPosition _taskPos];
@@ -95,6 +92,6 @@ publicVariable QGVAR(primary);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		((units _grp) + [_officer] + _base + _drivers) call EFUNC(main,cleanup);
-		END_TASK
+		ENDP
 	};
 }, HANDLER_SLEEP, [_taskID,_officer,_grp,_drivers,_base]] call CBA_fnc_addPerFrameHandler;

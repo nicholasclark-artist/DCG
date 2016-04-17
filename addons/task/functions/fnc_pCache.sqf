@@ -12,11 +12,6 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define HANDLER_SLEEP 10
-#define MRK_DIST 350
-#define ENEMY_MINCOUNT 8
-#define ENEMY_MAXCOUNT 20
-#define END_TASK GVAR(primary) = []; publicVariable QGVAR(primary); [1] spawn FUNC(select);
 
 private ["_caches","_base","_drivers","_grp","_cache","_ret","_vehPos","_taskPos","_taskID","_taskTitle","_taskDescription","_mrk","_posCache"];
 params [["_position",[]]];
@@ -36,12 +31,11 @@ if (_position isEqualTo []) exitWith {
 };
 
 _base = [_position,0.5 + random 0.5] call EFUNC(main,spawnBase);
+_posCache = [_position,0,15,1] call EFUNC(main,findRandomPos);
 
 for "_i" from 0 to 1 do {
-	_posCache = [_position,0,10,1] call EFUNC(main,findRandomPos);
 	_cache = "O_supplyCrate_F" createVehicle _posCache;
 	_cache setDir random 360;
-	_cache setPos _posCache;
 	_cache setVectorUp surfaceNormal getPos _cache;
 	_caches pushBack _cache;
 	_cache addEventHandler ["HandleDamage", {
@@ -56,7 +50,7 @@ for "_i" from 0 to 1 do {
 	}];
 };
 
-_grp = [_position,0,[ENEMY_MINCOUNT,ENEMY_MAXCOUNT] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+_grp = [_position,0,[PMIN,PMAX] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 [units _grp,50] call EFUNC(main,setPatrol);
 
 if (random 1 < 0.5) then {
@@ -68,7 +62,7 @@ if (random 1 < 0.5) then {
 };
 
 // SET TASK
-_taskPos = [_position,MRK_DIST*0.85,MRK_DIST] call EFUNC(main,findRandomPos);
+_taskPos = ASLToAGL ([_position,MRK_DIST,MRK_DIST] call EFUNC(main,findRandomPos));
 _taskID = format ["pCache_%1",diag_tickTime];
 _taskTitle = "(P) Destroy Cache";
 _taskDescription = format ["An enemy camp housing an ammunitions cache has been spotted near %1. These supplies are critical to the opposition's efforts. Destroy the cache and weaken the enemy.", mapGridPosition _taskPos];
@@ -101,6 +95,6 @@ publicVariable QGVAR(primary);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		((units _grp) + _drivers + _caches + _base) call EFUNC(main,cleanup);
-		END_TASK
+		ENDP
 	};
 }, HANDLER_SLEEP, [_taskID,_caches,_grp,_drivers,_base]] call CBA_fnc_addPerFrameHandler;
