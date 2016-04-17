@@ -52,7 +52,7 @@ _fnc_getNearHelipad = {
 	_helipad = (nearestObjects [_pos, ["Land_HelipadCircle_F","Land_HelipadCivil_F","Land_HelipadEmpty_F","Land_HelipadRescue_F","Land_HelipadSquare_F","Land_JumpTarget_F"], _range]) select 0;
 
 	if !(isNil "_helipad") then {
-		_isEmpty = (getPosATL _helipad) isFlatEmpty [_size, 0, 0.5, 6, 0, false, _helipad];
+		_isEmpty = (getPosASL _helipad) isFlatEmpty [_size, -1, 0.5, 6, -1, false, _helipad];
 		if !(_isEmpty isEqualTo []) then {
 			_pos = getPosATL _helipad;
 		};
