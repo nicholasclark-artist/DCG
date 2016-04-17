@@ -25,7 +25,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 				[_x] call EFUNC(main,setTaskState);
 			} forEach (_data select 1);*/
 		} else { // if previous data was saved without occupy addon
-			call FUNC(findLocation);
+			[] call FUNC(findLocation);
 		};
 	};
 }, 0, []] call CBA_fnc_addPerFrameHandler;

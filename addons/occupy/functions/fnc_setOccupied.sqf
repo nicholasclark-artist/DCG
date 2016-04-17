@@ -29,7 +29,6 @@ __________________________________________________________________*/
 #define SNIPER_VILLAGE 1
 #define STATIC_VILLAGE 1
 #define SETVAR_UNIT(UNIT) UNIT setVariable [format ["occupyUnit_%1", _name],true]
-#define TASK_ID(TASKNAME) format ["lib_%1", TASKNAME]
 #define TASK_TITLE(TASKTYPE) format ["Liberate %1", TASKTYPE]
 #define TASK_DESC(TASKNAME) format ["Enemy forces have occupied %1! Liberate the settlement!",TASKNAME]
 #define WRECKS ["Land_Wreck_Truck_dropside_F","Land_Wreck_Truck_F","Land_Wreck_UAZ_F","Land_Wreck_Ural_F","Land_Wreck_Van_F","Land_Wreck_Skodovka_F","Land_Wreck_CarDismantled_F","Land_Wreck_Car3_F","Land_Wreck_Car_F"]
@@ -97,6 +96,7 @@ _objArray = [];
 _count = 0;
 _taskType = "";
 _officer = objNull;
+_taskID = format ["lib_%1_%2", _name, diag_tickTime];
 
 call {
 	if (_type isEqualTo "NameCityCapital") exitWith {
@@ -168,7 +168,6 @@ removeFromRemainsCollector [_officer];
 [[_officer],_size*0.5] call EFUNC(main,setPatrol);
 // TODO call FUNC(addIntel) on officer
 
-// create wrecks
 for "_i" from 0 to (ceil random 3) do {
 	_vehPos = [_position,0,_size,4] call EFUNC(main,findRandomPos);
 	if (!(_vehPos isEqualTo _position) && {!isOnRoad _vehPos} && {!surfaceIsWater _vehPos}) then {
@@ -182,19 +181,18 @@ for "_i" from 0 to (ceil random 3) do {
 	};
 };
 
-// pushBack location to array and set task
 GVAR(locations) pushBack _this;
-[true,TASK_ID(_name),[TASK_DESC(_name),TASK_TITLE(_taskType),""],ASLtoAGL _position,false,true,"Attack"] call EFUNC(main,setTask);
+[true,_taskID,[TASK_DESC(_name),TASK_TITLE(_taskType),""],ASLtoAGL _position,false,true,"Attack"] call EFUNC(main,setTask);
 
-[{ // check for player PFH
+[{
 	params ["_args","_idPFH"];
-	_args params ["_town","_count","_objArray","_officer"];
+	_args params ["_town","_count","_objArray","_officer","_task"];
 
 	if !(([ASLToAGL(_town select 1),_town select 2] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		_args call FUNC(handler);
 	};
-}, 10, [_this,_count,_objArray,_officer]] call CBA_fnc_addPerFrameHandler;
+}, 10, [_this,_count,_objArray,_officer,_taskID]] call CBA_fnc_addPerFrameHandler;
 
 if (CHECK_DEBUG) then {
 	_mrk = createMarker [format["%1_%2_debug",QUOTE(ADDON),_name],_position];
@@ -204,4 +202,4 @@ if (CHECK_DEBUG) then {
 	_mrk setMarkerBrush "SolidBorder";
 };
 
-LOG_DEBUG_4("%1, %2, %3, %4",_this,_count,_objArray,_officer);
+LOG_DEBUG_5("%1, %2, %3, %4, %5",_this,_count,_objArray,_officer,_taskID);

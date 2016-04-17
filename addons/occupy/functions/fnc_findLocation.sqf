@@ -1,20 +1,20 @@
 /*
 Author:
-Nicholas Clark (SENSEI), Killzone Kid
+Nicholas Clark (SENSEI)
 
 Description:
 find and occupy location
 
 Arguments:
+0: data loaded from server profile <ARRAY>
 
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_locations","_index"];
-
-params [["_data",[]]];
+private ["_data","_locations","_index"];
+_data = param [0,[],[[]]];
 
 if !(_data isEqualTo []) exitWith {
 	{
@@ -30,8 +30,7 @@ _locations = [];
 	if !(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) then {
 		_locations pushBack _x;
 	};
-	false
-} count EGVAR(main,locations);
+} forEach EGVAR(main,locations);
 
 if (count _locations >= abs GVAR(locationCount)) then {
 	[_locations,(count _locations)*3] call EFUNC(main,shuffle);

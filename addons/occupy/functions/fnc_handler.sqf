@@ -41,9 +41,9 @@ __________________________________________________________________*/
 
 // main PFH
 [{
-	params ["_args","_idPFH"];
-	_args params ["_town","_enemyCountMax","_objArray","_officer"];
 	private ["_count"];
+	params ["_args","_idPFH"];
+	_args params ["_town","_enemyCountMax","_objArray","_officer","_task"];
 
 	_count = 0;
 	{
@@ -60,13 +60,13 @@ __________________________________________________________________*/
 		EGVAR(patrol,blacklist) pushBack [_town select 1,_town select 2]; // stop patrols from spawning in town
 
 		[{
-			params ["_args","_idPFH"];
-			_args params ["_town","_enemyCountMax","_objArray","_officer"];
-			_town params ["_name","_position","_size","_type"];
 			private ["_friendlyScore","_enemyScore","_enemyArray"];
+			params ["_args","_idPFH"];
+			_args params ["_town","_enemyCountMax","_objArray","_officer","_task"];
+			_town params ["_name","_position","_size","_type"];
 
-			_friendlyScore = 0;
-			_enemyScore = 0;
+			_friendlyScore = 1;
+			_enemyScore = 1;
 			_enemyArray = [];
 
 			// get scores for all units in town
@@ -94,14 +94,12 @@ __________________________________________________________________*/
 			_chanceSurrender = (_friendlyScore/_enemyScore) min 0.4;
 			LOG_DEBUG_4("E_Score: %1, F_Score: %2, E_Count: %3, S_Chance: %4.",_enemyScore,_friendlyScore,count _enemyArray,_chanceSurrender);
 
-			// if enemy surrenders
-			if (_enemyScore <= _friendlyScore && {random 1 < _chanceSurrender}) exitWith {
+			if (count _enemyArray isEqualTo 0 || {_enemyScore <= _friendlyScore && (random 1 < _chanceSurrender)}) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 
 				missionNamespace setVariable [SURRENDER_VAR,true];
-				[format ["lib_%1", _name]] call EFUNC(main,setTaskState);
+				[_task] call EFUNC(main,setTaskState);
 
-				// force surrender
 				{
 					if !(isNull _x) then {
 						if !(typeOf (vehicle _x) isKindOf "AIR") then {
@@ -116,7 +114,6 @@ __________________________________________________________________*/
 					};
 				} forEach _enemyArray;
 
-				// add approval
 				if (CHECK_ADDON_2(approval)) then {
 					/*_approval = 0;
 					call {
@@ -131,7 +128,6 @@ __________________________________________________________________*/
 					_approval call EFUNC(approval,add);*/
 				};
 
-				// cleanup
 				missionNamespace setVariable [SURRENDER_VAR,nil];
 				GVAR(locations) = GVAR(locations) - [_town];
 				EGVAR(patrol,blacklist) deleteAt (EGVAR(patrol,blacklist) find [_position,_size]);
@@ -139,6 +135,7 @@ __________________________________________________________________*/
 					[getPosATL _x] call EFUNC(main,removeParticle);
 					deleteVehicle _x;
 				} forEach _objArray;
+
 				if (CHECK_DEBUG) then {
 					deleteMarker (format["%1_%2_debug",QUOTE(ADDON),_name]);
 				};
@@ -151,7 +148,7 @@ __________________________________________________________________*/
 
 						if (diag_tickTime > _cooldown) exitWith {
 							[_idPFH] call CBA_fnc_removePerFrameHandler;
-							call FUNC(findLocation);
+							[] call FUNC(findLocation);
 						};
 					}, 1, [diag_tickTime + GVAR(cooldown)]] call CBA_fnc_addPerFrameHandler;
 				};
