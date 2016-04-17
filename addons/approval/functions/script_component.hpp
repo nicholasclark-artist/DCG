@@ -1,1 +1,0 @@
-#include "\d\dcg\addons\approval\script_component.hpp"
