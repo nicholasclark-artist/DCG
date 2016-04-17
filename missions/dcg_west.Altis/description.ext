@@ -52,7 +52,7 @@ class CfgSounds {
 
 // DEBUG
 
-/*allowFunctionsRecompile = 1;
+allowFunctionsRecompile = 1;
 
 class CfgSettings {
     class CBA {
@@ -62,4 +62,4 @@ class CfgSettings {
             functions = 0;
         };
     };
-};*/
+};
