@@ -90,15 +90,14 @@
 #define LOG_DEBUG_4(MSG,ARG1,ARG2,ARG3,ARG4) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4]] call EFUNC(main,log)
 #define LOG_DEBUG_5(MSG,ARG1,ARG2,ARG3,ARG4,ARG5) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4,ARG5]] call EFUNC(main,log)
 #define LOG_DEBUG_6(MSG,ARG1,ARG2,ARG3,ARG4,ARG5,ARG6) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4,ARG5,ARG6]] call EFUNC(main,log)
-#define LOCATION_ARRAY (nearestLocations [[worldSize*0.5,worldSize*0.5], ["NameVillage","NameCity","NameCityCapital"], worldSize])
 #define HEADLESSCLIENT DOUBLES(PREFIX,HC)
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) getMarkerColor MARKER != ""
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> "CfgPatches" >> PATCH))
 #define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {TRIPLES(PREFIX,VAR,enable) isEqualTo 1})
-#define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= DIST
-#define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= DIST
-#define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= DIST
+#define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= (DIST)
+#define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
+#define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
 #define CACHE_DISABLE_VAR QUOTE(TRIPLES(PREFIX,cache,disableCaching))
 #define CACHE_DISABLE(GRP,BOOL) GRP setVariable [CACHE_DISABLE_VAR,BOOL,true]
 #define COST_MAN 4
@@ -111,3 +110,17 @@
 #define COST_ITEM 0.75
 #define COST_FORT 0.5
 #define COST_SIGN 1
+#define AV_VAR(LOC) format ["dcg_approval_%1",LOC]
+#define AV_MIN 0
+#define AV_MAX 100
+#define AV_CAR ((AV_MAX*0.005)*GVAR(mulitplier))
+#define AV_TANK ((AV_MAX*0.0075)*GVAR(mulitplier))
+#define AV_AIR ((AV_MAX*0.01)*GVAR(mulitplier))
+#define AV_SHIP ((AV_MAX*0.005)*GVAR(mulitplier))
+#define AV_MAN ((AV_MAX*0.001)*GVAR(mulitplier))
+#define AV_CIV ((AV_MAX*0.01)*GVAR(mulitplier))
+#define AV_FOB ((AV_MAX*0.0025)*GVAR(mulitplier))
+#define AV_TASK ((AV_MAX*0.02)*GVAR(mulitplier))
+#define AV_VILLAGE ((AV_MAX*0.05)*GVAR(mulitplier))
+#define AV_CITY ((AV_MAX*0.1)*GVAR(mulitplier))
+#define AV_CAPITAL ((AV_MAX*0.15)*GVAR(mulitplier))
