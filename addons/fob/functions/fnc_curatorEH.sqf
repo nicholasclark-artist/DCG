@@ -13,7 +13,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define SET_COST(COST) \
 	_cost = if (_side isEqualTo _playerSide || {_side isEqualTo 3}) then { \
-		[true,COST] \
+		[true,COST]; \
 	} else { \
 		[false,COST]; \
 	};
@@ -78,7 +78,7 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
 		};
 	};
 	if (CHECK_ADDON_2(approval)) then {
-		// TODO add approval increase
+		[getPosASL (_this select 1),AV_FOB] call EFUNC(approval,setValue);
 	};
 }];
 
@@ -90,6 +90,6 @@ GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
 		};
 	};
 	if (CHECK_ADDON_2(approval)) then {
-		// TODO add approval decrease
+		[getPosASL (_this select 1),AV_FOB * -1] call EFUNC(approval,setValue);
 	};
 }];
