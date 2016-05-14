@@ -16,16 +16,18 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_vehArray","_driver","_veh","_grp","_statement","_wp"];
+private ["_vehArray","_driver","_veh","_grp","_statement","_wp","_approval"];
 params ["_start","_mid","_end","_player"];
 
-// hostile vehicle
-if (((CHECK_ADDON_2(approval) && true) || {!(CHECK_ADDON_2(approval)) && random 1 < GVAR(hostileChance)}) && {alive _player} && {((getPosATL _player) select 2) < 5}) exitWith {
-	_grp = [getPosASL _start,0,1,CIVILIAN] call EFUNC(main,spawnGroup);
-	_veh = (selectRandom EGVAR(main,vehPoolCiv)) createVehicle getPosASL _start;
-	_grp = [units _grp] call EFUNC(main,setSide);
-	(leader _grp) moveInDriver _veh;
-	[leader _grp,0,_player] call FUNC(setHostile);
+if (CHECK_ADDON_2(approval) && {alive _player} && {((getPosATL _player) select 2) < 5}) exitWith {
+	_approval = [_pos] call EFUNC(approval,getValue);
+	if (random 100 < ((((AV_MAX-_approval)*AV_MAX) max 1)/100)/4) then {
+		_grp = [getPosASL _start,0,1,CIVILIAN] call EFUNC(main,spawnGroup);
+		_veh = (selectRandom EGVAR(main,vehPoolCiv)) createVehicle getPosASL _start;
+		_grp = [units _grp] call EFUNC(main,setSide);
+		(leader _grp) moveInDriver _veh;
+		[leader _grp,0,_player] call FUNC(setHostile);
+	};
 };
 
 _vehArray = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
