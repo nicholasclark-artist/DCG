@@ -16,12 +16,12 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_vehArray","_driver","_veh","_grp","_statement","_wp","_approval"];
+private ["_probability","_grp","_veh","_vehArray","_driver","_wp","_statement"];
 params ["_start","_mid","_end","_player"];
 
 if (CHECK_ADDON_2(approval) && {alive _player} && {((getPosATL _player) select 2) < 5}) exitWith {
-	_approval = [_pos] call EFUNC(approval,getValue);
-	if (random 100 < ((((AV_MAX-_approval)*AV_MAX) max 1)/100)/4) then {
+	_probability = 1 - (linearConversion [AV_MIN, AV_MAX, [getPos _player] call EFUNC(approval,getValue), 0, 1, true]);
+	if (random 1 < (_probability min GVAR(hostileMaxChance))) then {
 		_grp = [getPosASL _start,0,1,CIVILIAN] call EFUNC(main,spawnGroup);
 		_veh = (selectRandom EGVAR(main,vehPoolCiv)) createVehicle getPosASL _start;
 		_grp = [units _grp] call EFUNC(main,setSide);

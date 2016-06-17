@@ -28,10 +28,10 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 5;
     };
-    class GVAR(hostileChance) {
+    class GVAR(hostileMaxChance) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 0.1;
+        value = 0.4;
     };
     class GVAR(vehMaxCount) {
         typeName = "SCALAR";

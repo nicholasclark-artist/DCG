@@ -15,7 +15,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_grp","_roads","_unit","_targets","_approval"];
+private ["_grp","_probability","_unit","_targets"];
 params ["_pos","_unitCount","_townName"];
 
 missionNamespace setVariable [format ["%1_%2",QUOTE(ADDON),_townName],true];
@@ -23,8 +23,8 @@ missionNamespace setVariable [format ["%1_%2",QUOTE(ADDON),_townName],true];
 _grp = [_pos,0,_unitCount,CIVILIAN] call EFUNC(main,spawnGroup);
 
 if (CHECK_ADDON_2(approval)) then {
-	_approval = [_pos] call EFUNC(approval,getValue);
-	if (random 100 < ((((AV_MAX-_approval)*AV_MAX) max 1)/100)/3) then {
+	_probability = 1 - (linearConversion [AV_MIN, AV_MAX, [_pos] call EFUNC(approval,getValue), 0, 1, true]);
+	if (random 1 < (_probability min GVAR(hostileMaxChance))) then {
 		_unit = selectRandom (units _grp);
 		_targets = [getPosATL _unit,GVAR(spawnDist)] call EFUNC(main,getNearPlayers);
 		if !(_targets isEqualTo []) then {

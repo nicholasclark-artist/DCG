@@ -16,6 +16,8 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	if (DOUBLES(PREFIX,main)) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
+		GVAR(hostileMaxChance) = (GVAR(hostileMaxChance) min 1) max 0;
+
 		// handle vehicle spawns
 		call FUNC(handlerVeh);
 
