@@ -6,68 +6,69 @@ Description:
 spawn base
 
 Arguments:
-0: base strength, number between 0 and 1 that defines how fortified the base will be <NUMBER>
+0: center position AGL <ARRAY>
+1: base strength, number between 0 and 1 that defines how fortified the base will be <NUMBER>
 
 Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#include "\d\dcg\addons\main\DCG_Bases.hpp"
 #define THRESHOLD 0.18
+#define CONFIG configfile >> "dcg_bases"
+#define ANCHOR "Land_HelipadEmpty_F"
 
-private ["_base","_ret","_data","_min","_max","_value","_normalize","_anchor"];
+private ["_position","_strength","_base","_ret","_normalized","_min","_max","_index","_cfg","_cfgStrength","_objects","_anchor"];
 params ["_position",["_strength",0.5]];
 
 _base = [];
 _ret = [];
+_normalized = [];
 
 _strength = (_strength max 0) min 1;
+_min = 0;
+_max = 0;
 
 // normalize base data
-_min = (_data select 0) select 0;
-_max = (_data select (count _data - 1)) select 0;
+for "_index" from 0 to (count (CONFIG)) - 1 do {
+    _cfg = (CONFIG) select _index;
+    _cfgStrength = getNumber (_cfg >> "strength");
+    if (_min isEqualTo 0 || {_cfgStrength < _min}) then {
+        _min = _cfgStrength;
+    };
+    if (_max isEqualTo 0 || {_cfgStrength > _max}) then {
+        _max = _cfgStrength;
+    };
+};
 
-{
-    _value = _x select 0;
-    _normalize = (_value - _min)/(_max - _min);
-    _x set [0,_normalize];
-} forEach _data;
+for "_index" from 0 to (count (CONFIG)) - 1 do {
+    _cfg = (CONFIG) select _index;
+    _normalized pushBack [_index,linearConversion [_min, _max, getNumber (_cfg >> "strength"), 0, 1, true]];
+};
 
-_data = [_data,1] call FUNC(shuffle);
+_normalized = [_normalized,1] call FUNC(shuffle);
 
 // find base with strength close to passed strength
 {
-    if (abs ((_x select 0) - _strength) < THRESHOLD) exitWith {
-        _base = _x select 1;
+    if (abs ((_x select 1) - _strength) < THRESHOLD) exitWith {
+        _base = (CONFIG) select (_x select 0);
     };
-    _base = (selectRandom _data) select 1;
+    _base = (CONFIG) select (random ((count (CONFIG)) - 1));
     false
-} count _data;
+} count _normalized;
 
-_anchor = ((_base select 0) select 0) createVehicle _position;
-_anchor setDir (call compile ((_base select 0) select 2));
+_ret pushBack _normalized;
+_objects = call compile (getText (_base >> "objects"));
+_anchor = ANCHOR createVehicle _position;
+_anchor setDir random 360;
+_anchor setPos [(getpos _anchor) select 0,(getpos _anchor) select 1,0];
+_anchor setVectorUp surfaceNormal getPos _anchor;
 
-if (((_base select 0) select 4) > 0) then {
-    _anchor setPos [(getpos _anchor) select 0,(getpos _anchor) select 1,0];
-};
-
-if (((_base select 0) select 3) > 0) then {
-    _anchor setVectorUp [0,0,1];
-} else {
-    _anchor setVectorUp surfaceNormal getPos _anchor;
-};
-
-_ret pushBack _anchor;
-
-for "_i" from 1 to count _base - 1 do {
+for "_i" from 0 to count _objects - 1 do {
     private ["_obj","_pos"];
-    (_base select _i) params ["_type","_relPos","_dir","_vector","_snap"];
-
-    _relPos = call compile _relPos;
-    _dir = call compile _dir;
+    (_objects select _i) params ["_type","_relPos","_relDir","_vector","_snap"];
 
     _obj = _type createVehicle [0,0,0];
-    _obj setDir _dir;
+    _obj setDir (getDir _anchor + _relDir);
     _pos = _anchor modelToWorld _relPos;
 
     if (_snap > 0) then {

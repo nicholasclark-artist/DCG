@@ -91,6 +91,7 @@
 #define LOG_DEBUG_5(MSG,ARG1,ARG2,ARG3,ARG4,ARG5) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4,ARG5]] call EFUNC(main,log)
 #define LOG_DEBUG_6(MSG,ARG1,ARG2,ARG3,ARG4,ARG5,ARG6) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4,ARG5,ARG6]] call EFUNC(main,log)
 #define HEADLESSCLIENT DOUBLES(PREFIX,HC)
+#define ACTIONPATH ["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) getMarkerColor MARKER != ""
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> "CfgPatches" >> PATCH))
@@ -113,14 +114,14 @@
 #define AV_VAR(LOC) format ["dcg_approval_%1",LOC]
 #define AV_MIN 0
 #define AV_MAX 100
-#define AV_CAR ((AV_MAX*0.005)*GVAR(mulitplier))
-#define AV_TANK ((AV_MAX*0.0075)*GVAR(mulitplier))
-#define AV_AIR ((AV_MAX*0.01)*GVAR(mulitplier))
-#define AV_SHIP ((AV_MAX*0.005)*GVAR(mulitplier))
-#define AV_MAN ((AV_MAX*0.001)*GVAR(mulitplier))
-#define AV_CIV ((AV_MAX*0.01)*GVAR(mulitplier))
-#define AV_FOB ((AV_MAX*0.0025)*GVAR(mulitplier))
-#define AV_TASK ((AV_MAX*0.02)*GVAR(mulitplier))
-#define AV_VILLAGE ((AV_MAX*0.05)*GVAR(mulitplier))
-#define AV_CITY ((AV_MAX*0.1)*GVAR(mulitplier))
-#define AV_CAPITAL ((AV_MAX*0.15)*GVAR(mulitplier))
+#define AV_CAR ((AV_MAX*0.005)*EGVAR(approval,mulitplier))
+#define AV_TANK ((AV_MAX*0.0075)*EGVAR(approval,mulitplier))
+#define AV_AIR ((AV_MAX*0.01)*EGVAR(approval,mulitplier))
+#define AV_SHIP ((AV_MAX*0.005)*EGVAR(approval,mulitplier))
+#define AV_MAN ((AV_MAX*0.001)*EGVAR(approval,mulitplier))
+#define AV_CIV ((AV_MAX*0.01)*EGVAR(approval,mulitplier))
+#define AV_FOB ((AV_MAX*0.0025)*EGVAR(approval,mulitplier))
+#define AV_TASK ((AV_MAX*0.02)*EGVAR(approval,mulitplier))
+#define AV_VILLAGE ((AV_MAX*0.05)*EGVAR(approval,mulitplier))
+#define AV_CITY ((AV_MAX*0.1)*EGVAR(approval,mulitplier))
+#define AV_CAPITAL ((AV_MAX*0.15)*EGVAR(approval,mulitplier))

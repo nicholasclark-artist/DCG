@@ -12,8 +12,6 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(hasInterface) exitWith {};
-
 private ["_action","_addAction","_childAction"];
 params [
 	["_id",""],
@@ -25,13 +23,14 @@ params [
 	["_type",1],
 	["_path",["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]],
 	["_pos",[0,0,0]],
+	["_params",[]],
 	["_args",nil]
 ];
 
 _action = [];
 
 if (CHECK_ADDON_1("ace_interact_menu")) then {
-	_addAction = [_id,_name,"",compile _statement,compile _condition,compile _child,[],_pos] call ace_interact_menu_fnc_createAction;
+	_addAction = [_id,_name,"",compile _statement,compile _condition,compile _child,_params,_pos] call ace_interact_menu_fnc_createAction;
 	[_obj, _type, _path, _addAction] call ace_interact_menu_fnc_addActionToObject;
 	_action append _addAction;
 } else {

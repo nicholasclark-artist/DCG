@@ -122,6 +122,17 @@ if (CHECK_ADDON_2(task)) then {
 	PUSHBACK_DATA(task,_data);
 };
 
+if (CHECK_ADDON_2(approval)) then {
+	private ["_data"];
+	_data = [];
+	{
+		_data pushBack [AV_VAR(_x select 0),missionNamespace getVariable [AV_VAR(_x select 0),0]];
+		false
+	} count GVAR(locations);
+
+	PUSHBACK_DATA(approval,_data);
+};
+
 // following code must run last
 if !(_dataProfile isEqualTo []) then {
 	{
