@@ -3,36 +3,68 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-question civilians
+question nearby civilian
 
 Arguments:
+0: player <OBJECT>
 
 Return:
 none
 __________________________________________________________________*/
-private ["_civ","_nearEnemies","_range","_near","_enemy","_local"];
+#include "script_component.hpp"
+#define RANGE EGVAR(main,range)*0.15
+#define QVAR QUOTE(DOUBLES(ADDON,questioned))
+#define COOLDOWN 300
+#define REJECT(CIV) format ["%1 doesn't have any relevant information.",name CIV]
 
-if (count DCG_civQuestioned >= 15) then {DCG_civQuestioned = []};
-_range = 3000;
-_nearCivs = [];
-_nearEnemies = [];
-_near = getposATL player nearEntities ["Man", 10];
+private ["_player","_enemies","_near","_civ","_enemy","_area"];
 
-{if (side _x isEqualTo CIVILIAN && {!isPlayer _x}) then {_nearCivs pushBack _x}} forEach _near;
-if (count _nearCivs isEqualTo 0) exitWith {hintSilent "There are no civilians near you."};
-if (DCG_approval < 100) exitWith {hintSilent "The locals don't trust you enough to cooperate."};
-_civ = selectRandom _nearCivs;
-if (_civ in DCG_civQuestioned) exitWith {hintSilent format ["You already questioned %1.",name _civ]};
-DCG_civQuestioned pushBack _civ;
+_player = _this select 0;
+_enemies = [];
+_near = getposATL player nearEntities ["Man", 5];
+
+{
+	if (!(side _x isEqualTo CIVILIAN) || {isPlayer _x}) then {
+		_near deleteAt _forEachIndex;
+	};
+} forEach _near;
+
+if (_near isEqualTo []) exitWith {
+	["There are no civilians near you."] remoteExecCall [QEFUNC(main,displayText),_player];
+};
+
+if ([getpos _player] call FUNC(getValue) < AV_MAX*0.1) exitWith {
+	["The locals don't trust you enough to cooperate."] remoteExecCall [QEFUNC(main,displayText),_player];
+};
+
+_civ = selectRandom _near;
+
+if (diag_tickTime < (_civ getVariable [QVAR,COOLDOWN * -1]) + COOLDOWN) exitWith {
+	[format ["%1 was questioned recently.",name _civ]] remoteExecCall [QEFUNC(main,displayText),_player];
+};
+
+_civ setVariable [QVAR,diag_tickTime,true];
 
 if (random 100 < 85) then {
-	_near = _civ nearEntities [["Man","LandVehicle","Ship"], _range];
-	{if !(side _x isEqualTo WEST && {side _x isEqualTo CIVILIAN}) then {_nearEnemies pushBack _x}} forEach _near;
-	if (count _nearEnemies isEqualTo 0) exitWith {hintSilent format ["%1 doesn't have any relevant information.",name _civ]};
-	_enemy = selectRandom _nearEnemies;
-	_local = (nearestLocations [getposATL _enemy, ["NameCityCapital","NameCity","NameVillage"], (((_range/2) min 1000) max 500)]);
-	if (count _local isEqualTo 0) exitWith {hintSilent format ["%1 doesn't have any relevant information.",name _civ]};
-	hintSilent format ["%1 saw soldiers around %2 not too long ago.",name _civ,text (_local select 0)];
+	_near = _civ nearEntities [["Man","LandVehicle","Ship"], RANGE];
+	{
+		if !(side _x isEqualTo EGVAR(main,playerSide) && {side _x isEqualTo CIVILIAN}) then {
+			_enemies pushBack _x
+		};
+	} forEach _near;
+
+	if (_enemies isEqualTo []) exitWith {
+		[REJECT(_civ)] remoteExecCall [QEFUNC(main,displayText),_player];
+	};
+
+	_enemy = selectRandom _enemies;
+	_area = nearestLocations [getposATL _enemy, ["NameCityCapital","NameCity","NameVillage"], (((RANGE * 0.5) min 1000) max 500)];
+
+	if (_area isEqualTo []) exitWith {
+		[REJECT(_civ)] remoteExecCall [QEFUNC(main,displayText),_player];
+	};
+
+	[format ["%1 saw soldiers around %2 not too long ago.",name _civ,text (_area select 0)]] remoteExecCall [QEFUNC(main,displayText),_player];
 } else {
-	hintSilent format ["%1 doesn't have any relevant information.",name _civ];
+	[REJECT(_civ)] remoteExecCall [QEFUNC(main,displayText),_player];
 };

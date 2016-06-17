@@ -20,9 +20,9 @@ params [
 	["_killer", objNull, [objNull]]
 ];
 
-LOG_DEBUG_4("LOCALITY: %1\nPLAYER: %2\nKILLED: %3\nKILLER: %4",isServer, player, _unit, _killer);
+if (isNull _unit || {!isPlayer (driver (vehicle _killer))} || {_killer isEqualTo _unit}) exitWith {};
 
-if (!local _unit || {isNull _unit} || {!isPlayer (driver (vehicle _killer))}) exitWith {};
+LOG_DEBUG_5("isSERVER: %1   isDED: %2   OWNER: %3   VICTIM: %4   KILLER: %5",isServer, isDedicated, owner _unit, _unit, _killer);
 
 _unitValue = 0;
 
@@ -75,4 +75,4 @@ if (side group _unit isEqualTo EGVAR(main,playerSide) || {side group _unit isEqu
 	_unitValue = _unitValue * -1;
 };
 
-[getPos _unit, _unitValue] call FUNC(setValue);
+[getPos _unit, _unitValue] call FUNC(addValue);

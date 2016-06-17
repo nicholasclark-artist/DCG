@@ -16,9 +16,9 @@ __________________________________________________________________*/
 private ["_nearest"];
 params [["_position",[]]];
 
-if (_position isEqualTo []) exitWith {};
-
 _nearest = [];
+
+if (_position isEqualTo []) exitWith {_nearest};
 
 {
 	if (CHECK_DIST2D(_x select 1,_position,EGVAR(main,range)*0.15 max 1000)) then {

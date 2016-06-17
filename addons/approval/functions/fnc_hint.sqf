@@ -14,6 +14,12 @@ __________________________________________________________________*/
 
 _player = _this select 0;
 _textArray = [];
+
+if ([getpos _player] call FUNC(getRegion) isEqualTo []) exitWith {
+	_hint = "region empty";
+	[_hint,true] remoteExecCall [QEFUNC(main,displayText),_player,false];
+};
+
 _value = [getpos _player] call FUNC(getValue);
 
 call {
@@ -53,4 +59,4 @@ call {
 	];
 };
 _hint = format ["%1", selectRandom _textArray];
-[_hint,true] remoteExecCall [QEFUNC(main,displayText),_player,false]
+[_hint,true] remoteExecCall [QEFUNC(main,displayText),_player,false];

@@ -8,9 +8,11 @@ if (!isServer || !isMultiplayer) exitWith {};
 
 ADDON = false;
 
-PREP(setValue);
+PREP(addValue);
 PREP(getValue);
 PREP(getRegion);
 PREP(handleKilled);
+PREP(hint);
+PREP(onCivQuestion);
 
 GVAR(mulitplier) = 1;
