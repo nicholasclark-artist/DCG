@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-setup curator eventhandlers
+setup eventhandlers on curator unit
 
 Arguments:
 
@@ -30,6 +30,7 @@ GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
 		call {
 			_side = getNumber (configFile >> "CfgVehicles" >> _x >> "side");
 			_vehClass = toLower getText (configFile >> "CfgVehicles" >> _x >> "vehicleClass");
+
 			if (_vehClass in ["men","menstory","menrecon","mendiver","mensniper","mensupport"]) exitWith {
 				SET_COST(COST_MAN)
 			};
@@ -64,7 +65,9 @@ GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
 		};
 		_costs pushBack _cost;
 	} forEach (_this select 1);
+
 	_costs
+
 }];
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectPlaced";
@@ -74,11 +77,12 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
 	};
 	if (typeOf (_this select 1) in ARRAY_HQ) then {
 		if ({typeOf _x in ARRAY_HQ} count (curatorEditableObjects GVAR(curator)) <= 1) then {
-			["HQ deployed.\nAerial reconnaissance online.",true] call EFUNC(main,displayText);
+            [true,getPosASL (_this select 1)] call FUNC(recon);
+
 		};
 	};
 	if (CHECK_ADDON_2(approval)) then {
-		[getPosASL (_this select 1),AV_FOB] call EFUNC(approval,setValue);
+		[getPosASL (_this select 1),AV_FOB] call EFUNC(approval,addValue);
 	};
 }];
 
@@ -86,10 +90,10 @@ GVAR(curator) removeAllEventHandlers "CuratorObjectDeleted";
 GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
 	if (typeOf (_this select 1) in ARRAY_HQ) then {
 		if ({typeOf _x in ARRAY_HQ} count (curatorEditableObjects GVAR(curator)) isEqualTo 0) then {
-			["HQ removed.\nAerial reconnaissance offline.",true] call EFUNC(main,displayText);
+            [false] call FUNC(recon);
 		};
 	};
 	if (CHECK_ADDON_2(approval)) then {
-		[getPosASL (_this select 1),AV_FOB * -1] call EFUNC(approval,setValue);
+		[getPosASL (_this select 1),AV_FOB * -1] call EFUNC(approval,addValue);
 	};
 }];

@@ -45,6 +45,10 @@ addMissionEventHandler ["HandleDisconnect",{
 				_veh setPosASL (_x select 1);
 				_veh setVectorUp (_x select 3);
 				GVAR(curator) addCuratorEditableObjects [[_veh],false];
+
+				if (typeOf _veh in ARRAY_HQ) then {
+					[true,getPosASL _veh] call FUNC(recon);
+				};
 				false
 			} count (_data select 2);
 		};

@@ -18,6 +18,7 @@ PREP(setup);
 PREP(getChildren);
 PREP(canDeploy);
 PREP(curatorEH);
+PREP(recon);
 
 GVAR(location) = locationNull;
 GVAR(UID) = "";
@@ -42,6 +43,7 @@ publicVariable QFUNC(getChildren);
 publicVariable QFUNC(deploy);
 publicVariable QFUNC(canDeploy);
 publicVariable QFUNC(curatorEH);
+publicVariable QFUNC(recon);
 publicVariable QGVAR(location);
 publicVariable QGVAR(UID);
 publicVariable QGVAR(response);

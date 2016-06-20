@@ -17,6 +17,10 @@ if (!isServer) exitWith {};
 {
 	deleteLocation GVAR(location);
 } remoteExecCall ["BIS_fnc_call",0,true];
+{
+	[false] call FUNC(recon);
+} remoteExecCall ["BIS_fnc_call",owner getAssignedCuratorUnit GVAR(curator),false];
+
 GVAR(UID) = "";
 (owner (getAssignedCuratorUnit GVAR(curator))) publicVariableClient QGVAR(UID);
 {_x call EFUNC(main,cleanup)} forEach (curatorEditableObjects GVAR(curator));

@@ -19,8 +19,6 @@ if ((getPosASL player isFlatEmpty [4, -1, 0.3, 15, 0, false, player]) isEqualTo 
 	[format ["Unsuitable position for %1. Select a flat, open area.",GVAR(name)],true] call EFUNC(main,displayText);
 };
 
-
-
 [] spawn {
 	[format ["Deploying %1...", GVAR(name)],true] call EFUNC(main,displayText);
 	sleep 3;

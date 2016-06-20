@@ -38,7 +38,7 @@ GVAR(ID1) = [format ["%1_requestAccept",QUOTE(ADDON)],"Accept Request",format [
 	FORMAT_SETUP
 ],"true","",player,1,ACTIONPATH] call EFUNC(main,setAction);
 
-GVAR(ID2) = [format ["%1_requestAccept",QUOTE(ADDON)],"Accept Request",format [
+GVAR(ID2) = [format ["%1_requestDeny",QUOTE(ADDON)],"Deny Request",format [
 	"
 		%1 = 0;
 		[player,1,%2] call %4;
