@@ -12,8 +12,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(hasInterface) exitWith {};
-
+private ["_actionIndex","_actionEH","_childIndex","_childEH"];
 params [
 	["_obj",player],
 	["_type",1],
@@ -23,12 +22,16 @@ params [
 if (CHECK_ADDON_1("ace_interact_menu")) then {
 	[_obj,_type,_action] call ace_interact_menu_fnc_removeActionFromObject;
 } else {
-	if (typeName _action isEqualTo "ARRAY") then {
-		{
-			_obj removeAction _x;
-		} forEach _action;
-	};
-	if (typeName _action isEqualTo "SCALAR") then {
-		_obj removeAction _action;
-	};
+	_actionIndex = _action select 0;
+	_actionEH = _action select 1;
+	_childIndex = _action select 2;
+	_childEH = _action select 3;
+
+	_obj removeAction _actionIndex;
+	{
+		_obj removeAction _x;
+	} forEach _childIndex;
+
+	_obj removeEventHandler ["Respawn", _actionEH];
+	_obj removeEventHandler ["Respawn", _childEH];
 };
