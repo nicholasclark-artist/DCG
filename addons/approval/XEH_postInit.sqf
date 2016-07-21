@@ -12,7 +12,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 };
 
 PVEH_HINT addPublicVariableEventHandler {[_this select 1] call FUNC(hint)};
-PVEH_QUESTION addPublicVariableEventHandler {[_this select 1] call FUNC(onCivQuestion)};
+PVEH_QUESTION addPublicVariableEventHandler {[_this select 1] call FUNC(question)};
 
 [{
 	if (DOUBLES(PREFIX,main)) exitWith {
@@ -21,26 +21,25 @@ PVEH_QUESTION addPublicVariableEventHandler {[_this select 1] call FUNC(onCivQue
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
 		if !(_data isEqualTo []) then {
 			{
-				missionNamespace setVariable _x;
+				_name = _x select 0;
+				_value = _x select 1;
+
+				missionNamespace setVariable [_name,_value,false];
 				false
 			} count _data;
 		} else {
 			{
-				missionNamespace setVariable [AV_VAR(_x select 0),0 + round random 5,false];
+				missionNamespace setVariable [AV_VAR(_x select 0),AV_MAX*0.1,false];
 				false
 			} count EGVAR(main,locations);
 		};
 
-		{
-			if (hasInterface) then {
-				// fix "respawn on start" missions
-				_time = diag_tickTime;
-				waitUntil {diag_tickTime > _time + 10 && {!isNull (findDisplay 46)} && {!isNull player} && {alive player}};
-				[QUOTE(ADDON),"Approval","",QUOTE(true),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]] call EFUNC(main,setAction);
-				[QUOTE(DOUBLES(ADDON,hint)),"Check Approval in Region",format ["%1 = player; publicVariableServer '%1'", PVEH_HINT],QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
-				[QUOTE(DOUBLES(ADDON,question)),"Question Nearby Civilians",format ["%1 = player; publicVariableServer '%1'", PVEH_QUESTION],QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
-			};
-		} remoteExec ["BIS_fnc_call",0,true];
+		_actions = [
+			[QUOTE(ADDON),"Approval","",QUOTE(true),""],
+			[QUOTE(DOUBLES(ADDON,hint)),"Check Approval in Region",format ["%1 = player; publicVariableServer '%1'", PVEH_HINT],QUOTE(true),"",player,1,ACTIONPATH],
+			[QUOTE(DOUBLES(ADDON,question)),"Question Person",format ["%1 = [player,cursorTarget]; publicVariableServer '%1'", PVEH_QUESTION],QUOTE(call FUNC(canQuestion)),"",player,1,ACTIONPATH]
+		];
+		REMOTE_WAITADDACTION(0,_actions,true);
 
 		if (CHECK_DEBUG) then {
 			[{

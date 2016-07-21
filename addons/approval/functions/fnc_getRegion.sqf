@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-get locations in region, should not be called directly
+get locations in region, should not be called directly in most cases
 
 Arguments:
 0: center position <ARRAY>

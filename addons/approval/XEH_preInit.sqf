@@ -12,7 +12,11 @@ PREP(addValue);
 PREP(getValue);
 PREP(getRegion);
 PREP(handleKilled);
+PREP(handlerHostile);
+PREP(spawnHostile);
 PREP(hint);
-PREP(onCivQuestion);
+PREP(canQuestion);
+PREP(question);
 
-GVAR(mulitplier) = 1;
+publicVariable QFUNC(addValue);
+publicVariable QFUNC(canQuestion);

@@ -6,57 +6,42 @@ Description:
 send approval hint to client
 
 Arguments:
+0: player to send hint to <OBJECT>
 
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+private ["_player","_fobBonus","_region","_value","_locations","_format"];
+
 _player = _this select 0;
-_textArray = [];
 
-if ([getpos _player] call FUNC(getRegion) isEqualTo []) exitWith {
-	_hint = "region empty";
-	[_hint,true] remoteExecCall [QEFUNC(main,displayText),_player,false];
-};
-
+_fobBonus = 0;
+_region = "";
 _value = [getpos _player] call FUNC(getValue);
+_locations = [getpos _player] call FUNC(getRegion);
 
-call {
-	if (_value > AV_MAX*0.1 && {_value <= AV_MAX*0.25}) exitWith {
-		_textArray = [
-			"AV 1 10%",
-			"AV 2 10%"
-		];
+_locations = _locations apply {_x select 0};
+
+{
+	if (_forEachIndex isEqualTo (count _locations - 1)) then {
+		_region = _region + _x;
+	} else {
+		_region = _region + _x + ", ";
 	};
-	if (_value > AV_MAX*0.25 && {_value <= AV_MAX*0.5}) exitWith {
-		_textArray = [
-			"AV 1 25%",
-			"AV 2 25%"
-		];
-	};
-	if (_value > AV_MAX*0.5 && {_value <= AV_MAX*0.75}) exitWith {
-		_textArray = [
-			"AV 1 50%",
-			"AV 2 50%"
-		];
-	};
-	if (_value > AV_MAX*0.75 && {_value <= AV_MAX}) exitWith {
-		_textArray = [
-			"AV 1 75%",
-			"AV 2 75%"
-		];
-	};
-	if (_value > AV_MAX) exitWith {
-		_textArray = [
-			"AV 1 100%",
-			"AV 2 100%"
-		];
-	};
-	_textArray = [
-		"AV 1 less than 10%",
-		"AV 2 less than 10%"
-	];
+} forEach _locations;
+
+if (CHECK_ADDON_2(fob)) then {
+	 _fobBonus = EGVAR(fob,AVBonus);
 };
-_hint = format ["%1", selectRandom _textArray];
-[_hint,true] remoteExecCall [QEFUNC(main,displayText),_player,false];
+
+_format = format ["
+Regional Breakdown \n \n
+Approval: %3/%4 \n
+Hostility: %5/100 \n
+FOB Bonus: %6 \n
+Region: %2
+",_player,_region,round _value,AV_MAX,round((AV_CHANCE(getPos _player))*100),_fobBonus];
+
+[_format,true] remoteExecCall [QEFUNC(main,displayText),_player,false];
