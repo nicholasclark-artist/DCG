@@ -18,11 +18,6 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 100;
     };
-    class GVAR(flagTexturePath) {
-        typeName = "STRING";
-        typeDetail = "";
-        value = "\A3\Data_F\Flags\flag_nato_co.paa";
-    };
     class GVAR(addons) {
         typeName = "ARRAY";
         typeDetail = "";

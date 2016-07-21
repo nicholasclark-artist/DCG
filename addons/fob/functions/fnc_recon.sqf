@@ -48,6 +48,8 @@ if (_ifRecon) then {
 	GVAR(reconUAV) lockDriver true;
 	GVAR(reconUAV) flyInHeight 150;
 
+	GVAR(reconUAV) addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
+
 	_wp = group GVAR(reconUAV) addWaypoint [_position, 0];
 	_wp setWaypointType "LOITER";
 	_wp setWaypointLoiterType "CIRCLE_L";
@@ -56,7 +58,7 @@ if (_ifRecon) then {
 	_statement = "
 		player action ['SwitchToUAVGunner',%1];
 	";
-	GVAR(reconAction) = [QUOTE(DOUBLES(ADDON,recon)),"Switch to UAV Camera",format [_statement,QGVAR(reconUAV),_position],QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
+	GVAR(reconAction) = [QUOTE(DOUBLES(ADDON,recon)),"Switch to FOB Recon",format [_statement,QGVAR(reconUAV),_position],QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
 
 	["HQ deployed.\nAerial reconnaissance online.",true] call EFUNC(main,displayText);
 } else {

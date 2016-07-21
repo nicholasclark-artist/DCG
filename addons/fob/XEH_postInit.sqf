@@ -3,18 +3,6 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SET_PATROL \
-	{ \
-		if (_x isKindOf 'Man' && {_x isEqualTo leader group _x} && {!(_x getVariable ['dcg_isOnPatrol',-1] isEqualTo 1)}) then { \
-			[units group _x,GVAR(range)*0.5,false] call EFUNC(main,setPatrol); \
-			_x addEventHandler ['Local',{ \
-				if (_this select 1) then { \
-					_x setVariable ['dcg_isOnPatrol',0]; \
-					[units group (_this select 0),GVAR(range)*0.5,false] call EFUNC(main,setPatrol); \
-				}; \
-			}]; \
-		}; \
-	} forEach (curatorEditableObjects GVAR(curator));
 
 if (!isServer || !isMultiplayer) exitWith {};
 
@@ -24,6 +12,8 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 
 unassignCurator GVAR(curator);
 
+[QGVAR(curatorEH), {call FUNC(curatorEH)}] call CBA_fnc_addEventHandler;
+[QGVAR(removeRecon), {[false] call FUNC(recon)}] call CBA_fnc_addEventHandler;
 PVEH_DEPLOY addPublicVariableEventHandler {(_this select 1) call FUNC(setup)};
 PVEH_REQUEST addPublicVariableEventHandler {(_this select 1) call FUNC(requestHandler)};
 PVEH_REASSIGN addPublicVariableEventHandler {(_this select 1) assignCurator GVAR(curator)};
@@ -46,32 +36,17 @@ addMissionEventHandler ["HandleDisconnect",{
 				_veh setVectorUp (_x select 3);
 				GVAR(curator) addCuratorEditableObjects [[_veh],false];
 
-				if (typeOf _veh in ARRAY_HQ) then {
+				if (typeOf _veh in FOB_HQ) then {
 					[true,getPosASL _veh] call FUNC(recon);
 				};
 				false
 			} count (_data select 2);
+
+			GVAR(AVBonus) = (_data select 3);
 		};
 
-		{
-			if (hasInterface) then {
-				// fix "respawn on start" missions
-				_time = diag_tickTime;
-				waitUntil {diag_tickTime > _time + 10 && {!isNull (findDisplay 46)} && {!isNull player} && {alive player}};
-				[QUOTE(ADDON),"Forward Operating Base","",QUOTE(true),QUOTE(call FUNC(getChildren)),player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]] call EFUNC(main,setAction);
-				[QUOTE(DOUBLES(ADDON,patrol)),"Set FOB Groups on Patrol",QUOTE(SET_PATROL),QUOTE(player isEqualTo (getAssignedCuratorUnit GVAR(curator))),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
-
-				player addEventHandler ["respawn",{
-					if ((getPlayerUID (_this select 0)) isEqualTo GVAR(UID)) then {
-						[] spawn {
-							sleep 5;
-							missionNamespace setVariable [PVEH_REASSIGN,player];
-							publicVariableServer PVEH_REASSIGN;
-						};
-					};
-				}];
-			};
-		} remoteExec ["BIS_fnc_call",0,true];
+		_actions = [[QUOTE(ADDON),"Forward Operating Base","",QUOTE(true),QUOTE(call FUNC(getChildren))]];
+		REMOTE_WAITADDACTION(0,_actions,true);
 	};
 }, 0, []] call CBA_fnc_addPerFrameHandler;
 

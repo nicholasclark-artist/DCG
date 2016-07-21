@@ -14,15 +14,16 @@ __________________________________________________________________*/
 
 if (!isServer) exitWith {};
 
-{
-	deleteLocation GVAR(location);
-} remoteExecCall ["BIS_fnc_call",0,true];
-{
-	[false] call FUNC(recon);
-} remoteExecCall ["BIS_fnc_call",owner getAssignedCuratorUnit GVAR(curator),false];
+if ({typeOf _x in FOB_HQ} count (curatorEditableObjects GVAR(curator)) > 0) then {
+	[QGVAR(removeRecon), [], getAssignedCuratorUnit GVAR(curator)] call CBA_fnc_targetEvent;
+};
+
+{_x call EFUNC(main,cleanup)} forEach (curatorEditableObjects GVAR(curator));
 
 GVAR(UID) = "";
 (owner (getAssignedCuratorUnit GVAR(curator))) publicVariableClient QGVAR(UID);
-{_x call EFUNC(main,cleanup)} forEach (curatorEditableObjects GVAR(curator));
-deleteVehicle GVAR(flag);
+[QEGVAR(main,deleteLocation), [GVAR(location)]] call CBA_fnc_globalEvent;
+remoteExecCall ["", CREATELOC_JIPID];
+
+deleteVehicle GVAR(anchor);
 unassignCurator GVAR(curator);
