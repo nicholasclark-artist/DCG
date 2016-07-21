@@ -16,13 +16,11 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	if (DOUBLES(PREFIX,main)) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
-		GVAR(hostileMaxChance) = (GVAR(hostileMaxChance) min 1) max 0;
-
-		// handle vehicle spawns
 		call FUNC(handlerVeh);
 
-		// get locations
 		_locations = [];
+		_posArray = [];
+
 		{
 			if !(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) then {
 				_locations pushBack _x;
@@ -34,7 +32,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			private "_mrk";
 			{
 				LOG_DEBUG_1("%1 initialized.", _x select 0);
-				_mrk = createMarker [format["%1_%2",QUOTE(ADDON),_x select 0],_x select 1];
+				_mrk = createMarker [LOCVAR(_x select 0),_x select 1];
 				_mrk setMarkerColor "ColorCivilian";
 				_mrk setMarkerShape "ELLIPSE";
 				_mrk setMarkerBrush "SolidBorder";
@@ -43,10 +41,8 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			} forEach _locations;
 		};
 
-		// handle civ spawns
 		[_locations] call FUNC(handlerUnit);
 
-		_posArray = [];
 		[{
 			params ["_args","_idPFH"];
 			_args params ["_posArray"];
@@ -65,11 +61,9 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 					} forEach _posArray;
 				};
 
-				// handle animal spawns
 				[_posArray] call FUNC(handlerAnimal);
 			};
 
-			// get animal positions
 			_selected = selectRandom EXPRESSIONS;
 			_expression = _selected select 0;
 			_str = _selected select 1;

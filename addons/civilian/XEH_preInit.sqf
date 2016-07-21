@@ -14,6 +14,5 @@ PREP(handlerAnimal);
 PREP(spawnUnit);
 PREP(spawnVeh);
 PREP(spawnAnimal);
-PREP(setHostile);
 
-GVAR(vehicles) = [];
+GVAR(drivers) = [];

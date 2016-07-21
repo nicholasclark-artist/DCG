@@ -18,22 +18,9 @@ __________________________________________________________________*/
 private ["_grp","_probability","_unit","_targets"];
 params ["_pos","_unitCount","_townName"];
 
-missionNamespace setVariable [format ["%1_%2",QUOTE(ADDON),_townName],true];
+SET_LOCVAR(_townName,true);
 
 _grp = [_pos,0,_unitCount,CIVILIAN] call EFUNC(main,spawnGroup);
-
-if (CHECK_ADDON_2(approval)) then {
-	_probability = 1 - (linearConversion [AV_MIN, AV_MAX, [_pos] call EFUNC(approval,getValue), 0, 1, true]);
-	if (random 1 < (_probability min GVAR(hostileMaxChance))) then {
-		_unit = selectRandom (units _grp);
-		_targets = [getPosATL _unit,GVAR(spawnDist)] call EFUNC(main,getNearPlayers);
-		if !(_targets isEqualTo []) then {
-			_unit setVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),0];
-			_unit = [[_unit]] call EFUNC(main,setSide);
-			[leader _unit,round random 1,selectRandom _targets] call FUNC(setHostile);
-		};
-	};
-};
 
 {
 	_x allowfleeing 0;
@@ -55,7 +42,7 @@ if (CHECK_ADDON_2(approval)) then {
 
 	if ({_x distance _pos < GVAR(spawnDist)} count allPlayers isEqualTo 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		missionNamespace setVariable [format ["%1_%2",QUOTE(ADDON),_townName],false];
+		SET_LOCVAR(_townName,false);
 		(units _grp) call EFUNC(main,cleanup);
 	};
 }, 30, [_pos,_townName,_grp]] call CBA_fnc_addPerFrameHandler;

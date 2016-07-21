@@ -28,11 +28,6 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 5;
     };
-    class GVAR(hostileMaxChance) {
-        typeName = "SCALAR";
-        typeDetail = "";
-        value = 0.4;
-    };
     class GVAR(vehMaxCount) {
         typeName = "SCALAR";
         typeDetail = "";
@@ -41,6 +36,6 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(vehCooldown) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 600;
+        value = 180;
     };
 };

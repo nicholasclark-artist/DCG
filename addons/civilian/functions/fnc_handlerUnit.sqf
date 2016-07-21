@@ -12,13 +12,12 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define ZDIST 65
 
 [{
 	params ["_args","_idPFH"];
 	_args params ["_positions"];
 	{
-		if !(missionNamespace getVariable [format ["%1_%2", QUOTE(ADDON),_x select 0],false]) then {
+		if !(GET_LOCVAR(_x select 0)) then {
 			private ["_position","_unitCount"];
 			_position = _x select 1;
 			if ({CHECK_VECTORDIST(_position,getPosASL (vehicle _x),GVAR(spawnDist)) && {((getPos (vehicle _x)) select 2) < ZDIST}} count allPlayers > 0) then {

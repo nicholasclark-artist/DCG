@@ -12,7 +12,6 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define ZDIST 65
 
 [{
 	private ["_pos","_str"];
@@ -20,7 +19,7 @@ __________________________________________________________________*/
 	_args params ["_posArray"];
 
 	{
-		if !(missionNamespace getVariable [format ["%1_%2", QUOTE(ADDON),_x select 0],false]) then {
+		if !(GET_LOCVAR(_x select 0)) then {
 			_pos = _x select 0;
 			_str = _x select 1;
 

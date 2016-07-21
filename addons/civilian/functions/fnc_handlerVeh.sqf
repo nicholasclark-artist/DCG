@@ -11,22 +11,18 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define RANGE 1000
-#define BUFFER 300
-#define ITERATIONS 250
 
 [{
 	private ["_HCs","_players","_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect","_mrk"];
 
-	// spawn dynamic vehicles
-	if (count GVAR(vehicles) <= GVAR(vehMaxCount)) then {
+	if (count GVAR(drivers) <= GVAR(vehMaxCount)) then {
 		_HCs = entities "HeadlessClient_F";
 		_players = allPlayers - _HCs;
 
 		if !(_players isEqualTo []) then {
-			_player = selectRandom _players; // get target player
-
+			_player = selectRandom _players;
 			_roads = _player nearRoads 200;
+
 			// get start and end point for vehicle that passes by target player
 			if !(_roads isEqualTo []) then {
 				_roadStart = objNull;
@@ -83,16 +79,15 @@ __________________________________________________________________*/
 							_mrk = createMarker [format ["%1_%2", _roadStart,time], getpos _roadStart];
 							_mrk setMarkerType "mil_dot";
 							_mrk setMarkerColor "colorGREEN";
-							_mrk setMarkerText "ROAD START";
+							_mrk setMarkerText format ["ROAD START - %1", time];
 
 							_mrk = createMarker [format ["%1_%2", _roadEnd,time], getpos _roadEnd];
 							_mrk setMarkerType "mil_dot";
 							_mrk setMarkerColor "colorRED";
-							_mrk setMarkerText "ROAD END";
+							_mrk setMarkerText format ["ROAD END - %1", time];
 						};
 				};
 			};
 		};
 	};
 }, GVAR(vehCooldown) max 180, []] call CBA_fnc_addPerFrameHandler;
-

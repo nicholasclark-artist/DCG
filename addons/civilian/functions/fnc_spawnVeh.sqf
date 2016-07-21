@@ -19,17 +19,6 @@ __________________________________________________________________*/
 private ["_probability","_grp","_veh","_vehArray","_driver","_wp","_statement"];
 params ["_start","_mid","_end","_player"];
 
-if (CHECK_ADDON_2(approval) && {alive _player} && {((getPosATL _player) select 2) < 5}) exitWith {
-	_probability = 1 - (linearConversion [AV_MIN, AV_MAX, [getPos _player] call EFUNC(approval,getValue), 0, 1, true]);
-	if (random 1 < (_probability min GVAR(hostileMaxChance))) then {
-		_grp = [getPosASL _start,0,1,CIVILIAN] call EFUNC(main,spawnGroup);
-		_veh = (selectRandom EGVAR(main,vehPoolCiv)) createVehicle getPosASL _start;
-		_grp = [units _grp] call EFUNC(main,setSide);
-		(leader _grp) moveInDriver _veh;
-		[leader _grp,0,_player] call FUNC(setHostile);
-	};
-};
-
 _vehArray = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 _driver = _vehArray select 0;
 _veh = vehicle _driver;
@@ -46,7 +35,7 @@ if (random 1 < 0.5) then {
 };
 
 _wp = _grp addWaypoint [getPosATL _end,0];
-_statement = format ["(vehicle this) call %1; %2 = %2 - [this];", QEFUNC(main,cleanup),QGVAR(vehicles)];
+_statement = format ["(vehicle this) call %1; %2 = %2 - [this];", QEFUNC(main,cleanup),QGVAR(drivers)];
 _wp setWaypointStatements ["true", _statement];
 _veh allowCrewInImmobile true;
 _veh addEventHandler ["GetOut", {
@@ -56,4 +45,4 @@ _veh addEventHandler ["GetOut", {
 	};
 }];
 
-GVAR(vehicles) pushBack _driver;
+GVAR(drivers) pushBack _driver;
