@@ -9,6 +9,7 @@ if (!isServer) exitWith {};
 ADDON = false;
 
 PREP(arsenal);
+PREP(createLocation);
 PREP(cleanup);
 PREP(findHousePos);
 PREP(replaceString);
@@ -66,9 +67,11 @@ GVAR(enemySide) = EAST;
 GVAR(markerCleanup) = [];
 GVAR(objectCleanup) = [];
 GVAR(saveDataCurrent) = [DATA_MISSION_ID];
+GVAR(actions) = [];
 
 publicVariable QUOTE(ADDON);
 publicVariable QFUNC(arsenal);
+publicVariable QFUNC(createLocation);
 publicVariable QFUNC(cleanup);
 publicVariable QFUNC(findHousePos);
 publicVariable QFUNC(replaceString);
@@ -111,6 +114,7 @@ publicVariable QGVAR(enemySide);
 publicVariable QGVAR(playerSide);
 publicVariable QGVAR(markerCleanup);
 publicVariable QGVAR(objectCleanup);
+publicVariable QGVAR(actions);
 
 call FUNC(setSettings);
 call FUNC(loadData);

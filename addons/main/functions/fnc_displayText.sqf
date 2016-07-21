@@ -12,7 +12,10 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_msg","_sound"];
+params [
+	"_msg",
+	["_sound",true]
+];
 
 if (CHECK_ADDON_1("ace_common")) then {
 	[_msg,_sound,8,0] call ace_common_fnc_displayText;
