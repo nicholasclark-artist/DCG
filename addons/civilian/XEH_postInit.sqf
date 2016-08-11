@@ -16,7 +16,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	if (DOUBLES(PREFIX,main)) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
-		call FUNC(handlerVeh);
+		call FUNC(handleVehicle);
 
 		_locations = [];
 		_posArray = [];
@@ -31,7 +31,6 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		if (CHECK_DEBUG) then {
 			private "_mrk";
 			{
-				LOG_DEBUG_1("%1 initialized.", _x select 0);
 				_mrk = createMarker [LOCVAR(_x select 0),_x select 1];
 				_mrk setMarkerColor "ColorCivilian";
 				_mrk setMarkerShape "ELLIPSE";
@@ -41,7 +40,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			} forEach _locations;
 		};
 
-		[_locations] call FUNC(handlerUnit);
+		[_locations] call FUNC(handleUnit);
 
 		[{
 			params ["_args","_idPFH"];
@@ -61,13 +60,13 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 					} forEach _posArray;
 				};
 
-				[_posArray] call FUNC(handlerAnimal);
+				[_posArray] call FUNC(handleAnimal);
 			};
 
 			_selected = selectRandom EXPRESSIONS;
 			_expression = _selected select 0;
 			_str = _selected select 1;
-			_pos = [EGVAR(main,center),0,EGVAR(main,range)] call EFUNC(main,findRandomPos);
+			_pos = [EGVAR(main,center),0,EGVAR(main,range)] call EFUNC(main,findPosSafe);
 			_ret = selectBestPlaces [_pos,5000,_expression,70,1];
 			_pos = _ret select 0 select 0;
 			if (!(_ret isEqualTo []) && {!(CHECK_DIST2D(_pos,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} && {!(surfaceIsWater _pos)} && {{CHECK_DIST2D(_pos,(_x select 0),GVAR(spawnDist))} count _posArray isEqualTo 0}) then {

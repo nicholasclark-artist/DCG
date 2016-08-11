@@ -8,11 +8,11 @@ if (!isServer || !isMultiplayer) exitWith {};
 
 ADDON = false;
 
-PREP(handlerUnit);
-PREP(handlerVeh);
-PREP(handlerAnimal);
+PREP(handleUnit);
+PREP(handleVehicle);
+PREP(handleAnimal);
 PREP(spawnUnit);
-PREP(spawnVeh);
+PREP(spawnVehicle);
 PREP(spawnAnimal);
 
 GVAR(drivers) = [];

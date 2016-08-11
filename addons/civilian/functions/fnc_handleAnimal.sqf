@@ -24,7 +24,7 @@ __________________________________________________________________*/
 			_str = _x select 1;
 
 			if ({CHECK_DIST2D((vehicle _x),_pos,GVAR(spawnDist)) && {((getPosATL (vehicle _x)) select 2) < ZDIST}} count allPlayers > 0) then {
-				[_pos,_str] spawn FUNC(spawnAnimal);
+				[_pos,_str] call FUNC(spawnAnimal);
 			};
 		};
 	} forEach _posArray;

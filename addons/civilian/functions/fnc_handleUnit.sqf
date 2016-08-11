@@ -30,7 +30,7 @@ __________________________________________________________________*/
 					};
 					_unitCount = ceil(GVAR(countVillage));
 				};
-				[ASLToAGL _position,_unitCount,_x select 0] spawn FUNC(spawnUnit);
+				[ASLToAGL _position,_unitCount,_x select 0] call FUNC(spawnUnit);
 			};
 		};
 	} forEach _positions;

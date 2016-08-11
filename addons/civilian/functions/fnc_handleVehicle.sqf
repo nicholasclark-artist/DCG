@@ -71,10 +71,9 @@ __________________________________________________________________*/
 
 				if (!([getPosASL _roadStart,_player] call EFUNC(main,inLOS)) &&
 				    {([_roadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
-					{([_roadEnd,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
 					{!(CHECK_DIST2D(_roadStart,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} &&
 					{!(CHECK_DIST2D(_roadEnd,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))}) then {
-						[_roadStart,_roadMid,_roadEnd,_player] spawn FUNC(spawnVeh);
+						[_roadStart,_roadMid,_roadEnd,_player] call FUNC(spawnVehicle);
 						if (CHECK_DEBUG) then {
 							_mrk = createMarker [format ["%1_%2", _roadStart,time], getpos _roadStart];
 							_mrk setMarkerType "mil_dot";
