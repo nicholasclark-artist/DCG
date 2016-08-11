@@ -12,11 +12,11 @@ PREP(addValue);
 PREP(getValue);
 PREP(getRegion);
 PREP(handleKilled);
-PREP(handlerHostile);
+PREP(handleHostile);
 PREP(spawnHostile);
 PREP(hint);
-PREP(canQuestion);
 PREP(question);
 
+publicVariable QFUNC(getRegion);
 publicVariable QFUNC(addValue);
-publicVariable QFUNC(canQuestion);
+publicVariable QFUNC(question);

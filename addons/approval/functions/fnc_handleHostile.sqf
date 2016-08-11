@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-handles hostile unit spawns
+handle hostile unit spawns
 
 Arguments:
 

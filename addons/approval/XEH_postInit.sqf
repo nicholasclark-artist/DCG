@@ -12,7 +12,6 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 };
 
 PVEH_HINT addPublicVariableEventHandler {[_this select 1] call FUNC(hint)};
-PVEH_QUESTION addPublicVariableEventHandler {[_this select 1] call FUNC(question)};
 
 [{
 	if (DOUBLES(PREFIX,main)) exitWith {
@@ -34,12 +33,20 @@ PVEH_QUESTION addPublicVariableEventHandler {[_this select 1] call FUNC(question
 			} count EGVAR(main,locations);
 		};
 
-		_actions = [
-			[QUOTE(ADDON),"Approval","",QUOTE(true),""],
-			[QUOTE(DOUBLES(ADDON,hint)),"Check Approval in Region",format ["%1 = player; publicVariableServer '%1'", PVEH_HINT],QUOTE(true),"",player,1,ACTIONPATH],
-			[QUOTE(DOUBLES(ADDON,question)),"Question Person",format ["%1 = [player,cursorTarget]; publicVariableServer '%1'", PVEH_QUESTION],QUOTE(call FUNC(canQuestion)),"",player,1,ACTIONPATH]
-		];
-		REMOTE_WAITADDACTION(0,_actions,true);
+		[
+			{!isNull player && {alive player}},
+			{
+				{
+					_x call EFUNC(main,setAction);
+				} forEach [
+					[QUOTE(ADDON),"Approval","",QUOTE(true),""],
+					[QUOTE(DOUBLES(ADDON,hint)),"Check Approval in Region",format ["%1 = player; publicVariableServer '%1'", PVEH_HINT],QUOTE(true),"",player,1,ACTIONPATH],
+					[QUOTE(DOUBLES(ADDON,question)),"Question Nearby Person",QUOTE(call FUNC(question)),QUOTE(true),"",player,1,ACTIONPATH]
+				];
+			}
+		] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute), 0, true];
+
+		call FUNC(handleHostile);
 
 		if (CHECK_DEBUG) then {
 			[{

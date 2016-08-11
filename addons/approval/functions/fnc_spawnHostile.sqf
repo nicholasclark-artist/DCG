@@ -17,14 +17,15 @@ __________________________________________________________________*/
 #define SOUNDPATH "A3\Sounds_F\sfx\Beep_Target.wss"
 #define TYPEMAX 2
 #define MINDIST 200
+#define REBEL_COUNT 8
 
-private ["_player","_pos","_type","_nearPlayers","_posArray","_hostilePos","_grp","_unit","_wp","_driver","_tempGrp","_vest","_weapon","_mags","_y","_cond"];
+private ["_player","_pos","_type","_nearPlayers","_posArray","_hostilePos","_grp","_unit","_wp","_driver","_unitPool","_tempGrp","_vest","_weapon","_mags","_y","_cond"];
 
 _player = _this select 0;
 _pos = getPos _player;
 _type = round random TYPEMAX;
 _nearPlayers = [_pos,50] call EFUNC(main,getNearPlayers);
-_posArray = [_pos,50,700,MINDIST] call EFUNC(main,findPosGrid);
+_posArray = [_pos,50,500,MINDIST] call EFUNC(main,findPosGrid);
 
 {
 	if !([_x,MINDIST] call EFUNC(main,getNearPlayers) isEqualTo []) then {
@@ -47,7 +48,6 @@ call {
 		_grp = [[leader _grp]] call EFUNC(main,setSide);
 
 		_unit = leader _grp;
-
 		_unit removeAllEventHandlers "firedNear";
 		_unit addEventHandler ["Hit", {
 			"HelicopterExploSmall" createVehicle ((_this select 0) modeltoworld [0,0,0]);
@@ -77,31 +77,19 @@ call {
 			};
 		}, 0.1, [_unit,_player]] call CBA_fnc_addPerFrameHandler;
 
-		/*[_unit,_player] spawn {
-			_unit = vehicle (_this select 0);
-			_player = _this select 1;
-
-			while {alive (driver _unit)} do {
-				if ((_player distance _unit) < 100) then {
-					playSound3D [SOUNDPATH, _unit, false, getPosATL _unit, 0.80, 1, 120];
-				};
-				sleep (((_player distance _unit)*0.005 max 0.1) min 1);
-			};
-		};*/
-
 		LOG_DEBUG("Suicide bomber spawned.");
 	};
 
 	// suicide vehicle
 	if (_type isEqualTo 1) exitWith {
-		!(GVAR(drivers) isEqualTo []) then {
+		if !(EGVAR(civilian,drivers) isEqualTo []) then {
 			_driver = objNull;
 
 			{
 				if (CHECK_DIST2D(getPos _x,_pos,2000)) exitWith {
 					_driver = _x;
 				};
-			} forEach GVAR(drivers);
+			} forEach EGVAR(civilian,drivers);
 
 			if !(isNull _driver) then {
 				{
@@ -151,18 +139,6 @@ call {
 							};
 						}, 0.1, [_unit,_player]] call CBA_fnc_addPerFrameHandler;
 
-						/*[_unit,_player] spawn {
-							_unit = vehicle (_this select 0);
-							_player = _this select 1;
-
-							while {alive (driver _unit)} do {
-								if ((_player distance _unit) < 100) then {
-									playSound3D [SOUNDPATH, _unit, false, getPosATL _unit, 0.80, 1, 120];
-								};
-								sleep (((_player distance _unit)*0.005 max 0.1) min 1);
-							};
-						};*/
-
 						LOG_DEBUG("Suicide vehicle spawned.");
 					},
 					[_player,_driver,_wp],
@@ -174,7 +150,23 @@ call {
 
 	// rebels
 	if (_type isEqualTo 2) exitWith {
-		_tempGrp = [[0,0,0],0,1] call EFUNC(main,spawnGroup);
+		_unitPool = [];
+		_tempGrp = createGroup EGVAR(main,enemySide);
+
+		call {
+			if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
+				_unitPool = GVAR(unitPoolEast);
+			};
+			if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
+				_unitPool = GVAR(unitPoolWest);
+			};
+			if (EGVAR(main,enemySide) isEqualTo CIVILIAN) exitWith {
+				_unitPool = GVAR(unitPoolCiv);
+			};
+			_unitPool = GVAR(unitPoolInd);
+		};
+
+		(selectRandom _unitPool) createUnit [[0,0,0], _tempGrp];
 
 		_vest = vest (leader _tempGrp);
 		_weapon = currentWeapon (leader _tempGrp);
@@ -182,22 +174,31 @@ call {
 
 		deleteVehicle (leader _tempGrp);
 
-		_grp = [_hostilePos,0,[6,16] call EFUNC(main,setStrength),CIVILIAN] call EFUNC(main,spawnGroup);
-		_grp = [units _grp] call EFUNC(main,setSide);
+		_grp = [_hostilePos,0,REBEL_COUNT,CIVILIAN,false,0.25] call EFUNC(main,spawnGroup);
 
-		{
-			_y = _x;
-			_y addVest _vest;
-			_y addWeapon _weapon;
-			{_y addMagazine _x} forEach _mags;
-		} forEach units _grp;
+		[
+			{count units (_this select 0) isEqualTo REBEL_COUNT},
+			{
+				_this params ["_grp","_pos","_vest","_weapon","_mags"];
 
-		_wp = _grp addWaypoint [_pos,0];
-		_wp setWaypointBehaviour "AWARE";
-		_wp setWaypointFormation "STAG COLUMN";
-		_cond = "!(behaviour this isEqualTo ""COMBAT"")";
-		_wp setWaypointStatements [_cond, format ["thisList call %1;",QEFUNC(main,cleanup)]];
+				_grp = [units _grp] call EFUNC(main,setSide);
 
-		LOG_DEBUG("Rebels spawned.");
+				{
+					_y = _x;
+					_y addVest _vest;
+					_y addWeapon _weapon;
+					{_y addMagazine _x} forEach _mags;
+				} forEach units _grp;
+
+				_wp = _grp addWaypoint [_pos,0];
+				_wp setWaypointBehaviour "AWARE";
+				_wp setWaypointFormation "STAG COLUMN";
+				_cond = "!(behaviour this isEqualTo ""COMBAT"")";
+				_wp setWaypointStatements [_cond, format ["thisList call %1;",QEFUNC(main,cleanup)]];
+
+				LOG_DEBUG("Rebels spawned.");
+			},
+			[_grp,_pos,_vest,_weapon,_mags]
+		] call CBA_fnc_waitUntilAndExecute;
 	};
 };
