@@ -43,7 +43,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 						DEBUG_IED
 					};
 				};
-			} forEach ([EGVAR(main,center),1500,worldSize,0,0,false,false] call EFUNC(main,findPosGrid));
+			} forEach ([EGVAR(main,center),(worldSize*0.051) max 900,worldSize,0,0,false,false] call EFUNC(main,findPosGrid));
 		} else {
 			for "_index" from 0 to count _data - 1 do {
 				_ied = (selectRandom _type) createVehicle (_data select _index);
@@ -60,8 +60,8 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 
 				{
 					_ied = _x;
-					_explosions = ["R_TBG32V_F","HelicopterExploSmall"];
 					if ({CHECK_DIST2D(_x,_ied,4)} count allPlayers > 0) then {
+						_explosions = ["R_TBG32V_F","HelicopterExploSmall"];
 						(selectRandom _explosions) createVehicle (getPosATL _ied);
 						deleteVehicle _ied;
 						GVAR(array) deleteAt _forEachIndex;

@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-spawn group, this function must be ran in a scheduled environment
+spawn group
 
 Arguments:
 0: position where group will spawn <ARRAY>
@@ -12,24 +12,28 @@ Arguments:
 3: side of group <SIDE>
 4: disable group caching <BOOL>
 5: delay between unit spawns <NUMBER>
+5: fill vehicle cargo <BOOL>
 
 Return:
-group or array
+group
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define MAX_CARGO 6
 
-private ["_grp","_unitPool","_vehPool","_airPool","_veh","_unit","_drivers"];
+private ["_grp","_drivers","_check","_unitPool","_vehPool","_airPool"];
 params [
 	"_pos",
 	["_type",0],
 	["_count",1],
 	["_side",GVAR(enemySide)],
 	["_uncache",false],
-	["_delay",1]
+	["_delay",0],
+	["_cargo",false]
 ];
 
 _grp = createGroup _side;
 _drivers = [];
+_check = [];
 
 call {
 	if (_side isEqualTo EAST) exitWith {
@@ -52,45 +56,68 @@ call {
 	_airPool = GVAR(airPoolInd);
 };
 
-for "_i" from 1 to _count do {
-	call {
-		private ["_veh","_unit"];
-		if (_type isEqualTo 0) exitWith {
-			(selectRandom _unitPool) createUnit [_pos, _grp];
-		};
-		if (_type isEqualTo 1) then {
-			_veh = (selectRandom _vehPool) createVehicle _pos;
-			_veh setVectorUp surfaceNormal getPos _veh;
-		} else {
-			_veh = createVehicle [selectRandom _airPool, _pos, [], 0, "FLY"];
-		};
-
-		_unit = _grp createUnit [selectRandom _unitPool, _pos, [], 0, "NONE"];
-		_unit moveInDriver _veh;
-		_drivers pushBack _unit;
-
-		if !((_veh emptyPositions "gunner") isEqualTo 0) then {
-			_unit = _grp createUnit [selectRandom _unitPool, _pos, [], 0, "NONE"];
-			_unit moveInGunner _veh;
-		};
-
-		if ((_veh emptyPositions "cargo") > 0) then {
-			for "_i" from 1 to ((_veh emptyPositions "cargo") min 4) do {
-				_unit = _grp createUnit [selectRandom _unitPool, _pos, [], 0, "NONE"];
-				_unit moveInCargo _veh;
-				sleep _delay;
-			};
-		};
-	};
-	sleep _delay;
-};
-
 if (_uncache) then {
 	CACHE_DISABLE(_grp,true);
 };
 
 if (_type isEqualTo 0) exitWith {
+	[{
+		params ["_args","_idPFH"];
+		_args params ["_pos","_grp","_unitPool","_count","_check"];
+
+		if (count _check isEqualTo _count) exitWith {
+			[_idPFH] call CBA_fnc_removePerFrameHandler;
+		};
+
+		(selectRandom _unitPool) createUnit [_pos, _grp];
+
+		_check pushBack 0;
+	}, _delay, [_pos,_grp,_unitPool,_count,_check]] call CBA_fnc_addPerFrameHandler;
+
 	_grp
 };
 
-_drivers
+[{
+	params ["_args","_idPFH"];
+	_args params ["_pos","_grp","_type","_count","_unitPool","_vehPool","_airPool","_check","_cargo"];
+
+	if (count _check isEqualTo _count) exitWith {
+		[_idPFH] call CBA_fnc_removePerFrameHandler;
+	};
+
+	private "_veh";
+
+	if (_type isEqualTo 1) then {
+		_veh = (selectRandom _vehPool) createVehicle _pos;
+		_veh setVectorUp surfaceNormal getPos _veh;
+	} else {
+		_veh = createVehicle [selectRandom _airPool, _pos, [], 0, "FLY"];
+	};
+
+	_unit = _grp createUnit [selectRandom _unitPool, [0,0,0], [], 0, "NONE"];
+	_unit setVariable [QUOTE(GVAR(spawnDriver)),true];
+	_unit moveInDriver _veh;
+
+	if !((_veh emptyPositions "gunner") isEqualTo 0) then {
+		_unit = _grp createUnit [selectRandom _unitPool, [0,0,0], [], 0, "NONE"];
+		_unit moveInGunner _veh;
+	};
+
+	if (_cargo) then {
+		[{
+			params ["_args","_idPFH"];
+			_args params ["_grp","_unitPool","_veh","_cargo"];
+
+			if (count ((crew _veh) select 4) >= _cargo) exitWith {
+				[_idPFH] call CBA_fnc_removePerFrameHandler;
+			};
+
+			_unit = _grp createUnit [selectRandom _unitPool, [0,0,0], [], 0, "NONE"];
+			_unit moveInCargo _veh;
+		}, _delay, [_grp,_unitPool,_veh,(_veh emptyPositions "cargo") min MAX_CARGO]] call CBA_fnc_addPerFrameHandler;
+	};
+
+	_check pushBack 0;
+}, _delay, [_pos,_grp,_type,_count,_unitPool,_vehPool,_airPool,_check,_cargo]] call CBA_fnc_addPerFrameHandler;
+
+_grp

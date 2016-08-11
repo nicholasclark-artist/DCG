@@ -29,6 +29,11 @@ __________________________________________________________________*/
 #define DEPLOY_STATEMENT {call FUNC(deploy)}
 #define DEPLOY_COND QUOTE(call FUNC(canDeploy))
 
+/*#define BUILD_ID QUOTE(DOUBLES(ADDON,build))
+#define BUILD_NAME format ["Build %1", GVAR(name)]
+#define BUILD_STATEMENT {openCuratorInterface}
+#define BUILD_COND QUOTE(player isEqualTo (getAssignedCuratorUnit GVAR(curator)))*/
+
 #define REQUEST_ID QUOTE(DOUBLES(ADDON,request))
 #define REQUEST_NAME format ["Request Control of %1", GVAR(name)]
 #define REQUEST_STATEMENT {call FUNC(request)}
@@ -36,12 +41,12 @@ __________________________________________________________________*/
 
 #define DISMANTLE_ID QUOTE(DOUBLES(ADDON,dismantle))
 #define DISMANTLE_NAME format ["Dismantle %1", GVAR(name)]
-#define DISMANTLE_STATEMENT {remoteExecCall [QFUNC(delete), 2, false]}
+#define DISMANTLE_STATEMENT {call FUNC(delete)}
 #define DISMANTLE_COND QUOTE(player isEqualTo (getAssignedCuratorUnit GVAR(curator)))
 
 #define PATROL_ID QUOTE(DOUBLES(ADDON,patrol))
 #define PATROL_NAME "Set FOB Groups on Patrol"
-#define PATROL_STATEMENT QUOTE(SET_PATROL)
+#define PATROL_STATEMENT {SET_PATROL}
 #define PATROL_COND QUOTE(player isEqualTo (getAssignedCuratorUnit GVAR(curator)))
 
 private ["_actions","_action"];
@@ -51,6 +56,9 @@ _actions = [];
 if (CHECK_ADDON_1("ace_interact_menu")) then {
 	_action = [DEPLOY_ID, DEPLOY_NAME, "", DEPLOY_STATEMENT, compile DEPLOY_COND, {}, []] call ace_interact_menu_fnc_createAction;
 	_actions pushBack [_action, [], player];
+
+	/*_action = [BUILD_ID, BUILD_NAME, "", BUILD_STATEMENT, compile BUILD_COND, {}, []] call ace_interact_menu_fnc_createAction;
+	_actions pushBack [_action, [], player];*/
 
 	_action = [REQUEST_ID, REQUEST_NAME, "", REQUEST_STATEMENT, compile REQUEST_COND, {}, []] call ace_interact_menu_fnc_createAction;
 	_actions pushBack [_action, [], player];
@@ -63,6 +71,9 @@ if (CHECK_ADDON_1("ace_interact_menu")) then {
 } else {
 	_action = player addAction [DEPLOY_NAME, DEPLOY_STATEMENT, [], 0, false, true, "", DEPLOY_COND];
 	_actions pushBack _action;
+
+	/*_action = player addAction [BUILD_NAME, BUILD_STATEMENT, [], 0, false, true, "", BUILD_COND];
+	_actions pushBack _action;*/
 
 	_action = player addAction [REQUEST_NAME, REQUEST_STATEMENT, [], 0, false, true, "", REQUEST_COND];
 	_actions pushBack _action;

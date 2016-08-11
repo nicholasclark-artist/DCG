@@ -9,8 +9,7 @@ if (!isServer || !isMultiplayer) exitWith {};
 ADDON = false;
 
 PREP(findLocation);
-PREP(handler);
+PREP(handleOccupied);
 PREP(setOccupied);
-PREP(addIntel);
 
 GVAR(locations) = [];

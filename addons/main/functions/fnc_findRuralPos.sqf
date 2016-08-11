@@ -9,15 +9,21 @@ Arguments:
 0: center position <ARRAY>
 1: search distance <NUMBER>
 2: terrain type <STRING>
+3: check for flat terrain <BOOL>
 
 Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define DIST worldSize*0.05
+#define DIST (worldSize*0.04) max 500
 
 private ["_ret","_expression","_pos"];
-params ["_anchor","_range",["_terrain",""]];
+params [
+	"_anchor",
+	"_range",
+	["_terrain",""],
+	["_checkFlat",true]
+];
 
 _ret = [];
 _expression = "";
@@ -45,16 +51,20 @@ if (_terrain isEqualTo "" || _expression isEqualTo "") exitWith {
 	_pos = _x select 0;
 	if ((nearestLocations [_pos, ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo []) then {
 		if !(_terrain isEqualTo "house") then {
-			if !(_pos isFlatEmpty [3,-1,0.27,40,0] isEqualTo []) then {
+			if (_checkFlat) then {
+				if !(_pos isFlatEmpty [3,-1,0.27,40,0] isEqualTo []) then {
+					_ret = _pos;
+				};
+			} else {
 				_ret = _pos;
 			};
 		} else {
-			_ret = [_pos,500] call FUNC(findHousePos);
+			_ret = [_pos,(DIST)*0.5] call FUNC(findHousePos);
 		};
 
 		if !(_ret isEqualTo []) exitWith {};
 	};
-} forEach (selectBestPlaces [_anchor,_range,_expression,100,20]);
+} forEach (selectBestPlaces [_anchor,_range,_expression,100,30]);
 
 _ret
 

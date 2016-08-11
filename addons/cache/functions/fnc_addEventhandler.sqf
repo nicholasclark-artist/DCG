@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-eventhandler for cached group's leader
+add eventhandler for cached group's leader
 
 Arguments:
 0: leader of cached group <OBJECT>
@@ -23,13 +23,15 @@ if (_unit isEqualTo leader _unit && {!(_unit getVariable [LEADER_EH,false])}) ex
 	// if leader is killed, setup new leader
 	_unit addEventHandler ["killed", {
 		if (group (_this select 0) in GVAR(groups) && {leader (_this select 0) isEqualTo (_this select 0)} && {count units group (_this select 0) >= 2}) then {
-			[_this select 0] spawn {
-				_grp = group (_this select 0);
-				waitUntil {!((leader _grp) isEqualTo (_this select 0))};
-				_unit = leader _grp;
-				[_unit] call FUNC(uncache);
-				[_unit] call FUNC(addEventhandler);
-			};
+			[
+				{!((leader (_this select 0)) isEqualTo (_this select 1))},
+				{
+					_newLeader = leader (_this select 0);
+					[_newLeader] call FUNC(uncache);
+					[_newLeader] call FUNC(addEventhandler);
+				},
+				[group (_this select 0),_this select 0]
+			] call CBA_fnc_waitUntilAndExecute;
 		};
 	}];
 

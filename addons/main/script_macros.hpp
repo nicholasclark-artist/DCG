@@ -94,12 +94,12 @@
 
 #define HEADLESSCLIENT DOUBLES(PREFIX,HC)
 
-#define ACTIONPATH ["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
+#define ACTIONPATH ['ACE_SelfActions',QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
 
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
-#define CHECK_MARKER(MARKER) getMarkerColor MARKER != ""
-#define CHECK_ADDON_1(PATCH) (isClass (configfile >> "CfgPatches" >> PATCH))
-#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {TRIPLES(PREFIX,VAR,enable) isEqualTo 1})
+#define CHECK_MARKER(MARKER) getMarkerColor MARKER != ''
+#define CHECK_ADDON_1(PATCH) (isClass (configfile >> 'CfgPatches' >> PATCH))
+#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {EGVAR(VAR,enable) isEqualTo 1})
 #define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= (DIST)
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
@@ -118,7 +118,7 @@
 #define COST_FORT 0.075
 #define COST_SIGN 0.1
 
-#define AV_VAR(LOC) format ["dcg_approval_%1",LOC]
+#define AV_VAR(LOC) format ["%1_approval_%2",PREFIX,LOC]
 #define AV_MIN 0
 #define AV_MAX 100
 #define AV_CAR ((AV_MAX*0.005)*EGVAR(approval,multiplier))
@@ -128,21 +128,7 @@
 #define AV_MAN ((AV_MAX*0.001)*EGVAR(approval,multiplier))
 #define AV_CIV ((AV_MAX*0.01)*EGVAR(approval,multiplier))
 #define AV_FOB ((AV_MAX*0.0025)*EGVAR(approval,multiplier))
-#define AV_TASK ((AV_MAX*0.02)*EGVAR(approval,multiplier))
 #define AV_VILLAGE ((AV_MAX*0.05)*EGVAR(approval,multiplier))
 #define AV_CITY ((AV_MAX*0.1)*EGVAR(approval,multiplier))
 #define AV_CAPITAL ((AV_MAX*0.15)*EGVAR(approval,multiplier))
 #define AV_CHANCE(POS) ((1 - (linearConversion [AV_MIN, AV_MAX, [POS] call EFUNC(approval,getValue), 0, 1, true])) * 0.5)
-
-#define REMOTE_WAITADDACTION(TARGET,ACTIONS,JIP) \
-  [ \
-    {!isNull player && {alive player} && {!isNil {DOUBLES(PREFIX,main)}} && {DOUBLES(PREFIX,main)}}, \
-    { \
-      { \
-        _x call EFUNC(main,setAction); \
-      } forEach _this; \
-    }, \
-    ACTIONS \
-  ] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute), TARGET, JIP]
-#define REMOTE_CREATELOCATION(TARGET,PARAMS,JIP) \
-  PARAMS remoteExecCall [QEFUNC(main,createLocation), TARGET, JIP]

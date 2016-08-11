@@ -13,20 +13,22 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define THRESHOLD 0.18
-#define CONFIG configfile >> "dcg_bases"
+#define CONFIG configfile >> QUOTE(DOUBLES(PREFIX,bases))
 #define ANCHOR "Land_HelipadEmpty_F"
 
-private ["_position","_strength","_base","_ret","_normalized","_min","_max","_index","_cfg","_cfgStrength","_objects","_anchor"];
+private ["_base","_ret","_bases","_objects","_nodes","_min","_max","_normalized","_index","_cfg","_cfgStrength","_anchor","_objData","_nodeData","_diff"];
 params ["_position",["_strength",0.5]];
 
 _base = [];
-_ret = [];
-_normalized = [];
+_bases = [];
+_objects = [];
+_nodes = [];
 
 _strength = (_strength max 0) min 1;
 _min = 0;
 _max = 0;
+_normalized = 0;
+_diff = 1;
 
 // normalize base data
 for "_index" from 0 to (count (CONFIG)) - 1 do {
@@ -42,30 +44,41 @@ for "_index" from 0 to (count (CONFIG)) - 1 do {
 
 for "_index" from 0 to (count (CONFIG)) - 1 do {
     _cfg = (CONFIG) select _index;
-    _normalized pushBack [_index,linearConversion [_min, _max, getNumber (_cfg >> "strength"), 0, 1, true]];
+    _normalized = linearConversion [_min, _max, getNumber (_cfg >> "strength"), 0, 1, true];
+    _bases pushBack [_index,_normalized];
 };
 
-_normalized = [_normalized,1] call FUNC(shuffle);
+_bases = [_bases,1] call FUNC(shuffle);
 
 // find base with strength close to passed strength
 {
-    if (abs ((_x select 1) - _strength) < THRESHOLD) exitWith {
+    if (abs ((_x select 1) - _strength) < _diff) then {
+        _diff = abs ((_x select 1) - _strength);
         _base = (CONFIG) select (_x select 0);
+        _normalized = (_x select 1);
     };
-    _base = (CONFIG) select (random ((count (CONFIG)) - 1));
     false
-} count _normalized;
+} count _bases;
 
-_ret pushBack _normalized;
-_objects = call compile (getText (_base >> "objects"));
+if (_base isEqualTo []) then {
+    _base = (CONFIG) select ((_bases select 0) select 0);
+    _normalized = (CONFIG) select ((_bases select 0) select 1);
+};
+
 _anchor = ANCHOR createVehicle _position;
 _anchor setDir random 360;
 _anchor setPos [(getpos _anchor) select 0,(getpos _anchor) select 1,0];
 _anchor setVectorUp surfaceNormal getPos _anchor;
 
-for "_i" from 0 to count _objects - 1 do {
+_objData = call compile (getText (_base >> "objects"));
+
+for "_i" from 0 to count _objData - 1 do {
     private ["_obj","_pos"];
-    (_objects select _i) params ["_type","_relPos","_relDir","_vector","_snap"];
+
+    (_objData select _i) params ["_type","_relPos","_relDir","_vector","_snap"];
+
+    _relDir = call compile _relDir;
+    _relPos = call compile _relPos;
 
     _obj = _type createVehicle [0,0,0];
     _obj setDir (getDir _anchor + _relDir);
@@ -83,7 +96,29 @@ for "_i" from 0 to count _objects - 1 do {
         _obj setVectorUp surfaceNormal getPos _obj;
     };
 
-    _ret pushBack _obj;
+    _objects pushBack _obj;
 };
+
+_nodeData = call compile (getText (_base >> "nodes"));
+
+for "_i" from 0 to count _nodeData - 1 do {
+    private ["_pos"];
+
+    (_nodeData select _i) params ["_relPos","_range"];
+
+    _relPos = call compile _relPos;
+    _range = call compile _range;
+
+    _pos = _anchor modelToWorld _relPos;
+
+    _nodes pushBack [_pos,_range];
+};
+
+_ret = [
+    getNumber (_base >> "radius"),
+    _normalized,
+    _objects,
+    _nodes
+];
 
 _ret

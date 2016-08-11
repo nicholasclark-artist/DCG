@@ -47,13 +47,13 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
             [true,getPosASL (_this select 1)] call FUNC(recon);
 		};
 	};
-	if (CHECK_ADDON_2(approval)) then {
+	if (EGVAR(approval,enable) isEqualTo 1) then {
 		_cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
 		_cost = _cost*COST_MULTIPIER;
 		[getPosASL (_this select 1),_cost] call EFUNC(approval,addValue);
 		GVAR(AVBonus) = round(GVAR(AVBonus) + _cost);
 		publicVariable QGVAR(AVBonus);
-		[QEGVAR(main,setLocationText), [GVAR(location),FOB_NAME]] call CBA_fnc_globalEvent;
+		{GVAR(location) setText FOB_NAME} remoteExecCall [QUOTE(BIS_fnc_call),0,false];
 	};
 }];
 
@@ -64,12 +64,12 @@ GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
             [false] call FUNC(recon);
 		};
 	};
-	if (CHECK_ADDON_2(approval)) then {
+	if (EGVAR(approval,enable) isEqualTo 1) then {
 		_cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
 		_cost = _cost*COST_MULTIPIER;
 		[getPosASL (_this select 1),_cost * -1] call EFUNC(approval,addValue);
 		GVAR(AVBonus) = round(GVAR(AVBonus) - _cost);
 		publicVariable QGVAR(AVBonus);
-		[QEGVAR(main,setLocationText), [GVAR(location),FOB_NAME]] call CBA_fnc_globalEvent;
+		{GVAR(location) setText FOB_NAME} remoteExecCall [QUOTE(BIS_fnc_call),0,false];
 	};
 }];

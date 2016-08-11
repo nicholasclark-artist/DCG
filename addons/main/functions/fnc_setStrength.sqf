@@ -20,7 +20,7 @@ params [
 	["_max",10000]
 ];
 
-_playerCount = count (call FUNC(getPlayers));
+_playerCount = count (call CBA_fnc_players);
 _strength = ceil ((_playerCount max 1) * abs(log(((_playerCount max 1)/3)/256)));
 _strength = (_strength max _min) min _max;
 

@@ -8,7 +8,6 @@ if (!isServer || !isMultiplayer) exitWith {};
 
 ADDON = false;
 
-PREP(handler);
 PREP(cache);
 PREP(uncache);
 PREP(canCache);

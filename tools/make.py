@@ -59,7 +59,7 @@ if sys.platform == "win32":
 
 ######## GLOBALS #########
 project = "@dcg"
-project_version = "3.0.0"
+project_version = "3.1.0.5"
 arma3tools_path = ""
 work_drive = ""
 module_root = ""
@@ -411,29 +411,29 @@ def copy_important_files(source_dir,destination_dir):
 #     finally:
 #         os.chdir(current_dir)
 
-    # print("")
-    # try:
-    #     for dir_name in src_directories:
-    #         mod.append(dir_name)
-    #         #userconfig requires special handling since it is not a PBO source folder.
-    #         #CfgConvert fails to build server.pbo if userconfig is not found in P:\
-    #         if (dir_name == "userconfig"):
-    #             if (os.path.exists(os.path.join(release_dir, project, "optionals", dir_name))):
-    #                 shutil.rmtree(os.path.join(release_dir, project, "optionals", dir_name), True)
-    #             shutil.copytree(os.path.join(optionals_root,dir_name), os.path.join(release_dir, project, "optionals", dir_name))
-    #             destination = os.path.join(work_drive,dir_name)
-    #         else:
-    #             destination = os.path.join(module_root,dir_name)
+#     print("")
+#     try:
+#         for dir_name in src_directories:
+#             mod.append(dir_name)
+#             #userconfig requires special handling since it is not a PBO source folder.
+#             #CfgConvert fails to build server.pbo if userconfig is not found in P:\
+#             if (dir_name == "userconfig"):
+#                 if (os.path.exists(os.path.join(release_dir, project, "optionals", dir_name))):
+#                     shutil.rmtree(os.path.join(release_dir, project, "optionals", dir_name), True)
+#                 shutil.copytree(os.path.join(optionals_root,dir_name), os.path.join(release_dir, project, "optionals", dir_name))
+#                 destination = os.path.join(work_drive,dir_name)
+#             else:
+#                 destination = os.path.join(module_root,dir_name)
 
-    #         print("Temporarily copying {} => {} for building.".format(os.path.join(optionals_root,dir_name),destination))
-    #         if (os.path.exists(destination)):
-    #             shutil.rmtree(destination, True)
-    #         shutil.copytree(os.path.join(optionals_root,dir_name), destination)
-    # except:
-    #     print_error("Copy Optionals Failed")
-    #     raise
-    # finally:
-    #     os.chdir(current_dir)
+#             print("Temporarily copying {} => {} for building.".format(os.path.join(optionals_root,dir_name),destination))
+#             if (os.path.exists(destination)):
+#                 shutil.rmtree(destination, True)
+#             shutil.copytree(os.path.join(optionals_root,dir_name), destination)
+#     except:
+#         print_error("Copy Optionals Failed")
+#         raise
+#     finally:
+#         os.chdir(current_dir)
 
 
 # def cleanup_optionals(mod):

@@ -32,7 +32,7 @@ _locations = [];
 	};
 } forEach EGVAR(main,locations);
 
-if (count _locations >= abs GVAR(locationCount)) then {
+if (count _locations >= GVAR(locationCount)) then {
 	[_locations,(count _locations)*3] call EFUNC(main,shuffle);
 	for "_index" from 0 to GVAR(locationCount) - 1 do {
 		(_locations select _index) spawn FUNC(setOccupied);

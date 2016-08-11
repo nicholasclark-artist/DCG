@@ -11,7 +11,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(cooldown) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 420;
+        value = 1200;
     };
     class GVAR(groupsMaxCount) {
         typeName = "SCALAR";

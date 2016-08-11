@@ -5,48 +5,13 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define BASE DOUBLES(PREFIX,base)
 #define DEFAULTPOS [-5000,-5000]
+#define CREATE_BASE \
+	GVAR(baseLocation) = createLocation ["NameCity", getPos BASE, GVAR(baseRadius), GVAR(baseRadius)]; \
+	GVAR(baseLocation) setText GVAR(baseName); \
+	GVAR(baseLocation) attachObject BASE
+#define CREATE_DEFAULTBASE GVAR(baseLocation) = createLocation ["NameCity", DEFAULTPOS, 10, 10]
 
 if (!isServer || !isMultiplayer) exitWith {};
-
-/*[QGVAR(addPlayerActions), {
-	[
-		{!isNull player && {alive player} && {!isNil {DOUBLES(PREFIX,main)}} && {DOUBLES(PREFIX,main)}},
-		{
-			{
-				_x call EFUNC(main,setAction);
-			} forEach (_this select 0);
-		},
-		[_this]
-	] call CBA_fnc_waitUntilAndExecute;
-}] call CBA_fnc_addEventHandler;*/
-
-[QGVAR(setLocationText), {(_this select 0) setText (_this select 1)}] call CBA_fnc_addEventHandler;
-[QGVAR(deleteLocation), {deleteLocation (_this select 0)}] call CBA_fnc_addEventHandler;
-[QGVAR(playMoveNow), {(_this select 0) playMoveNow (_this select 1)}] call CBA_fnc_addEventHandler;
-
-[QGVAR(createBase), {
-	if (isNull GVAR(baseLocation)) then {
-		GVAR(baseLocation) = createLocation ["NameCity", getPos BASE, GVAR(baseRadius), GVAR(baseRadius)];
-		GVAR(baseLocation) setText GVAR(baseName);
-		GVAR(baseLocation) attachObject BASE;
-	};
-}] call CBA_fnc_addEventHandler;
-
-[QGVAR(createDefaultBase), {
-	if (isNull GVAR(baseLocation)) then {
-		GVAR(baseLocation) = createLocation ["NameCity", DEFAULTPOS, 10, 10];
-	};
-}] call CBA_fnc_addEventHandler;
-
-[QGVAR(cleanupGrpPFH), {
-	[{
-		{
-			if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then {
-				deleteGroup _x;
-			};
-		} forEach allGroups;
-	}, 10, []] call CBA_fnc_addPerFrameHandler;
-}] call CBA_fnc_addEventHandler;
 
 // set mission params as missionNameSpace variables
 call FUNC(setParams);
@@ -57,32 +22,64 @@ if (CHECK_MARKER(QUOTE(BASE))) then {
 };
 
 if !(isNil QUOTE(BASE)) then {
-	[QGVAR(createBase),[]] call CBA_fnc_localEvent;
-	[QGVAR(createBase),[]] call CBA_fnc_globalEventJIP;
+	CREATE_BASE;
+	{
+		CREATE_BASE;
+	} remoteExecCall [QUOTE(BIS_fnc_call),-2,true];
 };
 
 if (isNull GVAR(baseLocation)) then {
-	[QGVAR(createDefaultBase),[]] call CBA_fnc_localEvent;
-	[QGVAR(createDefaultBase),[]] call CBA_fnc_globalEventJIP;
+	CREATE_DEFAULTBASE;
+	{
+		CREATE_DEFAULTBASE;
+	} remoteExecCall [QUOTE(BIS_fnc_call),-2,true];
+
 	LOG_DEBUG_1("Base object does not exist. Base location created at %1.",DEFAULTPOS);
 };
 
 GVAR(blacklistLocations) = GVAR(blacklistLocations) apply {toLower _x};
 GVAR(simpleWorlds) = GVAR(simpleWorlds) apply {toLower _x};
 
-// get map locations
-// allows for user create locations
-{
-	_name = text _x;
-	_position = locationPosition _x;
-	_position set [2, abs (_position select 2)]; // gets actual positionASL, not ASL altitude zero
-	_size = (((size _x) select 0) + ((size _x) select 1))/2;
-	_type = type _x;
+// get map locations from config
+_cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";
+_typeArray = ["namecitycapital","namecity","namevillage"];
 
-	if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(toLower _name in GVAR(blacklistLocations))} && {!(_name isEqualTo "")}) then {
-		GVAR(locations) pushBack [_name,_position,_size,_type];
+for "_i" from 0 to (count _cfgLocations) - 1 do {
+	_location = _cfgLocations select _i;
+	_type = getText (_location >> "type");
+
+	if (toLower _type in _typeArray) then {
+		_name = getText (_location >> "name");
+		_position = getArray (_location >> "position");
+		_position set [2,0];
+		_position = ATLToASL _position;
+		_size = ((getNumber (_location >> "radiusA")) + (getNumber (_location >> "radiusB")))*0.5;
+
+		if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(toLower _name in GVAR(blacklistLocations))} && {!(_name isEqualTo "")}) then {
+			GVAR(locations) pushBack [_name,_position,_size,_type];
+		};
 	};
-} forEach (nearestLocations [GVAR(center), ["NameCityCapital","NameCity","NameVillage"], GVAR(range)]);
+};
+
+// update locations with center positions if available
+{
+	_nameNoSpace = (_x select 0) splitString " " joinString "";
+	_cityCenterA2 = _cfgLocations >> ("ACityC_" + _nameNoSpace);
+	_cityCenterA3 = _cfgLocations >> ("CityC_" + _nameNoSpace);
+
+	if (isClass _cityCenterA2) then {
+		_position = getArray (_cityCenterA2 >> "position");
+		_position set [2,0];
+		_position = ATLToASL _position;
+		_x set [1,_position]
+	};
+	if (isClass _cityCenterA3) then {
+		_position = getArray (_cityCenterA3 >> "position");
+		_position set [2,0];
+		_position = ATLToASL _position;
+		_x set [1,_position]
+	};
+} forEach GVAR(locations);
 
 if (GVAR(baseSafezone)) then {
 	[{
@@ -96,7 +93,13 @@ if (GVAR(baseSafezone)) then {
 };
 
 if !(isNil {HEADLESSCLIENT}) then {
-	[QGVAR(cleanupGrpPFH), [], HEADLESSCLIENT] call CBA_fnc_targetEvent;
+	[{
+		{
+			if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then {
+				deleteGroup _x;
+			};
+		} forEach allGroups;
+	}, 10, []] remoteExecCall [QUOTE(CBA_fnc_addPerFrameHandler),owner HEADLESSCLIENT,false];
 };
 
 [{
@@ -137,24 +140,19 @@ if !(isNil {HEADLESSCLIENT}) then {
 	} forEach (nearestObjects [locationPosition GVAR(baseLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],GVAR(baseRadius)]);
 }, 60, []] call CBA_fnc_addPerFrameHandler;
 
-/*[
-	QGVAR(addPlayerActions),
-	[
-		[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"",QUOTE(true),"",player,1,["ACE_SelfActions"]],
-		[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","",QUOTE(true),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]],
-		[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
-		[QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",QUOTE(call FUNC(deleteDataClient)),QUOTE(isServer || {serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
-	]
-] call CBA_fnc_globalEventJIP;*/
-
-_actions = 	[
-	[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"",QUOTE(true),"",player,1,["ACE_SelfActions"]],
-	[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","",QUOTE(true),""],
-	[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
-	[QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",QUOTE(call FUNC(deleteDataClient)),QUOTE(isServer || {serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
-];
-
-REMOTE_WAITADDACTION(0,_actions,true);
+[
+	{!isNull player && {alive player} && {!isNil {DOUBLES(PREFIX,main)}} && {DOUBLES(PREFIX,main)}},
+	{
+		{
+			_x call EFUNC(main,setAction);
+		} forEach [
+			[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"",QUOTE(true),"",player,1,["ACE_SelfActions"]],
+			[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","",QUOTE(true),""],
+			[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
+			[QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",QUOTE(call FUNC(deleteDataClient)),QUOTE(isServer || {serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
+		];
+	}
+] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute), 0, true];
 
 DATA_SAVEPVEH addPublicVariableEventHandler {
 	call FUNC(saveData);

@@ -30,7 +30,7 @@ if (CHECK_ADDON_2(occupy)) then {
 		_vehCount = 0;
 		_airCount = 0;
 		{
-			if ((driver _x) getVariable [format ["occupyUnit_%1", _name],false]) then {
+			if ((driver _x) getVariable [QUOTE(TRIPLES(PREFIX,occupy,unit)),false]) then {
 				if (_x isKindOf "Man") exitWith {
 					_infCount = _infCount + 1;
 				};

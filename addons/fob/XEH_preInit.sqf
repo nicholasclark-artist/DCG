@@ -11,15 +11,14 @@ ADDON = false;
 PREP(deploy);
 PREP(delete);
 PREP(request);
-PREP(requestAnswer);
-PREP(requestReceive);
-PREP(requestHandler);
+PREP(handleRequest);
 PREP(setup);
 PREP(getChildren);
 PREP(getCuratorCost);
 PREP(canDeploy);
 PREP(curatorEH);
 PREP(recon);
+PREP(handleKey);
 
 GVAR(location) = locationNull;
 GVAR(UID) = "";
@@ -39,14 +38,14 @@ GVAR(curator) setVariable ["Forced", 0, true];
 LOG_DEBUG_1("Creating curator %1.",GVAR(curator));
 
 publicVariable QFUNC(request);
-publicVariable QFUNC(requestReceive);
-publicVariable QFUNC(requestAnswer);
 publicVariable QFUNC(getChildren);
 publicVariable QFUNC(getCuratorCost);
 publicVariable QFUNC(deploy);
+publicVariable QFUNC(delete);
 publicVariable QFUNC(canDeploy);
 publicVariable QFUNC(curatorEH);
 publicVariable QFUNC(recon);
+publicVariable QFUNC(handleKey);
 
 publicVariable QGVAR(location);
 publicVariable QGVAR(UID);

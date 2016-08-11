@@ -13,7 +13,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_optionEntry","_fnc_getValueWithType","_fnc_fixSettingValue","_typeName","_value","_typeDetail","_settingData"];
+private ["_fnc_getValueWithType","_fnc_fixSettingValue","_typeName","_value","_typeDetail","_settingData"];
 params ["_optionEntry"];
 
 _fnc_getValueWithType = {
@@ -41,8 +41,9 @@ _fnc_getValueWithType = {
 };
 
 _fnc_fixSettingValue = {
-    private ["_pool","_class"];
+    private ["_pool","_class","_arr"];
     params ["_name","_typeName","_typeDetail","_value","_debug"];
+
     if (toUpper _typeDetail isEqualTo "POOL") then {
         _pool = [];
         {
@@ -53,6 +54,7 @@ _fnc_fixSettingValue = {
             false
         } count _value;
 
+        _pool = _pool arrayIntersect _pool;
         _value = _pool;
 
         for "_i" from (count _value - 1) to 0 step -1 do {
@@ -87,6 +89,19 @@ _fnc_fixSettingValue = {
         if (_value isEqualTo []) then {
             LOG_DEBUG_1("%1 is empty.", _name);
         };
+    };
+
+    if (toUpper _typeDetail isEqualTo "WORLD") then {
+        _arr = [];
+        {
+            if (toUpper (_x select 0) isEqualTo toUpper worldName) then {
+                _x deleteAt 0;
+                _arr append _x;
+            };
+            false
+        } count _value;
+
+        _value = _arr;
     };
 
     _value

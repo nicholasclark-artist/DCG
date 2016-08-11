@@ -21,7 +21,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(baseRadius) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 1800;
+        value = (worldSize*0.055);
     };
     class GVAR(baseSafezone) {
         typeName = "BOOL";

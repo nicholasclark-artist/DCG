@@ -46,7 +46,7 @@ if (_ifRecon) then {
     } forEach crew GVAR(reconUAV);
 	GVAR(reconUAV) setVehicleAmmo 0;
 	GVAR(reconUAV) lockDriver true;
-	GVAR(reconUAV) flyInHeight 150;
+	GVAR(reconUAV) flyInHeight 120;
 
 	GVAR(reconUAV) addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
 

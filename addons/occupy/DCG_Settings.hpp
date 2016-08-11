@@ -51,7 +51,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(infCountVillage) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 8;
+        value = 10;
     };
     class GVAR(vehCountVillage) {
         typeName = "SCALAR";

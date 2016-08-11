@@ -46,7 +46,7 @@ if (_units isEqualTo []) exitWith {false};
         _posPrev = _posStart;
         for "_i" from 0 to (2 + (floor (random 3))) do {
             private ["_pos","_waypoint"];
-            _pos = [_posPrev,_range*0.5,_range] call FUNC(findRandomPos);
+            _pos = [_posPrev,_range*0.5,_range] call FUNC(findPosSafe);
             _posPrev = ASLToAGL _pos;
             _waypoint = _grp addWaypoint [ASLToAGL _pos,0];
             _waypoint setWaypointType "MOVE";
