@@ -37,10 +37,16 @@ for "_i" from 0 to count _config - 1 do {
 			_value = str (getText (_entry >> "value"));
 		};
 		if (toUpper _typeName isEqualTo "SCALAR") exitWith {
-			_value = getNumber (_entry >> "value");
+			_value = getText (_entry >> "value"); // try getText first so unevaluated code can be used
+			if (_value isEqualTo "") then {
+				_value = getNumber (_entry >> "value");
+			};
 		};
 		if (toUpper _typeName isEqualTo "BOOL") exitWith {
-			_value = getNumber (_entry >> "value");
+			_value = getText (_entry >> "value");
+			if (_value isEqualTo "") then {
+				_value = getNumber (_entry >> "value");
+			};
 		};
 	};
 
