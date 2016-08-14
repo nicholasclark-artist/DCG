@@ -76,10 +76,10 @@ if (count _posArray < 2) exitWith {
 };
 
 call {
-	if (EGVAR(main,playerSide) isEqualTo EAST) then {
+	if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
 		_type = "O_Truck_02_box_F";
 	};
-	if (EGVAR(main,playerSide) isEqualTo RESISTANCE) then {
+	if (EGVAR(main,playerSide) isEqualTo RESISTANCE) exitWith {
 		_type = "I_Truck_02_box_F";
 	};
 	_type = "B_Truck_01_box_F";
@@ -87,7 +87,7 @@ call {
 
 _veh = _type createVehicle _posConvoy;
 _veh setDir random 360;
-_veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.2,0.05,0.05,1)"];
+_veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.65,0.65,0.65,1)"];
 [_veh] call EFUNC(main,setVehDamaged);
 
 if (CHECK_ADDON_1("ace_cargo")) then {
@@ -109,7 +109,7 @@ if (CHECK_ADDON_1("ace_cargo")) then {
 _grp = [_posConvoy,0,UNITCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,spawnGroup);
 
 [
-	{count units (_this select 0) == UNITCOUNT},
+	{count units (_this select 0) isEqualTo UNITCOUNT},
 	{
 		{
 			if (random 1 < 0.5) then {
@@ -121,7 +121,7 @@ _grp = [_posConvoy,0,UNITCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,s
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
-_taskDescription = format["A convoy enroute to deliver medical supplies to %1 broke down somewhere near %3. Repair the convoy and complete the delivery to %1.",_locDeliver, _locConvoy];
+_taskDescription = format["A convoy enroute to deliver medical supplies to %1 broke down somewhere near %2. Repair the convoy and complete the delivery to %1.",_locDeliver, _locConvoy];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_posConvoy,false,true,"Support"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
@@ -170,6 +170,8 @@ TASK_PUBLISH(_posArray);
 				_cond = "!(behaviour this isEqualTo ""COMBAT"")";
 				_wp setWaypointStatements [_cond, format ["thisList call %1;",QEFUNC(main,cleanup)]];
 			};
+		} else {
+			[getpos _veh,EGVAR(main,enemySide),300] spawn EFUNC(main,spawnReinforcements);
 		};
 	};
 }, TASK_SLEEP, [_taskID,_posDeliver,_veh,_grp]] call CBA_fnc_addPerFrameHandler;

@@ -40,20 +40,18 @@ _leader = _grp createUnit [(selectRandom EGVAR(main,unitPoolCiv)), _position, []
 _leader allowDamage false;
 _leader disableAI "MOVE";
 _leader setPosATL [_position select 0,_position select 1,30];
+_leader enableSimulation false;
 hideObjectGlobal _leader;
 
-for "_i" from 1 to 10 do {
+for "_i" from 1 to 6 do {
 	_unit = _grp createUnit [(selectRandom EGVAR(main,unitPoolCiv)), _position, [], 5, "NONE"];
 	_unit setDir random 360;
 	removeFromRemainsCollector [_unit];
 	_unit setDamage 1;
+	removeAllItems _unit;
+	removeAllAssignedItems _unit;
 	_units pushBack _unit;
 };
-
-{
-	removeAllItems _x;
-	removeAllAssignedItems _x;
-} forEach _units;
 
 _unit = selectRandom _units;
 _position = getpos _unit;

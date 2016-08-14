@@ -54,10 +54,10 @@ if (_vehPos isEqualTo []) exitWith {
 };
 
 call {
-	if (EGVAR(main,playerSide) isEqualTo EAST) then {
+	if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
 		_type = "O_Truck_03_ammo_F";
 	};
-	if (EGVAR(main,playerSide) isEqualTo RESISTANCE) then {
+	if (EGVAR(main,playerSide) isEqualTo RESISTANCE) exitWith {
 		_type = "I_Truck_02_ammo_F";
 	};
 	_type = "B_Truck_01_ammo_F";

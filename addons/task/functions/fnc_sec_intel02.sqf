@@ -22,6 +22,7 @@ params [["_position",[]]];
 // CREATE TASK
 _taskID = str diag_tickTime;
 _classes = [];
+_vehicle = objNull;
 
 if (_position isEqualTo []) then {
 	_position = [EGVAR(main,center),EGVAR(main,range),"house",false] call EFUNC(main,findRuralPos);
@@ -44,7 +45,13 @@ call {
 };
 
 _position = _position select 1;
-_vehicle = (selectRandom _classes) createVehicle ([_position,0,25,8,0] call EFUNC(main,findPosSafe));
+_vehPos = [_position,5,30,8,0] call EFUNC(main,findPosSafe);
+
+if !(_position isEqualTo _vehPos) then {
+	_vehicle = (selectRandom _classes) createVehicle [0,0,0];
+	_vehicle setPosASL _vehPos;
+};
+
 _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
 
 [

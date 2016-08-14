@@ -11,7 +11,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(cooldown) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 900;
+        value = 480;
     };
     class GVAR(primaryTasks) {
         typeName = "ARRAY";
@@ -20,8 +20,8 @@ class DOUBLES(PREFIX,settings) {
             QFUNC(prim_vip),
             QFUNC(prim_cache),
             QFUNC(prim_officer),
-            QFUNC(prim_defend),
-            QFUNC(prim_intel01)
+            //QFUNC(prim_intel01),
+            QFUNC(prim_defend)
         };
     };
     class GVAR(secondaryTasks) {

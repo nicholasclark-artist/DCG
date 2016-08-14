@@ -14,7 +14,7 @@ __________________________________________________________________*/
 #define TASK_SECONDARY
 #define TASK_NAME 'Repair Patrol'
 #define SUCCESS GVAR(DOUBLES(repair,success))
-#define VEHCOUNT 2
+#define VEHCOUNT 1
 #include "script_component.hpp"
 
 params [["_position",[]]];
@@ -28,14 +28,16 @@ SUCCESS = 0;
 if (_position isEqualTo []) then {
 	{
 		_roads = (ASLToAGL _x) nearRoads 350;
-		if !(_roads isEqualTo []) then {
-			_temp = getPos (selectRandom _roads);
-			if ((nearestLocations [_temp, ["NameCityCapital","NameCity","NameVillage"], (worldSize*0.04) max 500]) isEqualTo []) then {
-				_position = _temp;
-			};
+		if !(_roads isEqualTo []) exitWith {
+			_position = getPos (selectRandom _roads);
 		};
-		if !(_position isEqualTo []) exitWith {};
 	} forEach ([EGVAR(main,center),worldSize*0.04,worldSize] call EFUNC(main,findPosGrid));
+};
+
+if (CHECK_ADDON_2(occupy)) then {
+	if ({CHECK_DIST2D(_x select 1,_position,1000)} count EGVAR(occupy,locations) > 0) then {
+		_position = [];
+	};
 };
 
 if (_position isEqualTo []) exitWith {
@@ -54,7 +56,8 @@ _grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,spa
 				_drivers pushBack _x;
 				_vehicles pushBack (vehicle _x);
 				(vehicle _x) setDir random 360;
-				[vehicle _x,QUOTE(SUCCESS = SUCCESS + 1)] call EFUNC(main,setVehDamaged);
+				(vehicle _x) lock 3;
+				[vehicle _x,2,QUOTE(SUCCESS = SUCCESS + 1)] call EFUNC(main,setVehDamaged);
 				(crew (vehicle _x)) allowGetIn false;
 				_grp leaveVehicle (vehicle _x);
 			};
@@ -65,13 +68,13 @@ _grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,spa
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
-_taskDescription = format["A friendly patrol, scouting near %1, is in need of repair supplies. Gather the necessary tools and assist the patrol.", mapGridPosition _position];
+_taskDescription = format["A friendly patrol, scouting near %1, is in need of repairs. Gather the necessary tools and assist the patrol.", mapGridPosition _position];
 
 [true,_taskID,[_taskDescription,TASK_TITLE,""],ASLToAGL([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"repair"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
-LOG_DEBUG_2("%1_%2",_drivers,_vehicles);
+
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
@@ -84,7 +87,7 @@ LOG_DEBUG_2("%1_%2",_drivers,_vehicles);
 		[TASK_TYPE] call FUNC(select);
 	};
 
-	if ({!alive _x} count _vehicles > 0) exitWith {
+	if (!(_vehicles isEqualTo []) && {{!alive _x} count _vehicles > 0}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_position,TASK_AV * -1);
@@ -92,7 +95,7 @@ LOG_DEBUG_2("%1_%2",_drivers,_vehicles);
 		TASK_EXIT;
 	};
 
-	if (SUCCESS >= count _vehicles) exitWith {
+	if (SUCCESS >= VEHCOUNT) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_position,TASK_AV);

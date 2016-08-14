@@ -32,7 +32,7 @@ if (_position isEqualTo []) exitWith {
 	[TASK_TYPE,0] call FUNC(select);
 };
 
-_base = [_position,1] call EFUNC(main,spawnBase);
+_base = [_position,0.86 + random 1] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 _bNodes = _base select 3;
 _posCache = selectRandom _bNodes;
@@ -65,18 +65,18 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
 	[_grp,_bRadius,_strength]
 ] call CBA_fnc_waitUntilAndExecute;
 
-if (random 1 < 0.5) then {
-	_vehPos = [_position,0,100,8,0] call EFUNC(main,findPosSafe);
-	if !(_vehPos isEqualTo _position) then {
-		_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
-		[
-			{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
-			{
-				[units (_this select 0),((_this select 1)*4 min 300) max 100] call EFUNC(main,setPatrol);
-			},
-			[_vehGrp,_bRadius]
-		] call CBA_fnc_waitUntilAndExecute;
-	};
+_vehPos = [_position,50,100,8,0] call EFUNC(main,findPosSafe);
+
+if !(_vehPos isEqualTo _position) then {
+	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
+
+	[
+		{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
+		{
+			[units (_this select 0),((_this select 1)*4 min 300) max 100] call EFUNC(main,setPatrol);
+		},
+		[_vehGrp,_bRadius]
+	] call CBA_fnc_waitUntilAndExecute;
 };
 
 // SET TASK
