@@ -26,9 +26,7 @@ __________________________________________________________________*/
 	if (_ret) then {
 		GVAR(UID) = "";
 
-		if ({typeOf _x in FOB_HQ} count (curatorEditableObjects GVAR(curator)) > 0) then {
-			[false] call FUNC(recon);
-		};
+		[false] call FUNC(recon);
 
 		{
 			{_x call EFUNC(main,cleanup)} forEach (curatorEditableObjects GVAR(curator));

@@ -15,10 +15,9 @@ __________________________________________________________________*/
 
 if !(isServer) exitWith {};
 
-private ["_type","_actions","_location"];
 params ["_unit"];
 
-_type = "";
+private _type = "";
 
 call {
 	if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
@@ -72,7 +71,10 @@ if !(isNull _unit) then {
 [
 	{(getAssignedCuratorUnit GVAR(curator)) isEqualTo (_this select 0)},
 	{
-		remoteExecCall [QFUNC(curatorEH), owner (getAssignedCuratorUnit GVAR(curator)), false];
+		{
+			call FUNC(curatorEH);
+			[true,getPosASL GVAR(anchor)] call FUNC(recon);
+		} remoteExecCall [QUOTE(BIS_fnc_call), owner (getAssignedCuratorUnit GVAR(curator)), false];
 	},
 	[_unit]
 ] call CBA_fnc_waitUntilAndExecute;

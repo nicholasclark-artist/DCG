@@ -42,11 +42,7 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
 	if (typeOf (_this select 1) in FOB_MED) then {
 		(_this select 1) setVariable ["ace_medical_isMedicalFacility",true,true];
 	};
-	if (typeOf (_this select 1) in FOB_HQ) then {
-		if ({typeOf _x in FOB_HQ} count (curatorEditableObjects GVAR(curator)) <= 1) then {
-            [true,getPosASL (_this select 1)] call FUNC(recon);
-		};
-	};
+
 	if (EGVAR(approval,enable) isEqualTo 1) then {
 		_cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
 		_cost = _cost*COST_MULTIPIER;
@@ -59,11 +55,6 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectDeleted";
 GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
-	if (typeOf (_this select 1) in FOB_HQ) then {
-		if ({typeOf _x in FOB_HQ} count (curatorEditableObjects GVAR(curator)) isEqualTo 0) then {
-            [false] call FUNC(recon);
-		};
-	};
 	if (EGVAR(approval,enable) isEqualTo 1) then {
 		_cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
 		_cost = _cost*COST_MULTIPIER;
