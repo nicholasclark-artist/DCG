@@ -58,7 +58,7 @@ if (CHECK_DEBUG) then {
 				if !(_posArray isEqualTo []) then {
 					_pos = selectRandom _posArray;
 					if (random 1 < GVAR(vehChance)) then {
-						_grp = [_pos,1,1,EGVAR(main,enemySide),false,0,true] call EFUNC(main,spawnGroup);
+						_grp = [_pos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
 						[
 							{count units (_this select 0) > 0},
 							{
