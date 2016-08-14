@@ -24,7 +24,7 @@ _fnc_getCargo = {
 	_baseCfg = configFile >> "CfgVehicles" >> _vehType;
 
 	_numCargo = count ("
-		if ( isText(_x >> 'proxyType') && { getText(_x >> 'proxyType') isEqualTo 'CPCargo' } ) then {
+		if (isText(_x >> 'proxyType') && {getText(_x >> 'proxyType') isEqualTo 'CPCargo'}) then {
 			true
 		};
 	"configClasses ( _baseCfg >> "Turrets" )) + getNumber ( _baseCfg >> "transportSoldier" );
