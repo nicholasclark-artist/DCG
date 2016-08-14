@@ -15,9 +15,20 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_pos","_unitCount","_townName"];
+params ["_center","_unitCount","_townName"];
+
+private _pos = [];
 
 SET_LOCVAR(_townName,true);
+
+if !([_center,1,0] call EFUNC(main,isPosSafe)) then {
+	for "_i" from 1 to 150 step 2 do {
+		_pos = [_center,0,_i,1,0] call EFUNC(main,findPosSafe);
+		if !(_pos isEqualTo _center) exitWith {};
+	};
+} else {
+	_pos = _center;
+};
 
 _grp = [_pos,0,_unitCount,CIVILIAN,false,0.5] call EFUNC(main,spawnGroup);
 

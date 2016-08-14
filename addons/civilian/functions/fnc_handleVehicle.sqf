@@ -68,11 +68,11 @@ __________________________________________________________________*/
 						_roadEnd = _road;
 					};
 				};
-
-				if (!([getPosASL _roadStart,_player] call EFUNC(main,inLOS)) &&
-				    {([_roadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
-					{!(CHECK_DIST2D(_roadStart,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} &&
-					{!(CHECK_DIST2D(_roadEnd,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))}) then {
+				if !(_roadStart isEqualTo _roadEnd) then {
+					if (!([getPosASL _roadStart,_player] call EFUNC(main,inLOS)) &&
+					    {([_roadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
+						{!(CHECK_DIST2D(_roadStart,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} &&
+						{!(CHECK_DIST2D(_roadEnd,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))}) then {
 						[_roadStart,_roadMid,_roadEnd,_player] call FUNC(spawnVehicle);
 						if (CHECK_DEBUG) then {
 							_mrk = createMarker [format ["%1_%2", _roadStart,time], getpos _roadStart];
@@ -85,8 +85,9 @@ __________________________________________________________________*/
 							_mrk setMarkerColor "colorRED";
 							_mrk setMarkerText format ["ROAD END - %1", time];
 						};
+					};
 				};
 			};
 		};
 	};
-}, GVAR(vehCooldown) max 180, []] call CBA_fnc_addPerFrameHandler;
+}, GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
