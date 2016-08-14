@@ -7,62 +7,55 @@ set vehicle to damaged state
 
 Arguments:
 0: vehicle to damage <OBJECT>
-1: code to run on repair <STRING>
+1: max number of damaged hit points <NUMBER>
+2: code to run on repair <STRING>
 
 Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define MAX_HIT 1
 
-private ["_ret","_hitpoints","_hit","_fx"];
-params ["_veh", ["_onRepair",""]];
+params [
+	"_veh",
+	["_max",1],
+	["_onRepair",""]
+];
 
-_ret = [];
+private _ret = [];
+private _hitpoints = [];
+private _hit = "";
 
-if (_veh isKindOf "MAN") exitWith {};
+if (_veh isKindOf "MAN" || {!local _veh}) exitWith {};
 
-if !(local _veh) exitWith {
-	[_veh] remoteExecCall [QFUNC(setVehDamaged), owner _veh, false];
+_hitpoints = (getAllHitPointsDamage _veh) select 0;
+_hitpoints = _hitpoints select {!(_x isEqualTo "") && {((toLower _x) find "glass") isEqualTo -1}};
+
+if !(_hitpoints isEqualTo []) then {
+	for "_i" from 1 to _max step 1 do {
+		_hit = selectRandom _hitpoints;
+		_veh setHitPointDamage [getText (configFile >> "cfgVehicles" >> typeOf _veh >> "HitPoints" >> _hit), MAX_HIT];
+		_ret pushBack _hit;
+	};
+
+	playSound3D ["A3\Sounds_F\Vehicles\air\noises\heli_damage_rotor_int_open_1.wss", _veh, false, getPosATL _veh, 2];
+	private _fx = "test_EmptyObjectForSmoke" createVehicle (getPosWorld _veh);
+	_fx attachTo [_veh,[0,0,0]];
 };
 
-call {
-	if (_veh isKindOf "Car") exitWith {
-		_hitpoints = ["HitLBWheel","HitLFWheel","HitRBWheel","HitRFWheel","HitRF2Wheel","HitLF2Wheel"];
-	};
-	if (_veh isKindOf "Tank") exitWith {
-		_hitpoints = ["HitLTrack","HitRTrack"];
-	};
-	if (_veh isKindOf "Air") exitWith {
-		_hitpoints = ["HitTransmission","HitHRotor","HitVRotor"];
-	};
-
-	// TODO add ship hitpoints
-};
-
-playSound3D ["A3\Sounds_F\Vehicles\air\noises\heli_damage_rotor_int_open_1.wss", _veh, false, getPosATL _veh, 2];
-_veh setHit [getText (configFile >> "cfgVehicles" >> typeOf _veh >> "HitPoints" >> "HitEngine" >> "name"), 1];
-_ret pushBack "HitEngine";
-
-if !(isNil "_hitpoints") then {
-	_hit = selectRandom _hitpoints;
-	_veh setHit [getText (configFile >> "cfgVehicles" >> typeOf _veh >> "HitPoints" >> _hit >> "name"), 1];
-	_ret pushBack _hit;
-};
-
-_fx = "test_EmptyObjectForSmoke" createVehicle (getPosATL _veh);
-_fx attachTo [_veh,[0,0,0]];
-
-[{
-	params ["_args","_idPFH"];
-	_args params ["_veh","_ret","_onRepair"];
-
-	if (isNull _veh || {!alive _veh} || {({_veh getHit (getText (configFile >> "cfgVehicles" >> typeOf _veh >> "HitPoints" >> _x >> "name")) isEqualTo 1} count _ret) isEqualTo 0}) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[getPosATL _veh,2] call FUNC(removeParticle);
-		if (!isNull _veh && {alive _veh}) then {
-			[_veh,_ret] call compile _onRepair;
+[
+	{
+		isNull (_this select 0) ||
+		{!alive (_this select 0)} ||
+		{(((getAllHitPointsDamage (_this select 0)) select 2) select {_x >= MAX_HIT}) isEqualTo []}
+	},
+	{
+		if (!isNull (_this select 0) && {alive (_this select 0)}) then {
+			[_this select 0,_this select 1] call compile (_this select 2);
 		};
-	};
-}, 0.2, [_veh,_ret,_onRepair]] call CBA_fnc_addPerFrameHandler;
+		[_this select 3,2] call FUNC(removeParticle);
+	},
+	[_veh,_ret,_onRepair,getPos _veh]
+] call CBA_fnc_waitUntilAndExecute;
 
 _ret
