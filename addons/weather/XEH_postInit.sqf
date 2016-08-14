@@ -52,9 +52,9 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			_date = [2016, _month, ceil random 27, _hour, round random 59];
 
 			if !(GVAR(mapData) isEqualTo []) then {
-				_overcast = ((GVAR(mapData) select (_month - 1)) + random 0.1) min 1;
+				_overcast = ((GVAR(mapData) select (_month - 1)) + random 0.05) min 1;
 			} else {
-				_overcast = 0.5 + random 0.1;
+				_overcast = 0.5 + random 0.2;
 			};
 		} else {
 			_overcast = _data select 0;
