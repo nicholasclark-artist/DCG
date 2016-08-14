@@ -23,7 +23,7 @@ class dcg_main_baseName {
 class dcg_main_baseRadius {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 844.8;
+	value = (worldSize*0.055);
 };
 class dcg_main_baseSafezone {
 	typeName = "BOOL";
@@ -178,7 +178,7 @@ class dcg_occupy_enable {
 class dcg_occupy_cooldown {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 1200;
+	value = 600;
 };
 class dcg_occupy_locationCount {
 	typeName = "SCALAR";
@@ -238,7 +238,7 @@ class dcg_patrol_enable {
 class dcg_patrol_cooldown {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 1200;
+	value = 900;
 };
 class dcg_patrol_groupsMaxCount {
 	typeName = "SCALAR";
@@ -317,6 +317,11 @@ class dcg_radio_squadNet {
 		{"r_1","r_2","r_3","r_4"}
 	};
 };
+class dcg_respawn_enable {
+	typeName = "SCALAR";
+	typeDetail = "";
+	value = 1;
+};
 class dcg_task_enable {
 	typeName = "SCALAR";
 	typeDetail = "";
@@ -325,7 +330,7 @@ class dcg_task_enable {
 class dcg_task_cooldown {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 900;
+	value = 480;
 };
 class dcg_task_primaryTasks {
 	typeName = "ARRAY";
@@ -334,8 +339,7 @@ class dcg_task_primaryTasks {
 		"dcg_task_fnc_prim_vip",
 		"dcg_task_fnc_prim_cache",
 		"dcg_task_fnc_prim_officer",
-		"dcg_task_fnc_prim_defend",
-		"dcg_task_fnc_prim_intel01"
+		"dcg_task_fnc_prim_defend"
 	};
 };
 class dcg_task_secondaryTasks {
@@ -388,9 +392,9 @@ class dcg_weather_mapData {
 		{"TAKISTAN",0.54,0.6,0.55,0.46,0.32,0.19,0.15,0.15,0.12,0.15,0.25,0.41},
 		{"KUNDUZ",0.54,0.6,0.55,0.46,0.32,0.19,0.15,0.15,0.12,0.15,0.25,0.41},
 		{"MOUNTAINS_ACR",0.54,0.6,0.55,0.46,0.32,0.19,0.15,0.15,0.12,0.15,0.25,0.41},
-		{"CHERNARUS",0.98,0.96,0.93,0.9,0.86,0.84,0.84,0.86,0.88,0.94,0.96,0.98},
-		{"CHERNARUS_SUMMER",0.98,0.96,0.93,0.9,0.86,0.84,0.84,0.86,0.88,0.94,0.96,0.98},
-		{"TANOA",0.9,0.85,0.84,0.82,0.83,0.79,0.75,0.72,0.8,0.84,0.86,0.9}
+		{"CHERNARUS",0.98,0.94,0.85,0.76,0.7,0.74,0.7,0.64,0.73,0.84,0.93,0.97},
+		{"CHERNARUS_SUMMER",0.73,0.72,0.7,0.72,0.74,0.7,0.68,0.65,0.64,0.69,0.7,0.75},
+		{"TANOA",0.8,0.78,0.7,0.63,0.57,0.55,0.48,0.49,0.57,0.64,0.71,0.79}
 	};
 };
 class dcg_approval_enable {
@@ -483,3 +487,4 @@ class dcg_ied_enable {
 	typeDetail = "";
 	value = 1;
 };
+
