@@ -28,7 +28,7 @@
 	if (random 1 < CHANCE) then { \
 		_grid = [POS,25,100,0,8,false,false] call EFUNC(main,findPosGrid); \
 		if !(_grid isEqualTo []) then { \
-			_grp = [ASLToAGL(selectRandom _grid),1,COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
+			_grp = [selectRandom _grid,1,COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
 			[ \
 				{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count units (_this select 0) >= COUNT}, \
 				{ \
@@ -79,7 +79,7 @@
 				(selectRandom POOL) createUnit [POS, _grp]; \
 				(leader _grp) setDir random 360; \
 				(leader _grp) setPosATL (selectRandom _posArray); \
-				(leader _grp) disableAI "PATH"; \
+				(leader _grp) disableAI "MOVE"; \
 			}; \
 		}; \
 	}

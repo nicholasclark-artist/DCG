@@ -24,11 +24,11 @@ __________________________________________________________________*/
 
 params ["_town","_objArray","_officer","_task"];
 
-private _unitArray = [];
+private _maxCount = 0;
 
 {
 	if (GET_UNITVAR(driver _x)) then {
-		_unitArray pushBack _x;
+		_maxCount = _maxCount + 1;
 	};
 	false
 } count ((_town select 1) nearEntities [ENTITY, _town select 2]);
@@ -51,7 +51,7 @@ private _unitArray = [];
 
 [{
 	params ["_args","_idPFH"];
-	_args params ["_town","_unitArray","_objArray","_officer","_task"];
+	_args params ["_town","_maxCount","_objArray","_officer","_task"];
 
 	private _count = 0;
 
@@ -61,10 +61,10 @@ private _unitArray = [];
 		};
 	} forEach ((_town select 1) nearEntities [ENTITY, _town select 2]);
 
-	LOG_DEBUG_2("%1 - %2",count _unitArray,_count);
+	LOG_DEBUG_2("%1 - %2",_maxCount,_count);
 
 	// if enemy has lost a certain amount of units, move to next phase
-	if (_count <= (count _unitArray)*ENEMYMAX_MULTIPLIER) exitWith {
+	if (_count <= _maxCount*ENEMYMAX_MULTIPLIER) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 
 		[format ["The enemy is losing control of %1! Keep up the fight and they may surrender!",_town select 0],true] remoteExecCall [QEFUNC(main,displayText), allPlayers, false];
@@ -122,7 +122,7 @@ private _unitArray = [];
 							(vehicle _x) call EFUNC(main,cleanup);
 						};
 					};
-				} forEach (_enemyArray arrayIntersect _unitArray);
+				} forEach _enemyArray;
 
 				if (CHECK_ADDON_2(approval)) then {
 					if (_type isEqualTo "NameCityCapital") exitWith {
@@ -154,4 +154,4 @@ private _unitArray = [];
 			};
 		}, INTERVAL, _args] call CBA_fnc_addPerFrameHandler;
 	};
-}, 15, [_town,_unitArray,_objArray,_officer,_task]] call CBA_fnc_addPerFrameHandler;
+}, 15, [_town,_maxCount,_objArray,_officer,_task]] call CBA_fnc_addPerFrameHandler;

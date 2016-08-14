@@ -28,28 +28,27 @@ __________________________________________________________________*/
 #define CHANCE_AIR_VILLAGE 0.10
 #define SNIPER_VILLAGE 1
 #define STATIC_VILLAGE 1
-#define WRECKS ["Land_Wreck_Truck_dropside_F","Land_Wreck_Truck_F","Land_Wreck_UAZ_F","Land_Wreck_Ural_F","Land_Wreck_Van_F","Land_Wreck_Skodovka_F","Land_Wreck_CarDismantled_F","Land_Wreck_Car3_F","Land_Wreck_Car_F"]
-
-private ["_center","_size","_type","_data","_position","_town","_objArray","_unitArray","_officerPool","_unitPool","_taskType","_taskID","_grp","_officer","_vehPos","_fx","_veh","_mrk"];
+#define WRECKS ["a3\structures_f\wrecks\Wreck_Car2_F.p3d","a3\structures_f\wrecks\Wreck_Car3_F.p3d","a3\structures_f\wrecks\Wreck_Car_F.p3d","a3\structures_f\wrecks\Wreck_Offroad2_F.p3d","a3\structures_f\wrecks\Wreck_Offroad_F.p3d","a3\structures_f\wrecks\Wreck_Truck_dropside_F.p3d","a3\structures_f\wrecks\Wreck_Truck_F.p3d","a3\structures_f\wrecks\Wreck_UAZ_F.p3d","a3\structures_f\wrecks\Wreck_Van_F.p3d","a3\structures_f\wrecks\Wreck_Ural_F.p3d"]
 
 _this params ["_name","_center","_size","_type",["_data",nil]];
 
 // find new position in case original is on water or not empty
-_position = [];
+private _position = [];
+private _town = [_name,_center,_size,_type];
+private _objArray = [];
+private _officerPool = [];
+private _unitPool = [];
+private _taskType = "";
+private _taskID = format ["lib_%1", diag_tickTime];
+
 if !([_center,1,0] call EFUNC(main,isPosSafe)) then {
-	for "_i" from 1 to _size step 10 do {
-		_position = [_center,0,_i,1] call EFUNC(main,findPosSafe);
+	for "_i" from 1 to _size step 2 do {
+		_position = [_center,0,_i,1,0] call EFUNC(main,findPosSafe);
+		if !(_position isEqualTo _center) exitWith {};
 	};
 } else {
 	_position = _center;
 };
-
-_town = [_name,_center,_size,_type];
-_objArray = [];
-_officerPool = [];
-_unitPool = [];
-_taskType = "";
-_taskID = format ["lib_%1", diag_tickTime];
 
 call {
 	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
@@ -64,8 +63,8 @@ call {
 	_unitPool = EGVAR(main,unitPoolInd);
 };
 
-_grp = createGroup EGVAR(main,enemySide);
-_officer = _grp createUnit [selectRandom _unitPool, ASLtoAGL _position, [], 0, "NONE"];
+private _grp = createGroup EGVAR(main,enemySide);
+private _officer = _grp createUnit [selectRandom _unitPool, _position, [], 0, "NONE"];
 _officer setVariable [QUOTE(DOUBLES(ADDON,officer)),true,true];
 SET_UNITVAR(_officer);
 [[_officer],_size*0.5] call EFUNC(main,setPatrol);
@@ -73,14 +72,14 @@ removeFromRemainsCollector [_officer];
 
 // spawn vehicle wrecks
 for "_i" from 0 to (ceil random 3) do {
-	_vehPos = [_position,0,_size,4,0] call EFUNC(main,findPosSafe);
+	_vehPos = [_position,0,_size,8,0] call EFUNC(main,findPosSafe);
 	if (!(_vehPos isEqualTo _position) && {!isOnRoad _vehPos}) then {
-		private ["_fx","_veh"];
-		_veh = (selectRandom WRECKS) createVehicle _vehPos;
+		private _veh = createSimpleObject [selectRandom WRECKS,[0,0,0]];
 		_veh setDir random 360;
-		_veh setVectorUp surfaceNormal position _veh;
-		_fx = "test_EmptyObjectForSmoke" createVehicle getposATL _veh;
-		_fx attachTo [_veh,[0,0,0]];
+		_veh setPosASL _vehPos;
+		_veh setVectorUp surfaceNormal _vehPos;
+		private _fx = "test_EmptyObjectForSmoke" createVehicle [0,0,0];
+		_fx setPosASL (getPosWorld _veh);
 		_objArray pushBack _veh;
 	};
 };
@@ -135,7 +134,7 @@ call {
 
 GVAR(locations) pushBack _town;
 
-[true,_taskID,[format ["Enemy forces have occupied %1! Liberate the settlement!",_name],format ["Liberate %1", _taskType],""],ASLtoAGL _center,false,true,"rifle"] call EFUNC(main,setTask);
+[true,_taskID,[format ["Enemy forces have occupied %1! Liberate the settlement!",_name],format ["Liberate %1", _taskType],""],ASLtoAGL _position,false,true,"rifle"] call EFUNC(main,setTask);
 
 [{
 	params ["_args","_idPFH"];
@@ -148,11 +147,11 @@ GVAR(locations) pushBack _town;
 }, 10, [_town,_objArray,_officer,_taskID]] call CBA_fnc_addPerFrameHandler;
 
 if (CHECK_DEBUG) then {
-	_mrk = createMarker [format["%1_%2_debug",QUOTE(ADDON),_name],_position];
+	private _mrk = createMarker [format["%1_%2_debug",QUOTE(ADDON),_name],_position];
 	_mrk setMarkerShape "ELLIPSE";
 	_mrk setMarkerSize [_size,_size];
 	_mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)];
 	_mrk setMarkerBrush "SolidBorder";
 };
 
-LOG_DEBUG_3("%1, %2, %3",_town,,count _objArray);
+LOG_DEBUG_2("%1, %2",_town,count _objArray);
