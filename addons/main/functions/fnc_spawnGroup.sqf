@@ -20,7 +20,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define MAX_CARGO 6
 
-private ["_grp","_drivers","_check","_unitPool","_vehPool","_airPool"];
+private ["_unitPool","_vehPool","_airPool"];
 params [
 	"_pos",
 	["_type",0],
@@ -31,9 +31,9 @@ params [
 	["_cargo",false]
 ];
 
-_grp = createGroup _side;
-_drivers = [];
-_check = [];
+private _grp = createGroup _side;
+private _drivers = [];
+private _check = [];
 
 call {
 	if (_side isEqualTo EAST) exitWith {
@@ -98,7 +98,7 @@ if (_type isEqualTo 0) exitWith {
 	_unit setVariable [QUOTE(GVAR(spawnDriver)),true];
 	_unit moveInDriver _veh;
 
-	if !((_veh emptyPositions "gunner") isEqualTo 0) then {
+	if ((_veh emptyPositions "gunner") > 0) then {
 		_unit = _grp createUnit [selectRandom _unitPool, [0,0,0], [], 0, "NONE"];
 		_unit moveInGunner _veh;
 	};
@@ -106,15 +106,15 @@ if (_type isEqualTo 0) exitWith {
 	if (_cargo) then {
 		[{
 			params ["_args","_idPFH"];
-			_args params ["_grp","_unitPool","_veh","_cargo"];
+			_args params ["_grp","_unitPool","_veh","_count"];
 
-			if (count ((crew _veh) select 4) >= _cargo) exitWith {
+			if (count crew _veh >= _count) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 			};
 
 			_unit = _grp createUnit [selectRandom _unitPool, [0,0,0], [], 0, "NONE"];
 			_unit moveInCargo _veh;
-		}, _delay, [_grp,_unitPool,_veh,(_veh emptyPositions "cargo") min MAX_CARGO]] call CBA_fnc_addPerFrameHandler;
+		}, _delay, [_grp,_unitPool,_veh,((_veh emptyPositions "cargo") min MAX_CARGO) + (count crew _veh)]] call CBA_fnc_addPerFrameHandler;
 	};
 
 	_check pushBack 0;
