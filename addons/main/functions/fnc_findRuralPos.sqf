@@ -17,16 +17,15 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define DIST (worldSize*0.04) max 500
 
-private ["_ret","_expression","_pos"];
 params [
 	"_anchor",
 	"_range",
 	["_terrain",""],
-	["_checkFlat",true]
+	["_check",true]
 ];
 
-_ret = [];
-_expression = "";
+private _ret = [];
+private _expression = "";
 
 call {
 	if (toLower _terrain isEqualTo "meadow") exitWith {
@@ -48,11 +47,11 @@ if (_terrain isEqualTo "" || _expression isEqualTo "") exitWith {
 };
 
 {
-	_pos = _x select 0;
+	private _pos = _x select 0;
 	if ((nearestLocations [_pos, ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo []) then {
 		if !(_terrain isEqualTo "house") then {
-			if (_checkFlat) then {
-				if !(_pos isFlatEmpty [3,-1,0.27,40,0] isEqualTo []) then {
+			if (_check) then {
+				if ([_pos,5,0,0.275] call FUNC(isPosSafe)) then {
 					_ret = _pos;
 				};
 			} else {
