@@ -16,7 +16,6 @@ boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_bbr","_p1","_p2","_w","_l","_h","_empty"];
 params [
 	"_pos",
 	["_model",objNull],
@@ -29,14 +28,17 @@ _pos = [_pos select 0,_pos select 1,0.5];
 if (_pos isFlatEmpty [-1, -1, _gradient, 10, _water] isEqualTo []) exitWith {false};
 
 if !(_model isEqualTo objNull) exitWith {
-	_empty = true;
+	private ["_w","_l","_h"];
+
+	private _empty = true;
 	_pos = AGLToASL _pos;
 
 	call {
 		if (_model isEqualType objNull) exitWith {
-			_bbr = boundingBoxReal _model;
-			_p1 = _bbr select 0;
-			_p2 = _bbr select 1;
+			private _bbr = boundingBoxReal _model;
+			private _p1 = _bbr select 0;
+			private _p2 = _bbr select 1;
+
 			_w = abs ((_p2 select 0) - (_p1 select 0)) * 0.85;
 			_l = abs ((_p2 select 1) - (_p1 select 1)) * 0.85;
 			_h = abs ((_p2 select 2) - (_p1 select 2)) * 0.85;

@@ -164,5 +164,4 @@ class DOUBLES(PREFIX,settings) {
             {"ALL","C_Heli_Light_01_civil_F"}
         };
     };
-    // TODO add insignia setting
 };

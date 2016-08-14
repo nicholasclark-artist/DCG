@@ -51,8 +51,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 	if (toLower _type in _typeArray) then {
 		_name = getText (_location >> "name");
 		_position = getArray (_location >> "position");
-		_position set [2,0];
-		_position = ATLToASL _position;
+		_position set [2,(getTerrainHeightASL _position) max 0];
 		_size = ((getNumber (_location >> "radiusA")) + (getNumber (_location >> "radiusB")))*0.5;
 
 		if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(toLower _name in GVAR(blacklistLocations))} && {!(_name isEqualTo "")}) then {
@@ -69,14 +68,12 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 
 	if (isClass _cityCenterA2) then {
 		_position = getArray (_cityCenterA2 >> "position");
-		_position set [2,0];
-		_position = ATLToASL _position;
+		_position set [2,(getTerrainHeightASL _position) max 0];
 		_x set [1,_position]
 	};
 	if (isClass _cityCenterA3) then {
 		_position = getArray (_cityCenterA3 >> "position");
-		_position set [2,0];
-		_position = ATLToASL _position;
+		_position set [2,(getTerrainHeightASL _position) max 0];
 		_x set [1,_position]
 	};
 } forEach GVAR(locations);
