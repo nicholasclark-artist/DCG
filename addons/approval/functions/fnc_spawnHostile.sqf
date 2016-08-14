@@ -27,6 +27,7 @@ _type = round random TYPEMAX;
 _nearPlayers = [_pos,50] call EFUNC(main,getNearPlayers);
 _posArray = [_pos,50,500,MINDIST] call EFUNC(main,findPosGrid);
 
+
 {
 	if !([_x,MINDIST] call EFUNC(main,getNearPlayers) isEqualTo []) then {
 		_posArray deleteAt _forEachIndex;

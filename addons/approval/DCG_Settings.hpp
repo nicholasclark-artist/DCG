@@ -16,6 +16,6 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(hostileCooldown) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 60;
+        value = 900;
     };
 };
