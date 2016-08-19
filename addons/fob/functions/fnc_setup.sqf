@@ -60,6 +60,10 @@ GVAR(curator) addCuratorCameraArea [0,getPos GVAR(anchor),GVAR(range)];
 GVAR(curator) setCuratorCameraAreaCeiling 40;
 [GVAR(curator),"object",["UnitPos","Rank","Lock"]] call BIS_fnc_setCuratorAttributes;
 
+[getPosASL GVAR(anchor),AV_FOB] call EFUNC(approval,addValue);
+GVAR(AVBonus) = round(AV_FOB);
+publicVariable QGVAR(AVBonus);
+
 // assign unit and send unit curator UID
 // unit does not immediately become owner of curator, it takes a few seconds
 if !(isNull _unit) then {

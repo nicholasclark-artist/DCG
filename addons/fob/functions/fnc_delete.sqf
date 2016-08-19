@@ -30,6 +30,7 @@ __________________________________________________________________*/
 
 		{
 			{_x call EFUNC(main,cleanup)} forEach (curatorEditableObjects GVAR(curator));
+			[getPosASL GVAR(anchor),AV_FOB*-1] call EFUNC(approval,addValue);
 			unassignCurator GVAR(curator);
 			deleteVehicle GVAR(anchor);
 		} remoteExecCall [QUOTE(BIS_fnc_call), 2, false];

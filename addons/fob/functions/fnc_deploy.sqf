@@ -39,7 +39,7 @@ if (!isNil "_entry") then {
 	};
 
 	_keyStr = _modArr joinString " ";
-	_keyStr = [_keyStr, keyName _key] joinString " + ";
+	_keyStr = format ["%1 + %2", _keyStr,keyName _key];
 
 	[format ["Press [%1] to start building %2.",_keyStr, GVAR(name)],true] call EFUNC(main,displayText);
 };

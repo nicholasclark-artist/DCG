@@ -23,6 +23,18 @@ addMissionEventHandler ["HandleDisconnect",{
 
 {
 	[TITLE, KEY_ID, KEY_NAME, {call FUNC(handleKey)}, "", [DIK_Y, [true, false, false]]] call CBA_fnc_addKeybind;
+	player addEventHandler ["Respawn",{
+		if ((getPlayerUID (_this select 0)) isEqualTo GVAR(UID)) then {
+			[
+				{
+					missionNamespace setVariable [PVEH_REASSIGN,player];
+					publicVariableServer PVEH_REASSIGN;
+				},
+				[],
+				5
+			] call CBA_fnc_waitAndExecute;
+		};
+	}];
 } remoteExecCall [QUOTE(BIS_fnc_call),0,true];
 
 [{

@@ -15,7 +15,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_type","_wp","_statement"];
+private ["_type","_wp"];
 params [
 	["_ifRecon",true],
 	["_position",[0,0,0]],
@@ -37,32 +37,26 @@ if (_ifRecon) then {
 		};
 	};
 
-	GVAR(reconUAV) = createVehicle [_type, _position, [], 0, "FLY"];
-    createVehicleCrew GVAR(reconUAV);
-	GVAR(reconUAV) allowDamage false;
-	GVAR(reconUAV) setCaptive true;
+	RECON = createVehicle [_type, _position, [], 0, "FLY"];
+    createVehicleCrew RECON;
+	RECON allowDamage false;
+	RECON setCaptive true;
     {
         _x setCaptive true;
-    } forEach crew GVAR(reconUAV);
-	GVAR(reconUAV) setVehicleAmmo 0;
-	GVAR(reconUAV) lockDriver true;
-	GVAR(reconUAV) flyInHeight 120;
+    } forEach crew RECON;
+	RECON setVehicleAmmo 0;
+	RECON lockDriver true;
+	RECON flyInHeight 200;
 
-	GVAR(reconUAV) addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
+	RECON addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
 
-	_wp = group GVAR(reconUAV) addWaypoint [_position, 0];
+	_wp = group RECON addWaypoint [_position, 0];
 	_wp setWaypointType "LOITER";
 	_wp setWaypointLoiterType "CIRCLE_L";
 	_wp setWaypointLoiterRadius GVAR(range);
 
-	_statement = "
-		player action ['SwitchToUAVGunner',%1];
-	";
-	GVAR(reconAction) = [QUOTE(DOUBLES(ADDON,recon)),"Switch to FOB Recon",format [_statement,QGVAR(reconUAV),_position],QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
-
-	["HQ deployed.\nAerial reconnaissance online.",true] call EFUNC(main,displayText);
+	["Aerial reconnaissance online.",true] call EFUNC(main,displayText);
 } else {
-	deleteVehicle GVAR(reconUAV);
-	[player, 1, GVAR(reconAction)] call EFUNC(main,removeAction);
-	["HQ removed.\nAerial reconnaissance offline.",true] call EFUNC(main,displayText);
+	deleteVehicle RECON;
+	["Aerial reconnaissance offline.",true] call EFUNC(main,displayText);
 };

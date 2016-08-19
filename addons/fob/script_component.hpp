@@ -10,3 +10,4 @@
 #define FOB_MED ["Land_Medevac_house_V1_F", "Land_Medevac_HQ_V1_F","B_Slingload_01_Medevac_F"]
 #define KEY_ID format ["%1_build_key", QUOTE(ADDON)]
 #define KEY_NAME "Build FOB"
+#define RECON GVAR(reconUAV)
