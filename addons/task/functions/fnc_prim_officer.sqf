@@ -45,7 +45,7 @@ if (_position isEqualTo []) exitWith {
 	[TASK_TYPE,0] call FUNC(select);
 };
 
-_base = [_position,0.9 + random 1] call EFUNC(main,spawnBase);
+_base = [_position,0.65 + random 1] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 
 _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, _position, [], 0, "NONE"];
@@ -92,7 +92,7 @@ TASK_PUBLISH(_position);
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + [_officer] + _base + (units _vehGrp)) call EFUNC(main,cleanup);
+		((units _grp) + [_officer] + _base + (units _vehGrp) + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		[TASK_TYPE] call FUNC(select);
 	};
 
@@ -100,7 +100,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_position,TASK_AV);
-		((units _grp) + [_officer] + _base + (units _vehGrp)) call EFUNC(main,cleanup);
+		((units _grp) + [_officer] + _base + (units _vehGrp) + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
 }, TASK_SLEEP, [_taskID,_officer,_grp,_vehGrp,(_base select 2),_position]] call CBA_fnc_addPerFrameHandler;

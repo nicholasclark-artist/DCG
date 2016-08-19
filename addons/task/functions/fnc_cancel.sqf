@@ -13,7 +13,6 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define CANCEL_HINT(TYPE) format ["Are you sure you want to cancel the current %1 task?",TYPE]
-#define CONFIRMED_HINT "Task canceled."
 
 if !(hasInterface) exitWith {};
 
@@ -31,7 +30,6 @@ if ((_this select 0) > 0) then {
 		if (_ret) then {
 			GVAR(primary) = [];
 			publicVariableServer QGVAR(primary);
-			[CONFIRMED_HINT,true] call EFUNC(main,displayText);
 		};
 	};
 } else {
@@ -48,7 +46,6 @@ if ((_this select 0) > 0) then {
 		if (_ret) then {
 			GVAR(secondary) = [];
 			publicVariableServer QGVAR(secondary);
-			[CONFIRMED_HINT,true] call EFUNC(main,displayText);
 		};
 	};
 };

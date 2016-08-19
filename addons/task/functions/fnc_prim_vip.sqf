@@ -52,7 +52,7 @@ if (_position isEqualTo [] || {_town isEqualTo []}) exitWith {
 };
 
 if (toLower worldName in EGVAR(main,simpleWorlds)) then {
-	_base = [_position,random 0.6] call EFUNC(main,spawnBase);
+	_base = [_position,0.6 + random 1] call EFUNC(main,spawnBase);
 	if !((_base select 3) isEqualTo []) then {
 		_position = selectRandom (_base select 3);
 		_position = _position select 0;
@@ -82,9 +82,9 @@ if !(_vehPos isEqualTo _position) then {
 	[
 		{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
 		{
-			[units (_this select 0),((_this select 1)*4 min 300) max 100] call EFUNC(main,setPatrol);
+			[units (_this select 0),200] call EFUNC(main,setPatrol);
 		},
-		[_vehGrp,_bRadius]
+		[_vehGrp]
 	] call CBA_fnc_waitUntilAndExecute;
 };
 
@@ -113,7 +113,7 @@ TASK_PUBLISH(_position);
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + (units _vehGrp) + [_vip] + _base) call EFUNC(main,cleanup);
+		((units _grp) + (units _vehGrp) + [_vip] + _base + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		[TASK_TYPE] call FUNC(select);
 	};
 
@@ -121,7 +121,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL((getPos _vip),TASK_AV * -1);
-		((units _grp) + (units _vehGrp) + [_vip] + _base) call EFUNC(main,cleanup);
+		((units _grp) + (units _vehGrp) + [_vip] + _base + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
 
@@ -142,7 +142,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL((getPos _vip),TASK_AV);
-		((units _grp) + (units _vehGrp) + [_vip] + _base) call EFUNC(main,cleanup);
+		((units _grp) + (units _vehGrp) + [_vip] + _base + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
 }, TASK_SLEEP, [_taskID,_vip,_grp,_vehGrp,_town,_base]] call CBA_fnc_addPerFrameHandler;

@@ -12,7 +12,7 @@ Return:
 none
 __________________________________________________________________*/
 #define TASK_SECONDARY
-#define TASK_NAME 'Find Intel'
+#define TASK_NAME 'Find GPS Intel'
 #define INTEL_CLASS QUOTE(ItemGPS)
 #include "script_component.hpp"
 
@@ -60,7 +60,7 @@ _unit linkItem INTEL_CLASS;
 TASK_DEBUG(_position);
 
 // SET TASK
-_taskPos = ASLToAGL ([_position,70,100] call EFUNC(main,findPosSafe));
+_taskPos = ASLToAGL ([_position,40,80] call EFUNC(main,findPosSafe));
 _taskDescription = format["A few days ago an informant didn't show for a meeting. He was suppose to hand off a GPS device with vital intel on the enemy's whereabouts. UAV reconnaissance spotted activity near %1. Search the site for the informant and retrieve the GPS.", mapGridPosition _position];
 
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"search"] call EFUNC(main,setTask);

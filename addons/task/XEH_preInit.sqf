@@ -15,7 +15,7 @@ PREP(prim_vip);
 PREP(prim_cache);
 PREP(prim_officer);
 PREP(prim_defend);
-PREP(prim_intel01);
+PREP(prim_arty);
 PREP(sec_deliver);
 PREP(sec_repair);
 PREP(sec_officer);

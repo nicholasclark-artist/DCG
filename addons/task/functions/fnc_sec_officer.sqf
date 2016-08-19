@@ -44,7 +44,7 @@ if (_position isEqualTo []) exitWith {
 	[TASK_TYPE,0] call FUNC(select);
 };
 
-_base = [_position,0.1] call EFUNC(main,spawnBase);
+_base = [_position,random 0.25] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 
 _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, _position, [], 0, "NONE"];

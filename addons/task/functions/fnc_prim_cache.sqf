@@ -32,9 +32,15 @@ if (_position isEqualTo []) exitWith {
 	[TASK_TYPE,0] call FUNC(select);
 };
 
-_base = [_position,0.86 + random 1] call EFUNC(main,spawnBase);
+_base = [_position,0.47 + random 0.3] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 _bNodes = _base select 3;
+
+if (_bNodes isEqualTo []) exitWith {
+	(_base select 2) call EFUNC(main,cleanup);
+	[TASK_TYPE,0] call FUNC(select);
+};
+
 _posCache = selectRandom _bNodes;
 _posCache = _posCache select 0;
 
@@ -43,7 +49,7 @@ for "_i" from 0 to 1 do {
 	_cache setDir random 360;
 	_cache setVectorUp surfaceNormal getPos _cache;
 	_caches pushBack _cache;
-	_cache addEventHandler ["HandleDamage", {
+/*	_cache addEventHandler ["HandleDamage", {
 		_ret = 0;
 		if ((_this select 4) isKindof "PipeBombBase") then {
 			_ret = 1;
@@ -52,7 +58,7 @@ for "_i" from 0 to 1 do {
 		};
 
 		_ret
-	}];
+	}];*/
 };
 
 _grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
@@ -97,14 +103,14 @@ TASK_PUBLISH(_position);
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + (units _vehGrp) + _caches + _base) call EFUNC(main,cleanup);
+		((units _grp) + (units _vehGrp) + [vehicle leader _vehGrp] + _caches + _base) call EFUNC(main,cleanup);
 		[TASK_TYPE] call FUNC(select);
 	};
 
 	if ({alive _x} count _caches isEqualTo 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
-		((units _grp) + (units _vehGrp) + _caches + _base) call EFUNC(main,cleanup);
+		((units _grp) + (units _vehGrp) + [vehicle leader _vehGrp] + _caches + _base) call EFUNC(main,cleanup);
 		TASK_APPROVAL(_posCache,TASK_AV);
 		TASK_EXIT;
 	};

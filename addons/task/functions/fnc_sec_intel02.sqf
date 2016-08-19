@@ -12,7 +12,7 @@ Return:
 none
 __________________________________________________________________*/
 #define TASK_SECONDARY
-#define TASK_NAME 'Find Intel'
+#define TASK_NAME 'Find Map Intel'
 #define INTEL_CLASS QUOTE(ItemMap)
 #define UNITCOUNT 6
 #include "script_component.hpp"
@@ -75,7 +75,7 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
 TASK_DEBUG(_position);
 
 // SET TASK
-_taskDescription = format["Spotted enemy fireteam at %1. ambush them and search bodies for map.", mapGridPosition _position];
+_taskDescription = format["Aerial reconnaissance spotted an enemy fireteam at %1. This is an opportunity to gain the upper hand. Ambush the unit and search the enemy combatants for intel.", mapGridPosition _position];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"search"] call EFUNC(main,setTask);
 
 // PUBLISH TASK

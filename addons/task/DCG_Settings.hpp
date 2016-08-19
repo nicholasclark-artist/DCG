@@ -20,7 +20,7 @@ class DOUBLES(PREFIX,settings) {
             QFUNC(prim_vip),
             QFUNC(prim_cache),
             QFUNC(prim_officer),
-            //QFUNC(prim_intel01),
+            QFUNC(prim_arty),
             QFUNC(prim_defend)
         };
     };

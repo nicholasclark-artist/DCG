@@ -34,9 +34,9 @@
 #define TASK_TITLE format ["%1 %2",TASK_TAG,TASK_NAME]
 #define TASK_APPROVAL(POS,AV) [POS,AV] call EFUNC(approval,addValue)
 #define TASK_DIST_START 50
-#define TASK_DIST_FAIL 500
+#define TASK_DIST_FAIL 350
 #define TASK_DIST_RET 20
-#define TASK_DIST_MRK 200
+#define TASK_DIST_MRK 500
 #define TASK_SLEEP 5
 
 #define TASK_DEBUG(POS) \
