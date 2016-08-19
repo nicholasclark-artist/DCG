@@ -23,7 +23,7 @@ params [
 	["_gradient",-1]
 ];
 
-_pos = [_pos select 0,_pos select 1,0.5];
+_pos = [_pos select 0,_pos select 1,0.3];
 
 if (_pos isFlatEmpty [-1, -1, _gradient, 10, _water] isEqualTo []) exitWith {false};
 
