@@ -111,7 +111,19 @@ if !(_tar isEqualTo []) then {
 	_tar = [_posArty,2000,4000] call EFUNC(main,findPosSafe);
 };
 
-[3600,60,TASK_NAME,{(_this select 1) doArtilleryFire [(_this select 2), "32Rnd_155mm_Mo_shells", 4]},[_gunner,_tar],0,_arty] call EFUNC(main,setTimer);
+[
+	3600,
+	60,
+	TASK_NAME,
+	{
+		if (isServer) then {
+			(_this select 1) doArtilleryFire [(_this select 2), "32Rnd_155mm_Mo_shells", 4];
+		};
+	},
+	[_gunner,_tar],
+	0,
+	_arty
+] call EFUNC(main,setTimer);
 
 // SET TASK
 _taskPos = ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe));
