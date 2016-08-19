@@ -50,6 +50,8 @@ if !([_center,1,0] call EFUNC(main,isPosSafe)) then {
 	_position = _center;
 };
 
+_position = ASLtoAGL _position;
+
 call {
 	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
 		_officerPool = EGVAR(main,officerPoolEast);
@@ -134,7 +136,7 @@ call {
 
 GVAR(locations) pushBack _town;
 
-[true,_taskID,[format ["Enemy forces have occupied %1! Liberate the settlement!",_name],format ["Liberate %1", _taskType],""],ASLtoAGL _position,false,true,"rifle"] call EFUNC(main,setTask);
+[true,_taskID,[format ["Enemy forces have occupied %1! Liberate the settlement!",_name],format ["Liberate %1", _taskType],""],_position,false,true,"rifle"] call EFUNC(main,setTask);
 
 [{
 	params ["_args","_idPFH"];
