@@ -18,13 +18,6 @@ player addEventHandler ["HandleRating",{
 	};
 }];
 
-// debug
-if (dcg_main_debug isEqualTo 1) then {
-	player setVariable ["ace_medical_allowDamage",false];
-	player addEventHandler ["handleDamage",{false}];
-	player allowDamage false;
-};
-
 // ACE3
 if (!(dcg_main_debug isEqualTo 1) && {isClass (configfile >> "CfgPatches" >> "ace_safemode")}) then {
 	player addEventHandler ["respawn",{
