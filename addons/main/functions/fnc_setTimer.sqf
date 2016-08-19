@@ -9,9 +9,10 @@ Arguments:
 0: countdown timer <NUMBER>
 1: hint interval <NUMBER>
 2: hint title <STRING>
-3: timer complete code <STRING>
-4: machines to run timer on <NUMBER,OBJECT,SIDE,GROUP,ARRAY>
-5: set timer on JIP <BOOL>
+3: timer complete code <CODE>
+4: timer complete code arguments <ANY>
+5: machines to run timer on <NUMBER,OBJECT,SIDE,GROUP,ARRAY>
+6: JIP id <BOOL>
 
 Return:
 bool
@@ -21,21 +22,22 @@ __________________________________________________________________*/
 params [
 	"_time",
 	["_interval",60],
-	["_title",format ["%1 Timer", toUpper PREFIX]],
-	["_onComplete",""],
+	["_title",format ["%1 Timer", toUpper QUOTE(PREFIX)]],
+	["_code",{}],
+	["_params",[]],
 	["_target",0],
-	["_jip",QUOTE(TRIPLES(PREFIX,timer,jip))]
+	["_jip",false]
 ];
 
-[[_time,_interval,_title,_onComplete],{
-	_this params ["_time","_interval","_title","_onComplete"];
+[[_time,_interval,_title,_code,_params],{
+	_this params ["_time","_interval","_title","_code","_params"];
 
  	GVAR(exitTimer) = false;
  	GVAR(timer) = _time;
 
  	[{
  		params ["_args","_idPFH"];
- 		_args params ["_time","_interval","_title","_onComplete"];
+ 		_args params ["_time","_interval","_title","_code","_params"];
 
  		if (GVAR(exitTimer)) exitWith {
  			[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -43,7 +45,8 @@ params [
 
  		if (GVAR(timer) < 1) exitWith {
  			[_idPFH] call CBA_fnc_removePerFrameHandler;
- 			[_time] call compile _onComplete;
+ 			_params = [_time] + _params;
+ 			_params call _code;
  		};
 
  		if ((GVAR(timer)/_interval) mod 1 isEqualTo 0) then {
@@ -72,7 +75,7 @@ params [
 		};
 
 		GVAR(timer) = GVAR(timer) - 1;
- 	}, 1, [_time,_interval,_title,_onComplete]] call CBA_fnc_addPerFrameHandler;
+ 	}, 1, [_time,_interval,_title,_code,_params]] call CBA_fnc_addPerFrameHandler;
 }] remoteExecCall ["BIS_fnc_call",_target,_jip];
 
 true
