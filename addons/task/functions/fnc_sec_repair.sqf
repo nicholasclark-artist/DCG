@@ -13,7 +13,6 @@ none
 __________________________________________________________________*/
 #define TASK_SECONDARY
 #define TASK_NAME 'Repair Patrol'
-#define SUCCESS GVAR(DOUBLES(repair,success))
 #define VEHCOUNT 1
 #include "script_component.hpp"
 
@@ -23,7 +22,6 @@ params [["_position",[]]];
 _taskID = str diag_tickTime;
 _drivers = [];
 _vehicles = [];
-SUCCESS = 0;
 
 if (_position isEqualTo []) then {
 	{
@@ -57,7 +55,7 @@ _grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,spa
 				_vehicles pushBack (vehicle _x);
 				(vehicle _x) setDir random 360;
 				(vehicle _x) lock 3;
-				[vehicle _x,2,QUOTE(SUCCESS = SUCCESS + 1)] call EFUNC(main,setVehDamaged);
+				[vehicle _x,2,{LOG_DEBUG_1("%1 repaired.",(_this select 0))}] call EFUNC(main,setVehDamaged);
 				(crew (vehicle _x)) allowGetIn false;
 				_grp leaveVehicle (vehicle _x);
 			};
@@ -84,10 +82,10 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		(_drivers + _vehicles) call EFUNC(main,cleanup);
-		[TASK_TYPE] call FUNC(select);
+		[TASK_TYPE,30] call FUNC(select);
 	};
 
-	if (!(_vehicles isEqualTo []) && {{!alive _x} count _vehicles > 0}) exitWith {
+	if ({!alive _x} count _vehicles > 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_position,TASK_AV * -1);
@@ -95,7 +93,7 @@ TASK_PUBLISH(_position);
 		TASK_EXIT;
 	};
 
-	if (SUCCESS >= VEHCOUNT) exitWith {
+	if ({(((getAllHitPointsDamage _x) select 2) select {_x isEqualTo 1}) isEqualTo []} count _vehicles isEqualTo VEHCOUNT) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_position,TASK_AV);

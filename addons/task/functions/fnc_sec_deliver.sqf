@@ -87,7 +87,7 @@ call {
 
 _veh = _type createVehicle _posConvoy;
 _veh setDir random 360;
-_veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.65,0.65,0.65,1)"];
+_veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.27,0.27,0.27,1)"];
 [_veh] call EFUNC(main,setVehDamaged);
 
 if (CHECK_ADDON_1("ace_cargo")) then {
@@ -136,7 +136,7 @@ TASK_PUBLISH(_posArray);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		((units _grp) + [_veh]) call EFUNC(main,cleanup);
-		[TASK_TYPE] call FUNC(select);
+		[TASK_TYPE,30] call FUNC(select);
 	};
 
 	if !(alive _veh) exitWith {

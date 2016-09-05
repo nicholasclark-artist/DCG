@@ -26,6 +26,14 @@ _artyClass = "";
 _gunnerClass = "";
 _objs = [];
 
+if (_position isEqualTo []) then {
+	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findRuralPos);
+};
+
+if (_position isEqualTo []) exitWith {
+	[TASK_TYPE,0] call FUNC(select);
+};
+
 call {
 	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
 		_artyClass = "O_MBT_02_arty_F";
@@ -37,14 +45,6 @@ call {
 	};
 	_artyClass = "B_MBT_01_arty_F";
 	_gunnerClass = "B_crew_F";
-};
-
-if (_position isEqualTo []) then {
-	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findRuralPos);
-};
-
-if (_position isEqualTo []) exitWith {
-	[TASK_TYPE,0] call FUNC(select);
 };
 
 _base = [_position,0.65 + random 1] call EFUNC(main,spawnBase);
@@ -72,7 +72,7 @@ _gunner assignAsGunner _arty;
 _gunner moveInGunner  _arty;
 _gunner setFormDir (getDir _arty);
 _gunner setDir (getDir _arty);
-_gunner doWatch (_gunner modelToWorld [0,100,50]);
+_gunner doWatch (_gunner modelToWorld [0,50,50]);
 _gunner disableAI "FSM";
 _gunner disableAI "MOVE";
 _objs pushBack _gunner;
@@ -88,7 +88,7 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
 	[_grp,_bRadius,_strength,_objs]
 ] call CBA_fnc_waitUntilAndExecute;
 
-_vehPos = [_position,50,100,8,0] call EFUNC(main,findPosSafe);
+_vehPos = [_position,100,200,8,0] call EFUNC(main,findPosSafe);
 
 if !(_vehPos isEqualTo _position) then {
 	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
@@ -101,6 +101,15 @@ if !(_vehPos isEqualTo _position) then {
 		},
 		[_vehGrp,_bRadius,_objs]
 	] call CBA_fnc_waitUntilAndExecute;
+} else {
+	_vehGrp = [_vehPos,2,1,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+	[
+		{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
+		{
+			[units (_this select 0),1200] call EFUNC(main,setPatrol);
+		},
+		[_vehGrp,_bRadius]
+	] call CBA_fnc_waitUntilAndExecute;
 };
 
 _tar = EGVAR(main,locations) select {!(CHECK_DIST2D(_x select 1,_posArty,(worldSize*0.04) max 1000))};
@@ -108,13 +117,13 @@ _tar = EGVAR(main,locations) select {!(CHECK_DIST2D(_x select 1,_posArty,(worldS
 if !(_tar isEqualTo []) then {
 	_tar = (selectRandom _tar) select 1;
 } else {
-	_tar = [_posArty,2000,4000] call EFUNC(main,findPosSafe);
+	_tar = [_posArty,4000,8000] call EFUNC(main,findPosSafe);
 };
 
 [
 	3600,
 	60,
-	TASK_NAME,
+	"Artillery Countdown",
 	{
 		if (isServer) then {
 			(_this select 1) doArtilleryFire [(_this select 2), "32Rnd_155mm_Mo_shells", 4];
@@ -126,9 +135,8 @@ if !(_tar isEqualTo []) then {
 ] call EFUNC(main,setTimer);
 
 // SET TASK
-_taskPos = ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe));
-_taskDescription = format ["", mapGridPosition _taskPos];
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"destroy"] call EFUNC(main,setTask);
+_taskDescription = format ["An enemy FOB housing an artillery unit is targetting a local settlement that's sympathetic to our cause. To keep the civilian's on our side, we must elminate the artillery."];
+[true,_taskID,[_taskDescription,TASK_TITLE,""], ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"destroy"] call EFUNC(main,setTask);
 
 TASK_DEBUG(_posArty);
 
@@ -143,13 +151,17 @@ TASK_PUBLISH(_position);
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+		EGVAR(main,exitTimer) = true;
+		publicVariable QEGVAR(main,exitTimer);
 		(_objs + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
-		[TASK_TYPE] call FUNC(select);
+		[TASK_TYPE,30] call FUNC(select);
 	};
 
 	if !(alive _arty) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+		EGVAR(main,exitTimer) = true;
+		publicVariable QEGVAR(main,exitTimer);
 		(_objs + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		TASK_APPROVAL(_position,TASK_AV);
 		TASK_EXIT;

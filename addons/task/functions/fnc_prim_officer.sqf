@@ -48,7 +48,7 @@ if (_position isEqualTo []) exitWith {
 _base = [_position,0.65 + random 1] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 
-_officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, _position, [], 0, "NONE"];
+_officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, ASLtoAGL _position, [], 0, "NONE"];
 removeFromRemainsCollector [_officer];
 [[_officer],_bRadius] call EFUNC(main,setPatrol);
 
@@ -62,13 +62,23 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup)
 	[_grp,_bRadius,_strength]
 ] call CBA_fnc_waitUntilAndExecute;
 
-_vehPos = [_position,50,100,8,0] call EFUNC(main,findPosSafe);
+_vehPos = [_position,100,200,8,0] call EFUNC(main,findPosSafe);
+
 if !(_vehPos isEqualTo _position) then {
 	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
 	[
 		{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
 		{
 			[units (_this select 0),((_this select 1)*4 min 300) max 100] call EFUNC(main,setPatrol);
+		},
+		[_vehGrp,_bRadius]
+	] call CBA_fnc_waitUntilAndExecute;
+} else {
+	_vehGrp = [_vehPos,2,1,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+	[
+		{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
+		{
+			[units (_this select 0),1200] call EFUNC(main,setPatrol);
 		},
 		[_vehGrp,_bRadius]
 	] call CBA_fnc_waitUntilAndExecute;
@@ -93,7 +103,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		((units _grp) + [_officer] + _base + (units _vehGrp) + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
-		[TASK_TYPE] call FUNC(select);
+		[TASK_TYPE,30] call FUNC(select);
 	};
 
 	if !(alive _officer) exitWith {

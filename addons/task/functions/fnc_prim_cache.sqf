@@ -71,7 +71,7 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
 	[_grp,_bRadius,_strength]
 ] call CBA_fnc_waitUntilAndExecute;
 
-_vehPos = [_position,50,100,8,0] call EFUNC(main,findPosSafe);
+_vehPos = [_position,100,200,8,0] call EFUNC(main,findPosSafe);
 
 if !(_vehPos isEqualTo _position) then {
 	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
@@ -90,7 +90,7 @@ _taskPos = ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,fin
 _taskDescription = format ["An enemy camp housing an ammunitions cache has been spotted near %1. These supplies are critical to the opposition's efforts. Destroy the cache and weaken the enemy.", mapGridPosition _taskPos];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"destroy"] call EFUNC(main,setTask);
 
-TASK_DEBUG(getpos (_caches select 0));
+TASK_DEBUG(_posCache);
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
@@ -104,7 +104,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		((units _grp) + (units _vehGrp) + [vehicle leader _vehGrp] + _caches + _base) call EFUNC(main,cleanup);
-		[TASK_TYPE] call FUNC(select);
+		[TASK_TYPE,30] call FUNC(select);
 	};
 
 	if ({alive _x} count _caches isEqualTo 0) exitWith {

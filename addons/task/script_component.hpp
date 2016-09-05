@@ -2,7 +2,7 @@
 #include "\d\dcg\addons\main\script_mod.hpp"
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define DISABLE_COMPILE_CACHE
+// #define DISABLE_COMPILE_CACHE
 
 // TASK macro is dependent on file structure
 // if addon's file structure changes, adjust TASK ID
@@ -15,7 +15,7 @@
 	#define TASK_TAG '(P)'
 	#define TASK_UNIT_MIN 16
 	#define TASK_UNIT_MAX 30
-	#define TASK_AV ((AV_MAX*0.025)*EGVAR(approval,multiplier))
+	#define TASK_AV ((AV_MAX*0.1)*EGVAR(approval,multiplier))
 	#define TASK_EXIT TASK_GVAR = []; [TASK_TYPE] call FUNC(select)
 	#define TASK_PUBLISH(POS) TASK_GVAR = [TASK_QFUNC,POS]
 #endif
@@ -26,7 +26,7 @@
 	#define TASK_TAG '(S)'
 	#define TASK_UNIT_MIN 8
 	#define TASK_UNIT_MAX 16
-	#define TASK_AV ((AV_MAX*0.0125)*EGVAR(approval,multiplier))
+	#define TASK_AV ((AV_MAX*0.05)*EGVAR(approval,multiplier))
 	#define TASK_EXIT TASK_GVAR = []; [TASK_TYPE] call FUNC(select)
 	#define TASK_PUBLISH(POS) TASK_GVAR = [TASK_QFUNC,POS]
 #endif
@@ -36,7 +36,7 @@
 #define TASK_DIST_START 50
 #define TASK_DIST_FAIL 350
 #define TASK_DIST_RET 20
-#define TASK_DIST_MRK 500
+#define TASK_DIST_MRK 300
 #define TASK_SLEEP 5
 
 #define TASK_DEBUG(POS) \

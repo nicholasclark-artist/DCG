@@ -14,8 +14,8 @@ __________________________________________________________________*/
 #define TASK_PRIMARY
 #define TASK_NAME 'Defend Supplies'
 #define COUNTDOWN 450
-#define FRIENDLY_COUNT 12
-#define FOB_COND !isNull EGVAR(fob,location) && {!(CHECK_DIST2D(locationPosition EGVAR(fob,location),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} && {random 1 < 0.5}
+#define FRIENDLY_COUNT 8
+#define ENEMY_COUNT 6
 #include "script_component.hpp"
 
 params [["_position",[]]];
@@ -27,13 +27,9 @@ GVAR(defend_enemies) = [];
 _vehPos = [];
 
 if (_position isEqualTo []) then {
-	if (FOB_COND) then {
-		_position = locationPosition EGVAR(fob,location);
-	} else {
-		_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findRuralPos);
-		if !(_position isEqualTo []) then {
-			_position = _position select 1;
-		};
+	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findRuralPos);
+	if !(_position isEqualTo []) then {
+		_position = _position select 1;
 	};
 };
 
@@ -66,7 +62,6 @@ call {
 _truck = _type createVehicle _vehPos;
 _truck lock 3;
 _truck setDir random 360;
-[_truck] call EFUNC(main,setVehDamaged);
 _truck allowDamage false;
 _driver = (createGroup CIVILIAN) createUnit ["C_man_w_worker_F", [0,0,0], [], 0, "NONE"];
 _driver moveInDriver _truck;
@@ -104,12 +99,12 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		((units _grp) + [_truck]) call EFUNC(main,cleanup);
-		[TASK_TYPE] call FUNC(select);
+		[TASK_TYPE,30] call FUNC(select);
 	};
 
 	if ({CHECK_VECTORDIST(getPosASL _x,getPosASL _truck,TASK_DIST_START)} count allPlayers > 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[COUNTDOWN,60,TASK_NAME,"",call CBA_fnc_players] call EFUNC(main,setTimer);
+		[COUNTDOWN,60,TASK_NAME,{},[],call CBA_fnc_players] call EFUNC(main,setTimer);
 		_enemyCount = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
 
 		[{
@@ -121,7 +116,7 @@ TASK_PUBLISH(_position);
 				[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 				EGVAR(main,exitTimer) = true;
 				((units _grp) + GVAR(defend_enemies) + [_truck]) call EFUNC(main,cleanup);
-				[TASK_TYPE] call FUNC(select);
+				[TASK_TYPE,30] call FUNC(select);
 			};
 
 			if ({CHECK_VECTORDIST(getPosASL _x,getPosASL _truck,TASK_DIST_FAIL)} count allPlayers isEqualTo 0) exitWith {
@@ -147,10 +142,16 @@ TASK_PUBLISH(_position);
 				if (isNull _x) then {GVAR(defend_enemies) deleteAt _forEachIndex};
 			} forEach GVAR(defend_enemies);
 
-			if (random 1 < 0.25 && {count GVAR(defend_enemies) < _enemyCount}) then {
-				_grp = [[getpos _truck,200,400] call EFUNC(main,findPosSafe),0,8,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
-				GVAR(defend_enemies) append (units _grp);
-				_wp = _grp addWaypoint [getpos _truck,30];
+			if (random 1 < 0.2 && {count GVAR(defend_enemies) < _enemyCount}) then {
+				_grp = [[getpos _truck,200,400] call EFUNC(main,findPosSafe),0,ENEMY_COUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+				[
+					{count units (_this select 0) >= ENEMY_COUNT},
+					{
+						GVAR(defend_enemies) append (units (_this select 0));
+						_wp = (_this select 0) addWaypoint [getpos (_this select 1),30];
+					},
+					[_grp,_truck]
+				] call CBA_fnc_waitUntilAndExecute;
 			};
 		}, TASK_SLEEP, [_taskID,_truck,_grp,_enemyCount,diag_tickTime]] call CBA_fnc_addPerFrameHandler;
 	};

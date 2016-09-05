@@ -23,7 +23,18 @@ _classes = [];
 _strength = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
 
 if (_position isEqualTo []) then {
-	_position = [EGVAR(main,center),EGVAR(main,range),"forest"] call EFUNC(main,findRuralPos);
+	if !(EGVAR(main,locals) isEqualTo []) then {
+		_position = (selectRandom EGVAR(main,locals)) select 1;
+		if !([_position,0.5,0] call EFUNC(main,isPosSafe)) then {
+			_position = [];
+		};
+	} else {
+		_position = [EGVAR(main,center),EGVAR(main,range),"forest",false] call EFUNC(main,findRuralPos);
+	};
+};
+
+if (_position isEqualTo []) exitWith {
+	[TASK_TYPE,0] call FUNC(select);
 };
 
 call {
@@ -40,14 +51,14 @@ call {
 	_classes = EGVAR(main,officerPoolEast);
 };
 
-if (_position isEqualTo []) exitWith {
-	[TASK_TYPE,0] call FUNC(select);
+if !([_position,1,0] call EFUNC(main,isPosSafe)) then {
+	_position = [_position,5,50,1,0] call EFUNC(main,findPosSafe);
 };
 
-_base = [_position,random 0.25] call EFUNC(main,spawnBase);
+_base = [_position,random 0.2] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 
-_officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, _position, [], 0, "NONE"];
+_officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, ASLtoAGL _position, [], 0, "NONE"];
 removeFromRemainsCollector [_officer];
 [[_officer],_bRadius] call EFUNC(main,setPatrol);
 
@@ -80,7 +91,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		((units _grp) + [_officer] + _base) call EFUNC(main,cleanup);
-		[TASK_TYPE] call FUNC(select);
+		[TASK_TYPE,30] call FUNC(select);
 	};
 
 	if !(alive _officer) exitWith {

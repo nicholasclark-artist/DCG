@@ -39,15 +39,15 @@ if (_position isEqualTo []) then {
 // find return location
 if !(EGVAR(main,locations) isEqualTo []) then {
 	if (CHECK_ADDON_2(occupy)) then {
-		if (count EGVAR(main,locations) > count EGVAR(occupy,locations)) then {
-			_town = selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations))});
-		};
+		_town = selectRandom (EGVAR(main,locations) select {!(_x in EGVAR(occupy,locations))});
 	} else {
 		_town = selectRandom EGVAR(main,locations);
 	};
 };
 
-if (_position isEqualTo [] || {_town isEqualTo []}) exitWith {
+// cannot move vip without ACE captives addon
+// TODO add vanilla compatible version
+if (_position isEqualTo [] || {_town isEqualTo []} || {!(CHECK_ADDON_1("ace_captives"))}) exitWith {
 	[TASK_TYPE,0] call FUNC(select);
 };
 
@@ -61,12 +61,12 @@ if (toLower worldName in EGVAR(main,simpleWorlds)) then {
 	};
 };
 
-_vip = (createGroup civilian) createUnit ["C_Nikos", _position, [], 0, "NONE"];
+_vip = (createGroup civilian) createUnit ["C_Nikos", [0,0,0], [], 0, "NONE"];
 _vip setDir random 360;
-_vip setPosATL _position;
-[_vip,"Acts_AidlPsitMstpSsurWnonDnon02"] call EFUNC(main,setAnim);
+_vip setPosASL _position;
+[_vip,"Acts_AidlPsitMstpSsurWnonDnon02",true] call EFUNC(main,setAnim);
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+_grp = [[_position,10,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 1)},
@@ -77,6 +77,7 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
 ] call CBA_fnc_waitUntilAndExecute;
 
 _vehPos = [_position,50,100,8,0] call EFUNC(main,findPosSafe);
+
 if !(_vehPos isEqualTo _position) then {
 	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 	[
@@ -114,7 +115,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		((units _grp) + (units _vehGrp) + [_vip] + _base + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
-		[TASK_TYPE] call FUNC(select);
+		[TASK_TYPE,30] call FUNC(select);
 	};
 
 	if !(alive _vip) exitWith {

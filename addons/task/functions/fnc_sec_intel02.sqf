@@ -45,11 +45,11 @@ call {
 };
 
 _position = _position select 1;
-_vehPos = [_position,5,30,8,0] call EFUNC(main,findPosSafe);
+_vehPos = [_position,5,30,10,0] call EFUNC(main,findPosSafe);
 
 if !(_position isEqualTo _vehPos) then {
 	_vehicle = (selectRandom _classes) createVehicle [0,0,0];
-	_vehicle setPosASL _vehPos;
+	[_vehicle] call EFUNC(main,setPosSafe);
 };
 
 _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
@@ -90,7 +90,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		((units _grp) + [_vehicle]) call EFUNC(main,cleanup);
-		[TASK_TYPE] call FUNC(select);
+		[TASK_TYPE,30] call FUNC(select);
 	};
 
 	if !(INTEL_CLASS in (assignedItems (leader _grp))) exitWith {
