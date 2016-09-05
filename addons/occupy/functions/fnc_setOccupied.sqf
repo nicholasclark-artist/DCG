@@ -24,10 +24,10 @@ __________________________________________________________________*/
 #define CHANCE_AIR_CITY 0.25
 #define SNIPER_CITY 2
 #define STATIC_CITY 2
-#define CHANCE_VEH_VILLAGE 0.15
-#define CHANCE_AIR_VILLAGE 0.10
-#define SNIPER_VILLAGE 1
-#define STATIC_VILLAGE 1
+#define CHANCE_VEH_VILL 0.15
+#define CHANCE_AIR_VILL 0.10
+#define SNIPER_VILL 1
+#define STATIC_VILL 1
 #define WRECKS ["a3\structures_f\wrecks\Wreck_Car2_F.p3d","a3\structures_f\wrecks\Wreck_Car3_F.p3d","a3\structures_f\wrecks\Wreck_Car_F.p3d","a3\structures_f\wrecks\Wreck_Offroad2_F.p3d","a3\structures_f\wrecks\Wreck_Offroad_F.p3d","a3\structures_f\wrecks\Wreck_Truck_dropside_F.p3d","a3\structures_f\wrecks\Wreck_Truck_F.p3d","a3\structures_f\wrecks\Wreck_UAZ_F.p3d","a3\structures_f\wrecks\Wreck_Van_F.p3d","a3\structures_f\wrecks\Wreck_Ural_F.p3d"]
 
 _this params ["_name","_center","_size","_type",["_data",nil]];
@@ -122,16 +122,16 @@ call {
 	_taskType = "Village";
 	if (isNil "_data") then {
 		PREP_INF(_position,ceil GVAR(infCountVillage),_size);
-		PREP_VEH(_position,ceil GVAR(vehCountVillage),_size,CHANCE_VEH_VILLAGE);
-		PREP_AIR(_position,ceil GVAR(airCountVillage),CHANCE_AIR_VILLAGE);
+		PREP_VEH(_position,ceil GVAR(vehCountVillage),_size,CHANCE_VEH_VILL);
+		PREP_AIR(_position,ceil GVAR(airCountVillage),CHANCE_AIR_VILL);
 	} else {
 		PREP_INF(_position,ceil (_data select 0),_size);
 		PREP_VEH(_position,ceil (_data select 1),_size,1);
 		PREP_AIR(_position,ceil (_data select 2),1);
 	};
 	PREP_GARRISON(_position,5,_size,_unitPool);
-	PREP_STATIC(_position,STATIC_VILLAGE,_size,_objArray);
-	PREP_SNIPER(_position,SNIPER_VILLAGE,_size);
+	PREP_STATIC(_position,STATIC_VILL,_size,_objArray);
+	PREP_SNIPER(_position,SNIPER_VILL,_size);
 };
 
 GVAR(locations) pushBack _town;
@@ -158,4 +158,4 @@ if (CHECK_DEBUG) then {
 	_mrk setMarkerBrush "SolidBorder";
 };
 
-LOG_DEBUG_2("%1, %2",_town,count _objArray);
+LOG_DEBUG_3("%1, %2, %3",_town,count _objArray,_data);

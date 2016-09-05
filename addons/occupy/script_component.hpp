@@ -9,30 +9,30 @@
 #define GET_UNITVAR(OBJ) (OBJ) getVariable [QUOTE(DOUBLES(ADDON,unit)),false]
 #define SPAWN_DELAY 1.5
 
-#define PREP_INF(POS,COUNT,SIZE) \
-	_grp = [POS,0,COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
+#define PREP_INF(POS,UNIT_COUNT,SIZE) \
+	_grp = [POS,0,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
 	[ \
-		{count units (_this select 0) >= COUNT}, \
+		{count units (_this select 0) >= (_this select 1)}, \
 		{ \
-			_this params ["_grp"]; \
+			params ["_grp"]; \
 			[units _grp,SIZE] call EFUNC(main,setPatrol); \
 			{ \
 				SET_UNITVAR(_x); \
 				false \
 			} count units _grp; \
 		}, \
-		[_grp] \
+		[_grp,UNIT_COUNT] \
 	] call CBA_fnc_waitUntilAndExecute
 
-#define PREP_VEH(POS,COUNT,SIZE,CHANCE) \
+#define PREP_VEH(POS,UNIT_COUNT,SIZE,CHANCE) \
 	if (random 1 < CHANCE) then { \
 		_grid = [POS,25,100,0,8,false,false] call EFUNC(main,findPosGrid); \
 		if !(_grid isEqualTo []) then { \
-			_grp = [selectRandom _grid,1,COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
+			_grp = [selectRandom _grid,1,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
 			[ \
-				{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count units (_this select 0) >= COUNT}, \
+				{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count units (_this select 0) >= (_this select 1)}, \
 				{ \
-					_this params ["_grp"]; \
+					params ["_grp"]; \
 					_drivers = []; \
 					{ \
 						if (_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]) then { \
@@ -43,18 +43,18 @@
 					} count (units _grp); \
 					[_drivers,SIZE*2] call EFUNC(main,setPatrol); \
 				}, \
-				[_grp] \
+				[_grp,UNIT_COUNT] \
 			] call CBA_fnc_waitUntilAndExecute; \
 		}; \
 	}
 
-#define PREP_AIR(POS,COUNT,CHANCE) \
+#define PREP_AIR(POS,UNIT_COUNT,CHANCE) \
 	if (random 1 < CHANCE) then { \
-		_grp = [POS,2,COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
+		_grp = [POS,2,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
 		[ \
-			{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count units (_this select 0) >= COUNT}, \
+			{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count units (_this select 0) >= (_this select 1)}, \
 			{ \
-				_this params ["_grp"]; \
+				params ["_grp"]; \
 				_drivers = []; \
 				{ \
 					if (_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]) then { \
@@ -65,7 +65,7 @@
 				} count (units _grp); \
 				[_drivers,2000] call EFUNC(main,setPatrol); \
 			}, \
-			[_grp] \
+			[_grp,UNIT_COUNT] \
 		] call CBA_fnc_waitUntilAndExecute; \
 	}
 

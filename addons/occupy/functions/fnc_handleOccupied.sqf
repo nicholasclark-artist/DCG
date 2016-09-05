@@ -33,7 +33,9 @@ private _maxCount = 0;
 	false
 } count ((_town select 1) nearEntities [ENTITY, _town select 2]);
 
-// reinforcements PFH
+// reinforcements
+missionNamespace setVariable [SURRENDER_VAR(_town select 0),false];
+
 [{
 	params ["_args","_idPFH"];
 	_args params ["_town"];
@@ -134,7 +136,6 @@ private _maxCount = 0;
 					[_position,AV_VILLAGE] call EFUNC(approval,addValue);
 				};
 
-				missionNamespace setVariable [SURRENDER_VAR(_name),nil];
 				GVAR(locations) = GVAR(locations) - [_town];
 				EGVAR(patrol,blacklist) deleteAt (EGVAR(patrol,blacklist) find [_position,_size]);
 				[{
