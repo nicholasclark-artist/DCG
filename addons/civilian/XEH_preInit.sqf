@@ -4,16 +4,16 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 ADDON = false;
 
-PREP(handlerUnit);
-PREP(handlerVeh);
-PREP(handlerAnimal);
+PREP(handleUnit);
+PREP(handleVehicle);
+PREP(handleAnimal);
 PREP(spawnUnit);
-PREP(spawnVeh);
+PREP(spawnVehicle);
 PREP(spawnAnimal);
-PREP(setHostile);
 
-GVAR(vehicles) = [];
+GVAR(drivers) = [];
+GVAR(blacklist) = [];

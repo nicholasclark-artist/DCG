@@ -6,21 +6,27 @@ Description:
 transfers objects to a requested owner
 
 Arguments:
+0: objects to transfer <OBJECT,ARRAY>
+1: machine to receive objects <NUMBER>
 
 Return:
 none
 __________________________________________________________________*/
-if (!isServer) exitWith {};
-
 #include "script_component.hpp"
 
-if (typeName (_this select 0) isEqualTo "ARRAY") then {
-	{
-		_x setOwner (_this select 1);
-		LOG_DEBUG_2("Transferring %1 to %2.",typeOf _x,(_this select 1));
-		false
-	} count (_this select 0);
-} else {
-	(_this select 0) setOwner (_this select 1);
-	LOG_DEBUG_2("Transferring %1 to %2.",typeOf (_this select 0),(_this select 1));
-};
+if (!isServer) exitWith {};
+
+params ["_obj","_id"];
+
+{
+	if !(isNull group _x) then {
+		if !(owner group _x isEqualTo _id) then {
+			group _x setGroupOwner _id;
+			LOG_DEBUG_2("Transferring group %1 to %2.",group _x,_id);
+		};
+	} else {
+		_x setOwner _id;
+		LOG_DEBUG_2("Transferring %1 to %2.",typeOf _x,_id);
+	};
+	false
+} count _obj;

@@ -3,8 +3,15 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-handles server side DCG settings, this file only has an effect on the server
+server config settings, this file only has an effect on the server
 __________________________________________________________________*/
+class dcg_main_init {
+	typeName = "ARRAY";
+	typeDetail = "";
+	value[] = {
+		"ALL"
+	};
+};
 class dcg_main_debug {
 	typeName = "SCALAR";
 	typeDetail = "";
@@ -23,7 +30,7 @@ class dcg_main_baseName {
 class dcg_main_baseRadius {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 1800;
+	value = (worldSize*0.055);
 };
 class dcg_main_baseSafezone {
 	typeName = "BOOL";
@@ -178,12 +185,12 @@ class dcg_occupy_enable {
 class dcg_occupy_cooldown {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 1200;
+	value = 300;
 };
 class dcg_occupy_locationCount {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 2;
+	value = 1;
 };
 class dcg_occupy_infCountCapital {
 	typeName = "SCALAR";
@@ -218,7 +225,7 @@ class dcg_occupy_airCountCity {
 class dcg_occupy_infCountVillage {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 8;
+	value = 10;
 };
 class dcg_occupy_vehCountVillage {
 	typeName = "SCALAR";
@@ -238,12 +245,12 @@ class dcg_patrol_enable {
 class dcg_patrol_cooldown {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 420;
+	value = 600;
 };
 class dcg_patrol_groupsMaxCount {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 20;
+	value = 10;
 };
 class dcg_patrol_vehChance {
 	typeName = "SCALAR";
@@ -317,6 +324,11 @@ class dcg_radio_squadNet {
 		{"r_1","r_2","r_3","r_4"}
 	};
 };
+class dcg_respawn_enable {
+	typeName = "SCALAR";
+	typeDetail = "";
+	value = 1;
+};
 class dcg_task_enable {
 	typeName = "SCALAR";
 	typeDetail = "";
@@ -325,24 +337,28 @@ class dcg_task_enable {
 class dcg_task_cooldown {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 900;
+	value = 480;
 };
 class dcg_task_primaryTasks {
 	typeName = "ARRAY";
 	typeDetail = "";
 	value[] = {
-		"dcg_task_fnc_pVip",
-		"dcg_task_fnc_pCache",
-		"dcg_task_fnc_pOfficer",
-		"dcg_task_fnc_pDefend"
+		"dcg_task_fnc_prim_vip",
+		"dcg_task_fnc_prim_cache",
+		"dcg_task_fnc_prim_officer",
+		"dcg_task_fnc_prim_arty",
+		"dcg_task_fnc_prim_defend"
 	};
 };
 class dcg_task_secondaryTasks {
 	typeName = "ARRAY";
 	typeDetail = "";
 	value[] = {
-		"dcg_task_fnc_sDeliver",
-		"dcg_task_fnc_sRepair"
+		"dcg_task_fnc_sec_deliver",
+		"dcg_task_fnc_sec_repair",
+		"dcg_task_fnc_sec_officer",
+		"dcg_task_fnc_sec_intel01",
+		"dcg_task_fnc_sec_intel02"
 	};
 };
 class dcg_transport_enable {
@@ -377,17 +393,32 @@ class dcg_weather_time {
 };
 class dcg_weather_mapData {
 	typeName = "ARRAY";
-	typeDetail = "POOL";
+	typeDetail = "WORLD";
 	value[] = {
-		{"ALL",0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5},
 		{"ALTIS",0.67,0.65,0.56,0.52,0.44,0.34,0.26,0.27,0.33,0.47,0.54,0.62},
 		{"STRATIS",0.67,0.65,0.56,0.52,0.44,0.34,0.26,0.27,0.33,0.47,0.54,0.62},
 		{"TAKISTAN",0.54,0.6,0.55,0.46,0.32,0.19,0.15,0.15,0.12,0.15,0.25,0.41},
 		{"KUNDUZ",0.54,0.6,0.55,0.46,0.32,0.19,0.15,0.15,0.12,0.15,0.25,0.41},
 		{"MOUNTAINS_ACR",0.54,0.6,0.55,0.46,0.32,0.19,0.15,0.15,0.12,0.15,0.25,0.41},
-		{"CHERNARUS",0.98,0.96,0.93,0.9,0.86,0.84,0.84,0.86,0.88,0.94,0.96,0.98},
-		{"CHERNARUS_SUMMER",0.98,0.96,0.93,0.9,0.86,0.84,0.84,0.86,0.88,0.94,0.96,0.98}
+		{"CHERNARUS",0.98,0.94,0.85,0.76,0.7,0.74,0.7,0.64,0.73,0.84,0.93,0.97},
+		{"CHERNARUS_SUMMER",0.73,0.72,0.7,0.72,0.74,0.7,0.68,0.65,0.64,0.69,0.7,0.75},
+		{"TANOA",0.8,0.78,0.7,0.63,0.57,0.55,0.48,0.49,0.57,0.64,0.71,0.79}
 	};
+};
+class dcg_approval_enable {
+	typeName = "SCALAR";
+	typeDetail = "";
+	value = 1;
+};
+class dcg_approval_multiplier {
+	typeName = "SCALAR";
+	typeDetail = "";
+	value = 1;
+};
+class dcg_approval_hostileCooldown {
+	typeName = "SCALAR";
+	typeDetail = "";
+	value = 900;
 };
 class dcg_cache_enable {
 	typeName = "SCALAR";
@@ -407,7 +438,7 @@ class dcg_civilian_enable {
 class dcg_civilian_spawnDist {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 500;
+	value = 400;
 };
 class dcg_civilian_countCapital {
 	typeName = "SCALAR";
@@ -424,11 +455,6 @@ class dcg_civilian_countVillage {
 	typeDetail = "";
 	value = 5;
 };
-class dcg_civilian_hostileChance {
-	typeName = "SCALAR";
-	typeDetail = "";
-	value = 0.1;
-};
 class dcg_civilian_vehMaxCount {
 	typeName = "SCALAR";
 	typeDetail = "";
@@ -437,7 +463,7 @@ class dcg_civilian_vehMaxCount {
 class dcg_civilian_vehCooldown {
 	typeName = "SCALAR";
 	typeDetail = "";
-	value = 600;
+	value = 300;
 };
 class dcg_fob_enable {
 	typeName = "SCALAR";
@@ -453,39 +479,6 @@ class dcg_fob_range {
 	typeName = "SCALAR";
 	typeDetail = "";
 	value = 100;
-};
-class dcg_fob_rangeRecon {
-	typeName = "SCALAR";
-	typeDetail = "";
-	value = 2500;
-};
-class dcg_fob_cooldownRecon {
-	typeName = "SCALAR";
-	typeDetail = "";
-	value = 1800;
-};
-class dcg_fob_flagTexturePath {
-	typeName = "STRING";
-	typeDetail = "";
-	value = "\A3\Data_F\Flags\flag_nato_co.paa";
-};
-class dcg_fob_addons {
-	typeName = "ARRAY";
-	typeDetail = "";
-	value[] = {
-		"A3_Characters_F_BLUFOR",
-		"A3_Soft_F_MRAP_01",
-		"A3_Soft_F_HEMTT",
-		"A3_Structures_F_Mil_Cargo",
-		"A3_Structures_F_Mil_Fortification",
-		"A3_Structures_F_Mil_Helipads",
-		"A3_Structures_F_Mil_Shelters",
-		"A3_Structures_F_Civ_Lamps",
-		"A3_Structures_F_Mil_BagBunker",
-		"A3_Structures_F_Mil_BagFence",
-		"A3_Structures_F_Civ_Camping",
-		"ace_medical"
-	};
 };
 class dcg_fob_placingMultiplier {
 	typeName = "SCALAR";

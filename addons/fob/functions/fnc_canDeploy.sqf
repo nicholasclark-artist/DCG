@@ -12,4 +12,4 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-GVAR(location) isEqualTo locationNull && {vehicle player isEqualTo player} && {((getPosATL player) select 2) < 2}
+GVAR(location) isEqualTo locationNull && {isNull (objectParent player)} && {((getPosATL player) select 2) < 2}

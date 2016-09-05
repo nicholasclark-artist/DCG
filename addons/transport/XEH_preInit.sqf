@@ -4,11 +4,11 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 ADDON = false;
 
-PREP(handler);
+PREP(handleRequest);
 PREP(request);
 PREP(getChildren);
 PREP(canCallTransport);
@@ -19,7 +19,7 @@ GVAR(wait) = false;
 GVAR(exfil) = [];
 GVAR(infil) = [];
 
-publicVariable QFUNC(handler);
+publicVariable QFUNC(handleRequest);
 publicVariable QFUNC(request);
 publicVariable QFUNC(canCallTransport);
 publicVariable QFUNC(getChildren);

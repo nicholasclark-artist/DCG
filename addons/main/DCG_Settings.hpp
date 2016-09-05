@@ -3,6 +3,11 @@
 */
 
 class DOUBLES(PREFIX,settings) {
+    class GVAR(init) {
+        typeName = "ARRAY";
+        typeDetail = "";
+        value[] = {"ALL"};
+    };
     class GVAR(debug) {
         typeName = "SCALAR";
         typeDetail = "";
@@ -21,7 +26,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(baseRadius) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 1800;
+        value = (worldSize*0.055);
     };
     class GVAR(baseSafezone) {
         typeName = "BOOL";
@@ -164,5 +169,4 @@ class DOUBLES(PREFIX,settings) {
             {"ALL","C_Heli_Light_01_civil_F"}
         };
     };
-    // TODO add insignia setting
 };

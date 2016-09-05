@@ -1,12 +1,9 @@
 /*
 Author:
 Nicholas Clark (SENSEI)
-
 Description:
 handles player transport request
-
 Arguments:
-
 Return:
 none
 __________________________________________________________________*/
@@ -33,7 +30,7 @@ __________________________________________________________________*/
 			[STR_NOTLAND,true] call EFUNC(main,displayText);
 			GVAR(wait) = false;
 		} else {
-			_exfil = _pos isFlatEmpty [CHECKDIST, 50, 0.6, 10, 0, false, player];
+			_exfil = _pos isFlatEmpty [CHECKDIST, 50, 0.45, 10, -1, false, player];
 			if !(_exfil isEqualTo []) then {
 				_exfil set [2,0];
 				_exfilMrk = createMarker [MRK_EXFIL,_exfil];
@@ -55,7 +52,7 @@ __________________________________________________________________*/
 							[STR_NOTLAND,true] call EFUNC(main,displayText);
 							GVAR(wait) = false;
 						} else {
-							_infil = _pos isFlatEmpty [CHECKDIST, 50, 0.6, 10, 0, false, player];
+							_infil = _pos isFlatEmpty [CHECKDIST, 50, 0.45, 10, -1, false, player];
 							if !(_infil isEqualTo []) then {
 								if (_exfil distance2D _infil >= 1000) then {
 									_infil set [2,0];
@@ -65,7 +62,7 @@ __________________________________________________________________*/
 									_infilMrk setMarkerText format ["INSERTION LZ (%1)",name player];
 									GVAR(wait) = false;
 									[EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-									[_class,_exfil,_infil,_exfilMrk,_infilMrk] call FUNC(handler);
+									[_class,_exfil,_infil,_exfilMrk,_infilMrk] call FUNC(handleRequest);
 								} else {
 									[STR_CLOSE,true] call EFUNC(main,displayText);
 									GVAR(wait) = false;

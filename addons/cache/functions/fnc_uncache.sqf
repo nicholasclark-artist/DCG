@@ -15,12 +15,16 @@ __________________________________________________________________*/
 
 params ["_unit"];
 
-if (!isPlayer _unit && {!("driver" in assignedVehicleRole _unit)}) then {
+if (!isPlayer _unit && {_unit getVariable [UNIT_CACHED,false]}) then {
+	_unit setVariable [UNIT_CACHED,false];
 	_unit enableSimulationGlobal true;
 	_unit hideObjectGlobal false;
-	if (vehicle _unit isEqualTo _unit) then {
+	_unit enableAI "ALL";
+	if (isNull objectParent _unit) then {
 		detach _unit;
-		_unit setPosATL [getPosATL _unit select 0,getPosATL _unit select 1,0];
+		if !(CHECK_VECTORDIST(getPosASL _unit,getPosASL (leader _unit),500)) then {
+			_unit setPos [getPos _unit select 0,getPos _unit select 1,0];
+		};
 	};
 	//LOG_DEBUG_2("uncaching %1 %2",_unit,typeof _unit);
 };

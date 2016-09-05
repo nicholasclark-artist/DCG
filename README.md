@@ -4,9 +4,9 @@
 
 <p align="center">
     <a href="https://github.com/nicholasclark-artist/DCG/releases">
-        <img src="https://img.shields.io/badge/Version-3.1.0.4-blue.svg?style=flat-square" alt="DCG Version">
+        <img src="https://img.shields.io/badge/Version-3.1.0.5-blue.svg?style=flat-square" alt="DCG Version">
     </a>
-    <a href="https://github.com/nicholasclark-artist/DCG/releases/download/v3.1.0.4/dcg_3_1_0_4.zip">
+    <a href="https://github.com/nicholasclark-artist/DCG/releases/download/v3.1.0.5/dcg_3_1_0_5.zip">
         <img src="https://img.shields.io/badge/Download-DCG-blue.svg?style=flat-square" alt="DCG Download">
     </a>
     <a href="https://github.com/nicholasclark-artist/DCG/issues">
@@ -52,7 +52,7 @@ Dynamic Combat Generator is an Arma 3 mod designed to help mission makers quickl
 - ACE3 support
 - ACRE2 support
 - TFAR support
-- Coop mission for Altis, Takistan, Chernarus maps
+- Coop mission
 
 ### How Do I Use DCG?
 The latest version of [Community Based Addons](https://forums.bistudio.com/topic/168277-cba-community-base-addons-arma-3/) is required on the server and client.

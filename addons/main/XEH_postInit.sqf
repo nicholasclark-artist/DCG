@@ -3,54 +3,120 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define BASE_VAR DOUBLES(PREFIX,base)
-#define CREATE_BASE(BASE_POS) \
-	GVAR(baseLocation) = createLocation ["NameCity", BASE_POS, GVAR(baseRadius), GVAR(baseRadius)]; \
-	GVAR(baseLocation) setText format ["%1", GVAR(baseName)]
+#define BASE DOUBLES(PREFIX,base)
 #define DEFAULTPOS [-5000,-5000]
-#define CREATE_DEFAULT_BASE \
-	GVAR(baseLocation) = createLocation ["NameCity", DEFAULTPOS, 100, 100]
+#define CREATE_BASE \
+	GVAR(baseLocation) = createLocation ["NameCity", getPos BASE, GVAR(baseRadius), GVAR(baseRadius)]; \
+	GVAR(baseLocation) setText GVAR(baseName); \
+	GVAR(baseLocation) attachObject BASE
+#define CREATE_DEFAULTBASE GVAR(baseLocation) = createLocation ["NameCity", DEFAULTPOS, 10, 10]
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 // set mission params as missionNameSpace variables
 call FUNC(setParams);
 
-if (CHECK_MARKER(QUOTE(BASE_VAR))) then { // check if base marker exists
-	BASE_VAR = "Land_HelipadEmpty_F" createVehicle (getMarkerPos QUOTE(BASE_VAR)); // create base object
-	publicVariable QUOTE(BASE_VAR);
+if (CHECK_MARKER(QUOTE(BASE))) then {
+	BASE = "Land_HelipadEmpty_F" createVehicle (getMarkerPos QUOTE(BASE));
+	publicVariable QUOTE(BASE);
 };
 
-if !(isNil QUOTE(BASE_VAR)) then { // check if base object exists
-	CREATE_BASE(getPos BASE_VAR);
-	{CREATE_BASE(getPos BASE_VAR);} remoteExecCall ["BIS_fnc_call",-2,true]; // can't PV locations, so recreate location on clients. Runs at time > 0
-	GVAR(baseLocation) attachObject BASE_VAR;
+if !(isNil QUOTE(BASE)) then {
+	CREATE_BASE;
+	{
+		CREATE_BASE;
+	} remoteExecCall [QUOTE(BIS_fnc_call),-2,true];
 };
 
-if (isNull GVAR(baseLocation)) then { // if base location does not exist
-	CREATE_DEFAULT_BASE;
-	{CREATE_DEFAULT_BASE;} remoteExecCall ["BIS_fnc_call",-2,true];
-	LOG_DEBUG_1("Base object does not exist. Creating default base location at %1.",DEFAULTPOS);
+if (isNull GVAR(baseLocation)) then {
+	CREATE_DEFAULTBASE;
+	{
+		CREATE_DEFAULTBASE;
+	} remoteExecCall [QUOTE(BIS_fnc_call),-2,true];
+
+	LOG_DEBUG_1("Base object does not exist. Base location created at %1.",DEFAULTPOS);
 };
 
-// set arrays to lowercase
+if (CHECK_DEBUG) then {
+	_mrk = createMarker [QUOTE(DOUBLES(PREFIX,baseMrk)),locationPosition GVAR(baseLocation)];
+	_mrk setMarkerColor format ["Color%1", GVAR(playerSide)];
+	_mrk setMarkerBrush "Border";
+	_mrk setMarkerShape "ELLIPSE";
+	_mrk setMarkerSize [GVAR(baseRadius), GVAR(baseRadius)];
+};
+
 GVAR(blacklistLocations) = GVAR(blacklistLocations) apply {toLower _x};
 GVAR(simpleWorlds) = GVAR(simpleWorlds) apply {toLower _x};
 
-// get map locations
-{
-	_name = text _x;
-	_position = locationPosition _x;
-	_position set [2, abs (_position select 2)]; // gets actual positionASL, not ASL altitude zero
-	_size = (((size _x) select 0) + ((size _x) select 1))/2;
-	_type = type _x;
+// get map locations from config
+_cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";
+_typeLocations = ["namecitycapital","namecity","namevillage"];
+_typeLocals = ["namelocal"];
+_typeHills = ["hill"];
+_typeMarines = ["namemarine"];
 
-	if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(toLower _name in GVAR(blacklistLocations))} && {!(_name isEqualTo "")}) then {
-		GVAR(locations) pushBack [_name,_position,_size,_type];
+for "_i" from 0 to (count _cfgLocations) - 1 do {
+	_location = _cfgLocations select _i;
+	_type = getText (_location >> "type");
+	_name = getText (_location >> "name");
+	_position = getArray (_location >> "position");
+	_position set [2,(getTerrainHeightASL _position) max 0];
+	_size = ((getNumber (_location >> "radiusA")) + (getNumber (_location >> "radiusB")))*0.5;
+
+	call {
+		if (toLower _type in _typeLocations) exitWith {
+			if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(toLower _name in GVAR(blacklistLocations))} && {!(_name isEqualTo "")}) then {
+				GVAR(locations) pushBack [_name,_position,_size,_type];
+			};
+		};
+		if (toLower _type in _typeLocals) exitWith {
+			if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(_name isEqualTo "")}) then {
+				GVAR(locals) pushBack [_name,_position,_size];
+			};
+		};
+		if (toLower _type in _typeHills) exitWith {
+			if !(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) then {
+				GVAR(hills) pushBack [_position,_size];
+			};
+		};
+		if (toLower _type in _typeMarines) exitWith {
+			if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(_name isEqualTo "")}) then {
+				GVAR(marines) pushBack [_name,_position,_size];
+			};
+		};
 	};
-} forEach (nearestLocations [GVAR(center), ["NameCityCapital","NameCity","NameVillage"], GVAR(range)]);
+};
 
-// safezone PFH
+{
+	// update locations with center positions if available
+	_nameNoSpace = (_x select 0) splitString " " joinString "";
+	_cityCenterA2 = _cfgLocations >> ("ACityC_" + _nameNoSpace);
+	_cityCenterA3 = _cfgLocations >> ("CityC_" + _nameNoSpace);
+
+	if (isClass _cityCenterA2) then {
+		_position = getArray (_cityCenterA2 >> "position");
+		_position set [2,(getTerrainHeightASL _position) max 0];
+		_x set [1,_position];
+	};
+	if (isClass _cityCenterA3) then {
+		_position = getArray (_cityCenterA3 >> "position");
+		_position set [2,(getTerrainHeightASL _position) max 0];
+		_x set [1,_position];
+	};
+
+	// update locations with safe positions
+	if !([_x select 1,0.5,0] call FUNC(isPosSafe)) then {
+		_places = selectBestPlaces [_x select 1, _x select 2, "(1 + houses) * (1 - sea)", 35, 2];
+		_places = _places select {(_x select 1) > 0 && {[_x select 0,0.5,0] call FUNC(isPosSafe)}};
+
+		if !(_places isEqualTo []) then {
+			_position = (selectRandom _places) select 0;
+			_position set [2,(getTerrainHeightASL _position) max 0];
+			_x set [1,_position];
+		};
+	};
+} forEach GVAR(locations);
+
 if (GVAR(baseSafezone)) then {
 	[{
 		{
@@ -62,78 +128,72 @@ if (GVAR(baseSafezone)) then {
 	}, 60, []] call CBA_fnc_addPerFrameHandler;
 };
 
-// cleanup PFH
 if !(isNil {HEADLESSCLIENT}) then {
-	{
-		[{
-			{
-				if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then { // only local groups can be deleted
-					deleteGroup _x;
-				};
-			} forEach allGroups;
-		}, 30, []] call CBA_fnc_addPerFrameHandler;
-	} remoteExecCall ["bis_fnc_call", owner HEADLESSCLIENT];
+	[{
+		{
+			if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then {
+				deleteGroup _x;
+			};
+		} forEach allGroups;
+	}, 10, []] remoteExecCall [QUOTE(CBA_fnc_addPerFrameHandler),owner HEADLESSCLIENT,false];
 };
 
 [{
 	private ["_obj"];
-	// groups
+
 	{
 		if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then { // only local groups can be deleted
 			deleteGroup _x;
 		};
 	} forEach allGroups;
-	// markers
+
 	if !(GVAR(markerCleanup) isEqualTo []) then {
 		for "_i" from (count GVAR(markerCleanup) - 1) to 0 step -1 do {
 			deleteMarker (GVAR(markerCleanup) select _i);
 			GVAR(markerCleanup) deleteAt _i;
 		};
 	};
-	// objects
+
 	if !(GVAR(objectCleanup) isEqualTo []) then {
 		GVAR(objectCleanup) = GVAR(objectCleanup) select {!isNull _x}; // remove null elements
 		for "_i" from (count GVAR(objectCleanup) - 1) to 0 step -1 do {
 			_obj = GVAR(objectCleanup) select _i;
 			if (_obj isKindOf "LandVehicle" || {_obj isKindOf "Air"} || {_obj isKindOf "Ship"}) then {
-				if ({isPlayer _x} count (crew _obj) isEqualTo 0 && {count ([getPosATL _obj,300] call EFUNC(main,getNearPlayers)) isEqualTo 0}) then {
+				if ({isPlayer _x} count (crew _obj) isEqualTo 0 && {count ([getPosATL _obj,200] call EFUNC(main,getNearPlayers)) isEqualTo 0}) then {
 					{deleteVehicle _x} forEach (crew _obj);
 					deleteVehicle _obj;
 				};
 			} else {
-				if (count ([getPosATL _obj,300] call EFUNC(main,getNearPlayers)) isEqualTo 0) then {
+				if (count ([getPosATL _obj,200] call EFUNC(main,getNearPlayers)) isEqualTo 0) then {
 					deleteVehicle _obj;
 				};
 			};
 		};
 	};
-	// base items
+
 	{
 		if (_x getVariable [QUOTE(DOUBLES(PREFIX,cleanup)),true]) then {deleteVehicle _x};
 	} forEach (nearestObjects [locationPosition GVAR(baseLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],GVAR(baseRadius)]);
-}, 180, []] call CBA_fnc_addPerFrameHandler;
+}, 60, []] call CBA_fnc_addPerFrameHandler;
 
+[
+	{!isNull player && {alive player} && {!isNil {DOUBLES(PREFIX,main)}} && {DOUBLES(PREFIX,main)}},
+	{
+		{
+			_x call EFUNC(main,setAction);
+		} forEach [
+			[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"",QUOTE(true),"",player,1,["ACE_SelfActions"]],
+			[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","",QUOTE(true),""],
+			[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
+			[QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",QUOTE(call FUNC(deleteDataClient)),QUOTE(isServer || {serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
+		];
+	}
+] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute), 0, true];
 
-// actions
-{
-	if (hasInterface) then {
-		// fix "respawn on start" missions
-		_time = diag_tickTime;
-		waitUntil {diag_tickTime > _time + 10 && {!isNull (findDisplay 46)} && {!isNull player} && {alive player}};
-		[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"","true","",player,1,["ACE_SelfActions"]] call FUNC(setAction);
-		[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","","true","",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]] call FUNC(setAction);
-		[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]] call FUNC(setAction);
-		[QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",QUOTE(call FUNC(deleteDataClient)),QUOTE(isServer || {serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]] call FUNC(setAction);
-	};
-} remoteExec ["BIS_fnc_call",0,true];
-
-// data PVEH
-// used to call save function from client
 DATA_SAVEPVEH addPublicVariableEventHandler {
 	call FUNC(saveData);
 };
 
-// used to call delete function from client
 DATA_DELETEPVEH addPublicVariableEventHandler {
 	profileNamespace setVariable [DATA_SAVEVAR,nil];
 	saveProfileNamespace;

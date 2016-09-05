@@ -15,8 +15,6 @@ __________________________________________________________________*/
 
 if !(hasInterface) exitWith {};
 
-waitUntil {time > 0};
-
 if (CHECK_ADDON_1("acre_main")) then {
 	[GVAR(acre_command), "default", PRESET] call acre_api_fnc_copyPreset;
 	[GVAR(acre_squad), "default", PRESET] call acre_api_fnc_copyPreset;
@@ -84,10 +82,13 @@ if (CHECK_ADDON_1("acre_main")) then {
 	[GVAR(acre_support), PRESET] call acre_api_fnc_setPreset;
 
 	player addEventHandler ["respawn",{
-		[] spawn {
-			sleep 2.5;
-			call EFUNC(radio,setRadioACRE);
-		};
+		[
+			{!isNull player && {alive player}},
+			{
+				call FUNC(setRadioACRE)
+			},
+			[]
+		] call CBA_fnc_waitUntilAndExecute;
 	}];
 };
 

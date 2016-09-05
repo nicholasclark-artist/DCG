@@ -24,184 +24,138 @@ __________________________________________________________________*/
 #define CHANCE_AIR_CITY 0.25
 #define SNIPER_CITY 2
 #define STATIC_CITY 2
-#define CHANCE_VEH_VILLAGE 0.15
-#define CHANCE_AIR_VILLAGE 0.10
-#define SNIPER_VILLAGE 1
-#define STATIC_VILLAGE 1
-#define SETVAR_UNIT(UNIT) UNIT setVariable [format ["occupyUnit_%1", _name],true]
-#define TASK_ID(TASKNAME) format ["lib_%1", TASKNAME]
-#define TASK_TITLE(TASKTYPE) format ["Liberate %1", TASKTYPE]
-#define TASK_DESC(TASKNAME) format ["Enemy forces have occupied %1! Liberate the settlement!",TASKNAME]
-#define WRECKS ["Land_Wreck_Truck_dropside_F","Land_Wreck_Truck_F","Land_Wreck_UAZ_F","Land_Wreck_Ural_F","Land_Wreck_Van_F","Land_Wreck_Skodovka_F","Land_Wreck_CarDismantled_F","Land_Wreck_Car3_F","Land_Wreck_Car_F"]
-#define PREP_INF(COUNT_INF) \
-	_grp = [[_position,0,30,0.5] call EFUNC(main,findRandomPos),0,COUNT_INF,EGVAR(main,enemySide),false,1.5] call EFUNC(main,spawnGroup); \
-	[units _grp,_size*0.5] call EFUNC(main,setPatrol); \
-	{ \
-		SETVAR_UNIT(_x); \
-		_count = _count + 1; \
-		false \
-	} count units _grp;
-#define PREP_VEH(CHANCE,COUNT_VEH) \
-	if (random 1 < CHANCE) then { \
-		_posArray = [_position,50,_size,0,8,false,false] call EFUNC(main,findPosGrid); \
-		if !(_posArray isEqualTo []) then { \
-			_vehArray = [selectRandom _posArray,1,COUNT_VEH,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup); \
-			[_vehArray,_size*2] call EFUNC(main,setPatrol); \
-			{ \
-				SETVAR_UNIT(_x); \
-				_count = _count + (count units group _x); \
-				false \
-			} count _vehArray; \
-		}; \
-	};
-#define PREP_AIR(CHANCE,COUNT_AIR) \
-	if (random 1 < CHANCE) then { \
-		_airArray = [_position,2,COUNT_AIR,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup); \
-		[_airArray,2000] call EFUNC(main,setPatrol); \
-		{ \
-			SETVAR_UNIT(_x); \
-			_count = _count + (count units group _x); \
-			false \
-		} count _airArray; \
-	};
-#define PREP_SNIPER(MAX_COUNT) \
-	[_position,ceil random MAX_COUNT,_size,_size+1000] call EFUNC(main,spawnSniper);
-#define PREP_STATIC(COUNT_STATIC) \
-	_static = [_position, _size, COUNT_STATIC] call EFUNC(main,spawnStatic); \
-	{ \
-		SETVAR_UNIT(_x); \
-		_count = _count + 1; \
-		false \
-	} count (_static select 0); \
-	_objArray append (_static select 1);
-#define PREP_GARRISON(MAX_COUNT) \
-	_houses = _position nearObjects ["House", _size]; \
-	if !(_houses isEqualTo []) then { \
-		for "_i" from 1 to MAX_COUNT do { \
-			_posArray = (selectRandom _houses) buildingPos -1; \
-			if !(_posArray isEqualTo []) then { \
-				_grp = [[0,0,0],0,1,EGVAR(main,enemySide),false,1.5] call EFUNC(main,spawnGroup); \
-				(leader _grp) setDir random 360; \
-				(leader _grp) setPosATL (selectRandom _posArray); \
-				(leader _grp) disableAI "MOVE"; \
-				(leader _grp) disableAI "COVER"; \
-				_count = _count + 1; \
-			}; \
-		}; \
-	};
+#define CHANCE_VEH_VILL 0.15
+#define CHANCE_AIR_VILL 0.10
+#define SNIPER_VILL 1
+#define STATIC_VILL 1
+#define WRECKS ["a3\structures_f\wrecks\Wreck_Car2_F.p3d","a3\structures_f\wrecks\Wreck_Car3_F.p3d","a3\structures_f\wrecks\Wreck_Car_F.p3d","a3\structures_f\wrecks\Wreck_Offroad2_F.p3d","a3\structures_f\wrecks\Wreck_Offroad_F.p3d","a3\structures_f\wrecks\Wreck_Truck_dropside_F.p3d","a3\structures_f\wrecks\Wreck_Truck_F.p3d","a3\structures_f\wrecks\Wreck_UAZ_F.p3d","a3\structures_f\wrecks\Wreck_Van_F.p3d","a3\structures_f\wrecks\Wreck_Ural_F.p3d"]
 
-private ["_grp","_count","_posArray","_vehArray","_airArray","_static","_objArray","_houses","_taskType","_officer","_vehPos","_fx","_veh","_town","_mrk"];
-_this params ["_name","_position","_size","_type",["_data",nil]];
+_this params ["_name","_center","_size","_type",["_data",nil]];
 
-_objArray = [];
-_count = 0;
-_taskType = "";
-_officer = objNull;
+// find new position in case original is on water or not empty
+private _position = [];
+private _town = [_name,_center,_size,_type];
+private _objArray = [];
+private _officerPool = [];
+private _unitPool = [];
+private _taskType = "";
+private _taskID = format ["L_%1", diag_tickTime];
+
+if !([_center,1,0] call EFUNC(main,isPosSafe)) then {
+	for "_i" from 1 to _size step 2 do {
+		_position = [_center,0,_i,1,0] call EFUNC(main,findPosSafe);
+		if !(_position isEqualTo _center) exitWith {};
+	};
+} else {
+	_position = _center;
+};
+
+_position = ASLtoAGL _position;
+
+call {
+	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
+		_officerPool = EGVAR(main,officerPoolEast);
+		_unitPool = EGVAR(main,unitPoolEast);
+	};
+	if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
+		_officerPool = EGVAR(main,officerPoolWest);
+		_unitPool = EGVAR(main,unitPoolWest);
+	};
+	_officerPool = EGVAR(main,officerPoolInd);
+	_unitPool = EGVAR(main,unitPoolInd);
+};
+
+private _grp = createGroup EGVAR(main,enemySide);
+private _officer = _grp createUnit [selectRandom _officerPool, _position, [], 0, "NONE"];
+_officer setVariable [QUOTE(DOUBLES(ADDON,officer)),true,true];
+SET_UNITVAR(_officer);
+[[_officer],_size*0.5] call EFUNC(main,setPatrol);
+removeFromRemainsCollector [_officer];
+
+// spawn vehicle wrecks
+for "_i" from 0 to (ceil random 3) do {
+	_vehPos = [_position,0,_size,8,0] call EFUNC(main,findPosSafe);
+	if (!(_vehPos isEqualTo _position) && {!isOnRoad _vehPos}) then {
+		private _veh = createSimpleObject [selectRandom WRECKS,[0,0,0]];
+		_veh setDir random 360;
+		_veh setPosASL _vehPos;
+		_veh setVectorUp surfaceNormal _vehPos;
+		private _fx = "test_EmptyObjectForSmoke" createVehicle [0,0,0];
+		_fx setPosASL (getPosWorld _veh);
+		_objArray pushBack _veh;
+	};
+};
 
 call {
 	if (_type isEqualTo "NameCityCapital") exitWith {
 		_taskType = "Capital";
 		if (isNil "_data") then {
-			PREP_INF(ceil GVAR(infCountCapital))
-			PREP_VEH(CHANCE_VEH_CAP,ceil GVAR(vehCountCapital))
-			PREP_AIR(CHANCE_AIR_CAP,ceil GVAR(airCountCapital))
-			PREP_SNIPER(SNIPER_CAP)
-			PREP_STATIC(STATIC_CAP)
+			PREP_INF(_position,ceil GVAR(infCountCapital),_size);
+			PREP_VEH(_position,ceil GVAR(vehCountCapital),_size,CHANCE_VEH_CAP);
+			PREP_AIR(_position,ceil GVAR(airCountCapital),CHANCE_AIR_CAP);
 		} else {
-			PREP_INF(ceil (_data select 0))
-			PREP_VEH(CHANCE_VEH_CAP,ceil (_data select 1))
-			PREP_AIR(CHANCE_AIR_CAP,ceil (_data select 2))
-			PREP_SNIPER(SNIPER_CAP)
-			PREP_STATIC(STATIC_CAP)
+			PREP_INF(_position,ceil (_data select 0),_size);
+			PREP_VEH(_position,ceil (_data select 1),_size,1);
+			PREP_AIR(_position,ceil (_data select 2),1);
 		};
-		PREP_GARRISON(15)
+		PREP_GARRISON(_position,15,_size,_unitPool);
+		PREP_STATIC(_position,STATIC_CAP,_size,_objArray);
+		PREP_SNIPER(_position,SNIPER_CAP,_size);
 	};
 
 	if (_type isEqualTo "NameCity") exitWith {
 		_taskType = "City";
 		if (isNil "_data") then {
-			PREP_INF(ceil GVAR(infCountCity))
-			PREP_VEH(CHANCE_VEH_CITY,ceil GVAR(vehCountCity))
-			PREP_AIR(CHANCE_AIR_CITY,ceil GVAR(airCountCity))
-			PREP_SNIPER(SNIPER_CITY);
-			PREP_STATIC(STATIC_CITY);
+			PREP_INF(_position,ceil GVAR(infCountCity),_size);
+			PREP_VEH(_position,ceil GVAR(vehCountCity),_size,CHANCE_VEH_CITY);
+			PREP_AIR(_position,ceil GVAR(airCountCity),CHANCE_AIR_CITY);
 		} else {
-			PREP_INF(ceil (_data select 0))
-			PREP_VEH(CHANCE_VEH_CITY,ceil (_data select 1))
-			PREP_AIR(CHANCE_AIR_CITY,ceil (_data select 2))
-			PREP_SNIPER(SNIPER_CITY);
-			PREP_STATIC(STATIC_CITY);
+			PREP_INF(_position,ceil (_data select 0),_size);
+			PREP_VEH(_position,ceil (_data select 1),_size,1);
+			PREP_AIR(_position,ceil (_data select 2),1);
 		};
-		PREP_GARRISON(10)
+		PREP_GARRISON(_position,10,_size,_unitPool);
+		PREP_STATIC(_position,STATIC_CITY,_size,_objArray);
+		PREP_SNIPER(_position,SNIPER_CITY,_size);
 	};
 
 	_taskType = "Village";
 	if (isNil "_data") then {
-		PREP_INF(ceil GVAR(infCountVillage))
-		PREP_VEH(CHANCE_VEH_VILLAGE,ceil GVAR(vehCountVillage))
-		PREP_AIR(CHANCE_AIR_VILLAGE,ceil GVAR(airCountVillage))
-		PREP_SNIPER(SNIPER_VILLAGE);
-		PREP_STATIC(STATIC_VILLAGE);
+		PREP_INF(_position,ceil GVAR(infCountVillage),_size);
+		PREP_VEH(_position,ceil GVAR(vehCountVillage),_size,CHANCE_VEH_VILL);
+		PREP_AIR(_position,ceil GVAR(airCountVillage),CHANCE_AIR_VILL);
 	} else {
-		PREP_INF(ceil (_data select 0))
-		PREP_VEH(CHANCE_VEH_VILLAGE,ceil (_data select 1))
-		PREP_AIR(CHANCE_AIR_VILLAGE,ceil (_data select 2))
-		PREP_SNIPER(SNIPER_VILLAGE);
-		PREP_STATIC(STATIC_VILLAGE);
+		PREP_INF(_position,ceil (_data select 0),_size);
+		PREP_VEH(_position,ceil (_data select 1),_size,1);
+		PREP_AIR(_position,ceil (_data select 2),1);
 	};
-	PREP_GARRISON(5)
+	PREP_GARRISON(_position,5,_size,_unitPool);
+	PREP_STATIC(_position,STATIC_VILL,_size,_objArray);
+	PREP_SNIPER(_position,SNIPER_VILL,_size);
 };
 
-call {
-	_grp = createGroup EGVAR(main,enemySide);
-	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
-		_officer = _grp createUnit [selectRandom EGVAR(main,officerPoolEast), ASLtoAGL _position, [], 0, "NONE"];
-	};
-	if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
-		_officer = _grp createUnit [selectRandom EGVAR(main,officerPoolWest), ASLtoAGL _position, [], 0, "NONE"];
-	};
-	_officer = _grp createUnit [selectRandom EGVAR(main,officerPoolInd), ASLtoAGL _position, [], 0, "NONE"];
-};
-_count = _count + 1;
-_officer setVariable [QUOTE(DOUBLES(ADDON,officer)),true,true];
-removeFromRemainsCollector [_officer];
-[[_officer],_size*0.5] call EFUNC(main,setPatrol);
-// TODO call FUNC(addIntel) on officer
+GVAR(locations) pushBack _town;
 
-// create wrecks
-for "_i" from 0 to (ceil random 3) do {
-	_vehPos = [_position,0,_size,4] call EFUNC(main,findRandomPos);
-	if (!(_vehPos isEqualTo _position) && {!isOnRoad _vehPos} && {!surfaceIsWater _vehPos}) then {
-		private ["_fx","_veh"];
-		_veh = (selectRandom WRECKS) createVehicle _vehPos;
-		_veh setDir random 360;
-		_veh setVectorUp surfaceNormal position _veh;
-		_fx = "test_EmptyObjectForSmoke" createVehicle getposATL _veh;
-		_fx attachTo [_veh,[0,0,0]];
-		_objArray pushBack _veh;
-	};
-};
+[true,_taskID,[format ["Enemy forces have occupied %1! Liberate the settlement!",_name],format ["Liberate %1", _taskType],""],_position,false,true,"rifle"] call EFUNC(main,setTask);
 
-// pushBack location to array and set task
-GVAR(locations) pushBack _this;
-[true,TASK_ID(_name),[TASK_DESC(_name),TASK_TITLE(_taskType),""],ASLtoAGL _position,false,true,"Attack"] call EFUNC(main,setTask);
-
-[{ // check for player PFH
+[{
 	params ["_args","_idPFH"];
-	_args params ["_town","_count","_objArray","_officer"];
+	_args params ["_town","_objArray","_officer","_taskID"];
 
 	if !(([ASLToAGL(_town select 1),_town select 2] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		_args call FUNC(handler);
+		_args call FUNC(handleOccupied);
 	};
-}, 10, [_this,_count,_objArray,_officer]] call CBA_fnc_addPerFrameHandler;
+}, 10, [_town,_objArray,_officer,_taskID]] call CBA_fnc_addPerFrameHandler;
+
+EGVAR(civilian,blacklist) pushBack _name; // stop civilians from spawning in town
 
 if (CHECK_DEBUG) then {
-	_mrk = createMarker [format["%1_%2_debug",QUOTE(ADDON),_name],_position];
+	private _mrk = createMarker [format["%1_%2_debug",QUOTE(ADDON),_name],_position];
 	_mrk setMarkerShape "ELLIPSE";
 	_mrk setMarkerSize [_size,_size];
 	_mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)];
 	_mrk setMarkerBrush "SolidBorder";
 };
 
-LOG_DEBUG_4("%1, %2, %3, %4",_this,_count,_objArray,_officer);
+LOG_DEBUG_3("%1, %2, %3",_town,count _objArray,_data);

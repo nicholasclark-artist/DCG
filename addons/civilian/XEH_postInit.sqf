@@ -6,7 +6,7 @@ __________________________________________________________________*/
 #define EXPRESSIONS [["(1 - forest) * (2 + meadow) * (1 - sea) * (1 - houses) * (1 - hills)","meadow"],["(2 + forest) * (1 - sea) * (1 - houses)","forest"],["(2 + hills) * (1 - sea)","hills"],["(2 + houses) * (1 - sea)","houses"]]
 #define THRESHOLD ceil(EGVAR(main,range)*0.002)
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");
@@ -16,11 +16,11 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	if (DOUBLES(PREFIX,main)) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
-		// handle vehicle spawns
-		call FUNC(handlerVeh);
+		call FUNC(handleVehicle);
 
-		// get locations
 		_locations = [];
+		_posArray = [];
+
 		{
 			if !(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) then {
 				_locations pushBack _x;
@@ -31,8 +31,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		if (CHECK_DEBUG) then {
 			private "_mrk";
 			{
-				LOG_DEBUG_1("%1 initialized.", _x select 0);
-				_mrk = createMarker [format["%1_%2",QUOTE(ADDON),_x select 0],_x select 1];
+				_mrk = createMarker [LOCVAR(_x select 0),_x select 1];
 				_mrk setMarkerColor "ColorCivilian";
 				_mrk setMarkerShape "ELLIPSE";
 				_mrk setMarkerBrush "SolidBorder";
@@ -41,10 +40,8 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			} forEach _locations;
 		};
 
-		// handle civ spawns
-		[_locations] call FUNC(handlerUnit);
+		[_locations] call FUNC(handleUnit);
 
-		_posArray = [];
 		[{
 			params ["_args","_idPFH"];
 			_args params ["_posArray"];
@@ -63,15 +60,13 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 					} forEach _posArray;
 				};
 
-				// handle animal spawns
-				[_posArray] call FUNC(handlerAnimal);
+				[_posArray] call FUNC(handleAnimal);
 			};
 
-			// get animal positions
 			_selected = selectRandom EXPRESSIONS;
 			_expression = _selected select 0;
 			_str = _selected select 1;
-			_pos = [EGVAR(main,center),0,EGVAR(main,range)] call EFUNC(main,findRandomPos);
+			_pos = [EGVAR(main,center),0,EGVAR(main,range)] call EFUNC(main,findPosSafe);
 			_ret = selectBestPlaces [_pos,5000,_expression,70,1];
 			_pos = _ret select 0 select 0;
 			if (!(_ret isEqualTo []) && {!(CHECK_DIST2D(_pos,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} && {!(surfaceIsWater _pos)} && {{CHECK_DIST2D(_pos,(_x select 0),GVAR(spawnDist))} count _posArray isEqualTo 0}) then {

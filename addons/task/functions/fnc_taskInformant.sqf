@@ -38,7 +38,7 @@ _townName = text _town;
 _townPos = getpos _town;
 _townPos set [2,0];
 
-_houseArray = [_townPos,_radius] call DCG_fnc_findHousePos;
+_houseArray = [_townPos,_radius] call DCG_fnc_findPosHouse;
 if ((_houseArray select 1) isEqualTo []) exitWith {
 	TASKEXIT(_taskID)
 };

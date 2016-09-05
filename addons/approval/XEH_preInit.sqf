@@ -4,8 +4,17 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 ADDON = false;
 
-GVAR(value) = 0;
+PREP(addValue);
+PREP(getValue);
+PREP(getRegion);
+PREP(handleKilled);
+PREP(handleHostile);
+PREP(spawnHostile);
+PREP(hint);
+PREP(question);
+
+publicVariable QFUNC(handleKilled);

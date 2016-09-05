@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-setup curator eventhandlers
+setup eventhandlers on curator unit
 
 Arguments:
 
@@ -11,12 +11,10 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SET_COST(COST) \
-	_cost = if (_side isEqualTo _playerSide || {_side isEqualTo 3}) then { \
-		[true,COST] \
-	} else { \
-		[false,COST]; \
-	};
+#define COST_MULTIPIER 0.5
+#define FOB_NAME format ["%1 (+ %2 Approval)", GVAR(name), GVAR(AVBonus)]
+
+LOG_DEBUG_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
 GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
@@ -26,70 +24,54 @@ GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
 	_playerSide = getNumber (configFile >> "CfgVehicles" >> typeOf getAssignedCuratorUnit GVAR(curator) >> "side");
 	_costs = [];
 	{
-		// TODO following code may be missing a few vehicle classes that are relevant to an fob
-		call {
-			_side = getNumber (configFile >> "CfgVehicles" >> _x >> "side");
-			_vehClass = toLower getText (configFile >> "CfgVehicles" >> _x >> "vehicleClass");
-			if (_vehClass in ["men","menstory","menrecon","mendiver","mensniper","mensupport"]) exitWith {
-				SET_COST(COST_MAN)
-			};
-			if (_vehClass in ["car","support"]) exitWith {
-				SET_COST(COST_CAR)
-			};
-			if (_vehClass in ["armored"]) exitWith {
-				SET_COST(COST_TANK)
-			};
-			if (_vehClass in ["air"]) exitWith {
-				SET_COST(COST_AIR)
-			};
-			if (_vehClass in ["ship","submarine"]) exitWith {
-				SET_COST(COST_SHIP)
-			};
-			if (_vehClass in ["ammo"]) exitWith {
-				SET_COST(COST_AMMO)
-			};
-			if (_vehClass in ["structures","structures_military","structures_village","structures_infrastructure","structures_industrial"]) exitWith {
-				SET_COST(COST_STRUCT)
-			};
-			if (_vehClass in ["fortifications"]) exitWith {
-				SET_COST(COST_FORT)
-			};
-			if (_vehClass in ["signs"]) exitWith {
-				SET_COST(COST_SIGN)
-			};
-			if (_vehClass in ["small_items","objects","furniture","tents"]) exitWith {
-				SET_COST(COST_ITEM)
-			};
-			_cost = [true,1];
+		_side = getNumber (configFile >> "CfgVehicles" >> _x >> "side");
+		_cost = [_x] call FUNC(getCuratorCost);
+
+		if (!(_cost isEqualTo 0) && {_side isEqualTo _playerSide || _side isEqualTo 3}) then {
+			_cost = [true,_cost];
+		} else {
+			_cost = [false,_cost];
 		};
+
 		_costs pushBack _cost;
 	} forEach (_this select 1);
+
 	_costs
 }];
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectPlaced";
 GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
-	if (typeOf (_this select 1) in ARRAY_MED) then {
+	if (typeOf (_this select 1) in FOB_MED) then {
 		(_this select 1) setVariable ["ace_medical_isMedicalFacility",true,true];
 	};
-	if (typeOf (_this select 1) in ARRAY_HQ) then {
-		if ({typeOf _x in ARRAY_HQ} count (curatorEditableObjects GVAR(curator)) <= 1) then {
-			["HQ deployed.\nAerial reconnaissance online.",true] call EFUNC(main,displayText);
-		};
-	};
-	if (CHECK_ADDON_2(approval)) then {
-		// TODO add approval increase
+
+	if (EGVAR(approval,enable) isEqualTo 1) then {
+		_cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
+		_cost = _cost*COST_MULTIPIER;
+
+		[[_cost,getPosASL (_this select 1)],{
+			[_this select 1,_this select 0] call EFUNC(approval,addValue);
+		}] remoteExecCall [QUOTE(BIS_fnc_call),2,false];
+
+		/*GVAR(AVBonus) = round(GVAR(AVBonus) + _cost);
+		publicVariable QGVAR(AVBonus);
+
+		{GVAR(location) setText FOB_NAME} remoteExecCall [QUOTE(BIS_fnc_call),0,false];*/
 	};
 }];
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectDeleted";
 GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
-	if (typeOf (_this select 1) in ARRAY_HQ) then {
-		if ({typeOf _x in ARRAY_HQ} count (curatorEditableObjects GVAR(curator)) isEqualTo 0) then {
-			["HQ removed.\nAerial reconnaissance offline.",true] call EFUNC(main,displayText);
-		};
-	};
-	if (CHECK_ADDON_2(approval)) then {
-		// TODO add approval decrease
+	if (EGVAR(approval,enable) isEqualTo 1) then {
+		_cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
+		_cost = _cost*COST_MULTIPIER;
+
+		[[_cost * -1,getPosASL (_this select 1)],{
+			[_this select 1,_this select 0] call EFUNC(approval,addValue);
+		}] remoteExecCall [QUOTE(BIS_fnc_call),2,false];
+
+		/*GVAR(AVBonus) = round(GVAR(AVBonus) - _cost);
+		publicVariable QGVAR(AVBonus);
+		{GVAR(location) setText FOB_NAME} remoteExecCall [QUOTE(BIS_fnc_call),0,false];*/
 	};
 }];

@@ -30,7 +30,7 @@ if (CHECK_ADDON_2(occupy)) then {
 		_vehCount = 0;
 		_airCount = 0;
 		{
-			if ((driver _x) getVariable [format ["occupyUnit_%1", _name],false]) then {
+			if ((driver _x) getVariable [QUOTE(TRIPLES(PREFIX,occupy,unit)),false]) then {
 				if (_x isKindOf "Man") exitWith {
 					_infCount = _infCount + 1;
 				};
@@ -89,6 +89,7 @@ if (CHECK_ADDON_2(fob)) then {
 		_data pushBack _dataObj;
 		_refund = ((_data select 1) + _refund) min 1;
 		_data set [1,_refund];
+		//_data pushBack [EGVAR(fob,AVBonus)];
 	};
 
 	PUSHBACK_DATA(fob,_data);
@@ -120,6 +121,17 @@ if (CHECK_ADDON_2(task)) then {
 	_data = [EGVAR(task,primary),EGVAR(task,secondary)];
 
 	PUSHBACK_DATA(task,_data);
+};
+
+if (CHECK_ADDON_2(approval)) then {
+	private ["_data"];
+	_data = [];
+	{
+		_data pushBack [AV_VAR(_x select 0),missionNamespace getVariable [AV_VAR(_x select 0),0]];
+		false
+	} count GVAR(locations);
+
+	PUSHBACK_DATA(approval,_data);
 };
 
 // following code must run last

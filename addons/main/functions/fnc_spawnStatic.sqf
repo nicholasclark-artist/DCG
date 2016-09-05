@@ -79,7 +79,7 @@ call {
 			_roadConnectedTo = _roadConnectedTo select 0;
 			_staticPos = _road modelToWorld [-11,0,0];
 			_staticPos set [2,0];
-			_check = _staticPos isFlatEmpty [2, 0, 0.4, 3, 0, false, objNull];
+			_check = _staticPos isFlatEmpty [2, -1, 0.4, 3, -1];
 			if (_check isEqualTo [] || {isOnRoad _staticPos}) exitWith {};
 			_staticPos set [2,-0.02];
 			_bunker = "Land_BagBunker_Small_F" createVehicle _staticPos;
@@ -98,7 +98,7 @@ call {
 			DEBUG_MRK
 		};
 		 // mortar
-		 if !(_x isFlatEmpty [2, 0, 0.4, 3, 0, false, objNull] isEqualTo []) then {
+		 if !(_x isFlatEmpty [2, -1, 0.4, 3, -1] isEqualTo []) then {
 			_static = _static3 createVehicle _x;
 			_fort = "Land_BagFence_Round_F" createVehicle [0,0,0];
 			_fortPos = (_static modelToWorld [0,2.3,0]);

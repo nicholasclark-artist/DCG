@@ -4,20 +4,24 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer) exitWith {};
-
 ADDON = false;
 
+PREP(init); // do not change
+call FUNC(init); // do not change
+
+if (!(GVAR(enable)) || {!isServer}) exitWith {};
+
+PREP(armory);
 PREP(arsenal);
+PREP(createLocation);
 PREP(cleanup);
-PREP(findHousePos);
+PREP(findPosHouse);
 PREP(replaceString);
-PREP(findOverwatchPos);
+PREP(findPosOverwatch);
 PREP(findPosGrid);
-PREP(findRandomPos);
-PREP(findRuralPos);
+PREP(findPosSafe);
+PREP(findPosRural);
 PREP(getNearPlayers);
-PREP(getPlayers);
 PREP(saveData);
 PREP(saveDataClient);
 PREP(deleteDataClient);
@@ -27,6 +31,7 @@ PREP(loadInventory);
 PREP(log);
 PREP(inBuilding);
 PREP(inLOS);
+PREP(isPosSafe);
 PREP(displayText);
 PREP(removeAction);
 PREP(removeParticle);
@@ -35,7 +40,7 @@ PREP(setAction);
 PREP(setSettings);
 PREP(setSettingsFromConfig);
 PREP(exportSettings);
-PREP(exportObjects);
+PREP(exportBase);
 PREP(shuffle);
 PREP(setOwner);
 PREP(setTask);
@@ -50,6 +55,7 @@ PREP(setUnitDamaged);
 PREP(setSurrender);
 PREP(setVehDamaged);
 PREP(setWaypointPos);
+PREP(setPosSafe);
 PREP(spawnBase);
 PREP(spawnGroup);
 PREP(spawnReinforcements);
@@ -58,6 +64,9 @@ PREP(spawnStatic);
 
 GVAR(settings) = [];
 GVAR(locations) = [];
+GVAR(locals) = [];
+GVAR(hills) = [];
+GVAR(marines) = [];
 GVAR(baseLocation) = locationNull;
 GVAR(range) = worldSize*0.5;
 GVAR(center) = [GVAR(range),GVAR(range),0];
@@ -66,18 +75,20 @@ GVAR(enemySide) = EAST;
 GVAR(markerCleanup) = [];
 GVAR(objectCleanup) = [];
 GVAR(saveDataCurrent) = [DATA_MISSION_ID];
+GVAR(actions) = [];
 
 publicVariable QUOTE(ADDON);
+publicVariable QFUNC(armory);
 publicVariable QFUNC(arsenal);
+publicVariable QFUNC(createLocation);
 publicVariable QFUNC(cleanup);
-publicVariable QFUNC(findHousePos);
+publicVariable QFUNC(findPosHouse);
 publicVariable QFUNC(replaceString);
-publicVariable QFUNC(findOverwatchPos);
+publicVariable QFUNC(findPosOverwatch);
 publicVariable QFUNC(findPosGrid);
-publicVariable QFUNC(findRandomPos);
-publicVariable QFUNC(findRuralPos);
+publicVariable QFUNC(findPosSafe);
+publicVariable QFUNC(findPosRural);
 publicVariable QFUNC(getNearPlayers);
-publicVariable QFUNC(getPlayers);
 publicVariable QFUNC(loadInventory);
 publicVariable QFUNC(log);
 publicVariable QFUNC(saveDataClient);
@@ -104,6 +115,8 @@ publicVariable QFUNC(spawnSniper);
 publicVariable QFUNC(spawnStatic);
 publicVariable QFUNC(inBuilding);
 publicVariable QFUNC(inLOS);
+publicVariable QFUNC(isPosSafe);
+publicVariable QFUNC(setPosSafe);
 
 publicVariable QGVAR(range);
 publicVariable QGVAR(center);
@@ -111,6 +124,7 @@ publicVariable QGVAR(enemySide);
 publicVariable QGVAR(playerSide);
 publicVariable QGVAR(markerCleanup);
 publicVariable QGVAR(objectCleanup);
+publicVariable QGVAR(actions);
 
 call FUNC(setSettings);
 call FUNC(loadData);

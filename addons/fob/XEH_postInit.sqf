@@ -3,20 +3,9 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SET_PATROL \
-	{ \
-		if (_x isKindOf 'Man' && {_x isEqualTo leader group _x} && {!(_x getVariable ['dcg_isOnPatrol',-1] isEqualTo 1)}) then { \
-			[units group _x,GVAR(range)*0.5,false] call EFUNC(main,setPatrol); \
-			_x addEventHandler ['Local',{ \
-				if (_this select 1) then { \
-					_x setVariable ['dcg_isOnPatrol',0]; \
-					[units group (_this select 0),GVAR(range)*0.5,false] call EFUNC(main,setPatrol); \
-				}; \
-			}]; \
-		}; \
-	} forEach (curatorEditableObjects GVAR(curator));
+#include "\a3\editor_f\Data\Scripts\dikCodes.h"
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");
@@ -25,7 +14,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 unassignCurator GVAR(curator);
 
 PVEH_DEPLOY addPublicVariableEventHandler {(_this select 1) call FUNC(setup)};
-PVEH_REQUEST addPublicVariableEventHandler {(_this select 1) call FUNC(requestHandler)};
+PVEH_REQUEST addPublicVariableEventHandler {(_this select 1) call FUNC(handleRequest)};
 PVEH_REASSIGN addPublicVariableEventHandler {(_this select 1) assignCurator GVAR(curator)};
 addMissionEventHandler ["HandleDisconnect",{
 	if ((_this select 2) isEqualTo GVAR(UID)) then {unassignCurator GVAR(curator)};
@@ -38,7 +27,7 @@ addMissionEventHandler ["HandleDisconnect",{
 
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
 		if !(_data isEqualTo []) then {
-			[objNull,_data select 0,_data select 1] call FUNC(setup);
+			[_data select 0,_data select 1] call FUNC(setup);
 			{
 				_veh = (_x select 0) createVehicle [0,0,0];
 				_veh setDir (_x select 2);
@@ -47,27 +36,33 @@ addMissionEventHandler ["HandleDisconnect",{
 				GVAR(curator) addCuratorEditableObjects [[_veh],false];
 				false
 			} count (_data select 2);
+
+			//GVAR(AVBonus) = (_data select 3);
 		};
 
 		{
-			if (hasInterface) then {
-				// fix "respawn on start" missions
-				_time = diag_tickTime;
-				waitUntil {diag_tickTime > _time + 10 && {!isNull (findDisplay 46)} && {!isNull player} && {alive player}};
-				[QUOTE(ADDON),"Forward Operating Base","",QUOTE(true),QUOTE(call FUNC(getChildren)),player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]] call EFUNC(main,setAction);
-				[QUOTE(DOUBLES(ADDON,patrol)),"Set FOB Groups on Patrol",QUOTE(SET_PATROL),QUOTE(player isEqualTo (getAssignedCuratorUnit GVAR(curator))),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
+			[QUOTE(ADDON),"Forward Operating Base","",QUOTE(true),QUOTE(call FUNC(getChildren))] call EFUNC(main,setAction);
 
-				player addEventHandler ["respawn",{
-					if ((getPlayerUID (_this select 0)) isEqualTo GVAR(UID)) then {
-						[] spawn {
-							sleep 5;
+			[ADDON_TITLE, DEPLOY_ID, DEPLOY_NAME, {DEPLOY_KEYCODE}, ""] call CBA_fnc_addKeybind;
+			[ADDON_TITLE, REQUEST_ID, REQUEST_NAME, {REQUEST_KEYCODE}, ""] call CBA_fnc_addKeybind;
+			[ADDON_TITLE, DISMANTLE_ID, DISMANTLE_NAME, {DISMANTLE_KEYCODE}, ""] call CBA_fnc_addKeybind;
+			[ADDON_TITLE, PATROL_ID, PATROL_NAME, {PATROL_KEYCODE}, ""] call CBA_fnc_addKeybind;
+			[ADDON_TITLE, RECON_ID, RECON_NAME, {RECON_KEYCODE}, ""] call CBA_fnc_addKeybind;
+			[ADDON_TITLE, BUILD_ID, BUILD_NAME, {BUILD_KEYCODE}, "", [DIK_DOWN, [true, false, false]]] call CBA_fnc_addKeybind;
+
+			player addEventHandler ["Respawn",{
+				if ((getPlayerUID (_this select 0)) isEqualTo GVAR(UID)) then {
+					[
+						{
 							missionNamespace setVariable [PVEH_REASSIGN,player];
 							publicVariableServer PVEH_REASSIGN;
-						};
-					};
-				}];
-			};
-		} remoteExec ["BIS_fnc_call",0,true];
+						},
+						[],
+						5
+					] call CBA_fnc_waitAndExecute;
+				};
+			}];
+		} remoteExecCall [QUOTE(BIS_fnc_call),0,true];
 	};
 }, 0, []] call CBA_fnc_addPerFrameHandler;
 

@@ -12,8 +12,7 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CANCEL_HINT(TASKTYPE) format ["Are you sure you want to cancel the current %1 task?",TASKTYPE]
-#define CONFIRMED_HINT "Task canceled."
+#define CANCEL_HINT(TYPE) format ["Are you sure you want to cancel the current %1 task?",TYPE]
 
 if !(hasInterface) exitWith {};
 
@@ -22,7 +21,7 @@ if ((_this select 0) > 0) then {
 	[] spawn {
 		closeDialog 0;
 		_ret = [
-			parseText (format ["<t align='center'>%1</t>",CANCEL_HINT("primary (P)")]),
+			parseText (format ["<t align='center'>%1</t>",CANCEL_HINT("primary")]),
 			TITLE,
 			"Yes",
 			"No"
@@ -30,8 +29,7 @@ if ((_this select 0) > 0) then {
 
 		if (_ret) then {
 			GVAR(primary) = [];
-			publicVariable QGVAR(primary);
-			[CONFIRMED_HINT,true] call EFUNC(main,displayText);
+			publicVariableServer QGVAR(primary);
 		};
 	};
 } else {
@@ -39,7 +37,7 @@ if ((_this select 0) > 0) then {
 	[] spawn {
 		closeDialog 0;
 		_ret = [
-			parseText (format ["<t align='center'>%1</t>",CANCEL_HINT("secondary (S)")]),
+			parseText (format ["<t align='center'>%1</t>",CANCEL_HINT("secondary")]),
 			TITLE,
 			"Yes",
 			"No"
@@ -47,8 +45,7 @@ if ((_this select 0) > 0) then {
 
 		if (_ret) then {
 			GVAR(secondary) = [];
-			publicVariable QGVAR(secondary);
-			[CONFIRMED_HINT,true] call EFUNC(main,displayText);
+			publicVariableServer QGVAR(secondary);
 		};
 	};
 };
