@@ -64,10 +64,20 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		setDate _date;
 
 		[[_overcast],{
-			if !(isDedicated) then {
-				waitUntil {time > 5 && !isNull player && alive player};
+			_overcast = _this select 0;
+			_wait = if (isDedicated) then {
+				true
+			} else {
+				time > 5 && !isNull player && alive player
 			};
-			(_this select 0) call BIS_fnc_setOvercast;
+
+			[
+				{_this select 1},
+				{
+					(_this select 0) call BIS_fnc_setOvercast;
+				},
+				[_overcast,_wait]
+			] call CBA_fnc_waitUntilAndExecute;
 		}] remoteExec [QUOTE(BIS_fnc_call),0,true];
 	};
 }, 0, []] call CBA_fnc_addPerFrameHandler;
