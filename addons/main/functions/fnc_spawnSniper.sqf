@@ -38,7 +38,7 @@ call {
 	_sniper = selectRandom GVAR(sniperPoolInd);
 };
 
-_overwatch = [_pos,_count,_min,_max] call FUNC(findOverwatchPos);
+_overwatch = [_pos,_count,_min,_max] call FUNC(findPosOverwatch);
 
 {
 	_grp = createGroup _side;

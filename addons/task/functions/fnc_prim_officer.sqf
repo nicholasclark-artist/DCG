@@ -24,7 +24,7 @@ _strength = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
 _vehGrp = grpNull;
 
 if (_position isEqualTo []) then {
-	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findRuralPos);
+	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findPosRural);
 };
 
 call {

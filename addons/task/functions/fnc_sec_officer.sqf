@@ -29,7 +29,7 @@ if (_position isEqualTo []) then {
 			_position = [];
 		};
 	} else {
-		_position = [EGVAR(main,center),EGVAR(main,range),"forest",false] call EFUNC(main,findRuralPos);
+		_position = [EGVAR(main,center),EGVAR(main,range),"forest",false] call EFUNC(main,findPosRural);
 	};
 };
 

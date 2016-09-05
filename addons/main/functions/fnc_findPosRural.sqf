@@ -62,7 +62,7 @@ if !(_places isEqualTo []) then {
 			_ret = _pos;
 		};
 	} else {
-		_ret = [_pos,500] call FUNC(findHousePos);
+		_ret = [_pos,500] call FUNC(findPosHouse);
 	};
 };
 
