@@ -61,7 +61,14 @@
 
 #define RECON_ID QUOTE(DOUBLES(ADDON,recon))
 #define RECON_NAME "Switch to Aerial Recon"
-#define RECON_STATEMENT player action ["SwitchToUAVGunner",RECON]
+#define RECON_STATEMENT \
+	if (((UAVControl RECON) select 0) isEqualTo player) then { \
+		objNull remoteControl gunner RECON; \
+		player switchCamera "internal"; \
+	} else { \
+		player remoteControl gunner RECON; \
+		RECON switchCamera "internal"; \
+	}
 #define RECON_COND player isEqualTo (getAssignedCuratorUnit GVAR(curator)) && {!isNull RECON}
 #define RECON_KEYCODE \
 	if (RECON_COND) then { \
@@ -81,3 +88,4 @@
 	if (BUILD_COND) then { \
 		BUILD_STATEMENT \
 	}
+
