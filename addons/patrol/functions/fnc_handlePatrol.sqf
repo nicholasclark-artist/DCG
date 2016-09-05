@@ -12,10 +12,6 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (CHECK_DEBUG) then {
-	call FUNC(debug);
-};
-
 [{
 	// delete null and lonely groups
 	if !(GVAR(groups) isEqualTo []) then {
@@ -34,14 +30,13 @@ if (CHECK_DEBUG) then {
 		};
 	};
 
-	// spawn dynamic groups
 	if (count GVAR(groups) <= GVAR(groupsMaxCount)) then {
 		_HCs = entities "HeadlessClient_F";
 		_players = allPlayers - _HCs;
 
 		if !(_players isEqualTo []) then {
-			_player = selectRandom _players; // get target player
-			_players = [getPosASL _player,100] call EFUNC(main,getNearPlayers); // get players in area around target
+			_player = selectRandom _players;
+			_players = [getPosASL _player,100] call EFUNC(main,getNearPlayers);
 
 			if ({CHECK_DIST2D(_player,(_x select 0),(_x select 1))} count GVAR(blacklist) isEqualTo 0) then { // check if player is in a blacklist array
 				_posArray = [getpos _player,100,PATROL_RANGE,PATROL_MINRANGE,6] call EFUNC(main,findPosGrid);
@@ -56,6 +51,7 @@ if (CHECK_DEBUG) then {
 				} forEach _posArray;
 
 				if !(_posArray isEqualTo []) then {
+					_grp = grpNull;
 					_pos = selectRandom _posArray;
 					if (random 1 < GVAR(vehChance)) then {
 						_grp = [_pos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
@@ -75,7 +71,7 @@ if (CHECK_DEBUG) then {
 								_this params ["_grp","_player","_count"];
 
 								// set waypoint around target player
-								_wp = _grp addWaypoint [getPosATL _player,100];
+								_wp = _grp addWaypoint [getPosATL _player,50];
 								_wp setWaypointCompletionRadius 100;
 								_wp setWaypointBehaviour "SAFE";
 								_wp setWaypointFormation "STAG COLUMN";
@@ -91,3 +87,22 @@ if (CHECK_DEBUG) then {
 		};
 	};
 }, GVAR(cooldown), []] call CBA_fnc_addPerFrameHandler;
+
+if (CHECK_DEBUG) then {
+	[{
+		{
+			if (!(isNull _x) && {count units _x > 0}) then {
+				private ["_mrk"];
+				_mrk = createMarker [format["%1_%2_tracking",QUOTE(ADDON),getposATL leader _x],getposATL leader _x];
+				_mrk setMarkerSize [0.5,0.5];
+				_mrk setMarkerColor format ["Color%1", side _x];
+				if !(vehicle leader _x isEqualTo leader _x) then {
+					_mrk setMarkerType "o_armor";
+				} else {
+					_mrk setMarkerType "o_inf";
+				};
+			};
+			false
+		} count GVAR(groups);
+	}, 30, []] call CBA_fnc_addPerFrameHandler;
+};

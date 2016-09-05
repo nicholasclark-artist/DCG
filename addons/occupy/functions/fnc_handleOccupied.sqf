@@ -16,7 +16,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define INTERVAL 30
-#define SURRENDER_VAR format ["%1_%2_surrendered",PREFIX,_name]
+#define SURRENDER_VAR(SURNAME) format ["%1_%2_surrendered",PREFIX,SURNAME]
 #define SURRENDER_CHANCE 0.3
 #define REINFORCE_CHANCE 0.1
 #define ENTITY ["Man","LandVehicle","Air","Ship"]
@@ -39,7 +39,7 @@ private _maxCount = 0;
 	_args params ["_town"];
 
 	// exit if enemy surrenders
-	if (missionNamespace getVariable [SURRENDER_VAR,false]) exitWith {
+	if (missionNamespace getVariable [SURRENDER_VAR(_town select 0),false]) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 	};
 
@@ -61,7 +61,7 @@ private _maxCount = 0;
 		};
 	} forEach ((_town select 1) nearEntities [ENTITY, _town select 2]);
 
-	LOG_DEBUG_2("%1 - %2",_maxCount,_count);
+	//LOG_DEBUG_2("%1 - %2",_maxCount,_count);
 
 	// if enemy has lost a certain amount of units, move to next phase
 	if (_count <= _maxCount*ENEMYMAX_MULTIPLIER) exitWith {
@@ -72,7 +72,7 @@ private _maxCount = 0;
 
 		[{
 			params ["_args","_idPFH"];
-			_args params ["_town","_unitArray","_objArray","_officer","_task"];
+			_args params ["_town","_maxCount","_objArray","_officer","_task"];
 			_town params ["_name","_position","_size","_type"];
 
 			private _friendlyScore = 1;
@@ -107,7 +107,7 @@ private _maxCount = 0;
 			if (count _enemyArray isEqualTo 0 || {_enemyScore <= _friendlyScore && (random 1 < _chanceSurrender)}) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 
-				missionNamespace setVariable [SURRENDER_VAR,true];
+				missionNamespace setVariable [SURRENDER_VAR(_name),true];
 				[_task] call EFUNC(main,setTaskState);
 
 				{
@@ -134,9 +134,12 @@ private _maxCount = 0;
 					[_position,AV_VILLAGE] call EFUNC(approval,addValue);
 				};
 
-				missionNamespace setVariable [SURRENDER_VAR,nil];
+				missionNamespace setVariable [SURRENDER_VAR(_name),nil];
 				GVAR(locations) = GVAR(locations) - [_town];
 				EGVAR(patrol,blacklist) deleteAt (EGVAR(patrol,blacklist) find [_position,_size]);
+				[{
+					EGVAR(civilian,blacklist) deleteAt (EGVAR(civilian,blacklist) find (_this select 0));
+				}, [_name], 300] call CBA_fnc_waitAndExecute;
 
 				{
 					[getPosATL _x] call EFUNC(main,removeParticle);
@@ -149,9 +152,9 @@ private _maxCount = 0;
 
 				// setup next round of occupied locations
 				if (GVAR(locations) isEqualTo []) then {
-					[call FUNC(findLocation), [], GVAR(cooldown)] call CBA_fnc_waitAndExecute;
+					[FUNC(findLocation), [], GVAR(cooldown)] call CBA_fnc_waitAndExecute;
 				};
 			};
 		}, INTERVAL, _args] call CBA_fnc_addPerFrameHandler;
 	};
-}, 15, [_town,_maxCount,_objArray,_officer,_task]] call CBA_fnc_addPerFrameHandler;
+}, INTERVAL, [_town,_maxCount,_objArray,_officer,_task]] call CBA_fnc_addPerFrameHandler;

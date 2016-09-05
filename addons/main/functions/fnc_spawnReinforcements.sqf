@@ -13,8 +13,8 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define MAX_CARGO(VEH) (VEH emptyPositions "cargo") min 6
 #define BUFFER 200
-
-private ["_fnc_getCargo","_fnc_getNearHelipad","_pos","_unitPool","_vehPool","_backup","_lz","_type","_veh","_grp","_pilot","_grpPatrol","_wp1","_wp2","_wp"];
+#define ITERATIONS 100
+#define FLATEMPTY(POS) POS isFlatEmpty [15, -1, 0.45, 10, 0, false, objNull]
 
 params [
 	"_center",
@@ -26,7 +26,12 @@ params [
 	["_findHelipad",false]
 ];
 
-_fnc_getCargo = {
+private _lz = [];
+private _unitPool = [];
+private _vehPool = [];
+private _backup = "";
+
+private _fnc_getCargo = {
 	params ["_vehType"];
 
 	private _baseCfg = configFile >> "CfgVehicles" >> _vehType;
@@ -40,7 +45,7 @@ _fnc_getCargo = {
 	_numCargo
 };
 
-_fnc_getNearHelipad = {
+private _fnc_getNearHelipad = {
 	params ["_pos",["_range",100],["_size",8]];
 
 	private _helipad = (nearestObjects [_pos, ["Land_HelipadCircle_F","Land_HelipadCivil_F","Land_HelipadEmpty_F","Land_HelipadRescue_F","Land_HelipadSquare_F","Land_JumpTarget_F"], _range]) select 0;
@@ -70,9 +75,12 @@ call {
 	_backup = "I_Heli_light_03_unarmed_F";
 };
 
-_lz = [_center,_dist,_dist+BUFFER,10] call FUNC(findPosSafe);
+for "_i" from 1 to ITERATIONS do {
+	_lz = [_center,_dist,_dist+BUFFER] call FUNC(findPosSafe);
+	if !(FLATEMPTY(_lz) isEqualTo []) exitWith {};
+};
 
-if (_lz isEqualTo _center) exitWith {
+if (FLATEMPTY(_lz) isEqualTo []) exitWith {
 	LOG_DEBUG("Reinforcements LZ undefined.");
 };
 
@@ -80,25 +88,26 @@ if (_findHelipad) then {
 	_lz = [_lz] call _fnc_getNearHelipad;
 };
 
-_pos = [_lz,_distSpawn,_distSpawn+BUFFER] call FUNC(findPosSafe);
+private _pos = [_lz,_distSpawn,_distSpawn+BUFFER] call FUNC(findPosSafe);
 
-_type = selectRandom _vehPool;
+private _type = selectRandom _vehPool;
 
 if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
 	_type = _backup;
 };
 
-_veh = createVehicle [_type,_pos,[],0,"FLY"];
+private _veh = createVehicle [_type,_pos,[],0,"FLY"];
 _veh flyInHeight 100;
 _veh lock 3;
-_grp = createGroup _side;
+
+private _grp = createGroup _side;
 _grp setBehaviour "CARELESS";
 
-_pilot = _grp createUnit [selectRandom _unitPool,_pos, [], 0, "NONE"];
+private _pilot = _grp createUnit [selectRandom _unitPool,[0,0,0], [], 0, "NONE"];
 _pilot moveInDriver _veh;
 _pilot allowfleeing 0;
 
-_grpPatrol = [_pos,0,MAX_CARGO(_veh),_side,false,0.5] call FUNC(spawnGroup);
+private _grpPatrol = [_pos,0,MAX_CARGO(_veh),_side,false,0.5] call FUNC(spawnGroup);
 
 [
 	{count units (_this select 2) isEqualTo MAX_CARGO((_this select 3))},

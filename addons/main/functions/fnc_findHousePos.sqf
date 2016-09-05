@@ -14,25 +14,24 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_center","_range","_return","_houseArray","_house","_housePosArray"];
+private _center = param [0,[0,0,0]];
+private _range = param [1,100,[0]];
+private _return = [];
 
-_center = param [0,[0,0,0]];
-_range = param [1,100,[0]];
-_return = [];
-
-_houseArray = _center nearObjects ["House",_range];
+private _houseArray = _center nearObjects ["House",_range];
+_houseArray = _houseArray select {!((_x buildingPos -1) isEqualTo [])};
 
 if !(_houseArray isEqualTo []) then {
-	_house = selectRandom _houseArray;
-	_housePosArray = _house buildingPos -1;
+	private _house = selectRandom _houseArray;
+	private _housePosArray = _house buildingPos -1;
 
-	if !(_housePosArray isEqualTo []) then {
-		{
-			if (_x call FUNC(inBuilding)) exitWith {
-				_return = [_house,_x];
-			};
-		} foreach _housePosArray;
-	};
+	{
+		if (_x call FUNC(inBuilding)) exitWith {
+			private _pos = _x;
+			_pos set [2,getTerrainHeightASL _pos];
+			_return = [_house,_pos];
+		};
+	} foreach _housePosArray;
 };
 
 _return

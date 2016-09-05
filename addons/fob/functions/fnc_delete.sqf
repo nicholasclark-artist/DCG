@@ -26,12 +26,11 @@ __________________________________________________________________*/
 	if (_ret) then {
 		GVAR(UID) = "";
 
-		[false] call FUNC(recon);
-
 		{
 			{_x call EFUNC(main,cleanup)} forEach (curatorEditableObjects GVAR(curator));
 			[getPosASL GVAR(anchor),AV_FOB*-1] call EFUNC(approval,addValue);
 			unassignCurator GVAR(curator);
+			[false] call FUNC(recon);
 			deleteVehicle GVAR(anchor);
 		} remoteExecCall [QUOTE(BIS_fnc_call), 2, false];
 

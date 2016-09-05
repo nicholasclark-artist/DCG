@@ -13,8 +13,9 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_data","_locations","_index"];
-_data = param [0,[],[[]]];
+params [
+	["_data",[]]
+];
 
 if !(_data isEqualTo []) exitWith {
 	{
@@ -24,7 +25,7 @@ if !(_data isEqualTo []) exitWith {
 	} forEach _data;
 };
 
-_locations = [];
+private _locations = [];
 
 {
 	if !(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) then {
@@ -34,7 +35,8 @@ _locations = [];
 
 if (count _locations >= GVAR(locationCount)) then {
 	[_locations,(count _locations)*3] call EFUNC(main,shuffle);
-	for "_index" from 0 to GVAR(locationCount) - 1 do {
+
+	for "_index" from 0 to (floor GVAR(locationCount)) - 1 do {
 		(_locations select _index) spawn FUNC(setOccupied);
 	};
 };

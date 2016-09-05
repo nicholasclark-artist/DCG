@@ -14,6 +14,8 @@ __________________________________________________________________*/
 #define COST_MULTIPIER 0.5
 #define FOB_NAME format ["%1 (+ %2 Approval)", GVAR(name), GVAR(AVBonus)]
 
+LOG_DEBUG_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
+
 GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
 GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
 	private ["_playerSide","_costs","_side","_vehClass","_cost"];
@@ -46,10 +48,15 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
 	if (EGVAR(approval,enable) isEqualTo 1) then {
 		_cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
 		_cost = _cost*COST_MULTIPIER;
-		[getPosASL (_this select 1),_cost] call EFUNC(approval,addValue);
-		GVAR(AVBonus) = round(GVAR(AVBonus) + _cost);
+
+		[[_cost,getPosASL (_this select 1)],{
+			[_this select 1,_this select 0] call EFUNC(approval,addValue);
+		}] remoteExecCall [QUOTE(BIS_fnc_call),2,false];
+
+		/*GVAR(AVBonus) = round(GVAR(AVBonus) + _cost);
 		publicVariable QGVAR(AVBonus);
-		{GVAR(location) setText FOB_NAME} remoteExecCall [QUOTE(BIS_fnc_call),0,false];
+
+		{GVAR(location) setText FOB_NAME} remoteExecCall [QUOTE(BIS_fnc_call),0,false];*/
 	};
 }];
 
@@ -58,9 +65,13 @@ GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
 	if (EGVAR(approval,enable) isEqualTo 1) then {
 		_cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
 		_cost = _cost*COST_MULTIPIER;
-		[getPosASL (_this select 1),_cost * -1] call EFUNC(approval,addValue);
-		GVAR(AVBonus) = round(GVAR(AVBonus) - _cost);
+
+		[[_cost * -1,getPosASL (_this select 1)],{
+			[_this select 1,_this select 0] call EFUNC(approval,addValue);
+		}] remoteExecCall [QUOTE(BIS_fnc_call),2,false];
+
+		/*GVAR(AVBonus) = round(GVAR(AVBonus) - _cost);
 		publicVariable QGVAR(AVBonus);
-		{GVAR(location) setText FOB_NAME} remoteExecCall [QUOTE(BIS_fnc_call),0,false];
+		{GVAR(location) setText FOB_NAME} remoteExecCall [QUOTE(BIS_fnc_call),0,false];*/
 	};
 }];

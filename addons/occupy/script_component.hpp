@@ -2,7 +2,7 @@
 #include "\d\dcg\addons\main\script_mod.hpp"
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define DISABLE_COMPILE_CACHE
+// #define DISABLE_COMPILE_CACHE
 
 #define UNITVAR QUOTE(DOUBLES(ADDON,unit))
 #define SET_UNITVAR(OBJ) (OBJ) setVariable [QUOTE(DOUBLES(ADDON,unit)),true]
@@ -72,14 +72,15 @@
 #define PREP_GARRISON(POS,MAX_COUNT,SIZE,POOL) \
 	_houses = POS nearObjects ["House", SIZE]; \
 	if !(_houses isEqualTo []) then { \
+		_grp = createGroup EGVAR(main,enemySide); \
+		CACHE_DISABLE(_grp,true); \
 		for "_i" from 1 to MAX_COUNT do { \
 			_posArray = (selectRandom _houses) buildingPos -1; \
 			if !(_posArray isEqualTo []) then { \
-				_grp = createGroup EGVAR(main,enemySide); \
-				(selectRandom POOL) createUnit [POS, _grp]; \
-				(leader _grp) setDir random 360; \
-				(leader _grp) setPosATL (selectRandom _posArray); \
-				(leader _grp) disableAI "MOVE"; \
+				_unit = _grp createUnit [(selectRandom POOL), POS, [], 0, "NONE"]; \
+				_unit setDir random 360; \
+				_unit setPosATL (selectRandom _posArray); \
+				_unit disableAI "PATH"; \
 			}; \
 		}; \
 	}

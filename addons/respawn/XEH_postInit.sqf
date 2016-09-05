@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");
@@ -15,7 +15,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
 		{
-			if (hasInterface) then {
+			if (hasInterface && {!(CHECK_ADDON_1("ace_respawn"))}) then {
 				player addEventHandler ["Killed",{
 					player setVariable [UNITGEAR, getUnitLoadout player];
    					player setVariable [UNITWEAPON, [currentWeapon player, currentMuzzle player, currentWeaponMode player]];

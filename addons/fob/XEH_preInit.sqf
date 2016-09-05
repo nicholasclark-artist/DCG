@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 ADDON = false;
 
@@ -18,7 +18,6 @@ PREP(getCuratorCost);
 PREP(canDeploy);
 PREP(curatorEH);
 PREP(recon);
-PREP(handleKey);
 
 GVAR(location) = locationNull;
 GVAR(UID) = "";
@@ -27,7 +26,7 @@ GVAR(anchor) = objNull;
 GVAR(side) = createCenter sideLogic;
 GVAR(group) = createGroup GVAR(side);
 GVAR(curator) = GVAR(group) createUnit ["ModuleCurator_F",[0,0,0], [], 0, "FORM"];
-GVAR(AVBonus) = 0;
+//GVAR(AVBonus) = 0;
 
 GVAR(curator) setVariable ["showNotification", false, true];
 GVAR(curator) setVariable ["birdType", "", true];
@@ -44,8 +43,6 @@ publicVariable QFUNC(deploy);
 publicVariable QFUNC(delete);
 publicVariable QFUNC(canDeploy);
 publicVariable QFUNC(curatorEH);
-publicVariable QFUNC(recon);
-publicVariable QFUNC(handleKey);
 
 publicVariable QGVAR(location);
 publicVariable QGVAR(UID);
@@ -53,4 +50,4 @@ publicVariable QGVAR(response);
 publicVariable QGVAR(side);
 publicVariable QGVAR(group);
 publicVariable QGVAR(curator);
-publicVariable QGVAR(AVBonus);
+//publicVariable QGVAR(AVBonus);

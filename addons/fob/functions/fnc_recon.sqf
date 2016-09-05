@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-add recon UAV to FOB, must run local to unit assigned to curator logic
+add recon UAV to FOB
 
 Arguments:
 0: to add or remove recon <BOOL>
@@ -38,6 +38,7 @@ if (_ifRecon) then {
 	};
 
 	RECON = createVehicle [_type, _position, [], 0, "FLY"];
+	(owner (getAssignedCuratorUnit GVAR(curator))) publicVariableClient QUOTE(RECON);
     createVehicleCrew RECON;
 	RECON allowDamage false;
 	RECON setCaptive true;
@@ -54,9 +55,6 @@ if (_ifRecon) then {
 	_wp setWaypointType "LOITER";
 	_wp setWaypointLoiterType "CIRCLE_L";
 	_wp setWaypointLoiterRadius GVAR(range);
-
-	["Aerial reconnaissance online.",true] call EFUNC(main,displayText);
 } else {
 	deleteVehicle RECON;
-	["Aerial reconnaissance offline.",true] call EFUNC(main,displayText);
 };

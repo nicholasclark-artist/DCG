@@ -77,12 +77,13 @@
     #define PREP(fncName) DFUNC(fncName) = QUOTE(PATHTOF(functions\DOUBLES(fnc,fncName).sqf)) call SLX_XEH_COMPILE
 #endif
 
+#define ADDON_TITLE (toUpper QUOTE(ADDON)) splitString "_" joinString " "
 #define DATA_SAVEVAR QUOTE(DOUBLES(MAIN_ADDON,saveData))
 #define DATA_SAVEPVEH QUOTE(DOUBLES(MAIN_ADDON,saveDataPVEH))
 #define DATA_DELETEPVEH QUOTE(DOUBLES(MAIN_ADDON,deleteDataPVEH))
 #define DATA_SETVAR(VAR1) profileNamespace setVariable [DATA_SAVEVAR,VAR1]
 #define DATA_GETVAR profileNamespace getVariable [DATA_SAVEVAR,[]]
-#define DATA_MISSION_ID format ["%1_%2", toUpper worldName, toUpper missionName]
+#define DATA_MISSION_ID ([toUpper worldName, toUpper missionName] joinString "_")
 
 #define LOG_DEBUG(MSG) [QUOTE(ADDON),[MSG]] call EFUNC(main,log)
 #define LOG_DEBUG_1(MSG,ARG1) [QUOTE(ADDON),[MSG,ARG1]] call EFUNC(main,log)
@@ -96,8 +97,9 @@
 
 #define ACTIONPATH ['ACE_SelfActions',QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
 
+#define CHECK_INIT ((EGVAR(main,enable)) && {isServer} && {isMultiplayer})
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
-#define CHECK_MARKER(MARKER) getMarkerColor MARKER != ''
+#define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> 'CfgPatches' >> PATCH))
 #define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {EGVAR(VAR,enable) isEqualTo 1})
 #define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= (DIST)

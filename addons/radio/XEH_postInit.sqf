@@ -4,17 +4,17 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");
 };
 
 [{
-	if (DOUBLES(PREFIX,main) && {time > 0}) exitWith {
+	if (DOUBLES(PREFIX,main)) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
-		// ACRE2 workdaround, remove items from communications tab
+		// ACRE2 workaround, remove items from communications tab
 		_data = missionnamespace getVariable "bis_fnc_arsenal_data";
 		_data set [12,[]];
 		missionnamespace setVariable ["bis_fnc_arsenal_data",_data,true];

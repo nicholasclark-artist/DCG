@@ -48,7 +48,7 @@ _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 		};
 
 		_wp = _grp addWaypoint [getPosATL _end,0];
-		_statement = format ["(vehicle this) call %1; %2 = %2 - [this];", QEFUNC(main,cleanup),QGVAR(drivers)];
+		_statement = format ["deleteVehicle (objectParent this); deleteVehicle this; %1 = %1 - [this];", QGVAR(drivers)];
 		_wp setWaypointStatements ["true", _statement];
 		_veh allowCrewInImmobile true;
 		_veh addEventHandler ["GetOut", {

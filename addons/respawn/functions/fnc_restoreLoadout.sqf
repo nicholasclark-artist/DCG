@@ -1,6 +1,6 @@
 /*
 Author:
-Nicholas Clark (SENSEI), bux578, commy2
+bux578, commy2, Nicholas Clark (SENSEI)
 
 Description:
 restore player loadout

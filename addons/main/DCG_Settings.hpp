@@ -3,6 +3,11 @@
 */
 
 class DOUBLES(PREFIX,settings) {
+    class GVAR(init) {
+        typeName = "ARRAY";
+        typeDetail = "";
+        value[] = {"ALL"};
+    };
     class GVAR(debug) {
         typeName = "SCALAR";
         typeDetail = "";

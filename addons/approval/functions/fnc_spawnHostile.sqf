@@ -71,7 +71,6 @@ call {
 			{
 				params ["_grp","_pos","_vest","_weapon","_mags"];
 
-				LOG_DEBUG_1("%1",_this);
 				_grp = [units _grp] call EFUNC(main,setSide);
 
 				{

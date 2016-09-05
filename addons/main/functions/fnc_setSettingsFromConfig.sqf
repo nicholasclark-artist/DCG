@@ -1,6 +1,6 @@
 /*
 Author:
-esteldunedain, SENSEI
+esteldunedain, Nicholas Clark (SENSEI)
 
 Description:
 Load a setting from config
@@ -13,10 +13,9 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_fnc_getValueWithType","_fnc_fixSettingValue","_typeName","_value","_typeDetail","_settingData"];
 params ["_optionEntry"];
 
-_fnc_getValueWithType = {
+private _fnc_getValueWithType = {
     private ["_value"];
     params ["_optionEntry", "_typeName"];
 
@@ -40,8 +39,8 @@ _fnc_getValueWithType = {
     getNumber _value // default
 };
 
-_fnc_fixSettingValue = {
-    private ["_pool","_class","_arr"];
+private _fnc_fixSettingValue = {
+    private ["_pool","_class"];
     params ["_name","_typeName","_typeDetail","_value","_debug"];
 
     if (toUpper _typeDetail isEqualTo "POOL") then {
@@ -92,7 +91,7 @@ _fnc_fixSettingValue = {
     };
 
     if (toUpper _typeDetail isEqualTo "WORLD") then {
-        _arr = [];
+        private _arr = [];
         {
             if (toUpper (_x select 0) isEqualTo toUpper worldName) then {
                 _x deleteAt 0;
@@ -108,12 +107,13 @@ _fnc_fixSettingValue = {
 };
 
 _name = configName _optionEntry;
-_typeDetail = getText (_optionEntry >> "typeDetail");
+private _typeDetail = getText (_optionEntry >> "typeDetail");
 
 // Check if the variable is already defined
 if (isNil _name) then {
     // Get type from config
-    _typeName = toUpper (getText (_optionEntry >> "typeName"));
+    private _typeName = toUpper (getText (_optionEntry >> "typeName"));
+
     if (_typeName isEqualTo "") then {
         _typeName = "SCALAR";
     };
@@ -130,7 +130,7 @@ if (isNil _name) then {
     missionNamespace setVariable [_name,_value];
 
     // Add the setting to a list on the server
-    _settingData = [
+    private _settingData = [
         _name,
         _typeName,
         _typeDetail,
@@ -139,8 +139,7 @@ if (isNil _name) then {
 
     GVAR(settings) pushBack _settingData;
 } else {
-    private ["_typeName","_value"];
-    _typeName = "";
+    private _typeName = "";
     {
         if ((_x select 0) isEqualTo _name) then {
             _typeName = _x select 1;
@@ -149,7 +148,7 @@ if (isNil _name) then {
     } count GVAR(settings);
 
     // Read entry and cast it to the correct type from the existing variable
-    _value = [_optionEntry, _typeName] call _fnc_getValueWithType;
+    private _value = [_optionEntry, _typeName] call _fnc_getValueWithType;
 
     // get correct pool for map and check if values exists on server
     _value = [_name,_typeName,_typeDetail,_value,true] call _fnc_fixSettingValue;

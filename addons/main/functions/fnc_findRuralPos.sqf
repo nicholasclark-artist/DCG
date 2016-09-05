@@ -15,7 +15,7 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define DIST (worldSize*0.04) max 500
+#define DIST 500
 
 params [
 	"_anchor",
@@ -42,28 +42,28 @@ call {
 	};
 };
 
-if (_terrain isEqualTo "" || _expression isEqualTo "") exitWith {
+if (_terrain isEqualTo "" || {_expression isEqualTo ""}) exitWith {
 	LOG_DEBUG("Cannot find rural position. Expression is empty.");
 };
 
-{
-	private _pos = _x select 0;
-	if ((nearestLocations [_pos, ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo []) then {
-		if !(_terrain isEqualTo "house") then {
-			if (_check) then {
-				if ([_pos,5,0,0.275] call FUNC(isPosSafe)) then {
-					_ret = _pos;
-				};
-			} else {
+private _places = selectBestPlaces [_anchor,_range,_expression,65,15];
+_places = _places select {(_x select 1) > 0 && {((nearestLocations [(_x select 0), ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo [])} && {!(CHECK_DIST2D((_x select 0),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))}};
+
+if !(_places isEqualTo []) then {
+	private _pos = _places select 0 select 0;
+	_pos set [2,getTerrainHeightASL _pos];
+
+	if !(_terrain isEqualTo "house") then {
+		if (_check) then {
+			if ([_pos,5,0,0.275] call FUNC(isPosSafe)) then {
 				_ret = _pos;
 			};
 		} else {
-			_ret = [_pos,(DIST)*0.5] call FUNC(findHousePos);
+			_ret = _pos;
 		};
-
-		if !(_ret isEqualTo []) exitWith {};
+	} else {
+		_ret = [_pos,500] call FUNC(findHousePos);
 	};
-} forEach (selectBestPlaces [_anchor,_range,_expression,100,30]);
+};
 
 _ret
-

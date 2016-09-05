@@ -82,7 +82,13 @@ if (CHECK_ADDON_1("acre_main")) then {
 	[GVAR(acre_support), PRESET] call acre_api_fnc_setPreset;
 
 	player addEventHandler ["respawn",{
-		[call FUNC(setRadioACRE), [], 3] call CBA_fnc_waitAndExecute;
+		[
+			{!isNull player && {alive player}},
+			{
+				call FUNC(setRadioACRE)
+			},
+			[]
+		] call CBA_fnc_waitUntilAndExecute;
 	}];
 };
 

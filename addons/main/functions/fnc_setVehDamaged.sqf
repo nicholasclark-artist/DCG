@@ -8,7 +8,8 @@ set vehicle to damaged state
 Arguments:
 0: vehicle to damage <OBJECT>
 1: max number of damaged hit points <NUMBER>
-2: code to run on repair <STRING>
+2: code to run on repair <CODE>
+3: code arguments <ANY>
 
 Return:
 array
@@ -19,7 +20,8 @@ __________________________________________________________________*/
 params [
 	"_veh",
 	["_max",1],
-	["_onRepair",""]
+	["_code",{}],
+	["_params",[]]
 ];
 
 private _ret = [];
@@ -50,12 +52,15 @@ if !(_hitpoints isEqualTo []) then {
 		{(((getAllHitPointsDamage (_this select 0)) select 2) select {_x >= MAX_HIT}) isEqualTo []}
 	},
 	{
-		if (!isNull (_this select 0) && {alive (_this select 0)}) then {
-			[_this select 0,_this select 1] call compile (_this select 2);
+		params ["_veh","_ret","_code","_params","_pos"];
+
+		if (!isNull _veh && {alive _veh}) then {
+			_params = [_veh,_ret] + _params;
+ 			_params call _code;
 		};
-		[_this select 3,2] call FUNC(removeParticle);
+		[_pos,2] call FUNC(removeParticle);
 	},
-	[_veh,_ret,_onRepair,getPos _veh]
+	[_veh,_ret,_code,_params,getPos _veh]
 ] call CBA_fnc_waitUntilAndExecute;
 
 _ret

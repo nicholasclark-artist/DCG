@@ -6,7 +6,8 @@ Description:
 setup fob on server
 
 Arguments:
-0: unit to assign to curator <OBJECT>
+0: unit to assign to curator or position <OBJECT,ARRAY>
+1: curator points <NUMBER>
 
 Return:
 none
@@ -15,9 +16,26 @@ __________________________________________________________________*/
 
 if !(isServer) exitWith {};
 
-params ["_unit"];
+params [
+	["_center",objNull,[objNull,[]]],
+	["_points",1,[0]]
+];
 
+private _unit = objNull;
+private _pos = [];
 private _type = "";
+
+call {
+	if (_center isEqualType objNull) exitWith {
+		_unit = _center;
+		_pos = _center modelToWorld [0,4,0];
+	};
+
+	if (_center isEqualType []) exitWith {
+		_unit = objNull;
+		_pos = _center;
+	};
+};
 
 call {
 	if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
@@ -32,7 +50,7 @@ call {
 	_type = "B_cargoNet_01_ammo_F";
 };
 
-GVAR(anchor) = _type createVehicle (_unit modelToWorld [0,4,0]);
+GVAR(anchor) = _type createVehicle _pos;
 publicVariable QGVAR(anchor);
 GVAR(anchor) allowDamage false;
 clearWeaponCargoGlobal GVAR(anchor);
@@ -51,7 +69,7 @@ clearBackpackCargoGlobal GVAR(anchor);
 
 /*removeAllCuratorAddons GVAR(curator);
 GVAR(curator) addCuratorAddons GVAR(addons);*/
-GVAR(curator) addCuratorPoints 1;
+GVAR(curator) addCuratorPoints _points;
 GVAR(curator) setCuratorCoef ["Place", GVAR(placingMultiplier)];
 GVAR(curator) setCuratorCoef ["Delete", GVAR(deletingMultiplier)];
 GVAR(curator) setCuratorWaypointCost 0;
@@ -61,8 +79,8 @@ GVAR(curator) setCuratorCameraAreaCeiling 40;
 [GVAR(curator),"object",["UnitPos","Rank","Lock"]] call BIS_fnc_setCuratorAttributes;
 
 [getPosASL GVAR(anchor),AV_FOB] call EFUNC(approval,addValue);
-GVAR(AVBonus) = round(AV_FOB);
-publicVariable QGVAR(AVBonus);
+/*GVAR(AVBonus) = round(AV_FOB);
+publicVariable QGVAR(AVBonus);*/
 
 // assign unit and send unit curator UID
 // unit does not immediately become owner of curator, it takes a few seconds
@@ -70,15 +88,16 @@ if !(isNull _unit) then {
 	_unit assignCurator GVAR(curator);
 	GVAR(UID) = getPlayerUID _unit;
 	(owner _unit) publicVariableClient QGVAR(UID);
+
+	[
+		{(getAssignedCuratorUnit GVAR(curator)) isEqualTo (_this select 0)},
+		{
+			{
+				call FUNC(curatorEH);
+			} remoteExecCall [QUOTE(BIS_fnc_call), owner (getAssignedCuratorUnit GVAR(curator)), false];
+		},
+		[_unit]
+	] call CBA_fnc_waitUntilAndExecute;
 };
 
-[
-	{(getAssignedCuratorUnit GVAR(curator)) isEqualTo (_this select 0)},
-	{
-		{
-			call FUNC(curatorEH);
-			[true,getPosASL GVAR(anchor)] call FUNC(recon);
-		} remoteExecCall [QUOTE(BIS_fnc_call), owner (getAssignedCuratorUnit GVAR(curator)), false];
-	},
-	[_unit]
-] call CBA_fnc_waitUntilAndExecute;
+[true,getPosASL GVAR(anchor)] call FUNC(recon);

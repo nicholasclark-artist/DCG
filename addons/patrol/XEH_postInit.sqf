@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");
@@ -15,7 +15,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
 		GVAR(blacklist) pushBack [locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)]; // add main base to blacklist
-		if !(isNil {HEADLESSCLIENT}) then {
+		if (!isNil {HEADLESSCLIENT} && {!(CHECK_ADDON_1("acex_headless"))}) then { // let ace handle transfer if enabled
 			(owner HEADLESSCLIENT) publicVariableClient QFUNC(handlePatrol);
 			(owner HEADLESSCLIENT) publicVariableClient QGVAR(groups);
 

@@ -2,6 +2,13 @@
 #include "\d\dcg\addons\main\script_mod.hpp"
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define DISABLE_COMPILE_CACHE
+// #define DISABLE_COMPILE_CACHE
 #define PVEH_HINT QUOTE(DOUBLES(ADDON,pveh_hint))
+#define HINT_CODE format ["%1 = player; publicVariableServer '%1'", PVEH_HINT]
+#define HINT_KEYID QUOTE(DOUBLES(ADDON,hint))
+#define HINT_NAME "Check Approval in Region"
+
 #define PVEH_QUESTION QUOTE(DOUBLES(ADDON,pveh_question))
+#define QUESTION_CODE format ["%1 = player; publicVariableServer '%1'", PVEH_QUESTION]
+#define QUESTION_KEYID QUOTE(DOUBLES(ADDON,question))
+#define QUESTION_NAME "Question Nearby Person"

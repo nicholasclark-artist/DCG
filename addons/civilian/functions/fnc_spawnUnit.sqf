@@ -14,28 +14,19 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define EMPTYDIST 0.5
+#define RANGE 200
 
-params ["_center","_unitCount","_townName"];
-
-private _pos = [];
+params ["_pos","_unitCount","_townName"];
 
 SET_LOCVAR(_townName,true);
 
-if !([_center,1,0] call EFUNC(main,isPosSafe)) then {
-	for "_i" from 1 to 150 step 2 do {
-		_pos = [_center,0,_i,1,0] call EFUNC(main,findPosSafe);
-		if !(_pos isEqualTo _center) exitWith {};
-	};
-} else {
-	_pos = _center;
-};
-
-_grp = [_pos,0,_unitCount,CIVILIAN,false,0.5] call EFUNC(main,spawnGroup);
+_grp = [_pos,0,_unitCount,CIVILIAN,false,1] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) isEqualTo (_this select 2)},
 	{
-		_this params ["_grp","_pos","_unitCount","_townName"];
+		params ["_grp","_pos","_unitCount","_townName"];
 
 		{
 			_x allowfleeing 0;

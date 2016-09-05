@@ -13,7 +13,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_unconsciousTime","_selection"];
+/*private ["_unconsciousTime","_selection"];
 params ["_unit"];
 
 if (ace_medical_level isEqualTo 1) then {
@@ -68,7 +68,7 @@ if (ace_medical_level isEqualTo 1) then {
 	    "shell"
 	];
 	[_unit, selectRandom _selection, 0, objNull, selectRandom _type, 0, 0.2] call ace_medical_fnc_handleDamage_advanced;
-};
+};*/
 
 /*
 _unit = (createGroup CIVILIAN) createUnit [GVAR(unitPoolCiv) select floor (random (count GVAR(unitPoolCiv))),player modeltoworld [0,4,0], [], 0, "NONE"];

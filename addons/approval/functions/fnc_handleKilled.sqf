@@ -14,17 +14,21 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_unitValue"];
 params [
 	["_unit", objNull, [objNull]],
 	["_killer", objNull, [objNull]]
 ];
 
-if (isNull _unit || {!isPlayer (driver (vehicle _killer))} || {_killer isEqualTo _unit}) exitWith {};
+// ACE workaround, https://github.com/acemod/ACE3/issues/3790
+if (CHECK_ADDON_1("ace_main") && {isNull _killer || _unit isEqualTo _killer}) then {
+    _killer = _unit getVariable ["ace_medical_lastDamageSource", _killer];
+};
 
-LOG_DEBUG_5("isSERVER: %1   isDED: %2   OWNER: %3   VICTIM: %4   KILLER: %5",isServer, isDedicated, owner _unit, _unit, _killer);
+if (isNull _unit || {!isPlayer (driver (vehicle _killer))} || {_killer isEqualTo _unit}) exitWith {
+	LOG_DEBUG_2("Exit handleKilled with %1, %2.",_unit,_killer);
+};
 
-_unitValue = 0;
+private _unitValue = 0;
 
 call {
 	if (_unit isKindOf "Man") exitWith {
@@ -75,4 +79,8 @@ if (side group _unit isEqualTo EGVAR(main,playerSide) || {side group _unit isEqu
 	_unitValue = _unitValue * -1;
 };
 
-[getPos _unit, _unitValue] call FUNC(addValue);
+if (isServer) then {
+	[getPos _unit, _unitValue] call FUNC(addValue);
+} else {
+	{[getPos _unit, _unitValue] call FUNC(addValue);} remoteExecCall [QUOTE(BIS_fnc_call),2,false];
+};

@@ -14,13 +14,11 @@ number
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_locations","_value"];
 params ["_position","_add"];
 
-_locations = [_position] call FUNC(getRegion);
-LOG_DEBUG_1("%1",_this);
 {
-	_value = missionNamespace getVariable [AV_VAR(_x select 0),0];
+	private _value = missionNamespace getVariable [AV_VAR(_x select 0),0];
 	missionNamespace setVariable [AV_VAR(_x select 0),_value + _add];
+	LOG_DEBUG_3("%1, %2, %3",_x select 0,_add,_value + _add);
 	false
-} count _locations;
+} count ([_position] call FUNC(getRegion));

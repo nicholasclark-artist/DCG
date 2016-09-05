@@ -6,7 +6,7 @@ __________________________________________________________________*/
 #define TASK_TITLE(LOC) format ["Liberate %1", LOC]
 #define TASK_DESC(LOC) format ["Enemy forces have occupied %1! Liberate the settlement!",LOC]
 
-if (!isServer || !isMultiplayer) exitWith {};
+if !(CHECK_INIT) exitWith {};
 
 if (GVAR(enable) isEqualTo 0) exitWith {
 	LOG_DEBUG("Addon is disabled.");

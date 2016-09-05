@@ -39,7 +39,7 @@ private _objArray = [];
 private _officerPool = [];
 private _unitPool = [];
 private _taskType = "";
-private _taskID = format ["lib_%1", diag_tickTime];
+private _taskID = format ["L_%1", diag_tickTime];
 
 if !([_center,1,0] call EFUNC(main,isPosSafe)) then {
 	for "_i" from 1 to _size step 2 do {
@@ -66,7 +66,7 @@ call {
 };
 
 private _grp = createGroup EGVAR(main,enemySide);
-private _officer = _grp createUnit [selectRandom _unitPool, _position, [], 0, "NONE"];
+private _officer = _grp createUnit [selectRandom _officerPool, _position, [], 0, "NONE"];
 _officer setVariable [QUOTE(DOUBLES(ADDON,officer)),true,true];
 SET_UNITVAR(_officer);
 [[_officer],_size*0.5] call EFUNC(main,setPatrol);
@@ -147,6 +147,8 @@ GVAR(locations) pushBack _town;
 		_args call FUNC(handleOccupied);
 	};
 }, 10, [_town,_objArray,_officer,_taskID]] call CBA_fnc_addPerFrameHandler;
+
+EGVAR(civilian,blacklist) pushBack _name; // stop civilians from spawning in town
 
 if (CHECK_DEBUG) then {
 	private _mrk = createMarker [format["%1_%2_debug",QUOTE(ADDON),_name],_position];

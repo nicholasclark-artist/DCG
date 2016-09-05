@@ -92,9 +92,11 @@ if ((_this select 1) isEqualTo 1) then { // if current curator unit accepts requ
 		{
 			GVAR(UID) = getPlayerUID (_this select 0);
 			(owner (_this select 0)) publicVariableClient QGVAR(UID);
+			(owner (_this select 0)) publicVariableClient QUOTE(RECON);
 			remoteExecCall [QFUNC(curatorEH), owner (_this select 0), false];
 			[(curatorEditableObjects GVAR(curator)),owner (_this select 0)] call EFUNC(main,setOwner); // set object locality to new unit, otherwise non local objects lag when edited
-		}
+		},
+		[_this select 0]
 	] call CBA_fnc_waitUntilAndExecute;
 };
 
@@ -104,11 +106,11 @@ if ((_this select 1) isEqualTo 1) then { // if current curator unit accepts requ
 	};
 
 	if ((_this select 1) isEqualTo 1) exitWith {
-		 _entry = [TITLE, KEY_ID] call CBA_fnc_getKeybind;
+		 _entry = [ADDON_TITLE, BUILD_ID] call CBA_fnc_getKeybind;
 
 		if (!isNil "_entry") then {
 			private _keyStr = "";
-			private _key = (_entry select 5) select 0;
+			private _key = call compile (keyName ((_entry select 5) select 0));
 			private _modifiers = (_entry select 5) select 1;
 			private _modArr = [];
 
@@ -123,9 +125,16 @@ if ((_this select 1) isEqualTo 1) then { // if current curator unit accepts requ
 			};
 
 			_keyStr = _modArr joinString " ";
-			_keyStr = format ["%1 + %2", _keyStr,keyName _key];
+			_keyStr = format ["%1 + %2", _keyStr,_key];
 
-			[format ["%1 accepts your request. Press [%2] to start building %3.",(_this select 0), _keyStr, GVAR(name)],true] call EFUNC(main,displayText);
+			private _format = format ["
+			%2 accepts your request \n \n
+			Press [%1] to start building. \n
+			Regional approval is affected by FOB readiness. \n
+			Aerial reconnaissance online.
+			",_keyStr,(_this select 0)];
+
+			[_format,true] call EFUNC(main,displayText);
 		};
 	};
 

@@ -131,7 +131,7 @@ call {
 	_pilot = "I_Helipilot_F";
 };
 
-_pilot = createGroup (side player) createUnit [_pilot,_spawnPos, [], 0, "NONE"];
+_pilot = createGroup (side player) createUnit [_pilot,[0,0,0], [], 0, "NONE"];
 _pilot moveInDriver _transport;
 _pilot allowfleeing 0;
 _pilot setBehaviour "CARELESS";

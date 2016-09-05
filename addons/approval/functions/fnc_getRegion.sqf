@@ -21,7 +21,7 @@ _nearest = [];
 if (_position isEqualTo []) exitWith {_nearest};
 
 {
-	if (CHECK_DIST2D(_x select 1,_position,EGVAR(main,range)*0.15 max 1000)) then {
+	if (CHECK_DIST2D(_x select 1,_position,EGVAR(main,range)*0.2 max 1000)) then {
 		_nearest pushBack _x;
 	};
 	false

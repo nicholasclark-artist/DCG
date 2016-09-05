@@ -15,9 +15,9 @@ __________________________________________________________________*/
 
 [{
 	params ["_args","_idPFH"];
-	_args params ["_positions"];
+	_args params ["_locations"];
 	{
-		if !(GET_LOCVAR(_x select 0)) then {
+		if (!(GET_LOCVAR(_x select 0)) && {GVAR(blacklist) find (_x select 0) isEqualTo -1}) then {
 			private ["_position","_unitCount"];
 			_position = _x select 1;
 			if ({CHECK_VECTORDIST(_position,getPosASL (vehicle _x),GVAR(spawnDist)) && {((getPos (vehicle _x)) select 2) < ZDIST}} count allPlayers > 0) then {
@@ -33,5 +33,5 @@ __________________________________________________________________*/
 				[ASLToAGL _position,_unitCount,_x select 0] call FUNC(spawnUnit);
 			};
 		};
-	} forEach _positions;
+	} forEach _locations;
 }, 15, [_this select 0]] call CBA_fnc_addPerFrameHandler;

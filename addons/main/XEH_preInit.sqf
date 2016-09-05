@@ -4,9 +4,12 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer) exitWith {};
-
 ADDON = false;
+
+PREP(init); // do not change
+call FUNC(init); // do not change
+
+if (!(GVAR(enable)) || {!isServer}) exitWith {};
 
 PREP(armory);
 PREP(arsenal);
@@ -62,6 +65,9 @@ PREP(spawnStatic);
 
 GVAR(settings) = [];
 GVAR(locations) = [];
+GVAR(locals) = [];
+GVAR(hills) = [];
+GVAR(marines) = [];
 GVAR(baseLocation) = locationNull;
 GVAR(range) = worldSize*0.5;
 GVAR(center) = [GVAR(range),GVAR(range),0];
@@ -113,7 +119,6 @@ publicVariable QFUNC(inBuilding);
 publicVariable QFUNC(inLOS);
 publicVariable QFUNC(isPosSafe);
 publicVariable QFUNC(setPosSafe);
-
 
 publicVariable QGVAR(range);
 publicVariable QGVAR(center);

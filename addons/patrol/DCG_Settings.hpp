@@ -11,12 +11,12 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(cooldown) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 900;
+        value = 600;
     };
     class GVAR(groupsMaxCount) {
         typeName = "SCALAR";
         typeDetail = "";
-        value = 20;
+        value = 10;
     };
     class GVAR(vehChance) {
         typeName = "SCALAR";

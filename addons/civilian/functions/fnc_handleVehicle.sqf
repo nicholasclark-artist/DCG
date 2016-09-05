@@ -21,6 +21,9 @@ __________________________________________________________________*/
 
 		if !(_players isEqualTo []) then {
 			_player = selectRandom _players;
+
+			if ((getPos _player) select 2 > 5) exitWith {};
+
 			_roads = _player nearRoads 200;
 
 			// get start and end point for vehicle that passes by target player
@@ -44,7 +47,7 @@ __________________________________________________________________*/
 					_road = _roadConnect select 0;
 
 					// if loop is done or road is far enough
-					if (_i isEqualTo ITERATIONS || {!(CHECK_VECTORDIST(getPosASL _road,getPosASL _roadMid,RANGE))}) exitWith {
+					if (!(CHECK_VECTORDIST(getPosASL _road,getPosASL _roadMid,RANGE)) || {_i isEqualTo ITERATIONS}) exitWith {
 						_roadStart = _road;
 					};
 				};
@@ -64,28 +67,30 @@ __________________________________________________________________*/
 					_road = _roadConnect select 1;
 
 					// if loop is done or road is far enough
-					if (_i isEqualTo ITERATIONS || {!(CHECK_VECTORDIST(getPosASL _road,getPosASL _roadMid,RANGE))}) exitWith {
+					if (!(CHECK_VECTORDIST(getPosASL _road,getPosASL _roadMid,RANGE)) || {_i isEqualTo ITERATIONS}) exitWith {
 						_roadEnd = _road;
 					};
 				};
-				if !(_roadStart isEqualTo _roadEnd) then {
-					if (!([getPosASL _roadStart,_player] call EFUNC(main,inLOS)) &&
-					    {([_roadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
-						{!(CHECK_DIST2D(_roadStart,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} &&
-						{!(CHECK_DIST2D(_roadEnd,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))}) then {
+
+				if (!(_roadStart isEqualTo _roadEnd) &&
+					{!(CHECK_VECTORDIST(getPosASL _roadStart,getPosASL _roadEnd,RANGE))} &&
+				    {!([getPosASL _roadStart,_player] call EFUNC(main,inLOS))} &&
+				    {([_roadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
+				    {([_roadEnd,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
+					{!(CHECK_DIST2D(_roadStart,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} &&
+					{!(CHECK_DIST2D(_roadEnd,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))}) then {
 						[_roadStart,_roadMid,_roadEnd,_player] call FUNC(spawnVehicle);
 						if (CHECK_DEBUG) then {
 							_mrk = createMarker [format ["%1_%2", _roadStart,time], getpos _roadStart];
 							_mrk setMarkerType "mil_dot";
 							_mrk setMarkerColor "colorGREEN";
-							_mrk setMarkerText format ["ROAD START - %1", time];
+							_mrk setMarkerText format ["ROAD START - %1", _roadStart distance2D _roadEnd];
 
 							_mrk = createMarker [format ["%1_%2", _roadEnd,time], getpos _roadEnd];
 							_mrk setMarkerType "mil_dot";
 							_mrk setMarkerColor "colorRED";
-							_mrk setMarkerText format ["ROAD END - %1", time];
+							_mrk setMarkerText format ["ROAD END - %1", _roadStart distance2D _roadEnd];
 						};
-					};
 				};
 			};
 		};

@@ -27,7 +27,7 @@ params [
 	["_count",1],
 	["_side",GVAR(enemySide)],
 	["_uncache",false],
-	["_delay",0],
+	["_delay",1],
 	["_cargo",false]
 ];
 

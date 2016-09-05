@@ -19,7 +19,6 @@ array (positionASL)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_pos"];
 params [
 	"_center",
 	["_min",0],
@@ -34,7 +33,7 @@ if (_dir < 0) then {
 	_dir = random 360;
 };
 
-_pos = _center getPos [floor (random ((_max - _min) + 1)) + _min, _dir];
+private _pos = _center getPos [floor (random ((_max - _min) + 1)) + _min, _dir];
 _pos set [2,getTerrainHeightASL _pos];
 
 if !(_model isEqualTo objNull) then {

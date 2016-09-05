@@ -16,10 +16,12 @@ __________________________________________________________________*/
 params ["_unit"];
 
 if (!isPlayer _unit && {!("driver" in assignedVehicleRole _unit)}) then {
+	_unit setVariable [UNIT_CACHED,true];
 	_unit enableSimulationGlobal false;
 	_unit hideObjectGlobal true;
+	_unit disableAI "ALL";
 	[_unit] call FUNC(addEventhandler);
-	if (vehicle _unit isEqualTo _unit && {vehicle (leader _unit) isEqualTo (leader _unit)}) then {
+	if (isNull objectParent _unit && {isNull objectParent (leader _unit)}) then {
 		_unit attachTo [leader _unit];
 	};
 	//LOG_DEBUG_2("caching %1 %2",_unit,typeof _unit);

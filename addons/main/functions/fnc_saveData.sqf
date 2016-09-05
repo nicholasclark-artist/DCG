@@ -89,7 +89,7 @@ if (CHECK_ADDON_2(fob)) then {
 		_data pushBack _dataObj;
 		_refund = ((_data select 1) + _refund) min 1;
 		_data set [1,_refund];
-		_data pushBack [EGVAR(fob,AVBonus)];
+		//_data pushBack [EGVAR(fob,AVBonus)];
 	};
 
 	PUSHBACK_DATA(fob,_data);

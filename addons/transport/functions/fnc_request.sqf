@@ -1,12 +1,9 @@
 /*
 Author:
 Nicholas Clark (SENSEI)
-
 Description:
 handles player transport request
-
 Arguments:
-
 Return:
 none
 __________________________________________________________________*/
@@ -17,8 +14,8 @@ __________________________________________________________________*/
 #define STR_NOTLAND "LZ must be on land."
 #define STR_BADTERRAIN "Unsuitable terrain. Select another LZ."
 #define STR_CANCEL "Transport request canceled."
-#define MRK_INFIL format["%1_infil",getPlayerUID player]
-#define MRK_EXFIL format["%1_exfil",getPlayerUID player]
+#define MRK_INFIL format["%1_infil",name player]
+#define MRK_EXFIL format["%1_exfil",name player]
 #define EH_INFIL format["%1_infilLZ",QUOTE(ADDON)]
 #define EH_EXFIL format["%1_exfilLZ",QUOTE(ADDON)]
 #define CHECKDIST 15
@@ -33,9 +30,8 @@ __________________________________________________________________*/
 			[STR_NOTLAND,true] call EFUNC(main,displayText);
 			GVAR(wait) = false;
 		} else {
-			//_exfil = _pos isFlatEmpty [CHECKDIST, 50, 0.45, 10, -1, false, player];
-			if !([_pos,CHECKDIST,-1,0.45] call EFUNC(main,isPosSafe)) then {
-				_exfil = _pos;
+			_exfil = _pos isFlatEmpty [CHECKDIST, 50, 0.45, 10, -1, false, player];
+			if !(_exfil isEqualTo []) then {
 				_exfil set [2,0];
 				_exfilMrk = createMarker [MRK_EXFIL,_exfil];
 				_exfilMrk setMarkerType "mil_pickup";
@@ -56,9 +52,8 @@ __________________________________________________________________*/
 							[STR_NOTLAND,true] call EFUNC(main,displayText);
 							GVAR(wait) = false;
 						} else {
-							//_infil = _pos isFlatEmpty [CHECKDIST, 50, 0.45, 10, -1, false, player];
-							if !([_pos,CHECKDIST,-1,0.45] call EFUNC(main,isPosSafe)) then {
-								_infil = _pos;
+							_infil = _pos isFlatEmpty [CHECKDIST, 50, 0.45, 10, -1, false, player];
+							if !(_infil isEqualTo []) then {
 								if (_exfil distance2D _infil >= 1000) then {
 									_infil set [2,0];
 									_infilMrk = createMarker [MRK_INFIL,_infil];
