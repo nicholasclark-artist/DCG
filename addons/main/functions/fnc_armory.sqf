@@ -27,13 +27,13 @@ __________________________________________________________________*/
 			}; \
 	} else { \
 		['You already have a pack radio.',true] call FUNC(displayText); \
-	}
-#define STATE_RADIO call EFUNC(radio,setRadio)
+	};
+#define STATE_RADIO call EFUNC(radio,setRadio);
 #define STATE_ARMORY \
 	if (CHECK_ADDON_1('acre_main')) then { \
 		{player removeItem _x} forEach (call acre_api_fnc_getCurrentRadioList); \
 	}; \
-	['Open',true] spawn FUNC(arsenal)
+	['Open',true] spawn FUNC(arsenal);
 
 private _obj = _this select 0;
 
@@ -44,4 +44,3 @@ private _obj = _this select 0;
 if (CHECK_ADDON_1("acre_main")) then {
 	[format ["%1_%2_armoryPack", QUOTE(ADDON),_obj],"Take Pack Radio",QUOTE(STATE_PACK),QUOTE(true),"",_obj,0,["ACE_MainActions"]] call FUNC(setAction);
 };
-
