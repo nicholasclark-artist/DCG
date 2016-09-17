@@ -1,6 +1,8 @@
 #include "scripts\hud\dialog.hpp"
 #include "scripts\VVS\menu.h"
 
+respawnOnStart = -1;
+
 class CfgTaskEnhancements {
    enable       = 1; // 0: disable new task features (default), 1: enable new task features & add new task markers and task widgets into the map
    3d           = 1; // 0: do not use new 3D markers (default), 1: replace task waypoints with new 3D markers
