@@ -52,7 +52,7 @@ _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes
 removeFromRemainsCollector [_officer];
 [[_officer],_bRadius] call EFUNC(main,setPatrol);
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},

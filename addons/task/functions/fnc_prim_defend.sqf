@@ -104,31 +104,31 @@ TASK_PUBLISH(_position);
 
 	if ({CHECK_VECTORDIST(getPosASL _x,getPosASL _truck,TASK_DIST_START)} count allPlayers > 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[COUNTDOWN,60,TASK_NAME,{},[],call CBA_fnc_players] call EFUNC(main,setTimer);
+		_timerID = [COUNTDOWN,60,TASK_NAME,{},[],call CBA_fnc_players] call EFUNC(main,setTimer);
 		_enemyCount = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
 
 		[{
 			params ["_args","_idPFH"];
-			_args params ["_taskID","_truck","_grp","_enemyCount","_time"];
+			_args params ["_taskID","_truck","_grp","_enemyCount","_timerID"];
 
 			if (TASK_GVAR isEqualTo []) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
+				[_timerID] call CBA_fnc_removePerFrameHandler;
 				[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-				EGVAR(main,exitTimer) = true;
 				((units _grp) + GVAR(defend_enemies) + [_truck]) call EFUNC(main,cleanup);
 				[TASK_TYPE,30] call FUNC(select);
 			};
 
 			if ({CHECK_VECTORDIST(getPosASL _x,getPosASL _truck,TASK_DIST_FAIL)} count allPlayers isEqualTo 0) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
+				[_timerID] call CBA_fnc_removePerFrameHandler;
 				[_taskID, "FAILED"] call EFUNC(main,setTaskState);
-				EGVAR(main,exitTimer) = true;
 				((units _grp) + GVAR(defend_enemies) + [_truck]) call EFUNC(main,cleanup);
 				TASK_APPROVAL(getPos _truck,TASK_AV * -1);
 				TASK_EXIT;
 			};
 
-			if (diag_tickTime > _time + COUNTDOWN) exitWith {
+			if (EGVAR(main,timer) < 1) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 			  	_truck setDamage 0;
 			  	(group driver _truck) move ([getPos _truck,4000,5000] call EFUNC(main,findPosSafe));
@@ -153,6 +153,6 @@ TASK_PUBLISH(_position);
 					[_grp,_truck]
 				] call CBA_fnc_waitUntilAndExecute;
 			};
-		}, TASK_SLEEP, [_taskID,_truck,_grp,_enemyCount,diag_tickTime]] call CBA_fnc_addPerFrameHandler;
+		}, TASK_SLEEP, [_taskID,_truck,_grp,_enemyCount,_timerID]] call CBA_fnc_addPerFrameHandler;
 	};
 }, TASK_SLEEP, [_taskID,_truck,_grp]] call CBA_fnc_addPerFrameHandler;

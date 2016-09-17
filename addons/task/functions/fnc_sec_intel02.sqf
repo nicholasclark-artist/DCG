@@ -45,7 +45,7 @@ call {
 };
 
 _position = _position select 1;
-_vehPos = [_position,5,30,10,0] call EFUNC(main,findPosSafe);
+_vehPos = [_position,5,30,7,0] call EFUNC(main,findPosSafe);
 
 if !(_position isEqualTo _vehPos) then {
 	_vehicle = (selectRandom _classes) createVehicle [0,0,0];
