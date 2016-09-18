@@ -16,6 +16,18 @@ unassignCurator GVAR(curator);
 PVEH_DEPLOY addPublicVariableEventHandler {(_this select 1) call FUNC(setup)};
 PVEH_REQUEST addPublicVariableEventHandler {(_this select 1) call FUNC(handleRequest)};
 PVEH_REASSIGN addPublicVariableEventHandler {(_this select 1) assignCurator GVAR(curator)};
+PVEH_DELETE addPublicVariableEventHandler {
+	{_x call EFUNC(main,cleanup)} forEach (curatorEditableObjects GVAR(curator));
+	[getPosASL GVAR(anchor),AV_FOB*-1] call EFUNC(approval,addValue);
+	unassignCurator GVAR(curator);
+	[false] call FUNC(recon);
+	deleteVehicle GVAR(anchor);
+
+	{
+		deleteLocation GVAR(location);
+	} remoteExecCall [QUOTE(BIS_fnc_call), 0, false];
+};
+
 addMissionEventHandler ["HandleDisconnect",{
 	if ((_this select 2) isEqualTo GVAR(UID)) then {unassignCurator GVAR(curator)};
 	false
