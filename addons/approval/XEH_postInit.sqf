@@ -13,6 +13,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 
 PVEH_QUESTION addPublicVariableEventHandler {[_this select 1] call FUNC(question)};
 PVEH_HINT addPublicVariableEventHandler {[_this select 1] call FUNC(hint)};
+PVEH_AVADD addPublicVariableEventHandler {(_this select 1) call EFUNC(approval,addValue);};
 
 [{
 	if (DOUBLES(PREFIX,main)) exitWith {
@@ -52,7 +53,7 @@ PVEH_HINT addPublicVariableEventHandler {[_this select 1] call FUNC(hint)};
 			[ADDON_TITLE, QUESTION_KEYID, QUESTION_NAME, compile QUESTION_CODE, ""] call CBA_fnc_addKeybind;
 		} remoteExecCall [QUOTE(BIS_fnc_call),0,true];
 
-		call FUNC(handleHostile);
+		[FUNC(handleHostile), [], GVAR(hostileCooldown)] call CBA_fnc_waitAndExecute;
 
 		if (CHECK_DEBUG) then {
 			[{

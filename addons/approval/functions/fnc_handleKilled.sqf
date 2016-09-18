@@ -82,5 +82,6 @@ if (side group _unit isEqualTo EGVAR(main,playerSide) || {side group _unit isEqu
 if (isServer) then {
 	[getPos _unit, _unitValue] call FUNC(addValue);
 } else {
-	{[getPos _unit, _unitValue] call FUNC(addValue);} remoteExecCall [QUOTE(BIS_fnc_call),2,false];
+	missionNamespace setVariable [PVEH_AVADD,[getPos _unit, _unitValue]];
+	publicVariableServer PVEH_AVADD;
 };
