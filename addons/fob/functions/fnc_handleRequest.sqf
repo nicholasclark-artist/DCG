@@ -57,23 +57,18 @@ if (count _this isEqualTo 1) exitWith {
 			FORMAT_SETUP
 		],"true","",player,1,ACTIONPATH] call EFUNC(main,setAction);
 
-		[{
-			params ["_args","_idPFH"];
-			_args params ["_time"];
-
-			if !(GVAR(response) isEqualTo -1) exitWith {
-				[_idPFH] call CBA_fnc_removePerFrameHandler;
-			};
-			if (diag_tickTime > _time) exitWith {
-				[_idPFH] call CBA_fnc_removePerFrameHandler;
+		[
+			{
 				if (GVAR(response) isEqualTo -1) then { // unit did not answer request
 					[player,1,GVAR(ID1)] call EFUNC(main,removeAction);
 					[player,1,GVAR(ID2)] call EFUNC(main,removeAction);
 					missionNamespace setVariable [PVEH_REQUEST,[player,GVAR(response)]];
 					publicVariableServer PVEH_REQUEST;
 				};
-			};
-		}, 1, [diag_tickTime + 60]] call CBA_fnc_addPerFrameHandler;
+			},
+			[],
+			60
+		] call CBA_fnc_waitAndExecute;
 	}] remoteExecCall [QUOTE(BIS_fnc_call), owner (getAssignedCuratorUnit GVAR(curator))];
 };
 
