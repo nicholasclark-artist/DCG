@@ -5,7 +5,8 @@ Nicholas Clark (SENSEI)
 Description:
 mission included with Dynamic Combat Generator
 __________________________________________________________________*/
-dcg_main_playerSide = EAST; // define var, can be changed via mission params
+// dcg_main_enemySide is defined in mission parameters
+dcg_main_playerSide = EAST;
 
 enableSaving [false, false];
 enableSentences false;
