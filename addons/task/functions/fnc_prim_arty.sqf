@@ -131,8 +131,7 @@ _timerID = [
 			(_this select 1) doArtilleryFire [(_this select 2), "32Rnd_155mm_Mo_shells", 4];
 		};
 	},
-	[_gunner,_tar],
-	call CBA_fnc_players
+	[_gunner,_tar]
 ] call EFUNC(main,setTimer);
 
 // SET TASK

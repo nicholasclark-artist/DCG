@@ -104,7 +104,7 @@ TASK_PUBLISH(_position);
 
 	if ({CHECK_VECTORDIST(getPosASL _x,getPosASL _truck,TASK_DIST_START)} count allPlayers > 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		_timerID = [COUNTDOWN,60,TASK_NAME,{},[],call CBA_fnc_players] call EFUNC(main,setTimer);
+		_timerID = [COUNTDOWN,60,TASK_NAME] call EFUNC(main,setTimer);
 		_enemyCount = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
 
 		[{
