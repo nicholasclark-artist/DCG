@@ -39,7 +39,6 @@ if (isNull GVAR(baseLocation)) then {
 
 if (CHECK_DEBUG) then {
 	_mrk = createMarker [QUOTE(DOUBLES(PREFIX,baseMrk)),locationPosition GVAR(baseLocation)];
-	_mrk setMarkerColor format ["Color%1", GVAR(playerSide)];
 	_mrk setMarkerBrush "Border";
 	_mrk setMarkerShape "ELLIPSE";
 	_mrk setMarkerSize [GVAR(baseRadius), GVAR(baseRadius)];
