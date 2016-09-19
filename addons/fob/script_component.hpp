@@ -1,8 +1,7 @@
 #define COMPONENT fob
+//#define DISABLE_COMPILE_CACHE
 #include "\d\dcg\addons\main\script_mod.hpp"
 #include "\d\dcg\addons\main\script_macros.hpp"
-
-// #define DISABLE_COMPILE_CACHE
 
 #define PVEH_DEPLOY QGVAR(pveh_deploy)
 #define PVEH_DELETE QGVAR(pveh_delete)
@@ -45,14 +44,14 @@
 #define DISMANTLE_ID QUOTE(DOUBLES(ADDON,dismantle))
 #define DISMANTLE_NAME "Dismantle FOB"
 #define DISMANTLE_STATEMENT call FUNC(delete)
-#define DISMANTLE_COND player isEqualTo (getAssignedCuratorUnit GVAR(curator))
+#define DISMANTLE_COND player isEqualTo (getAssignedCuratorUnit GVAR(curator)) && {cameraOn isEqualTo player}
 #define DISMANTLE_KEYCODE \
 	if (DISMANTLE_COND) then { \
 		DISMANTLE_STATEMENT \
 	}
 
 #define PATROL_ID QUOTE(DOUBLES(ADDON,patrol))
-#define PATROL_NAME "Set Groups on Patrol"
+#define PATROL_NAME "Set FOB Groups on Patrol"
 #define PATROL_STATEMENT SET_PATROL
 #define PATROL_COND player isEqualTo (getAssignedCuratorUnit GVAR(curator))
 #define PATROL_KEYCODE \
@@ -61,7 +60,7 @@
 	}
 
 #define RECON_ID QUOTE(DOUBLES(ADDON,recon))
-#define RECON_NAME "Switch to Aerial Recon"
+#define RECON_NAME "FOB Aerial Recon"
 #define RECON_STATEMENT \
 	if (((UAVControl RECON) select 0) isEqualTo player) then { \
 		objNull remoteControl gunner RECON; \
@@ -84,7 +83,7 @@
 	} else { \
 		findDisplay 312 closeDisplay 2; \
 	}
-#define BUILD_COND player isEqualTo (getAssignedCuratorUnit GVAR(curator))
+#define BUILD_COND player isEqualTo (getAssignedCuratorUnit GVAR(curator)) && {isNull (objectParent player)} && {cameraOn isEqualTo player}
 #define BUILD_KEYCODE \
 	if (BUILD_COND) then { \
 		BUILD_STATEMENT \

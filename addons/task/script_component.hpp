@@ -1,11 +1,10 @@
 #define COMPONENT task
+//#define DISABLE_COMPILE_CACHE
 #include "\d\dcg\addons\main\script_mod.hpp"
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-// #define DISABLE_COMPILE_CACHE
-
 // TASK macro is dependent on file structure
-// if addon's file structure changes, adjust TASK ID
+// if addon's file structure changes, adjust TASK
 #define TASK (((__FILE__) select [32]) select [0,(count ((__FILE__) select [32])) - 4])
 #define TASK_QFUNC format ["%1_%2",QUOTE(DOUBLES(ADDON,fnc)),TASK]
 

@@ -120,6 +120,7 @@
 #define COST_FORT 0.075
 #define COST_SIGN 0.1
 
+#define PVEH_AVADD QEGVAR(approval,pveh_add)
 #define AV_VAR(LOC) format ["%1_approval_%2",PREFIX,LOC]
 #define AV_MIN 0
 #define AV_MAX 100
