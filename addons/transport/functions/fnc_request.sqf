@@ -82,21 +82,17 @@ __________________________________________________________________*/
 	};
 },[(_this select 0)]] call BIS_fnc_addStackedEventHandler;
 
-// exit if lz not selected in time
-[{
-	params ["_args","_idPFH"];
-	_args params ["_time"];
-
-	if (GVAR(ready) isEqualTo 0) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-	};
-	if (diag_tickTime >= _time && {GVAR(ready) isEqualTo 1}) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[STR_CANCEL,true] call EFUNC(main,displayText);
-		GVAR(wait) = false;
-		[EH_EXFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-		[EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-		deleteMarker MRK_INFIL;
-		deleteMarker MRK_EXFIL;
-	};
-}, 1, [diag_tickTime + 90]] call CBA_fnc_addPerFrameHandler;
+[
+	{
+		if (GVAR(ready) isEqualTo 1) then {
+			[STR_CANCEL,true] call EFUNC(main,displayText);
+			GVAR(wait) = false;
+			[EH_EXFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
+			[EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
+			deleteMarker MRK_INFIL;
+			deleteMarker MRK_EXFIL;
+		};
+	},
+	[],
+	90
+] call CBA_fnc_waitAndExecute;
