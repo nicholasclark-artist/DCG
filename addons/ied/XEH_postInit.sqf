@@ -43,7 +43,8 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 					 {isOnRoad _road} &&
 					 {(nearestLocations [_pos, ["NameCityCapital","NameCity","NameVillage"], 500]) isEqualTo []} &&
 					 {{CHECK_DIST2D(_pos,getpos _x,500)} count GVAR(array) isEqualTo 0}) then {
-						_ied = createVehicle [(selectRandom _type), _pos, [], 6, "NONE"];
+						_ied = (selectRandom _type) createVehicle [0,0,0];
+						_ied setPos (_pos getPos [6, random 360]);
 						GVAR(array) pushBack _ied;
 						DEBUG_IED
 					};

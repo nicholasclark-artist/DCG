@@ -88,7 +88,8 @@ if (_type isEqualTo 0) exitWith {
 	private "_veh";
 
 	if (_type isEqualTo 1) then {
-		_veh = (selectRandom _vehPool) createVehicle _pos;
+		_veh = (selectRandom _vehPool) createVehicle [0,0,0];
+		_veh setPos _pos;
 		_veh setVectorUp surfaceNormal getPos _veh;
 	} else {
 		_veh = createVehicle [selectRandom _airPool, _pos, [], 0, "FLY"];

@@ -63,8 +63,9 @@ if (_bNodes isEqualTo []) exitWith {
 _posArty = selectRandom _bNodes;
 _posArty = _posArty select 0;
 
-_arty = _artyClass createVehicle _posArty;
+_arty = _artyClass createVehicle [0,0,0];
 _arty setDir random 360;
+_arty setPos _posArty;
 _arty lock 3;
 _arty allowCrewInImmobile true;
 _objs pushBack _arty;

@@ -17,7 +17,8 @@ if !(CHECK_INIT) exitWith {};
 call FUNC(setParams);
 
 if (CHECK_MARKER(QUOTE(BASE))) then {
-	BASE = "Land_HelipadEmpty_F" createVehicle (getMarkerPos QUOTE(BASE));
+	BASE = "Land_HelipadEmpty_F" createVehicle [0,0,0];
+	BASE setPos (getMarkerPos QUOTE(BASE));
 	publicVariable QUOTE(BASE);
 };
 
@@ -188,6 +189,19 @@ if !(isNil {HEADLESSCLIENT}) then {
 		];
 	}
 ] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute), 0, true];
+
+// load data
+_data = QUOTE(ADDON) call FUNC(loadDataAddon);
+if !(_data isEqualTo []) then {
+	{
+		_x params ["_type","_pos","_dir","_vector"];
+
+		_veh = _type createVehicle [0,0,0];
+		_veh setDir _dir;
+		_veh setPosASL _pos;
+		_veh setVectorUp _vector;
+	} forEach _data;
+};
 
 DATA_SAVEPVEH addPublicVariableEventHandler {
 	call FUNC(saveData);

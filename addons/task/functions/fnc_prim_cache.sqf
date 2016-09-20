@@ -45,8 +45,9 @@ _posCache = selectRandom _bNodes;
 _posCache = _posCache select 0;
 
 for "_i" from 0 to 1 do {
-	_cache = "O_supplyCrate_F" createVehicle _posCache;
+	_cache = "O_supplyCrate_F" createVehicle [0,0,0];
 	_cache setDir random 360;
+	_cache setPos _posCache;
 	_cache setVectorUp surfaceNormal getPos _cache;
 	_caches pushBack _cache;
 /*	_cache addEventHandler ["HandleDamage", {

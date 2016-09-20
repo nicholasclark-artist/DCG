@@ -50,7 +50,8 @@ call {
 	_type = "B_cargoNet_01_ammo_F";
 };
 
-GVAR(anchor) = _type createVehicle _pos;
+GVAR(anchor) = _type createVehicle [0,0,0];
+GVAR(anchor) setPos _pos;
 publicVariable QGVAR(anchor);
 GVAR(anchor) allowDamage false;
 clearWeaponCargoGlobal GVAR(anchor);

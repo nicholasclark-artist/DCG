@@ -55,8 +55,9 @@ call {
 	if !(isOnRoad (ASLToAGL _x)) then {
 		_type = ceil random 3;
 		if (_type isEqualTo 1) exitWith { // tower
-			_tower = _static1 createVehicle _x;
+			_tower = _static1 createVehicle [0,0,0];
 			_tower setdir ([_tower, _pos] call BIS_fnc_DirTo) + 180;
+			_tower setPosASL _x;
 			_tower setvectorup [0,0,1];
 			_gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
 			_gunner setFormDir (getDir _tower);
@@ -99,7 +100,8 @@ call {
 		};
 		 // mortar
 		 if !(_x isFlatEmpty [2, -1, 0.4, 3, -1] isEqualTo []) then {
-			_static = _static3 createVehicle _x;
+			_static = _static3 createVehicle [0,0,0];
+			_static setPosASL _x;
 			_fort = "Land_BagFence_Round_F" createVehicle [0,0,0];
 			_fortPos = (_static modelToWorld [0,2.3,0]);
 			_fortPos set [2,0];
