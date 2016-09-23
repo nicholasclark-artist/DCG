@@ -26,6 +26,7 @@ if (_unit isEqualTo leader _unit && {!(_unit getVariable [UNIT_EH,false])}) exit
 				{
 					_newLeader = leader (_this select 0);
 					[_newLeader] call FUNC(uncache);
+					_newLeader setVariable [UNIT_EH,false];
 					[_newLeader] call FUNC(addEventhandler);
 				},
 				[group (_this select 0),_this select 0]
