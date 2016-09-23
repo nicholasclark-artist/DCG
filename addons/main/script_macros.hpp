@@ -98,7 +98,7 @@
 
 #define ACTIONPATH ['ACE_SelfActions',QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
 
-#define CHECK_INIT ((EGVAR(main,enable)) && {isServer} && {isMultiplayer})
+#define CHECK_INIT ((EGVAR(main,enable) isEqualTo 1) && {isServer} && {isMultiplayer})
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> 'CfgPatches' >> PATCH))
