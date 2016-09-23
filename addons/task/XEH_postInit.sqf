@@ -14,6 +14,14 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	if (DOUBLES(PREFIX,main) && {time > 15}) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
+		GVAR(primaryBlacklist) = GVAR(primaryBlacklist) apply {toLower _x};
+		GVAR(secondaryBlacklist) = GVAR(secondaryBlacklist) apply {toLower _x};
+
+		GVAR(primaryList) = GVAR(primaryList) select {!(toLower _x in GVAR(primaryBlacklist))};
+		GVAR(secondaryList) = GVAR(secondaryList) select {!(toLower _x in GVAR(secondaryBlacklist))};
+
+		LOG_DEBUG_2("Prim: %1, Sec: %2",GVAR(primaryList),GVAR(secondaryList));
+
 		[
 			{!isNull player && {alive player}},
 			{

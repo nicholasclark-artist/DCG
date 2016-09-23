@@ -25,12 +25,10 @@ if (_cooldown < 0) then {
 };
 
 [{
-	_task = "";
-
-	if ((_this select 0) > 0) then {
-		_task = selectRandom GVAR(primaryTasks);
+	_task = if ((_this select 0) > 0) then {
+		selectRandom GVAR(primaryList);
 	} else {
-		_task = selectRandom GVAR(secondaryTasks);
+		selectRandom GVAR(secondaryList);
 	};
 
 	if !(_task isEqualTo "") then {
