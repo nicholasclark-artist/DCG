@@ -28,7 +28,7 @@ _gunnerClass = "";
 _objs = [];
 
 if (_position isEqualTo []) then {
-	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findPosRural);
+	_position = [EGVAR(main,center),EGVAR(main,range),"meadow",10] call EFUNC(main,findPos);
 };
 
 if (_position isEqualTo []) exitWith {

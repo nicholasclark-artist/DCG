@@ -25,7 +25,7 @@ _strength = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
 _vehGrp = grpNull;
 
 if (_position isEqualTo []) then {
-	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findPosRural);
+	_position = [EGVAR(main,center),EGVAR(main,range),"meadow",10] call EFUNC(main,findPos);
 };
 
 if (_position isEqualTo []) exitWith {
@@ -45,9 +45,8 @@ _posCache = selectRandom _bNodes;
 _posCache = _posCache select 0;
 
 for "_i" from 0 to 1 do {
-	_cache = "O_supplyCrate_F" createVehicle [0,0,0];
+	_cache = "O_supplyCrate_F" createVehicle _posCache;
 	_cache setDir random 360;
-	_cache setPos _posCache;
 	_cache setVectorUp surfaceNormal getPos _cache;
 	_caches pushBack _cache;
 /*	_cache addEventHandler ["HandleDamage", {
