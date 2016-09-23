@@ -25,7 +25,7 @@ params [
 
 _pos = [_pos select 0,_pos select 1,0.3];
 
-if (_pos isFlatEmpty [-1, -1, _gradient, 10, _water] isEqualTo []) exitWith {false};
+if (_pos isFlatEmpty [-1, -1, _gradient, 30, _water] isEqualTo []) exitWith {false};
 
 if !(_model isEqualTo objNull) exitWith {
 	private ["_w","_l","_h"];
