@@ -23,7 +23,7 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_actions","_addAction","_EHStr","_EH","_childAction","_list"];
+private ["_actions","_addAction","_EHStr","_EH","_childAction"];
 params [
 	["_id",""],
 	["_name",""],
@@ -80,9 +80,7 @@ if (CHECK_ADDON_1("ace_interact_menu")) then {
 		_actions append [[-1],-1];
 	};
 
-	_list = [_obj,_name];
-	_list pushBack _actions;
-	GVAR(actions) pushBack _list;
+	GVAR(actions) pushBack [_obj,_name,_actions];
 };
 
 _actions
