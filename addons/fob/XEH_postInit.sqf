@@ -13,7 +13,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 
 unassignCurator GVAR(curator);
 
-PVEH_DEPLOY addPublicVariableEventHandler {(_this select 1) call FUNC(setup)};
+PVEH_DEPLOY addPublicVariableEventHandler {[_this select 1] call FUNC(setup)};
 PVEH_REQUEST addPublicVariableEventHandler {(_this select 1) call FUNC(handleRequest)};
 PVEH_REASSIGN addPublicVariableEventHandler {(_this select 1) assignCurator GVAR(curator)};
 PVEH_DELETE addPublicVariableEventHandler {
@@ -22,6 +22,8 @@ PVEH_DELETE addPublicVariableEventHandler {
 	unassignCurator GVAR(curator);
 	[false] call FUNC(recon);
 	deleteVehicle GVAR(anchor);
+
+	GVAR(respawnPos) call BIS_fnc_removeRespawnPosition;
 
 	{
 		deleteLocation GVAR(location);

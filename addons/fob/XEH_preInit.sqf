@@ -20,6 +20,7 @@ PREP(curatorEH);
 PREP(recon);
 
 GVAR(location) = locationNull;
+GVAR(respawnPos) = [];
 GVAR(UID) = "";
 GVAR(response) = -1;
 GVAR(anchor) = objNull;

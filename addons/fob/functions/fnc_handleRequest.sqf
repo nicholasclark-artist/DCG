@@ -13,49 +13,26 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define FORMAT_SETUP \
-	GVAR(response), \
-	GVAR(ID1), \
-	GVAR(ID2), \
-	QEFUNC(main,removeAction), \
-	missionNamespace setVariable [PVEH_REQUEST,[player,GVAR(response)]], \
-	publicVariableServer str PVEH_REQUEST
+#define ACTION_CODE(ANSWER) \
+	GVAR(response) = ANSWER; \
+	[player,1,GVAR(ID1)] call EFUNC(main,removeAction); \
+	[player,1,GVAR(ID2)] call EFUNC(main,removeAction); \
+	missionNamespace setVariable [QUOTE(PVEH_REQUEST),[player,GVAR(response)]], \
+	publicVariableServer QUOTE(PVEH_REQUEST)
 
 if (!isServer) exitWith {};
 
-private "_userName";
-
-_userName = "SERVER";
+private _userName = "SERVER";
 
 if (count _this isEqualTo 1) exitWith {
 	[_this select 0, {
 		GVAR(response) = -1;
-		GVAR(ID1) = -1;
-		GVAR(ID2) = -1;
 
 		[format ["%1 requests control of %2.",name _this,GVAR(name)],true] call EFUNC(main,displayText);
 
-		GVAR(ID1) = [format ["%1_requestAccept",QUOTE(ADDON)],"Accept Request",format [
-			"
-				%1 = 1;
-				[player,1,%2] call %4;
-				[player,1,%3] call %4;
-				%5;
-				%6;
-			",
-			FORMAT_SETUP
-		],"true","",player,1,ACTIONPATH] call EFUNC(main,setAction);
+		GVAR(ID1) = [QUOTE(DOUBLES(ADDON,requestAccept)),"Accept Request",QUOTE(ACTION_CODE(1)),QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
 
-		GVAR(ID2) = [format ["%1_requestDeny",QUOTE(ADDON)],"Deny Request",format [
-			"
-				%1 = 0;
-				[player,1,%2] call %4;
-				[player,1,%3] call %4;
-				%5;
-				%6;
-			",
-			FORMAT_SETUP
-		],"true","",player,1,ACTIONPATH] call EFUNC(main,setAction);
+		GVAR(ID2) = [QUOTE(DOUBLES(ADDON,requestDeny)),"Deny Request",QUOTE(ACTION_CODE(0)),QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
 
 		[
 			{

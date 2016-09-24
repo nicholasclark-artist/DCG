@@ -83,7 +83,7 @@
 	} else { \
 		findDisplay 312 closeDisplay 2; \
 	}
-#define BUILD_COND player isEqualTo (getAssignedCuratorUnit GVAR(curator)) && {isNull (objectParent player)} && {cameraOn isEqualTo player}
+#define BUILD_COND player isEqualTo (getAssignedCuratorUnit GVAR(curator)) && {isNull (objectParent player)} && {cameraOn isEqualTo player} && {!(visibleMap)}
 #define BUILD_KEYCODE \
 	if (BUILD_COND) then { \
 		BUILD_STATEMENT \

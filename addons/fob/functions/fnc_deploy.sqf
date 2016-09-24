@@ -52,6 +52,6 @@ if !([player modelToWorld [0,3,0],10,0,0.3] call EFUNC(main,isPosSafe)) exitWith
 		[_format,true] call EFUNC(main,displayText);
 	};
 
-	missionNamespace setVariable [PVEH_DEPLOY,[player]];
+	missionNamespace setVariable [PVEH_DEPLOY,player];
 	publicVariableServer PVEH_DEPLOY;
 }, [], ANIM_TIME] call CBA_fnc_waitAndExecute;

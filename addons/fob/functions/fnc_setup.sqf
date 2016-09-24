@@ -68,6 +68,8 @@ clearBackpackCargoGlobal GVAR(anchor);
  	[getPos GVAR(anchor),"NameCity",GVAR(range),GVAR(name),QGVAR(location)] call EFUNC(main,createLocation);
 } remoteExecCall [QUOTE(BIS_fnc_call),0,GVAR(anchor)];
 
+GVAR(respawnPos) = [missionNamespace,GVAR(anchor) modelToWorld [0,-4,0],GVAR(name)] call BIS_fnc_addRespawnPosition;
+
 /*removeAllCuratorAddons GVAR(curator);
 GVAR(curator) addCuratorAddons GVAR(addons);*/
 GVAR(curator) addCuratorPoints _points;
@@ -79,13 +81,14 @@ GVAR(curator) addCuratorCameraArea [0,getPos GVAR(anchor),GVAR(range)];
 GVAR(curator) setCuratorCameraAreaCeiling 40;
 [GVAR(curator),"object",["UnitPos","Rank","Lock"]] call BIS_fnc_setCuratorAttributes;
 
-[getPosASL GVAR(anchor),AV_FOB] call EFUNC(approval,addValue);
 /*GVAR(AVBonus) = round(AV_FOB);
 publicVariable QGVAR(AVBonus);*/
 
 // assign unit and send unit curator UID
 // unit does not immediately become owner of curator, it takes a few seconds
 if !(isNull _unit) then {
+	[getPosASL GVAR(anchor),AV_FOB] call EFUNC(approval,addValue);
+
 	_unit assignCurator GVAR(curator);
 	GVAR(UID) = getPlayerUID _unit;
 	(owner _unit) publicVariableClient QGVAR(UID);
@@ -93,9 +96,7 @@ if !(isNull _unit) then {
 	[
 		{(getAssignedCuratorUnit GVAR(curator)) isEqualTo (_this select 0)},
 		{
-			{
-				call FUNC(curatorEH);
-			} remoteExecCall [QUOTE(BIS_fnc_call), owner (getAssignedCuratorUnit GVAR(curator)), false];
+			[] remoteExecCall [QFUNC(curatorEH), owner (getAssignedCuratorUnit GVAR(curator)), false];
 		},
 		[_unit]
 	] call CBA_fnc_waitUntilAndExecute;
