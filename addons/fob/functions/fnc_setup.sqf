@@ -84,8 +84,6 @@ GVAR(curator) setCuratorCameraAreaCeiling 40;
 /*GVAR(AVBonus) = round(AV_FOB);
 publicVariable QGVAR(AVBonus);*/
 
-// assign unit and send unit curator UID
-// unit does not immediately become owner of curator, it takes a few seconds
 if !(isNull _unit) then {
 	[getPosASL GVAR(anchor),AV_FOB] call EFUNC(approval,addValue);
 
@@ -93,6 +91,7 @@ if !(isNull _unit) then {
 	GVAR(UID) = getPlayerUID _unit;
 	(owner _unit) publicVariableClient QGVAR(UID);
 
+	// unit does not immediately become owner of curator, it takes a few seconds
 	[
 		{(getAssignedCuratorUnit GVAR(curator)) isEqualTo (_this select 0)},
 		{

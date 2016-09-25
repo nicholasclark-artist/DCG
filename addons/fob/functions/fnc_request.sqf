@@ -17,5 +17,6 @@ if (isNull (getAssignedCuratorUnit GVAR(curator))) exitWith {
 	publicVariableServer PVEH_REQUEST;
 };
 
+GVAR(requestReady) = 0;
 missionNamespace setVariable [PVEH_REQUEST,[player]];
 publicVariableServer PVEH_REQUEST;

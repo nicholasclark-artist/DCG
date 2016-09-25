@@ -15,8 +15,8 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define ACTION_CODE(ANSWER) \
 	GVAR(response) = ANSWER; \
-	[player,1,GVAR(ID1)] call EFUNC(main,removeAction); \
-	[player,1,GVAR(ID2)] call EFUNC(main,removeAction); \
+	[player,1,GVAR(actionID1)] call EFUNC(main,removeAction); \
+	[player,1,GVAR(actionID2)] call EFUNC(main,removeAction); \
 	missionNamespace setVariable [QUOTE(PVEH_REQUEST),[player,GVAR(response)]], \
 	publicVariableServer QUOTE(PVEH_REQUEST)
 
@@ -30,15 +30,15 @@ if (count _this isEqualTo 1) exitWith {
 
 		[format ["%1 requests control of %2.",name _this,GVAR(name)],true] call EFUNC(main,displayText);
 
-		GVAR(ID1) = [QUOTE(DOUBLES(ADDON,requestAccept)),"Accept Request",QUOTE(ACTION_CODE(1)),QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
+		GVAR(actionID1) = [QUOTE(DOUBLES(ADDON,requestAccept)),"Accept Request",QUOTE(ACTION_CODE(1)),QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
 
-		GVAR(ID2) = [QUOTE(DOUBLES(ADDON,requestDeny)),"Deny Request",QUOTE(ACTION_CODE(0)),QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
+		GVAR(actionID2) = [QUOTE(DOUBLES(ADDON,requestDeny)),"Deny Request",QUOTE(ACTION_CODE(0)),QUOTE(true),"",player,1,ACTIONPATH] call EFUNC(main,setAction);
 
 		[
 			{
 				if (GVAR(response) isEqualTo -1) then { // unit did not answer request
-					[player,1,GVAR(ID1)] call EFUNC(main,removeAction);
-					[player,1,GVAR(ID2)] call EFUNC(main,removeAction);
+					[player,1,GVAR(actionID1)] call EFUNC(main,removeAction);
+					[player,1,GVAR(actionID2)] call EFUNC(main,removeAction);
 					missionNamespace setVariable [PVEH_REQUEST,[player,GVAR(response)]];
 					publicVariableServer PVEH_REQUEST;
 				};
@@ -57,7 +57,15 @@ if ((_this select 1) isEqualTo 1) then { // if current curator unit accepts requ
 	GVAR(UID) = "";
 	(owner (getAssignedCuratorUnit GVAR(curator))) publicVariableClient QGVAR(UID); // reset UID on current curator unit
 	unassignCurator GVAR(curator);
-	(_this select 0) assignCurator GVAR(curator);
+
+	// a delay between unassigning and assigning curator is required
+	[
+		{
+			(_this select 0) assignCurator GVAR(curator);
+		},
+		[_this select 0],
+		3
+	] call CBA_fnc_waitAndExecute;
 
 	[
 		{(getAssignedCuratorUnit GVAR(curator)) isEqualTo (_this select 0)},
@@ -73,6 +81,8 @@ if ((_this select 1) isEqualTo 1) then { // if current curator unit accepts requ
 };
 
 [[_userName,_this select 1],{
+	GVAR(requestReady) = 1;
+
 	if ((_this select 1) isEqualTo 0) exitWith {
 		[format ["%1 denies your request.", (_this select 0)],true] call EFUNC(main,displayText);
 	};

@@ -11,8 +11,7 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define COST_MULTIPIER 0.5
-#define FOB_NAME format ["%1 (+ %2 Approval)", GVAR(name), GVAR(AVBonus)]
+// #define FOB_NAME format ["%1 (+ %2 Approval)", GVAR(name), GVAR(AVBonus)]
 
 LOG_DEBUG_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
 
