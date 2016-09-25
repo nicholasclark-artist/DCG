@@ -48,7 +48,6 @@ if (_hitIndex isEqualTo []) exitWith {
 	LOG_DEBUG_2("%1 %2: no suitable hitpoints.",typeOf _veh,getPos _veh);
 };
 
-
 for "_i" from 1 to _hitCount step 1 do {
 	_hit = selectRandom _hitIndex;
 
