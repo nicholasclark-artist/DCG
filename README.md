@@ -59,8 +59,8 @@ The latest version of [Community Based Addons](https://forums.bistudio.com/topic
 
 **Server Setup**
 - Extract the DCG and CBA zip files to the server's Arma 3 folder
-- After extracting the files, @dcg, @cba_a3 and the userconfig folder should exist in the server's Arma 3 directory
-- If you wish to customize DCG's settings, edit serverconfig.hpp found in the userconfig folder. For more info on DCG's settings see, [Customizing DCG Settings](https://github.com/nicholasclark-artist/DCG/wiki/Customizing-DCG-Settings)
+- After extracting the files, @dcg and @cba_a3 should exist in the server's Arma 3 directory
+- If you wish to customize DCG's settings, check out [Customizing DCG Settings](https://github.com/nicholasclark-artist/DCG/wiki/Customizing-DCG-Settings)
 - If you would like to set up a mission for DCG, take a quick look at [Setting up a DCG compatible mission](https://github.com/nicholasclark-artist/DCG/wiki/Setting-up-a-DCG-compatible-mission)
 
 ### Can I Contribute to DCG?
