@@ -5,7 +5,7 @@ class CfgPatches {
 		requiredVersion = REQUIRED_VERSION;
 		requiredAddons[] = {"cba_common","cba_xeh",QUOTE(MAIN_ADDON)};
 		author = "SENSEI";
-		name = DOUBLES(PREFIX,ADDON);
+		name = COMPONENT_NAME;
 		url = URL;
 		VERSION_CONFIG;
 	};
