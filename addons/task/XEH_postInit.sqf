@@ -20,7 +20,8 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		GVAR(primaryList) = GVAR(primaryList) select {!(toLower _x in GVAR(primaryBlacklist))};
 		GVAR(secondaryList) = GVAR(secondaryList) select {!(toLower _x in GVAR(secondaryBlacklist))};
 
-		LOG_DEBUG_2("Prim: %1, Sec: %2",GVAR(primaryList),GVAR(secondaryList));
+		LOG_DEBUG_1("Prim: %1",GVAR(primaryList));
+		LOG_DEBUG_1("Sec: %1",GVAR(secondaryList));
 
 		[
 			{!isNull player && {alive player}},
