@@ -67,11 +67,7 @@ __________________________________________________________________*/
 					VVS by Tonic<br/>
 					Vehicle HUD script by Tier1ops<br/>"]
 			];
-			player createDiaryRecord ["Diary", ["Mission Info", format ["<br/>
-				Author: Nicholas Clark (SENSEI)<br/><br/>
-				Known Issues:<br/>
-				ACE interaction menu may not initialize at mission start, ACE3 Github issue #1171<br/><br/>
-				"]]
+			player createDiaryRecord ["Diary", ["Mission Info", format ["<br/>Author: Nicholas Clark (SENSEI)"]]
 			];
 		};
 
