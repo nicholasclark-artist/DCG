@@ -61,8 +61,7 @@ call {
 
 _truck = _type createVehicle [0,0,0];
 _truck lock 3;
-_truck setDir random 360;
-_truck setPosASL _vehPos;
+[_truck,_vehPos] call EFUNC(main,setPosSafe);
 _truck allowDamage false;
 _driver = (createGroup CIVILIAN) createUnit ["C_man_w_worker_F", [0,0,0], [], 0, "NONE"];
 _driver moveInDriver _truck;
@@ -139,9 +138,7 @@ TASK_PUBLISH(_position);
 				TASK_EXIT;
 			};
 
-			{
-				if (isNull _x) then {GVAR(defend_enemies) deleteAt _forEachIndex};
-			} forEach GVAR(defend_enemies);
+			GVAR(defend_enemies) = GVAR(defend_enemies) select {!(isNull _x)};
 
 			if (random 1 < 0.2 && {count GVAR(defend_enemies) < _enemyCount}) then {
 				_grp = [[getpos _truck,200,400] call EFUNC(main,findPosSafe),0,ENEMY_COUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);

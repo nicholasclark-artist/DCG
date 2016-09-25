@@ -55,7 +55,7 @@ _grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,spa
 				_vehicles pushBack (vehicle _x);
 				(vehicle _x) setDir random 360;
 				(vehicle _x) lock 3;
-				[vehicle _x,2,{LOG_DEBUG_1("%1 repaired.",(_this select 0))}] call EFUNC(main,setVehDamaged);
+				[vehicle _x,2,{(_this select 0) setVariable [TASK_QFUNC,true]}] call EFUNC(main,setVehDamaged);
 				(crew (vehicle _x)) allowGetIn false;
 				_grp leaveVehicle (vehicle _x);
 			};
@@ -93,7 +93,7 @@ TASK_PUBLISH(_position);
 		TASK_EXIT;
 	};
 
-	if ({(((getAllHitPointsDamage _x) select 2) select {_x isEqualTo 1}) isEqualTo []} count _vehicles isEqualTo VEHCOUNT) exitWith {
+	if ({_x getVariable [TASK_QFUNC,false]} count _vehicles isEqualTo VEHCOUNT) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_position,TASK_AV);
