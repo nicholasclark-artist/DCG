@@ -3,6 +3,8 @@
 #include "\d\dcg\addons\main\script_mod.hpp"
 #include "\d\dcg\addons\main\script_macros.hpp"
 
+#define COST_MULTIPIER 0.5
+
 #define PVEH_DEPLOY QGVAR(pveh_deploy)
 #define PVEH_DELETE QGVAR(pveh_delete)
 #define PVEH_REQUEST QGVAR(pveh_request)
@@ -35,7 +37,7 @@
 #define REQUEST_ID QUOTE(DOUBLES(ADDON,request))
 #define REQUEST_NAME "Request Control of FOB"
 #define REQUEST_STATEMENT call FUNC(request)
-#define REQUEST_COND !(GVAR(location) isEqualTo locationNull) && {!(player isEqualTo (getAssignedCuratorUnit GVAR(curator)))}
+#define REQUEST_COND !(GVAR(location) isEqualTo locationNull) && {!(player isEqualTo (getAssignedCuratorUnit GVAR(curator)))} && {GVAR(requestReady) isEqualTo 1}
 #define REQUEST_KEYCODE \
 	if (REQUEST_COND) then { \
 		REQUEST_STATEMENT \
@@ -63,9 +65,11 @@
 #define RECON_NAME "FOB Aerial Recon"
 #define RECON_STATEMENT \
 	if (((UAVControl RECON) select 0) isEqualTo player) then { \
+		player allowDamage true; \
 		objNull remoteControl gunner RECON; \
 		player switchCamera "internal"; \
 	} else { \
+		player allowDamage false; \
 		player remoteControl gunner RECON; \
 		RECON switchCamera "internal"; \
 	}
