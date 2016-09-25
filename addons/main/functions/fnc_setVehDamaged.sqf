@@ -55,7 +55,8 @@ for "_i" from 1 to _hitCount step 1 do {
 		_lastHit = _hit;
 		_veh setHitIndex [_hit, MAX_DMG];
 		_hitSelect pushBack _hit;
-		LOG_DEBUG_4("%1 %2: index: %3 damage: %4.",typeOf _veh,getPos _veh,_hit,MAX_DMG);
+
+		LOG_DEBUG_5("%1 %2: hitpoint: %3 index: %4 damage: %5.",typeOf _veh,getPos _veh,_allHitpoints select _hit,_hit,MAX_DMG);
 	};
 };
 
