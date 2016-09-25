@@ -902,7 +902,7 @@ See the make.cfg file for additional build options.
         key = cfg.get(make_target, "key", fallback=None)
 
         # Private key creation directory
-        private_key_path = cfg.get(make_target, "private_key_path", fallback=os.path.join(work_drive, "private_keys"))
+        # private_key_path = cfg.get(make_target, "private_key_path", fallback=os.path.join(work_drive, "private_keys"))
 
         # Project prefix (folder path)
         prefix = cfg.get(make_target, "prefix", fallback="")
@@ -1026,12 +1026,12 @@ See the make.cfg file for additional build options.
             print_error("Cannot create release directory")
             raise
 
-    if not os.path.isdir(os.path.join(release_dir, project, "keys")):
-        try:
-            os.makedirs(os.path.join(release_dir, project, "keys"))
-        except:
-            print_error("Cannot create release directory")
-            raise
+    # if not os.path.isdir(os.path.join(release_dir, project, "keys")):
+    #     try:
+    #         os.makedirs(os.path.join(release_dir, project, "keys"))
+    #     except:
+    #         print_error("Cannot create release directory")
+    #         raise
 
     # Update version stamp in all files that contain it
     # Update version only for release if full update not requested (backup and restore files)
@@ -1062,48 +1062,48 @@ See the make.cfg file for additional build options.
                     modules.append(path)
 
         # Make the key specified from command line if necessary.
-        if new_key:
-            if not os.path.isfile(os.path.join(private_key_path, key_name + ".biprivatekey")):
-                print_yellow("\nRequested key does not exist.")
-                try:
-                    os.makedirs(private_key_path)
-                except:
-                    pass
-                curDir = os.getcwd()
-                os.chdir(private_key_path)
-                ret = subprocess.call([dscreatekey, key_name]) # Created in make_root
-                os.chdir(curDir)
-                if ret == 0:
-                    print_green("Created: {}".format(os.path.join(private_key_path, key_name + ".biprivatekey")))
-                    print("Removing any old signature keys...")
-                    purge(os.path.join(module_root, release_dir, project, "addons"), "^.*\.bisign$","*.bisign")
-                    purge(os.path.join(module_root, release_dir, project, "optionals"), "^.*\.bisign$","*.bisign")
-                    purge(os.path.join(module_root, release_dir, project, "keys"), "^.*\.bikey$","*.bikey")
-                else:
-                    print_error("Failed to create key!")
+        # if new_key:
+        #     if not os.path.isfile(os.path.join(private_key_path, key_name + ".biprivatekey")):
+        #         print_yellow("\nRequested key does not exist.")
+        #         try:
+        #             os.makedirs(private_key_path)
+        #         except:
+        #             pass
+        #         curDir = os.getcwd()
+        #         os.chdir(private_key_path)
+        #         ret = subprocess.call([dscreatekey, key_name]) # Created in make_root
+        #         os.chdir(curDir)
+        #         if ret == 0:
+        #             print_green("Created: {}".format(os.path.join(private_key_path, key_name + ".biprivatekey")))
+        #             print("Removing any old signature keys...")
+        #             purge(os.path.join(module_root, release_dir, project, "addons"), "^.*\.bisign$","*.bisign")
+        #             purge(os.path.join(module_root, release_dir, project, "optionals"), "^.*\.bisign$","*.bisign")
+        #             purge(os.path.join(module_root, release_dir, project, "keys"), "^.*\.bikey$","*.bikey")
+        #         else:
+        #             print_error("Failed to create key!")
 
 
 
-            else:
-                print_green("\nNOTE: Using key {}".format(os.path.join(private_key_path, key_name + ".biprivatekey")))
+        #     else:
+        #         print_green("\nNOTE: Using key {}".format(os.path.join(private_key_path, key_name + ".biprivatekey")))
 
-            try:
-                print("Copying public key to release directory.")
+        #     try:
+        #         print("Copying public key to release directory.")
 
-                try:
-                    os.makedirs(os.path.join(module_root, release_dir, project, "keys"))
-                except:
-                    pass
+        #         try:
+        #             os.makedirs(os.path.join(module_root, release_dir, project, "keys"))
+        #         except:
+        #             pass
 
-                # Use biKeyNameAbrev to attempt to minimize problems from this BI Bug REFERENCE: http://feedback.arma3.com/view.php?id=22133
-                biKeyNameAbrev = key_name.split("-")[0]
-                shutil.copyfile(os.path.join(private_key_path, key_name + ".bikey"), os.path.join(module_root, release_dir, project, "keys", "{}.bikey".format(biKeyNameAbrev)))
+        #         # Use biKeyNameAbrev to attempt to minimize problems from this BI Bug REFERENCE: http://feedback.arma3.com/view.php?id=22133
+        #         biKeyNameAbrev = key_name.split("-")[0]
+        #         shutil.copyfile(os.path.join(private_key_path, key_name + ".bikey"), os.path.join(module_root, release_dir, project, "keys", "{}.bikey".format(biKeyNameAbrev)))
 
-            except:
-                print_error("Could not copy key to release directory.")
-                raise
+        #     except:
+        #         print_error("Could not copy key to release directory.")
+        #         raise
 
-            key = os.path.join(private_key_path, "{}.biprivatekey".format(key_name))
+        #     key = os.path.join(private_key_path, "{}.biprivatekey".format(key_name))
 
         # Remove any obsolete files.
         print_blue("\nChecking for obsolete files...")
