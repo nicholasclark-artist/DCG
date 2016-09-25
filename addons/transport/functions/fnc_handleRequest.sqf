@@ -16,6 +16,7 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define HINT_GETIN "A player must be in the copilot position to signal take off."
 #define COOLDOWN \
 	[ \
 		{ \
@@ -88,6 +89,9 @@ _spawnPos = [GVAR(exfil),5000,6000,objNull,-1,-1,_dir] call EFUNC(main,findPosSa
 _transport = createVehicle [_classname,_spawnPos,[],0,"FLY"];
 
 _transport addEventHandler ["GetIn",{
+	if (isPlayer (_this select 2) && {!((_this select 2) isEqualTo ((_this select 0) turretUnit [0]))}) then {
+		[HINT_GETIN,false] remoteExecCall [QEFUNC(main,displayText),(_this select 2),false];
+	};
 	if (isPlayer (_this select 2) && {(_this select 2) isEqualTo ((_this select 0) turretUnit [0])} && {alive (driver (_this select 0))} && {canMove (_this select 0)}) then {
 		(_this select 0) removeAllEventHandlers "GetIn";
 		playSound3D ["A3\dubbing_F\modules\supports\transport_welcome.ogg", driver (_this select 0), false, getPosASL (_this select 0), 2, 1, 100];
@@ -139,6 +143,7 @@ _transport enableCopilot false;
 _transport lockDriver true;
 _transport flyInHeight 180;
 _wp = group _pilot addWaypoint [GVAR(exfil), 0];
+_wp setWaypointPosition [GVAR(exfil), 0];
 _wp setWaypointStatements ["true", "(vehicle this) land ""GET IN"";"];
 playSound3D ["A3\dubbing_F\modules\supports\transport_acknowledged.ogg", player, false, getPosASL player, 1, 1, 100];
 
