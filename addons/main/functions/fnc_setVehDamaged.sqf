@@ -15,52 +15,76 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define MAX_HIT 1
+#define MAX_DMG 1
 
 params [
 	"_veh",
-	["_max",1],
-	["_code",{}],
-	["_params",[]]
+	["_hitCount",1],
+	["_onRepair",{}],
+	["_params",[]],
+	["_playSound",false]
 ];
 
-private _ret = [];
-private _hitpoints = [];
-private _hit = "";
+(getAllHitPointsDamage _veh) params [
+	["_allHitpoints", []],
+	["_allHitpointsSelections", []]
+];
 
-if (_veh isKindOf "MAN" || {!local _veh}) exitWith {};
+if (!(local _veh) || {_allHitpoints isEqualTo []} || {!(_veh isKindOf "LandVehicle" || (_veh isKindOf "Ship") || (_veh isKindOf "Air"))}) exitWith {};
 
-_hitpoints = (getAllHitPointsDamage _veh) select 0;
-_hitpoints = _hitpoints select {!(_x isEqualTo "") && {((toLower _x) find "glass") isEqualTo -1}};
+private _hitIndex = [];
+private _hitSelect = [];
+private _lastHit = "";
 
-if !(_hitpoints isEqualTo []) then {
-	for "_i" from 1 to _max step 1 do {
-		_hit = selectRandom _hitpoints;
-		_veh setHitPointDamage [getText (configFile >> "cfgVehicles" >> typeOf _veh >> "HitPoints" >> _hit), MAX_HIT];
-		_ret pushBack _hit;
+{
+	_selection = _allHitpointsSelections select _forEachIndex;
+
+	if (!(_x isEqualTo "") && {((toLower _x) find "glass") isEqualTo -1} && {((toLower _x) find "fuel") isEqualTo -1} && {!isNil {_veh getHit _selection}}) then {
+		_hitIndex pushBack _forEachIndex;
 	};
+} forEach _allHitpoints;
 
-	playSound3D ["A3\Sounds_F\Vehicles\air\noises\heli_damage_rotor_int_open_1.wss", _veh, false, getPosATL _veh, 2];
-	private _fx = "test_EmptyObjectForSmoke" createVehicle (getPosWorld _veh);
-	_fx attachTo [_veh,[0,0,0]];
+if (_hitIndex isEqualTo []) exitWith {
+	LOG_DEBUG_2("%1 %2: no suitable hitpoints.",typeOf _veh,getPos _veh);
 };
 
+
+for "_i" from 1 to _hitCount step 1 do {
+	_hit = selectRandom _hitIndex;
+
+	if !(_hit isEqualTo _lastHit) then {
+		_lastHit = _hit;
+		_veh setHitIndex [_hit, MAX_DMG];
+		_hitSelect pushBack _hit;
+		LOG_DEBUG_4("%1 %2: index: %3 damage: %4.",typeOf _veh,getPos _veh,_hit,MAX_DMG);
+	};
+};
+
+if (_playSound) then {
+	playSound3D ["A3\Sounds_F\Vehicles\air\noises\heli_damage_rotor_int_open_1.wss", _veh, false, getPosATL _veh, 2];
+};
+
+private _fx = "test_EmptyObjectForSmoke" createVehicle (getPosWorld _veh);
+_fx attachTo [_veh,[0,0,0]];
+
+// wait until all suitable hitpoints are repaired or vehicle is dead
 [
 	{
 		isNull (_this select 0) ||
 		{!alive (_this select 0)} ||
-		{(((getAllHitPointsDamage (_this select 0)) select 2) select {_x >= MAX_HIT}) isEqualTo []}
+		{({(((getAllHitPointsDamage (_this select 0)) select 2) select _x) >= MAX_DMG} count (_this select 1)) isEqualTo 0}
 	},
 	{
-		params ["_veh","_ret","_code","_params","_pos"];
+		params ["_veh","_hitIndex","_onRepair","_params","_pos","_fx"];
 
 		if (!isNull _veh && {alive _veh}) then {
-			_params = [_veh,_ret] + _params;
- 			_params call _code;
+			_params = [_veh] + _params;
+ 			_params call _onRepair;
+ 			LOG_DEBUG_2("%1 %2: repaired.",typeOf _veh,_pos);
 		};
-		[_pos,2] call FUNC(removeParticle);
+		[_fx] call FUNC(removeParticle);
 	},
-	[_veh,_ret,_code,_params,getPos _veh]
+	[_veh,_hitIndex,_onRepair,_params,getPos _veh,[_fx]]
 ] call CBA_fnc_waitUntilAndExecute;
 
-_ret
+[_hitIndex,_hitSelect]
