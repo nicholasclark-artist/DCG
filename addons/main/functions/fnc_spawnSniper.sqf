@@ -18,15 +18,18 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_pos","_count","_min","_max","_side","_uncache","_return","_sniper","_overwatch","_grp","_unit","_mrk"];
+params [
+	"_pos",
+	["_count",1,[0]],
+	["_min",100,[0]],
+	["_max",1000,[0]],
+	["_side",GVAR(enemySide)],
+	["_uncache",false]
+];
 
-_pos = param [0];
-_count = param [1,1,[0]];
-_min = param [2,100,[0]];
-_max = param [3,1100,[0]];
-_side = param [4,GVAR(enemySide)];
-_uncache = param [5,false];
-_return = [];
+private _return = [];
+private _sniper = objNull;
+private _overwatch = [_pos,_count,_min,_max] call FUNC(findPosOverwatch);
 
 call {
 	if (_side isEqualTo EAST) exitWith {
@@ -38,22 +41,22 @@ call {
 	_sniper = selectRandom GVAR(sniperPoolInd);
 };
 
-_overwatch = [_pos,_count,_min,_max] call FUNC(findPosOverwatch);
-
 {
-	_grp = createGroup _side;
-	_unit = _grp createUnit [_sniper, [0,0,0], [], 0, "NONE"];
+	private _grp = createGroup _side;
+	private _unit = _grp createUnit [_sniper, [0,0,0], [], 0, "NONE"];
 	_unit setPosASL _x;
 	_unit setUnitPos "DOWN";
 	_unit setskill ["spotDistance",0.97];
 	units _grp doWatch _pos;
 	_return pushBack _grp;
 	_grp setBehaviour "COMBAT";
+
 	if (_uncache) then {
 		CACHE_DISABLE(_grp,true);
 	};
+
 	if(CHECK_DEBUG) then {
-		_mrk = createMarker [format["%1_sniper_%2",QUOTE(PREFIX),_unit],getposATL leader _grp];
+		private _mrk = createMarker [format["%1_sniper_%2",QUOTE(PREFIX),_unit],getposATL leader _grp];
 		_mrk setMarkerType "o_recon";
 		_mrk setMarkerColor format ["Color%1",side _unit];
 		_mrk setMarkerSize [0.7,0.7];
