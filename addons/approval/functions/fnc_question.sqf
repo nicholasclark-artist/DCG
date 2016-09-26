@@ -90,7 +90,7 @@ if (random 1 < (linearConversion [AV_MIN, AV_MAX, [getpos _player] call FUNC(get
 					_mrk setMarkerSize [0.75,0.75];
 					_mrk setMarkerColor "ColorRed";
 				};
-			} forEach (EGVAR(ied,array));
+			} forEach (EGVAR(ied,list));
 		};
 		SEND_MSG(selectRandom _text);
 	};

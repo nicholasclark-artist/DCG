@@ -126,7 +126,7 @@ if (CHECK_ADDON_2(ied)) then {
 		_pos deleteAt 2;
 		_data pushBack _pos;
 		false
-	} count EGVAR(ied,array);
+	} count EGVAR(ied,list);
 
 	PUSHBACK_DATA(ied,_data);
 };
@@ -142,7 +142,7 @@ if (CHECK_ADDON_2(approval)) then {
 	private ["_data"];
 	_data = [];
 	{
-		_data pushBack [AV_VAR(_x select 0),missionNamespace getVariable [AV_VAR(_x select 0),0]];
+		_data pushBack [_x select 0,missionNamespace getVariable [AV_VAR(_x select 0),AV_MAX*0.1]];
 		false
 	} count GVAR(locations);
 
