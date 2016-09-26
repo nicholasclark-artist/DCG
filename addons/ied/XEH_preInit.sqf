@@ -8,4 +8,4 @@ if !(CHECK_INIT) exitWith {};
 
 ADDON = false;
 
-GVAR(array) = [];
+GVAR(list) = [];
