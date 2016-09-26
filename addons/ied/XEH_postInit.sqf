@@ -48,7 +48,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 					 {isOnRoad _road} &&
 					 {(nearestLocations [_pos, ["NameCityCapital","NameCity","NameVillage"], 500]) isEqualTo []}) then {
 						_ied = (selectRandom _type) createVehicle [0,0,0];
-						_ied setPos (_pos getPos [4, random 360]);
+						_ied setPos (_pos getPos [5, random 360]);
 
 						GVAR(list) pushBack _ied;
 						DEBUG_IED
