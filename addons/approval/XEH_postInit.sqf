@@ -22,10 +22,7 @@ PVEH_AVADD addPublicVariableEventHandler {(_this select 1) call EFUNC(approval,a
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
 		if !(_data isEqualTo []) then {
 			{
-				_name = _x select 0;
-				_value = _x select 1;
-
-				missionNamespace setVariable [_name,_value,false];
+				missionNamespace setVariable [AV_VAR(_x select 0),_x select 1,false];
 				false
 			} count _data;
 		} else {
