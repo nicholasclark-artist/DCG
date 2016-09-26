@@ -13,6 +13,7 @@ none
 __________________________________________________________________*/
 #define TASK_PRIMARY
 #define TASK_NAME 'Destroy Artillery'
+#define ARTY_SIZE 8
 #include "script_component.hpp"
 
 params [["_position",[]]];
@@ -27,7 +28,7 @@ _gunnerClass = "";
 _objs = [];
 
 if (_position isEqualTo []) then {
-	_position = [EGVAR(main,center),EGVAR(main,range),"meadow"] call EFUNC(main,findPosRural);
+	_position = [EGVAR(main,center),EGVAR(main,range),"meadow",10] call EFUNC(main,findPos);
 };
 
 if (_position isEqualTo []) exitWith {
@@ -52,17 +53,19 @@ _bRadius = _base select 0;
 _bNodes = _base select 3;
 _objs append (_base select 2);
 
-_bNodes = _bNodes select {(_x select 1) >= 8};
+_bNodes = _bNodes select {(_x select 1) >= ARTY_SIZE && {[_x select 0,ARTY_SIZE,0] call EFUNC(main,isPosSafe)}};
 
 if (_bNodes isEqualTo []) exitWith {
 	(_base select 2) call EFUNC(main,cleanup);
 	[TASK_TYPE,0] call FUNC(select);
 };
+
 _posArty = selectRandom _bNodes;
 _posArty = _posArty select 0;
 
-_arty = _artyClass createVehicle _posArty;
+_arty = _artyClass createVehicle [0,0,0];
 _arty setDir random 360;
+_arty setPos _posArty;
 _arty lock 3;
 _arty allowCrewInImmobile true;
 _objs pushBack _arty;
@@ -72,20 +75,20 @@ _gunner assignAsGunner _arty;
 _gunner moveInGunner  _arty;
 _gunner setFormDir (getDir _arty);
 _gunner setDir (getDir _arty);
-_gunner doWatch (_gunner modelToWorld [0,50,50]);
 _gunner disableAI "FSM";
 _gunner disableAI "MOVE";
 _objs pushBack _gunner;
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},
 	{
 		[units (_this select 0),_this select 1] call EFUNC(main,setPatrol);
 		(_this select 3) append (units (_this select 0));
+		(_this select 4) doWatch ((_this select 4) modelToWorld [0,50,50]);
 	},
-	[_grp,_bRadius,_strength,_objs]
+	[_grp,_bRadius,_strength,_objs,_gunner]
 ] call CBA_fnc_waitUntilAndExecute;
 
 _vehPos = [_position,100,200,8,0] call EFUNC(main,findPosSafe);
@@ -120,7 +123,7 @@ if !(_tar isEqualTo []) then {
 	_tar = [_posArty,4000,8000] call EFUNC(main,findPosSafe);
 };
 
-[
+_timerID = [
 	3600,
 	60,
 	"Artillery Countdown",
@@ -129,9 +132,7 @@ if !(_tar isEqualTo []) then {
 			(_this select 1) doArtilleryFire [(_this select 2), "32Rnd_155mm_Mo_shells", 4];
 		};
 	},
-	[_gunner,_tar],
-	0,
-	_arty
+	[_gunner,_tar]
 ] call EFUNC(main,setTimer);
 
 // SET TASK
@@ -146,22 +147,20 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_arty","_vehGrp","_position","_objs"];
+	_args params ["_taskID","_arty","_vehGrp","_position","_objs","_timerID"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
+		[_timerID] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		EGVAR(main,exitTimer) = true;
-		publicVariable QEGVAR(main,exitTimer);
 		(_objs + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		[TASK_TYPE,30] call FUNC(select);
 	};
 
 	if !(alive _arty) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
+		[_timerID] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
-		EGVAR(main,exitTimer) = true;
-		publicVariable QEGVAR(main,exitTimer);
 		(_objs + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		TASK_APPROVAL(_position,TASK_AV);
 		TASK_EXIT;
@@ -173,4 +172,4 @@ TASK_PUBLISH(_position);
 		(_objs + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_arty,_vehGrp,_position,_objs]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_arty,_vehGrp,_position,_objs,_timerID]] call CBA_fnc_addPerFrameHandler;

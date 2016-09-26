@@ -9,7 +9,7 @@ ADDON = false;
 PREP(init); // do not change
 call FUNC(init); // do not change
 
-if (!(GVAR(enable)) || {!isServer}) exitWith {};
+if ((GVAR(enable) isEqualTo 0) || {!isServer}) exitWith {};
 
 PREP(armory);
 PREP(arsenal);
@@ -20,7 +20,7 @@ PREP(replaceString);
 PREP(findPosOverwatch);
 PREP(findPosGrid);
 PREP(findPosSafe);
-PREP(findPosRural);
+PREP(findPos);
 PREP(getNearPlayers);
 PREP(saveData);
 PREP(saveDataClient);
@@ -87,7 +87,7 @@ publicVariable QFUNC(replaceString);
 publicVariable QFUNC(findPosOverwatch);
 publicVariable QFUNC(findPosGrid);
 publicVariable QFUNC(findPosSafe);
-publicVariable QFUNC(findPosRural);
+publicVariable QFUNC(findPos);
 publicVariable QFUNC(getNearPlayers);
 publicVariable QFUNC(loadInventory);
 publicVariable QFUNC(log);

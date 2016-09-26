@@ -11,7 +11,9 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define PUSHBACK_DATA(ADDONTOSAVE,DATATOSAVE) GVAR(saveDataCurrent) pushBack [QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE]
+#define PUSHBACK_DATA(ADDONTOSAVE,DATATOSAVE) \
+	LOG_DEBUG_2("Saving data for %1 addon: %2.",QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE); \
+	GVAR(saveDataCurrent) pushBack [QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE]
 
 if (!isServer) exitWith {};
 
@@ -19,6 +21,19 @@ private ["_dataProfile"];
 
 _dataProfile = DATA_GETVAR; // main data variable
 GVAR(saveDataCurrent) = [DATA_MISSION_ID]; // overwrite current data
+
+// don't need to check for main addon, it's always enabled
+private _data = [];
+
+{
+	if (!(_x isKindOf "Man") && {!(_x isKindOf "Logic")}) then {
+		if (_x getVariable [DATA_OBJVAR,false]) then {
+			_data pushBack [typeOf _x,getPosASL _x,getDir _x,vectorUp _x];
+		};
+	};
+} foreach (allMissionObjects "All");
+
+PUSHBACK_DATA(main,_data);
 
 if (CHECK_ADDON_2(occupy)) then {
 	private ["_data","_locations","_infCount","_vehCount","_airCount","_players"];
@@ -62,7 +77,7 @@ if (CHECK_ADDON_2(fob)) then {
 		_dataObj = [];
 		_refund = 0;
 		{
-			if (!(_x isKindOf "Man") && {count crew _x isEqualTo 0}) then {
+			if (!(_x isKindOf "Man") && {!(_x isKindOf "Logic")} && {count crew _x isEqualTo 0}) then {
 				_dataObj pushBack [typeOf _x,getPosASL _x,getDir _x,vectorUp _x];
 			} else {
 				call {
@@ -111,7 +126,7 @@ if (CHECK_ADDON_2(ied)) then {
 		_pos deleteAt 2;
 		_data pushBack _pos;
 		false
-	} count EGVAR(ied,array);
+	} count EGVAR(ied,list);
 
 	PUSHBACK_DATA(ied,_data);
 };
@@ -127,7 +142,7 @@ if (CHECK_ADDON_2(approval)) then {
 	private ["_data"];
 	_data = [];
 	{
-		_data pushBack [AV_VAR(_x select 0),missionNamespace getVariable [AV_VAR(_x select 0),0]];
+		_data pushBack [_x select 0,missionNamespace getVariable [AV_VAR(_x select 0),AV_MAX*0.1]];
 		false
 	} count GVAR(locations);
 

@@ -42,10 +42,11 @@ if (_ifRecon) then {
     createVehicleCrew RECON;
 	RECON allowDamage false;
 	RECON setCaptive true;
+
     {
         _x setCaptive true;
     } forEach crew RECON;
-	RECON setVehicleAmmo 0;
+
 	RECON lockDriver true;
 	RECON flyInHeight 200;
 
@@ -58,3 +59,4 @@ if (_ifRecon) then {
 } else {
 	deleteVehicle RECON;
 };
+

@@ -23,9 +23,9 @@ private _fnc_parseConfigForInit = {
         if (configName _optionEntry isEqualTo QGVAR(init)) exitWith {
     		{
 			    if (toUpper _x isEqualTo "ALL" || {toUpper _x isEqualTo toUpper worldName} || {toUpper _x isEqualTo toUpper missionName}) exitWith {
-			        GVAR(enable) = true;
+			        GVAR(enable) = 1;
 			    };
-			    GVAR(enable) = false;
+			    GVAR(enable) = 0;
 			} forEach (getArray (_optionEntry >> "value"));
         };
     };

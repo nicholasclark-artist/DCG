@@ -16,17 +16,17 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define COOLDOWN_PFH \
-	[{ \
-		params ["_args","_idPFH"]; \
-		_args params ["_time"]; \
-		if (diag_tickTime >= _time) exitWith { \
-			[_idPFH] call CBA_fnc_removePerFrameHandler; \
+#define HINT_GETIN "A player must be in the copilot position to signal take off."
+#define COOLDOWN \
+	[ \
+		{ \
 			GVAR(ready) = 1; \
 			GVAR(count) = GVAR(count) - 1; \
 			publicVariable QGVAR(count); \
-		}; \
-	}, 1, [diag_tickTime + GVAR(cooldown)]] call CBA_fnc_addPerFrameHandler
+		}, \
+		[], \
+		GVAR(cooldown) \
+	] call CBA_fnc_waitAndExecute
 
 private ["_classname","_exfilMrk","_infilMrk","_helipad1","_helipad2","_helipadPos","_dir","_spawnPos","_transport","_wp","_pilot","_time"];
 
@@ -73,8 +73,8 @@ if !(_helipadPos isEqualTo GVAR(infil)) then {
 };
 
 // find position away from an occupied location
-missionNamespace setVariable [QEGVAR(transport,getLocations), player];
-publicVariableServer QEGVAR(transport,getLocations);
+missionNamespace setVariable [QGVAR(getLocations), player];
+publicVariableServer QGVAR(getLocations);
 
 if !(isNil QEGVAR(occupy,occupiedLocations)) then {
 	{
@@ -89,6 +89,9 @@ _spawnPos = [GVAR(exfil),5000,6000,objNull,-1,-1,_dir] call EFUNC(main,findPosSa
 _transport = createVehicle [_classname,_spawnPos,[],0,"FLY"];
 
 _transport addEventHandler ["GetIn",{
+	if (isPlayer (_this select 2) && {!((_this select 2) isEqualTo ((_this select 0) turretUnit [0]))}) then {
+		[HINT_GETIN,false] remoteExecCall [QEFUNC(main,displayText),(_this select 2),false];
+	};
 	if (isPlayer (_this select 2) && {(_this select 2) isEqualTo ((_this select 0) turretUnit [0])} && {alive (driver (_this select 0))} && {canMove (_this select 0)}) then {
 		(_this select 0) removeAllEventHandlers "GetIn";
 		playSound3D ["A3\dubbing_F\modules\supports\transport_welcome.ogg", driver (_this select 0), false, getPosASL (_this select 0), 2, 1, 100];
@@ -102,19 +105,18 @@ _transport addEventHandler ["GetIn",{
 				if (isTouchingGround (vehicle _pilot)) exitWith {
 					[_id] call CBA_fnc_removePerFrameHandler;
 					playSound3D [""A3\dubbing_F\modules\supports\transport_accomplished.ogg"", _pilot, false, getPosASL _pilot, 2, 1, 100];
-					[{
-						params [""_args"",""_id""];
-						_args params [""_time"",""_pilot""];
 
-						if (diag_tickTime >= _time) exitWith {
-							[_id] call CBA_fnc_removePerFrameHandler;
+					[
+						{
 							{
 								if (isPlayer _x) then {moveOut _x};
-							} forEach (crew (vehicle _pilot));
+							} forEach (crew (vehicle (_this select 0)));
 							missionNameSpace setVariable ['%1', -1];
-							_wp = group _pilot addWaypoint [[0,0,100], 0];
-						};
-					}, 1, [diag_tickTime + 10,_pilot]] call CBA_fnc_addPerFrameHandler;
+							_wp = group (_this select 0) addWaypoint [[0,0,100], 0];
+						},
+						[_pilot],
+						7
+					] call CBA_fnc_waitAndExecute;
 				};
 			}, 1, [this]] call CBA_fnc_addPerFrameHandler;
 		",QGVAR(ready)]];
@@ -141,10 +143,10 @@ _transport enableCopilot false;
 _transport lockDriver true;
 _transport flyInHeight 180;
 _wp = group _pilot addWaypoint [GVAR(exfil), 0];
+_wp setWaypointPosition [GVAR(exfil), 0];
 _wp setWaypointStatements ["true", "(vehicle this) land ""GET IN"";"];
 playSound3D ["A3\dubbing_F\modules\supports\transport_acknowledged.ogg", player, false, getPosASL player, 1, 1, 100];
 
-// run PFHs
 [{
 	params ["_args","_idPFH"];
 	_args params ["_transport","_pilot","_exfilMrk","_infilMrk","_helipad1","_helipad2"];
@@ -156,9 +158,9 @@ playSound3D ["A3\dubbing_F\modules\supports\transport_acknowledged.ogg", player,
 		deleteVehicle _helipad1;
 		deleteVehicle _helipad2;
 		_transport call EFUNC(main,cleanup);
-		COOLDOWN_PFH;
+		COOLDOWN;
 	};
-	if (!alive _pilot || {vehicle _pilot isEqualTo _pilot} || {isTouchingGround _transport && (!(canMove _transport) || (fuel _transport isEqualTo 0))}) exitWith { // if transport destroyed enroute
+	if (!alive _pilot || {isNull (objectParent _pilot)} || {isTouchingGround _transport && (!(canMove _transport) || (fuel _transport isEqualTo 0))}) exitWith { // if transport destroyed enroute
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		GVAR(ready) = -1;
 		deleteMarker _exfilMrk;
@@ -167,11 +169,11 @@ playSound3D ["A3\dubbing_F\modules\supports\transport_acknowledged.ogg", player,
 		deleteVehicle _helipad2;
 		_transport call EFUNC(main,cleanup);
 		playSound3D ["A3\dubbing_F\modules\supports\transport_destroyed.ogg", player, false, getPosASL player, 1, 1, 100];
-		COOLDOWN_PFH;
+		COOLDOWN;
 	};
 }, 1, [_transport,_pilot,_exfilMrk,_infilMrk,_helipad1,_helipad2]] call CBA_fnc_addPerFrameHandler;
 
-// handles transport timeout if player not in vehicle
+// handles transport timeout if player not in copilot
 [{
 	params ["_args","_idPFH"];
 	_args params ["_transport","_pilot"];
@@ -180,26 +182,25 @@ playSound3D ["A3\dubbing_F\modules\supports\transport_acknowledged.ogg", player,
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 	};
 
-	if (isTouchingGround _transport && {alive _pilot} && {vehicle _pilot isEqualTo _transport} && {canMove _transport}) exitWith {
+	if (isTouchingGround _transport && {alive _pilot} && {objectParent _pilot isEqualTo _transport} && {canMove _transport}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[{
-			params ["_args","_idPFH"];
-			_args params ["_transport", "_pilot", "_time"];
 
-			if !(isTouchingGround _transport) exitWith {
-				[_idPFH] call CBA_fnc_removePerFrameHandler;
-			};
+		[
+			{
+				params ["_pilot","_transport"];
 
-			if (diag_tickTime >= _time && {isTouchingGround _transport}) exitWith {
-				[_idPFH] call CBA_fnc_removePerFrameHandler;
-				GVAR(ready) = -1;
-				{
-					if (isPlayer _x) then {moveOut _x};
-				} forEach (crew _transport);
-				_wp = group _pilot addWaypoint [[0,0,100], 0];
-				(vehicle _pilot) call EFUNC(main,cleanup);
-				COOLDOWN_PFH;
-			};
-		}, 1, [_transport, _pilot, diag_tickTime + 120]] call CBA_fnc_addPerFrameHandler;
+				if (isTouchingGround _transport) then {
+					GVAR(ready) = -1;
+					{
+						if (isPlayer _x) then {moveOut _x};
+					} forEach (crew _transport);
+					_wp = group _pilot addWaypoint [[0,0,100], 0];
+					(vehicle _pilot) call EFUNC(main,cleanup);
+					COOLDOWN;
+				};
+			},
+			[_pilot,_transport],
+			120
+		] call CBA_fnc_waitAndExecute;
 	};
 }, 1, [_transport,_pilot]] call CBA_fnc_addPerFrameHandler;

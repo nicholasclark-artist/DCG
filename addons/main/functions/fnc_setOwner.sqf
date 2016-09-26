@@ -20,7 +20,7 @@ params ["_obj","_id"];
 
 {
 	if !(isNull group _x) then {
-		if !(owner group _x isEqualTo _id) then {
+		if !(groupOwner group _x isEqualTo _id) then {
 			group _x setGroupOwner _id;
 			LOG_DEBUG_2("Transferring group %1 to %2.",group _x,_id);
 		};

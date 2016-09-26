@@ -38,7 +38,7 @@ call {
 	/*if (_vehClass in ["ammo"]) exitWith {
 		_cost = COST_AMMO
 	};*/
-	if (_vehClass in [/*"structures",*/"structures_military","structures_village","structures_infrastructure","structures_industrial"]) exitWith {
+	if (_vehClass in [/*"structures",*/"structures_military","structures_village","structures_infrastructure","structures_industrial","lamps"]) exitWith {
 		_cost = COST_STRUCT
 	};
 	if (_vehClass in ["fortifications"]) exitWith {

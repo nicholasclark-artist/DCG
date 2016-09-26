@@ -18,9 +18,13 @@ __________________________________________________________________*/
 	_args params ["_locations"];
 	{
 		if (!(GET_LOCVAR(_x select 0)) && {GVAR(blacklist) find (_x select 0) isEqualTo -1}) then {
-			private ["_position","_unitCount"];
-			_position = _x select 1;
-			if ({CHECK_VECTORDIST(_position,getPosASL (vehicle _x),GVAR(spawnDist)) && {((getPos (vehicle _x)) select 2) < ZDIST}} count allPlayers > 0) then {
+			private ["_unitCount"];
+			private _position = _x select 1;
+
+			private _near = _position nearEntities [["Man", "LandVehicle"], GVAR(spawnDist)];
+			_near = _near select {isPlayer _x && {(getPosATL _x select 2) < ZDIST}};
+
+			if !(_near isEqualTo []) then {
 				call {
 					if ((_x select 3) isEqualTo "NameCityCapital") exitWith {
 						_unitCount = ceil(GVAR(countCapital));

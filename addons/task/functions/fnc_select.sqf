@@ -25,19 +25,16 @@ if (_cooldown < 0) then {
 };
 
 [{
-	// primary task
-	if ((_this select 0) > 0) then {
-		_task = selectRandom GVAR(primaryTasks);
-		if !(isNil "_task") then {
-			LOG_DEBUG_1("Spawning task %1.",_task);
-			[] spawn (missionNamespace getVariable [_task,{}]);
-		};
+	_task = if ((_this select 0) > 0) then {
+		selectRandom GVAR(primaryList);
 	} else {
-		// secondary task
-		_task = selectRandom GVAR(secondaryTasks);
-		if !(isNil "_task") then {
-			LOG_DEBUG_1("Spawning task %1.",_task);
-			[] spawn (missionNamespace getVariable [_task,{}]);
-		};
+		selectRandom GVAR(secondaryList);
+	};
+
+	if !(_task isEqualTo "") then {
+		LOG_DEBUG_1("Spawning task %1.",_task);
+		[] spawn (missionNamespace getVariable [_task,{}]);
+	} else {
+		LOG_DEBUG("No task selected.");
 	};
 }, [_type], _cooldown] call CBA_fnc_waitAndExecute;

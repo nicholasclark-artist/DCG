@@ -1,8 +1,7 @@
 #define COMPONENT occupy
+//#define DISABLE_COMPILE_CACHE
 #include "\d\dcg\addons\main\script_mod.hpp"
 #include "\d\dcg\addons\main\script_macros.hpp"
-
-// #define DISABLE_COMPILE_CACHE
 
 #define UNITVAR QUOTE(DOUBLES(ADDON,unit))
 #define SET_UNITVAR(OBJ) (OBJ) setVariable [QUOTE(DOUBLES(ADDON,unit)),true]

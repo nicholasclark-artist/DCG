@@ -20,6 +20,8 @@ PREP(curatorEH);
 PREP(recon);
 
 GVAR(location) = locationNull;
+GVAR(respawnPos) = [];
+GVAR(requestReady) = 1;
 GVAR(UID) = "";
 GVAR(response) = -1;
 GVAR(anchor) = objNull;
@@ -45,6 +47,7 @@ publicVariable QFUNC(canDeploy);
 publicVariable QFUNC(curatorEH);
 
 publicVariable QGVAR(location);
+publicVariable QGVAR(requestReady);
 publicVariable QGVAR(UID);
 publicVariable QGVAR(response);
 publicVariable QGVAR(side);

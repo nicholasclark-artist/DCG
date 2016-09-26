@@ -529,6 +529,81 @@ Author:
 #define PUSH(var1,var2) (var1) pushBack (var2)
 
 /* -------------------------------------------
+Macro: MAP()
+Description:
+    Applies given code to each element of the array, then assigns the
+    resulting array to the original
+Parameters:
+    ARRAY - Array to be modified
+    CODE - Code that'll be applied to each element of the array.
+Example:
+    (begin example)
+        _array = [1, 2, 3, 4, 3, 8];
+        MAP(_array,_x + 1);
+        // _array is now [2, 3, 4, 5, 4, 9];
+    (end)
+Author:
+    654wak654
+------------------------------------------- */
+#define MAP(ARR,CODE) ARR = ARR apply {CODE}
+
+/* -------------------------------------------
+Macro: FILTER()
+Description:
+    Filters an array based on given code, then assigns the resulting array
+    to the original
+Parameters:
+    ARRAY - Array to be filtered
+    CODE - Condition to pick elements
+Example:
+    (begin example)
+        _array = [1, 2, 3, 4, 3, 8];
+        FILTER(_array,_x % 2 == 0)
+        // _array is now [2, 4, 8];
+    (end)
+Author:
+    Commy2
+------------------------------------------- */
+#define FILTER(ARR,CODE) ARR = ARR select {CODE}
+
+/* -------------------------------------------
+Macro: UNIQUE()
+Description:
+    Removes duplicate values in given array
+Parameters:
+    ARRAY - The array to be modified
+Example:
+    (begin example)
+        _someArray = [4, 4, 5, 5, 5, 2];
+        UNIQUE(_someArray);
+        // _someArray is now [4, 5, 2]
+    (end)
+Author:
+    Commy2
+------------------------------------------- */
+#define UNIQUE(ARR) ARR = ARR arrayIntersect ARR
+
+/* -------------------------------------------
+Macro: INTERSECTION()
+Description:
+    Finds unique common elements between two arrays and assigns them
+    to the first array
+Parameters:
+    ARRAY0 - The array to be modified
+    ARRAY1 - The array to find intersections with
+Example:
+    (begin example)
+        _someArray = [1, 2, 3, 4, 5, 5];
+        _anotherArray = [4, 5, 6, 7];
+        INTERSECTION(_someArray,_anotherArray);
+        // _someArray is now [4, 5]
+    (end)
+Author:
+    654wak654
+------------------------------------------- */
+#define INTERSECTION(ARG0,ARG1) ARG0 = ARG0 arrayIntersect (ARG1)
+
+/* -------------------------------------------
 Macro: ISNILS()
 
 Description:
@@ -632,6 +707,9 @@ Author:
 #define CFGSETTINGS CFGSETTINGSS(PREFIX,COMPONENT)
 #define PATHTO(var1) PATHTO_SYS(PREFIX,COMPONENT_F,var1)
 #define PATHTOF(var1) PATHTOF_SYS(PREFIX,COMPONENT,var1)
+#define PATHTOEF(var1,var2) PATHTOF_SYS(PREFIX,var1,var2)
+#define QPATHTOF(var1) QUOTE(PATHTOF(var1))
+#define QPATHTOEF(var1,var2) QUOTE(PATHTOEF(var1,var2))
 
 #define COMPILE_FILE(var1) COMPILE_FILE_SYS(PREFIX,COMPONENT_F,var1)
 #define COMPILE_FILE_CFG(var1) COMPILE_FILE_CFG_SYS(PREFIX,COMPONENT_F,var1)
@@ -674,6 +752,8 @@ Author:
 #define EGVAR(var1,var2) TRIPLES(PREFIX,var1,var2)
 #define QGVAR(var1) QUOTE(GVAR(var1))
 #define QEGVAR(var1,var2) QUOTE(EGVAR(var1,var2))
+#define QQGVAR(var1) QUOTE(QGVAR(var1))
+#define QQEGVAR(var1,var2) QUOTE(QEGVAR(var1,var2))
 
 /* -------------------------------------------
 Macro: GVARMAIN()
@@ -693,6 +773,7 @@ Author:
 ------------------------------------------- */
 #define GVARMAIN(var1) GVARMAINS(PREFIX,var1)
 #define QGVARMAIN(var1) QUOTE(GVARMAIN(var1))
+#define QQGVARMAIN(var1) QUOTE(QGVARMAIN(var1))
 // TODO: What's this?
 #define SETTINGS DOUBLES(PREFIX,settings)
 #define CREATELOGIC CREATELOGICS(PREFIX,COMPONENT)
@@ -719,6 +800,14 @@ Author:
 #define FUNCMAIN(var1) TRIPLES(PREFIX,fnc,var1)
 #define FUNC_INNER(var1,var2) TRIPLES(DOUBLES(PREFIX,var1),fnc,var2)
 #define EFUNC(var1,var2) FUNC_INNER(var1,var2)
+#define QFUNC(var1) QUOTE(FUNC(var1))
+#define QFUNCMAIN(var1) QUOTE(FUNCMAIN(var1))
+#define QFUNC_INNER(var1,var2) QUOTE(FUNC_INNER(var1,var2))
+#define QEFUNC(var1,var2) QUOTE(EFUNC(var1,var2))
+#define QQFUNC(var1) QUOTE(QFUNC(var1))
+#define QQFUNCMAIN(var1) QUOTE(QFUNCMAIN(var1))
+#define QQFUNC_INNER(var1,var2) QUOTE(QFUNC_INNER(var1,var2))
+#define QQEFUNC(var1,var2) QUOTE(QEFUNC(var1,var2))
 
 #ifndef PRELOAD_ADDONS
     #define PRELOAD_ADDONS class CfgAddons \
@@ -1259,6 +1348,39 @@ Author:
     };
 
 /* -------------------------------------------
+Macro: TEST_DEFINED_AND_OP()
+    Tests that A and B are defined and (A OPERATOR B) is true.
+    If the test fails, an error is raised with the given MESSAGE.
+
+Parameters:
+    A - First value [Any]
+    OPERATOR - Binary operator to use [Operator]
+    B - Second value [Any]
+    MESSSAGE - Message to display [String]
+
+Example:
+    (begin example)
+        TEST_OP(_fish,>,5,"Too few fish!");
+    (end)
+
+Author:
+    Killswitch, PabstMirror
+------------------------------------------- */
+#define TEST_DEFINED_AND_OP(A,OPERATOR,B,MESSAGE) \
+    if (isNil #A) then { \
+        TEST_FAIL('(A is not defined) ' + (MESSAGE)); \
+    } else { \
+        if (isNil #B) then { \
+            TEST_FAIL('(B is not defined) ' + (MESSAGE)); \
+        } else { \
+            if ((A) OPERATOR (B)) then { \
+                TEST_SUCCESS('(A OPERATOR B) ' + (MESSAGE)) \
+            } else { \
+                TEST_FAIL('(A OPERATOR B) ' + (MESSAGE)) \
+    }; }; };
+
+
+/* -------------------------------------------
 Macro: TEST_DEFINED()
     Tests that a VARIABLE is defined.
 
@@ -1417,3 +1539,5 @@ Author:
 #define XEH_POST_INIT QUOTE(call COMPILE_FILE(XEH_PostInit_Once))
 #define XEH_POST_CINIT QUOTE(call COMPILE_FILE(XEH_PostClientInit_Once))
 #define XEH_POST_SINIT QUOTE(call COMPILE_FILE(XEH_PostServerInit_Once))
+
+#define IS_LINUX (productVersion select 2 <= 154)

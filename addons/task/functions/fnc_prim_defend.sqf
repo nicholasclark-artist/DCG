@@ -27,7 +27,7 @@ GVAR(defend_enemies) = [];
 _vehPos = [];
 
 if (_position isEqualTo []) then {
-	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findPosRural);
+	_position = [EGVAR(main,center),EGVAR(main,range),"house",0,true] call EFUNC(main,findPos);
 	if !(_position isEqualTo []) then {
 		_position = _position select 1;
 	};
@@ -59,9 +59,9 @@ call {
 	_type = "B_Truck_01_ammo_F";
 };
 
-_truck = _type createVehicle _vehPos;
+_truck = _type createVehicle [0,0,0];
 _truck lock 3;
-_truck setDir random 360;
+[_truck,_vehPos] call EFUNC(main,setPosSafe);
 _truck allowDamage false;
 _driver = (createGroup CIVILIAN) createUnit ["C_man_w_worker_F", [0,0,0], [], 0, "NONE"];
 _driver moveInDriver _truck;
@@ -104,31 +104,31 @@ TASK_PUBLISH(_position);
 
 	if ({CHECK_VECTORDIST(getPosASL _x,getPosASL _truck,TASK_DIST_START)} count allPlayers > 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[COUNTDOWN,60,TASK_NAME,{},[],call CBA_fnc_players] call EFUNC(main,setTimer);
+		_timerID = [COUNTDOWN,60,TASK_NAME] call EFUNC(main,setTimer);
 		_enemyCount = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
 
 		[{
 			params ["_args","_idPFH"];
-			_args params ["_taskID","_truck","_grp","_enemyCount","_time"];
+			_args params ["_taskID","_truck","_grp","_enemyCount","_timerID"];
 
 			if (TASK_GVAR isEqualTo []) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
+				[_timerID] call CBA_fnc_removePerFrameHandler;
 				[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-				EGVAR(main,exitTimer) = true;
 				((units _grp) + GVAR(defend_enemies) + [_truck]) call EFUNC(main,cleanup);
 				[TASK_TYPE,30] call FUNC(select);
 			};
 
 			if ({CHECK_VECTORDIST(getPosASL _x,getPosASL _truck,TASK_DIST_FAIL)} count allPlayers isEqualTo 0) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
+				[_timerID] call CBA_fnc_removePerFrameHandler;
 				[_taskID, "FAILED"] call EFUNC(main,setTaskState);
-				EGVAR(main,exitTimer) = true;
 				((units _grp) + GVAR(defend_enemies) + [_truck]) call EFUNC(main,cleanup);
 				TASK_APPROVAL(getPos _truck,TASK_AV * -1);
 				TASK_EXIT;
 			};
 
-			if (diag_tickTime > _time + COUNTDOWN) exitWith {
+			if (EGVAR(main,timer) < 1) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 			  	_truck setDamage 0;
 			  	(group driver _truck) move ([getPos _truck,4000,5000] call EFUNC(main,findPosSafe));
@@ -138,9 +138,7 @@ TASK_PUBLISH(_position);
 				TASK_EXIT;
 			};
 
-			{
-				if (isNull _x) then {GVAR(defend_enemies) deleteAt _forEachIndex};
-			} forEach GVAR(defend_enemies);
+			GVAR(defend_enemies) = GVAR(defend_enemies) select {!(isNull _x)};
 
 			if (random 1 < 0.2 && {count GVAR(defend_enemies) < _enemyCount}) then {
 				_grp = [[getpos _truck,200,400] call EFUNC(main,findPosSafe),0,ENEMY_COUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
@@ -153,6 +151,6 @@ TASK_PUBLISH(_position);
 					[_grp,_truck]
 				] call CBA_fnc_waitUntilAndExecute;
 			};
-		}, TASK_SLEEP, [_taskID,_truck,_grp,_enemyCount,diag_tickTime]] call CBA_fnc_addPerFrameHandler;
+		}, TASK_SLEEP, [_taskID,_truck,_grp,_enemyCount,_timerID]] call CBA_fnc_addPerFrameHandler;
 	};
 }, TASK_SLEEP, [_taskID,_truck,_grp]] call CBA_fnc_addPerFrameHandler;

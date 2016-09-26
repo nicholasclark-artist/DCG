@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define DIST_MIN 750
-#define DIST worldSize*0.053 max DIST_MIN
+#define DIST worldSize*0.057 max DIST_MIN
 #define DEBUG_IED \
 	if (CHECK_DEBUG) then { \
 		_mrk = createMarker [format["%1_%2",QUOTE(ADDON),getPosATL _ied],getPosATL _ied]; \
@@ -23,6 +23,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	if (DOUBLES(PREFIX,main)) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
+/*
 		_type = [];
 
 		if (CHECK_ADDON_1("ace_explosives")) then {
@@ -30,21 +31,26 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		} else {
 			_type = ["IEDUrbanBig_F"];
 		};
+*/
+		_type = ["IEDUrbanBig_F"];
 
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
 		if (_data isEqualTo []) then {
+
 			{
-				_pos = _x getPos [DIST_MIN,random 360];
-				_roads = _pos nearRoads 400;
+				_roads = _x nearRoads DIST_MIN*0.5;
+
 				if !(_roads isEqualTo []) then {
 					_road = selectRandom _roads;
 					_pos = getPos _road;
+
 					if (!(CHECK_DIST2D(_pos,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) &&
 					 {isOnRoad _road} &&
-					 {(nearestLocations [_pos, ["NameCityCapital","NameCity","NameVillage"], 500]) isEqualTo []} &&
-					 {{CHECK_DIST2D(_pos,getpos _x,500)} count GVAR(array) isEqualTo 0}) then {
-						_ied = createVehicle [(selectRandom _type), _pos, [], 6, "NONE"];
-						GVAR(array) pushBack _ied;
+					 {(nearestLocations [_pos, ["NameCityCapital","NameCity","NameVillage"], 500]) isEqualTo []}) then {
+						_ied = (selectRandom _type) createVehicle [0,0,0];
+						_ied setPos (_pos getPos [5, random 360]);
+
+						GVAR(list) pushBack _ied;
 						DEBUG_IED
 					};
 				};
@@ -52,28 +58,31 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		} else {
 			for "_index" from 0 to count _data - 1 do {
 				_ied = (selectRandom _type) createVehicle (_data select _index);
-				GVAR(array) pushBack _ied;
+				GVAR(list) pushBack _ied;
 				DEBUG_IED
 			};
 		};
 
-		if !(CHECK_ADDON_1("ace_explosives")) then {
+		// if !(CHECK_ADDON_1("ace_explosives")) then {
 			[{
-				if (GVAR(array) isEqualTo []) exitWith {
+				if (GVAR(list) isEqualTo []) exitWith {
 					[_this select 1] call CBA_fnc_removePerFrameHandler;
 				};
 
 				{
 					_ied = _x;
-					if ({CHECK_DIST2D(_x,_ied,4)} count allPlayers > 0) then {
+					_near = _ied nearEntities [["Man", "LandVehicle"], 4];
+					_near = _near select {isPlayer _x};
+
+					if !(_near isEqualTo []) then {
 						_explosions = ["R_TBG32V_F","HelicopterExploSmall"];
 						(selectRandom _explosions) createVehicle (getPosATL _ied);
 						deleteVehicle _ied;
-						GVAR(array) deleteAt _forEachIndex;
+						GVAR(list) deleteAt _forEachIndex;
 					};
-				} forEach GVAR(array);
+				} forEach GVAR(list);
 			}, 1, []] call CBA_fnc_addPerFrameHandler;
-		};
+		// };
 	};
 }, 0, []] call CBA_fnc_addPerFrameHandler;
 

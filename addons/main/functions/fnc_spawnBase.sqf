@@ -63,7 +63,8 @@ if (_base isEqualTo []) then {
     _normalized = (CONFIG) select ((_bases select 0) select 1);
 };
 
-private _anchor = ANCHOR createVehicle _position;
+private _anchor = ANCHOR createVehicle [0,0,0];
+_anchor setPos _position;
 _anchor setDir random 360;
 _anchor setPos [(getpos _anchor) select 0,(getpos _anchor) select 1,0];
 _anchor setVectorUp surfaceNormal getPos _anchor;

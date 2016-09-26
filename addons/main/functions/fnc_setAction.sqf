@@ -23,7 +23,7 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_actions","_addAction","_EHStr","_EH","_childAction","_list"];
+private ["_actions","_addAction","_EHStr","_EH","_childAction","_entryPath"];
 params [
 	["_id",""],
 	["_name",""],
@@ -47,7 +47,8 @@ _actions = [];
 if (CHECK_ADDON_1("ace_interact_menu")) then {
 	_addAction = [_id,_name,"",compile _statement,compile _condition,compile _child,_params,_pos] call ace_interact_menu_fnc_createAction;
 	[_obj, _type, _path, _addAction] call ace_interact_menu_fnc_addActionToObject;
-	_actions append _addAction;
+	_path pushBack _id;
+	_actions append _path;
 } else {
 	if (_name isEqualTo "") exitWith {
 		_actions = [-1,-1,[-1],-1];
@@ -80,9 +81,7 @@ if (CHECK_ADDON_1("ace_interact_menu")) then {
 		_actions append [[-1],-1];
 	};
 
-	_list = [_obj,_name];
-	_list pushBack _actions;
-	GVAR(actions) pushBack _list;
+	GVAR(actions) pushBack [_obj,_name,_actions];
 };
 
 _actions

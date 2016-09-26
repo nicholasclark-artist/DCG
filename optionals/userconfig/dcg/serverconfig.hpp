@@ -339,26 +339,16 @@ class dcg_task_cooldown {
 	typeDetail = "";
 	value = 480;
 };
-class dcg_task_primaryTasks {
+class dcg_task_primaryBlacklist {
 	typeName = "ARRAY";
 	typeDetail = "";
 	value[] = {
-		"dcg_task_fnc_prim_vip",
-		"dcg_task_fnc_prim_cache",
-		"dcg_task_fnc_prim_officer",
-		"dcg_task_fnc_prim_arty",
-		"dcg_task_fnc_prim_defend"
 	};
 };
-class dcg_task_secondaryTasks {
+class dcg_task_secondaryBlacklist {
 	typeName = "ARRAY";
 	typeDetail = "";
 	value[] = {
-		"dcg_task_fnc_sec_deliver",
-		"dcg_task_fnc_sec_repair",
-		"dcg_task_fnc_sec_officer",
-		"dcg_task_fnc_sec_intel01",
-		"dcg_task_fnc_sec_intel02"
 	};
 };
 class dcg_transport_enable {

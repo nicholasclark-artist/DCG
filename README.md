@@ -4,9 +4,9 @@
 
 <p align="center">
     <a href="https://github.com/nicholasclark-artist/DCG/releases">
-        <img src="https://img.shields.io/badge/Version-3.1.0.5-blue.svg?style=flat-square" alt="DCG Version">
+        <img src="https://img.shields.io/badge/Version-3.1.0.6-blue.svg?style=flat-square" alt="DCG Version">
     </a>
-    <a href="https://github.com/nicholasclark-artist/DCG/releases/download/v3.1.0.5/dcg_3_1_0_5.zip">
+    <a href="https://github.com/nicholasclark-artist/DCG/releases/download/v3.1.0.6/dcg_3_1_0_6.zip">
         <img src="https://img.shields.io/badge/Download-DCG-blue.svg?style=flat-square" alt="DCG Download">
     </a>
     <a href="https://github.com/nicholasclark-artist/DCG/issues">
@@ -59,8 +59,8 @@ The latest version of [Community Based Addons](https://forums.bistudio.com/topic
 
 **Server Setup**
 - Extract the DCG and CBA zip files to the server's Arma 3 folder
-- After extracting the files, @dcg, @cba_a3 and the userconfig folder should exist in the server's Arma 3 directory
-- If you wish to customize DCG's settings, edit serverconfig.hpp found in the userconfig folder. For more info on DCG's settings see, [Customizing DCG Settings](https://github.com/nicholasclark-artist/DCG/wiki/Customizing-DCG-Settings)
+- After extracting the files, @dcg and @cba_a3 should exist in the server's Arma 3 directory
+- If you wish to customize DCG's settings, check out [Customizing DCG settings](https://github.com/nicholasclark-artist/DCG/wiki/Customizing-DCG-Settings)
 - If you would like to set up a mission for DCG, take a quick look at [Setting up a DCG compatible mission](https://github.com/nicholasclark-artist/DCG/wiki/Setting-up-a-DCG-compatible-mission)
 
 ### Can I Contribute to DCG?

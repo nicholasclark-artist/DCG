@@ -13,9 +13,36 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 
 unassignCurator GVAR(curator);
 
-PVEH_DEPLOY addPublicVariableEventHandler {(_this select 1) call FUNC(setup)};
+PVEH_DEPLOY addPublicVariableEventHandler {[_this select 1] call FUNC(setup)};
 PVEH_REQUEST addPublicVariableEventHandler {(_this select 1) call FUNC(handleRequest)};
 PVEH_REASSIGN addPublicVariableEventHandler {(_this select 1) assignCurator GVAR(curator)};
+PVEH_DELETE addPublicVariableEventHandler {
+	{
+		// ignore units in vehicles, only subtract cost of vehicle
+		if (EGVAR(approval,enable) isEqualTo 1 && {!(_x isKindOf "Man") || (_x isKindOf "Man" && (isNull objectParent _x))}) then {
+			_cost = [typeOf _x] call FUNC(getCuratorCost);
+			_cost = _cost*COST_MULTIPIER;
+			[getPosASL GVAR(anchor),_cost*-1] call EFUNC(approval,addValue);
+		};
+		_x call EFUNC(main,cleanup);
+		false
+	} count (curatorEditableObjects GVAR(curator));
+
+	// remove objects from editable array so objects are not part of new FOB if placed in same position
+	GVAR(curator) removeCuratorEditableObjects [curatorEditableObjects GVAR(curator),true];
+
+	[getPosASL GVAR(anchor),AV_FOB*-1] call EFUNC(approval,addValue);
+	unassignCurator GVAR(curator);
+	[false] call FUNC(recon);
+	deleteVehicle GVAR(anchor);
+
+	GVAR(respawnPos) call BIS_fnc_removeRespawnPosition;
+
+	{
+		deleteLocation GVAR(location);
+	} remoteExecCall [QUOTE(BIS_fnc_call), 0, false];
+};
+
 addMissionEventHandler ["HandleDisconnect",{
 	if ((_this select 2) isEqualTo GVAR(UID)) then {unassignCurator GVAR(curator)};
 	false
