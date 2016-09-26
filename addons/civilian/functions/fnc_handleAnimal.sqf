@@ -14,16 +14,18 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 [{
-	private ["_pos","_str"];
 	params ["_args","_idPFH"];
 	_args params ["_posArray"];
 
 	{
 		if !(GET_LOCVAR(_x select 0)) then {
-			_pos = _x select 0;
-			_str = _x select 1;
+			private _pos = _x select 0;
+			private _str = _x select 1;
 
-			if ({CHECK_DIST2D((vehicle _x),_pos,GVAR(spawnDist)) && {((getPosATL (vehicle _x)) select 2) < ZDIST}} count allPlayers > 0) then {
+			private _near = _pos nearEntities [["Man", "LandVehicle"], GVAR(spawnDist)];
+			_near = _near select {isPlayer _x && {(getPosATL _x select 2) < ZDIST}};
+
+			if !(_near isEqualTo []) then {
 				[_pos,_str] call FUNC(spawnAnimal);
 			};
 		};
