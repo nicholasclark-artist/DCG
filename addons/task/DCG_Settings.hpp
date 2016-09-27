@@ -13,16 +13,4 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 480;
     };
-    class GVAR(primaryBlacklist) {
-        typeName = "ARRAY";
-        typeDetail = "";
-        value[] = {
-        };
-    };
-    class GVAR(secondaryBlacklist) {
-        typeName = "ARRAY";
-        typeDetail = "";
-        value[] = {
-        };
-    };
 };
