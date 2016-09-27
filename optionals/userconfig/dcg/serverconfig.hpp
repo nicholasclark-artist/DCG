@@ -339,18 +339,6 @@ class dcg_task_cooldown {
 	typeDetail = "";
 	value = 480;
 };
-class dcg_task_primaryBlacklist {
-	typeName = "ARRAY";
-	typeDetail = "";
-	value[] = {
-	};
-};
-class dcg_task_secondaryBlacklist {
-	typeName = "ARRAY";
-	typeDetail = "";
-	value[] = {
-	};
-};
 class dcg_transport_enable {
 	typeName = "SCALAR";
 	typeDetail = "";
