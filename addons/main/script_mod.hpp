@@ -10,8 +10,8 @@
 #define VERSION_AR MAJOR,MINOR,PATCHLVL,BUILD
 #define REQUIRED_VERSION 1.64
 
-#define TITLE "Dynamic Combat Generator"
-#define TITLESHORT "DCG"
+#define TITLE QUOTE(Dynamic Combat Generator)
+#define TITLESHORT QUOTE(DCG)
 
 #define URL "https://github.com/nicholasclark-artist/dcg"
 #define AUTHOR_NAME QUOTE(Nicholas Clark (SENSEI))
