@@ -81,7 +81,7 @@ for "_i" from 1 to ITERATIONS do {
 };
 
 if (FLATEMPTY(_lz) isEqualTo []) exitWith {
-	LOG_DEBUG("Reinforcements LZ undefined.");
+	INFO("Reinforcements LZ undefined.");
 };
 
 if (_findHelipad) then {
@@ -124,7 +124,7 @@ private _grpPatrol = [_pos,0,MAX_CARGO(_veh),_side,false,0.5] call FUNC(spawnGro
 		_wp2 = _grp addWaypoint [_pos, 0];
 		_wp2 setWaypointStatements ["true", "deleteVehicle (vehicle this); deleteVehicle this;"];
 
-		LOG_DEBUG_1("Reinforcements inbound to %1.",_lz);
+		INFO_1("Reinforcements inbound to %1.",_lz);
 
 		[{
 			params ["_args","_idPFH"];
@@ -132,7 +132,7 @@ private _grpPatrol = [_pos,0,MAX_CARGO(_veh),_side,false,0.5] call FUNC(spawnGro
 
 			if (isNull objectParent (leader _grpPatrol)) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
-				LOG_DEBUG("Reinforcements complete.");
+				INFO("Reinforcements complete.");
 
 				_wp = _grpPatrol addWaypoint [_center, 0];
 				_wp setWaypointType _wpType;
@@ -154,7 +154,7 @@ private _grpPatrol = [_pos,0,MAX_CARGO(_veh),_side,false,0.5] call FUNC(spawnGro
 				_pilot call FUNC(cleanup);
 				_veh call FUNC(cleanup);
 
-				LOG_DEBUG("Reinforcement vehicle destroyed.");
+				INFO("Reinforcement vehicle destroyed.");
 			};
 		}, 1, [_veh,_pilot]] call CBA_fnc_addPerFrameHandler;
 	},

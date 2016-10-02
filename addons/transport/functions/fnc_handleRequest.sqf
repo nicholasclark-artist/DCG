@@ -30,7 +30,7 @@ __________________________________________________________________*/
 
 private ["_classname","_exfilMrk","_infilMrk","_helipad1","_helipad2","_helipadPos","_dir","_spawnPos","_transport","_wp","_pilot","_time"];
 
-LOG_DEBUG_1("Transport request: %1.",_this);
+LOG_1("Request: %1.",_this);
 
 _classname = _this select 0;
 GVAR(exfil) = _this select 1;

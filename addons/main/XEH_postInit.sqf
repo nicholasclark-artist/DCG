@@ -35,7 +35,7 @@ if (isNull GVAR(baseLocation)) then {
 		CREATE_DEFAULTBASE;
 	} remoteExecCall [QUOTE(BIS_fnc_call),-2,true];
 
-	LOG_DEBUG_1("Base object does not exist. Base location created at %1.",DEFAULTPOS);
+	WARNING_1("Base object does not exist. Base location created at %1.",DEFAULTPOS);
 };
 
 if (CHECK_DEBUG) then {

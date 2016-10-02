@@ -36,7 +36,7 @@ GVAR(curator) setVariable ["Owner", "", true];
 //GVAR(curator) setVariable ["Addons", 3, true];
 GVAR(curator) setVariable ["Forced", 0, true];
 
-LOG_DEBUG_1("Creating curator %1.",GVAR(curator));
+INFO_1("Creating curator %1.",GVAR(curator));
 
 publicVariable QFUNC(request);
 publicVariable QFUNC(getChildren);

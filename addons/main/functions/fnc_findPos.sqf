@@ -47,7 +47,7 @@ call {
 };
 
 if (_terrain isEqualTo "" || {_expression isEqualTo ""}) exitWith {
-	LOG_DEBUG("Cannot find position. Expression is empty.");
+	WARNING("Cannot find position. Expression is empty.");
 };
 
 private _places = selectBestPlaces [_anchor,_range,_expression,100,20];

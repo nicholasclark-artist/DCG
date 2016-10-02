@@ -13,7 +13,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 // #define FOB_NAME format ["%1 (+ %2 Approval)", GVAR(name), GVAR(AVBonus)]
 
-LOG_DEBUG_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
+INFO_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
 GVAR(curator) addEventHandler ["CuratorObjectRegistered",{

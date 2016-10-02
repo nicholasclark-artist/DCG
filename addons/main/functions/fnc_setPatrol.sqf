@@ -94,7 +94,7 @@ if (_units isEqualTo []) exitWith {false};
                 if (!alive _veh || {!alive _unit} || {_unit getVariable [PATROL_VAR,-1] isEqualTo 0}) exitWith {
                     [_idPFH] call CBA_fnc_removePerFrameHandler;
                     _veh forceSpeed (_veh getSpeed "AUTO");
-                    LOG_DEBUG_2("%1 exiting patrol at %2.",_type,getPosASL _veh);
+                    LOG_2("%1 exiting patrol at %2.",_type,getPosASL _veh);
                 };
 
                 if (WAYPOINT_UNITREADY) then {
@@ -147,7 +147,7 @@ if (_units isEqualTo []) exitWith {false};
                 if (!alive _unit || {_unit getVariable [PATROL_VAR,-1] isEqualTo 0}) exitWith {
                     [_idPFH] call CBA_fnc_removePerFrameHandler;
                     _unit forceSpeed (_unit getSpeed "AUTO");
-                    LOG_DEBUG_2("%1 exiting patrol at %2.", _type, getPosASL _unit);
+                    LOG_2("%1 exiting patrol at %2.", _type, getPosASL _unit);
                 };
 
                 if (WAYPOINT_UNITREADY) then {

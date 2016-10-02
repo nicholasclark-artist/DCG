@@ -158,4 +158,4 @@ if (CHECK_DEBUG) then {
 	_mrk setMarkerBrush "SolidBorder";
 };
 
-LOG_DEBUG_2("%1, %2",_town,count _objArray);
+LOG_2("%1, %2",_town,count _objArray);

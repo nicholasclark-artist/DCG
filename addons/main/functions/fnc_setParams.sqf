@@ -41,6 +41,6 @@ private ["_pname","_pval","_ptype","_pset"];
         };
 
         missionNamespace setVariable [_pname,_pval,true];
-        LOG_DEBUG_2("Parameter: %1 = %2", _pname,_pval);
+        INFO_2("Parameter: %1 = %2", _pname,_pval);
     };
 } forEach paramsArray;

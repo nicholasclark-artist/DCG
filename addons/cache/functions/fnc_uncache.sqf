@@ -26,5 +26,5 @@ if (!isPlayer _unit && {_unit getVariable [UNIT_CACHED,false]}) then {
 			_unit setPos [getPos _unit select 0,getPos _unit select 1,0];
 		};
 	};
-	//LOG_DEBUG_2("uncaching %1 %2",_unit,typeof _unit);
+	LOG_3("Uncaching %1 (%2) at %3.",_unit,typeof _unit,getPos _unit);
 };

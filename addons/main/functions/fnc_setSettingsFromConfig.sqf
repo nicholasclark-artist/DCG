@@ -60,7 +60,7 @@ private _fnc_fixSettingValue = {
             _class = _value select _i;
             if (_class isEqualType "") then {
                 if !(isClass (configfile >> "CfgVehicles" >> _class)) then {
-                    LOG_DEBUG_1("%1 does not exist on server.", _class);
+                    INFO_1("%1 does not exist on server.", _class);
                     _value deleteAt _i;
                 } else {
                     _side = getNumber (configfile >> "CfgVehicles" >> _class >> "side");
@@ -79,14 +79,14 @@ private _fnc_fixSettingValue = {
                         };
                     };
                     if (_debug) then {
-                        LOG_DEBUG_2("%1 (%2) exists on server.", _class, _side);
+                        LOG_2("%1 (%2) exists on server.", _class, _side);
                     };
                 };
             };
         };
 
         if (_value isEqualTo []) then {
-            LOG_DEBUG_1("%1 is empty.", _name);
+            WARNING_1("%1 is empty.", _name);
         };
     };
 
@@ -124,7 +124,7 @@ if (isNil _name) then {
     // get correct pool for map and check if values exists on server
     _value = [_name,_typeName,_typeDetail,_value,false] call _fnc_fixSettingValue;
 
-    //LOG_DEBUG_4("%1, %2, %3, %4", _name, _typeName, _typeDetail, _value);
+    LOG_4("%1, %2, %3, %4", _name, _typeName, _typeDetail, _value);
 
     // Init the variable
     missionNamespace setVariable [_name,_value];

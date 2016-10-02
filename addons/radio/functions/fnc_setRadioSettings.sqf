@@ -36,7 +36,7 @@ if (CHECK_ADDON_1("acre_main")) then {
 			[GVAR(acre_command), PRESET, 1, "name", "COMMAND"] call acre_api_fnc_setPresetChannelField;
 			[GVAR(acre_command), PRESET, 2, "name", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
 		};
-		LOG_DEBUG_1("%1 is not a recognized type.",GVAR(acre_command));
+		WARNING_1("%1 is not a recognized type.",GVAR(acre_command));
 	};
 	// setup support radio
 	call {
@@ -55,7 +55,7 @@ if (CHECK_ADDON_1("acre_main")) then {
 			[GVAR(acre_support), PRESET, 1, "name", "COMMAND"] call acre_api_fnc_setPresetChannelField;
 			[GVAR(acre_support), PRESET, 2, "name", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
 		};
-		LOG_DEBUG_1("%1 is not a recognized type.",GVAR(acre_support));
+		WARNING_1("%1 is not a recognized type.",GVAR(acre_support));
 	};
 	// setup squad radio
 	call {
@@ -74,7 +74,7 @@ if (CHECK_ADDON_1("acre_main")) then {
 			[GVAR(acre_squad), PRESET, 1, "name", "COMMAND"] call acre_api_fnc_setPresetChannelField;
 			[GVAR(acre_squad), PRESET, 2, "name", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
 		};
-		LOG_DEBUG_1("%1 is not a recognized type.",GVAR(acre_squad));
+		WARNING_1("%1 is not a recognized type.",GVAR(acre_squad));
 	};
 
 	[GVAR(acre_squad), PRESET] call acre_api_fnc_setPreset;

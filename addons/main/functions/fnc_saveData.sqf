@@ -12,7 +12,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define PUSHBACK_DATA(ADDONTOSAVE,DATATOSAVE) \
-	LOG_DEBUG_2("Saving data for %1 addon: %2.",QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE); \
+	LOG_2("Saving data for %1 addon: %2.",QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE); \
 	GVAR(saveDataCurrent) pushBack [QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE]
 
 if (!isServer) exitWith {};

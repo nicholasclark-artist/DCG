@@ -63,8 +63,6 @@ missionNamespace setVariable [SURRENDER_VAR(_town select 0),false];
 		};
 	} forEach ((_town select 1) nearEntities [ENTITY, _town select 2]);
 
-	//LOG_DEBUG_2("%1 - %2",_maxCount,_count);
-
 	// if enemy has lost a certain amount of units, move to next phase
 	if (_count <= _maxCount*ENEMYMAX_MULTIPLIER) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -104,7 +102,7 @@ missionNamespace setVariable [SURRENDER_VAR(_town select 0),false];
 			// get chance for enemies to surrender
 			// surrender chance is capped
 			_chanceSurrender = (_friendlyScore/_enemyScore) min SURRENDER_CHANCE;
-			LOG_DEBUG_4("E_Score: %1, F_Score: %2, E_Count: %3, S_Chance: %4.",_enemyScore,_friendlyScore,count _enemyArray,_chanceSurrender);
+			LOG_4("E_Score: %1, F_Score: %2, E_Count: %3, S_Chance: %4.",_enemyScore,_friendlyScore,count _enemyArray,_chanceSurrender);
 
 			if (count _enemyArray isEqualTo 0 || {_enemyScore <= _friendlyScore && (random 1 < _chanceSurrender)}) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;

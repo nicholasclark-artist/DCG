@@ -7,7 +7,7 @@ __________________________________________________________________*/
 if !(CHECK_INIT) exitWith {};
 
 if (GVAR(enable) isEqualTo 0) exitWith {
-	LOG_DEBUG("Addon is disabled.");
+	INFO("Addon is disabled.");
 };
 
 [{

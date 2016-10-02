@@ -44,7 +44,7 @@ _tab = toString [9];
 } forEach _mObjects;
 
 if (isNull _anchor) exitWith {
-	LOG_DEBUG("Cannot export object data because anchor is undefined.");
+	WARNING("Cannot export object data because anchor is undefined.");
 	copyToClipboard "Cannot export object data because anchor is undefined."
 };
 

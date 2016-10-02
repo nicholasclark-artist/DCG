@@ -45,7 +45,7 @@ private _lastHit = "";
 } forEach _allHitpoints;
 
 if (_hitIndex isEqualTo []) exitWith {
-	LOG_DEBUG_2("%1 %2: no suitable hitpoints.",typeOf _veh,getPos _veh);
+	WARNING_2("%1 %2: no suitable hitpoints.",typeOf _veh,getPos _veh);
 };
 
 for "_i" from 1 to _hitCount step 1 do {
@@ -56,7 +56,7 @@ for "_i" from 1 to _hitCount step 1 do {
 		_veh setHitIndex [_hit, MAX_DMG];
 		_hitSelect pushBack _hit;
 
-		LOG_DEBUG_5("%1 %2: hitpoint: %3 index: %4 damage: %5.",typeOf _veh,getPos _veh,_allHitpoints select _hit,_hit,MAX_DMG);
+		LOG_5("%1 %2: hitpoint: %3 index: %4 damage: %5.",typeOf _veh,getPos _veh,_allHitpoints select _hit,_hit,MAX_DMG);
 	};
 };
 
@@ -80,7 +80,7 @@ _fx attachTo [_veh,[0,0,0]];
 		if (!isNull _veh && {alive _veh}) then {
 			_params = [_veh] + _params;
  			_params call _onRepair;
- 			LOG_DEBUG_2("%1 %2: repaired.",typeOf _veh,_pos);
+ 			LOG_2("%1 %2: repaired.",typeOf _veh,_pos);
 		};
 		[_fx] call FUNC(removeParticle);
 	},

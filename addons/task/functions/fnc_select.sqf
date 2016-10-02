@@ -31,10 +31,10 @@ if (_cooldown < 0) then {
 		selectRandom GVAR(secondaryList);
 	};
 
-	if !(_task isEqualTo "") then {
-		LOG_DEBUG_1("Spawning task %1.",_task);
+	if !(isNil "_task") then {
+		INFO_1("Spawning task %1.",_task);
 		[] spawn (missionNamespace getVariable [_task,{}]);
 	} else {
-		LOG_DEBUG("No task selected.");
+		WARNING("No task selected.");
 	};
 }, [_type], _cooldown] call CBA_fnc_waitAndExecute;

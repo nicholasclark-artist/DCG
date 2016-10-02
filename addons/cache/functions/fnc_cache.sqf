@@ -24,5 +24,5 @@ if (!isPlayer _unit && {!("driver" in assignedVehicleRole _unit)}) then {
 	if (isNull objectParent _unit && {isNull objectParent (leader _unit)}) then {
 		_unit attachTo [leader _unit];
 	};
-	//LOG_DEBUG_2("caching %1 %2",_unit,typeof _unit);
+	LOG_3("Caching %1 (%2) at %3.",_unit,typeof _unit,getPos _unit);
 };

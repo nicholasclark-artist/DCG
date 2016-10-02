@@ -50,7 +50,6 @@
 
 #define ARR_SELECT(ARRAY,INDEX,DEFAULT) if (count ARRAY > INDEX) then {ARRAY select INDEX} else {DEFAULT}
 
-
 #define MACRO_ADDWEAPON(WEAPON,COUNT) class _xx_##WEAPON { \
   weapon = #WEAPON; \
   count = COUNT; \
@@ -72,9 +71,11 @@
 }
 
 #ifdef DISABLE_COMPILE_CACHE
-    #define PREP(fncName) DFUNC(fncName) = compile preprocessFileLineNumbers QUOTE(PATHTOF(functions\DOUBLES(fnc,fncName).sqf))
+    #undef PREP
+    #define PREP(fncName) DFUNC(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,fncName).sqf)
 #else
-    #define PREP(fncName) DFUNC(fncName) = QUOTE(PATHTOF(functions\DOUBLES(fnc,fncName).sqf)) call SLX_XEH_COMPILE
+    #undef PREP
+    #define PREP(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
 #endif
 
 #define ADDON_TITLE (toUpper QUOTE(ADDON)) splitString "_" joinString " "
@@ -85,14 +86,6 @@
 #define DATA_SETVAR(VAR1) profileNamespace setVariable [DATA_SAVEVAR,VAR1]
 #define DATA_GETVAR profileNamespace getVariable [DATA_SAVEVAR,[]]
 #define DATA_MISSION_ID ([toUpper worldName, toUpper missionName] joinString "_")
-
-#define LOG_DEBUG(MSG) [QUOTE(ADDON),[MSG]] call EFUNC(main,log)
-#define LOG_DEBUG_1(MSG,ARG1) [QUOTE(ADDON),[MSG,ARG1]] call EFUNC(main,log)
-#define LOG_DEBUG_2(MSG,ARG1,ARG2) [QUOTE(ADDON),[MSG,ARG1,ARG2]] call EFUNC(main,log)
-#define LOG_DEBUG_3(MSG,ARG1,ARG2,ARG3) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3]] call EFUNC(main,log)
-#define LOG_DEBUG_4(MSG,ARG1,ARG2,ARG3,ARG4) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4]] call EFUNC(main,log)
-#define LOG_DEBUG_5(MSG,ARG1,ARG2,ARG3,ARG4,ARG5) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4,ARG5]] call EFUNC(main,log)
-#define LOG_DEBUG_6(MSG,ARG1,ARG2,ARG3,ARG4,ARG5,ARG6) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4,ARG5,ARG6]] call EFUNC(main,log)
 
 #define HEADLESSCLIENT DOUBLES(PREFIX,HC)
 
