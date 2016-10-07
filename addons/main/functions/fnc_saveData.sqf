@@ -12,14 +12,11 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define PUSHBACK_DATA(ADDONTOSAVE,DATATOSAVE) \
-	LOG_2("Saving data for %1 addon: %2.",QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE); \
+	INFO_2("Saving %1: %2.",QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE); \
 	GVAR(saveDataCurrent) pushBack [QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE]
 
 if (!isServer) exitWith {};
 
-private ["_dataProfile"];
-
-_dataProfile = DATA_GETVAR; // main data variable
 GVAR(saveDataCurrent) = [DATA_MISSION_ID]; // overwrite current data
 
 // don't need to check for main addon, it's always enabled
@@ -150,6 +147,8 @@ if (CHECK_ADDON_2(approval)) then {
 };
 
 // following code must run last
+private _dataProfile = DATA_GETVAR;
+
 if !(_dataProfile isEqualTo []) then {
 	{
 		if (toUpper (_x select 0) isEqualTo DATA_MISSION_ID) exitWith {
