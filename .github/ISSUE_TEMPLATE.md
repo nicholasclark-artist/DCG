@@ -1,6 +1,6 @@
-**Arma 3 Version:** `x.xx` (stable / rc / dev)     
-**CBA Version:** `x.x.x`   
-**DCG Version:** `x.x.x` 
+**Arma 3 Version:** `x.xx` (stable / rc / dev)
+**CBA Version:** `x.x.x`
+**DCG Version:** `x.x.x.x`
 
 **Server Mods:**
 - `@CBA_A3`
@@ -10,7 +10,7 @@
 - Add a description of the error.
 
 **Steps to reproduce:**
-- Add the steps necessary to reproduce the issue. 
+- Add the steps necessary to reproduce the issue.
 
 **Where did the issue occur?**
 - Dedicated / Self-Hosted Multiplayer / Editor (Multiplayer)
