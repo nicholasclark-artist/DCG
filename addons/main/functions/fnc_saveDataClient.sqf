@@ -11,7 +11,7 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SAVE_HINT "Are you sure you want to overwrite the saved data for this mission?"
+#define SAVE_HINT format ["Are you sure you want to overwrite the saved data for %1?", DATA_MISSION_ID]
 #define CONFIRMED_HINT "Data saved."
 
 if !(hasInterface) exitWith {};

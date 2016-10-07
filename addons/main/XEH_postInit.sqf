@@ -13,9 +13,6 @@ __________________________________________________________________*/
 
 if !(CHECK_INIT) exitWith {};
 
-// set mission params as missionNameSpace variables
-call FUNC(setParams);
-
 if (CHECK_MARKER(QUOTE(BASE))) then {
 	BASE = "Land_HelipadEmpty_F" createVehicle [0,0,0];
 	BASE setPos (getMarkerPos QUOTE(BASE));
@@ -190,8 +187,18 @@ if !(isNil {HEADLESSCLIENT}) then {
 	}
 ] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute), 0, true];
 
+DATA_SAVEPVEH addPublicVariableEventHandler {
+	call FUNC(saveData);
+};
+
+DATA_DELETEPVEH addPublicVariableEventHandler {
+	profileNamespace setVariable [DATA_SAVEVAR,nil];
+	saveProfileNamespace;
+};
+
 // load data
 _data = QUOTE(ADDON) call FUNC(loadDataAddon);
+
 if !(_data isEqualTo []) then {
 	{
 		_x params ["_type","_pos","_dir","_vector"];
@@ -201,15 +208,6 @@ if !(_data isEqualTo []) then {
 		_veh setPosASL _pos;
 		_veh setVectorUp _vector;
 	} forEach _data;
-};
-
-DATA_SAVEPVEH addPublicVariableEventHandler {
-	call FUNC(saveData);
-};
-
-DATA_DELETEPVEH addPublicVariableEventHandler {
-	profileNamespace setVariable [DATA_SAVEVAR,nil];
-	saveProfileNamespace;
 };
 
 ADDON = true;

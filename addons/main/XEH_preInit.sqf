@@ -125,4 +125,5 @@ publicVariable QGVAR(objectCleanup);
 publicVariable QGVAR(actions);
 
 call FUNC(setSettings);
+call FUNC(setParams);
 call FUNC(loadData);
