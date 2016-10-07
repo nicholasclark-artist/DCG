@@ -14,13 +14,12 @@ __________________________________________________________________*/
 
 if !(isServer) exitWith {};
 
-private ["_pname","_pval","_ptype","_pset"];
-
 {
-	_pname = configName ((missionConfigFile >> "Params") select _ForEachIndex);
-	_pval = paramsArray select _ForEachIndex;
-    _ptype = getText (missionConfigFile >> "Params" >> _pname >> "typeName");
-	_pset = getNumber (missionConfigFile >> "Params" >> _pname >> "setParam");
+    private _pname = configName ((missionConfigFile >> "Params") select _ForEachIndex);
+    private _pval = paramsArray select _ForEachIndex;
+    private _ptype = getText (missionConfigFile >> "Params" >> _pname >> "typeName");
+    private _pset = getNumber (missionConfigFile >> "Params" >> _pname >> QUOTE(DOUBLES(PREFIX,setting)));
+
     if (_pset > 0) then {
         if (_ptype isEqualTo "BOOL") then {
             _pval = _pval > 0
@@ -41,6 +40,6 @@ private ["_pname","_pval","_ptype","_pset"];
         };
 
         missionNamespace setVariable [_pname,_pval,true];
-        INFO_2("Parameter: %1 = %2", _pname,_pval);
+        INFO_3("Include mission parameter setting: %1, %2, %3", _pname, _ptype, _pval);
     };
 } forEach paramsArray;
