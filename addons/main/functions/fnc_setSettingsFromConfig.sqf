@@ -41,7 +41,7 @@ private _fnc_getValueWithType = {
 
 private _fnc_fixSettingValue = {
     private ["_pool","_class"];
-    params ["_name","_typeName","_typeDetail","_value","_debug"];
+    params ["_name","_typeName","_typeDetail","_value"];
 
     if (toUpper _typeDetail isEqualTo "POOL") then {
         _pool = [];
@@ -62,25 +62,6 @@ private _fnc_fixSettingValue = {
                 if !(isClass (configfile >> "CfgVehicles" >> _class)) then {
                     INFO_1("%1 does not exist on server.", _class);
                     _value deleteAt _i;
-                } else {
-                    _side = getNumber (configfile >> "CfgVehicles" >> _class >> "side");
-                    call {
-                        if (_side isEqualTo 0) exitWith {
-                            _side = "EAST";
-                        };
-                        if (_side isEqualTo 1) exitWith {
-                            _side = "WEST";
-                        };
-                        if (_side isEqualTo 2) exitWith {
-                            _side = "INDEPENDENT";
-                        };
-                        if (_side isEqualTo 3) exitWith {
-                            _side = "CIVILIAN";
-                        };
-                    };
-                    if (_debug) then {
-                        LOG_2("%1 (%2) exists on server.", _class, _side);
-                    };
                 };
             };
         };
@@ -122,9 +103,7 @@ if (isNil _name) then {
     _value = [_optionEntry, _typeName] call _fnc_getValueWithType;
 
     // get correct pool for map and check if values exists on server
-    _value = [_name,_typeName,_typeDetail,_value,false] call _fnc_fixSettingValue;
-
-    LOG_4("%1, %2, %3, %4", _name, _typeName, _typeDetail, _value);
+    _value = [_name,_typeName,_typeDetail,_value] call _fnc_fixSettingValue;
 
     // Init the variable
     missionNamespace setVariable [_name,_value];
@@ -151,7 +130,9 @@ if (isNil _name) then {
     private _value = [_optionEntry, _typeName] call _fnc_getValueWithType;
 
     // get correct pool for map and check if values exists on server
-    _value = [_name,_typeName,_typeDetail,_value,true] call _fnc_fixSettingValue;
+    _value = [_name,_typeName,_typeDetail,_value] call _fnc_fixSettingValue;
+
+    INFO_4("Include userconfig setting: %1, %2, %3, %4", _name, _typeName, _typeDetail, _value);
 
     // Update the variable
     missionNamespace setVariable [_name,_value];
