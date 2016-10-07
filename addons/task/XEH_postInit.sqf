@@ -14,9 +14,6 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	if (DOUBLES(PREFIX,main) && {time > 15}) exitWith {
 		[_this select 1] call CBA_fnc_removePerFrameHandler;
 
-		LOG_1("Prim: %1",GVAR(primaryList));
-		LOG_1("Sec: %1",GVAR(secondaryList));
-
 		[
 			{!isNull player && {alive player}},
 			{
