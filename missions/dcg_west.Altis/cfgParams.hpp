@@ -7,7 +7,7 @@ class dcg_main_debug {
    values[] = {0,1};
    texts[] = {"Off", "On"};
    default = 0;
-   setParam = 1;
+   dcg_setting = 1;
    typeName = "";
 };
 class dcg_main_loadData {
@@ -15,7 +15,7 @@ class dcg_main_loadData {
    values[] = {0,1};
    texts[] = {"Off", "On"};
    default = 1;
-   setParam = 1;
+   dcg_setting = 1;
    typeName = "BOOL";
 };
 class dcg_main_enemySide {
@@ -23,7 +23,7 @@ class dcg_main_enemySide {
    values[] = {0,2};
    texts[] = {"East", "Independent"};
    default = 0;
-   setParam = 1;
+   dcg_setting = 1;
    typeName = "SIDE";
 };
 class dcg_mission_disableCam {
@@ -31,7 +31,7 @@ class dcg_mission_disableCam {
    values[] = {0,1};
    texts[] = {"Off", "On"};
    default = 0;
-   setParam = 1;
+   dcg_setting = 1;
    typeName = "BOOL";
 };
 class dcg_weather_season {
@@ -39,7 +39,7 @@ class dcg_weather_season {
    values[] = {-1,0,1,2,3};
    texts[] = {"Random","Summer","Fall","Winter","Spring"};
    default = -1;
-   setParam = 1;
+   dcg_setting = 1;
    typeName = "";
 };
 class dcg_weather_time {
@@ -47,6 +47,6 @@ class dcg_weather_time {
    values[] = {-1,0,1,2,3};
    texts[] = {"Random","Morning","Midday","Evening","Night"};
    default = -1;
-   setParam = 1;
+   dcg_setting = 1;
    typeName = "";
 };
