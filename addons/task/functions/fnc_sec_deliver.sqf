@@ -87,7 +87,7 @@ call {
 
 _veh = _type createVehicle [0,0,0];
 _veh setDir random 360;
-_veh setPosASL _posConvoy;
+_veh setPos _posConvoy;
 _veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.27,0.27,0.27,1)"];
 [_veh] call EFUNC(main,setVehDamaged);
 
