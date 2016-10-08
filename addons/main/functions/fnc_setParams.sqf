@@ -40,6 +40,6 @@ if !(isServer) exitWith {};
         };
 
         missionNamespace setVariable [_pname,_pval,true];
-        INFO_3("Include mission parameter setting: %1, %2, %3", _pname, _ptype, _pval);
+        INFO_3("Include mission parameter setting: %1, %2, %3", _pname,_pval,_ptype);
     };
 } forEach paramsArray;
