@@ -12,7 +12,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_actionIndex","_actionEH","_childIndex","_childEH"];
+private ["_actionIndex","_actionEH","_childIndex"];
 params [
 	["_obj",player],
 	["_type",1],
@@ -23,9 +23,8 @@ if (CHECK_ADDON_1("ace_interact_menu")) then {
 	[_obj,_type,_action] call ace_interact_menu_fnc_removeActionFromObject;
 } else {
 	_actionIndex = _action select 0;
-	_actionEH = _action select 1;
-	_childIndex = _action select 2;
-	_childEH = _action select 3;
+	_childIndex = _action select 1;
+	_actionEH = _action select 2;
 
 	_obj removeAction _actionIndex;
 	{
@@ -33,5 +32,4 @@ if (CHECK_ADDON_1("ace_interact_menu")) then {
 	} forEach _childIndex;
 
 	_obj removeEventHandler ["Respawn", _actionEH];
-	_obj removeEventHandler ["Respawn", _childEH];
 };
