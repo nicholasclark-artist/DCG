@@ -15,42 +15,36 @@ PVEH_QUESTION addPublicVariableEventHandler {[_this select 1] call FUNC(question
 PVEH_HINT addPublicVariableEventHandler {[_this select 1] call FUNC(hint)};
 PVEH_AVADD addPublicVariableEventHandler {(_this select 1) call EFUNC(approval,addValue);};
 
-[{
-	if (DOUBLES(PREFIX,main)) exitWith {
-		[_this select 1] call CBA_fnc_removePerFrameHandler;
-
+[
+	{DOUBLES(PREFIX,main)},
+	{
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
-		if !(_data isEqualTo []) then {
-			{
-				missionNamespace setVariable [AV_VAR(_x select 0),_x select 1,false];
-				false
-			} count _data;
-		} else {
-			{
-				missionNamespace setVariable [AV_VAR(_x select 0),AV_MAX*0.1,false];
-				false
-			} count EGVAR(main,locations);
-		};
 
-		{
-			[
-				{!isNull player && {alive player}},
-				{
-					{
-						_x call EFUNC(main,setAction);
-					} forEach [
-						[QUOTE(ADDON),"Approval","",QUOTE(true),""],
-						[QUOTE(DOUBLES(ADDON,hint)),HINT_NAME,HINT_CODE,QUOTE(true),"",player,1,ACTIONPATH],
-						[QUOTE(DOUBLES(ADDON,question)),QUESTION_NAME,QUESTION_CODE,QUOTE(true),"",player,1,ACTIONPATH]
-					];
-				}
-			] call CBA_fnc_waitUntilAndExecute;
+		[_data] call FUNC(handleLoadData);
 
-			[ADDON_TITLE, HINT_KEYID, HINT_NAME, compile HINT_CODE, ""] call CBA_fnc_addKeybind;
-			[ADDON_TITLE, QUESTION_KEYID, QUESTION_NAME, compile QUESTION_CODE, ""] call CBA_fnc_addKeybind;
-		} remoteExecCall [QUOTE(BIS_fnc_call),0,true];
+		[{
+			[FUNC(handleHostile), GVAR(hostileCooldown), []] call CBA_fnc_addPerFrameHandler
+		}, [], GVAR(hostileCooldown)] call CBA_fnc_waitAndExecute;
 
-		[FUNC(handleHostile), [], GVAR(hostileCooldown)] call CBA_fnc_waitAndExecute;
+		[[],{
+			if (hasInterface) then {
+	 			[
+	 				{!isNull player && {alive player}},
+	 				{
+	 					{
+	 						_x call EFUNC(main,setAction);
+	 					} forEach [
+	 						[QUOTE(ADDON),"Approval","",QUOTE(true),""],
+	 						[QUOTE(DOUBLES(ADDON,hint)),HINT_NAME,HINT_CODE,QUOTE(true),"",player,1,ACTIONPATH],
+	 						[QUOTE(DOUBLES(ADDON,question)),QUESTION_NAME,QUESTION_CODE,QUOTE(true),"",player,1,ACTIONPATH]
+	 					];
+	 				}
+	 			] call CBA_fnc_waitUntilAndExecute;
+
+	 			[ADDON_TITLE, HINT_KEYID, HINT_NAME, compile HINT_CODE, ""] call CBA_fnc_addKeybind;
+	 			[ADDON_TITLE, QUESTION_KEYID, QUESTION_NAME, compile QUESTION_CODE, ""] call CBA_fnc_addKeybind;
+			};
+ 		}] remoteExecCall [QUOTE(BIS_fnc_call),0,true];
 
 		if (CHECK_DEBUG) then {
 			[{
@@ -65,7 +59,7 @@ PVEH_AVADD addPublicVariableEventHandler {(_this select 1) call EFUNC(approval,a
 				} count EGVAR(main,locations);
 			}, 5, []] call CBA_fnc_addPerFrameHandler;
 		};
-	};
-}, 0, []] call CBA_fnc_addPerFrameHandler;
+	}
+] call CBA_fnc_waitUntilAndExecute;
 
 ADDON = true;

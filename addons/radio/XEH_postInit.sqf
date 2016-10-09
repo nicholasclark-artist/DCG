@@ -10,24 +10,27 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	INFO("Addon is disabled.");
 };
 
-[{
-	if (DOUBLES(PREFIX,main)) exitWith {
-		[_this select 1] call CBA_fnc_removePerFrameHandler;
-
+[
+	{DOUBLES(PREFIX,main)},
+	{
 		// ACRE2 workaround, remove items from communications tab
 		_data = missionnamespace getVariable "bis_fnc_arsenal_data";
 		_data set [12,[]];
 		missionnamespace setVariable ["bis_fnc_arsenal_data",_data,true];
 
-		[
-			{!isNull player && {alive player}},
-			{
-				call FUNC(checkLoadout);
-				call FUNC(setRadioSettings);
-			},
-			[]
-		] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute), 0, true];
-	};
-}, 0, []] call CBA_fnc_addPerFrameHandler;
+		[[],{
+			if (hasInterface) then {
+				[
+					{!isNull player && {alive player}},
+					{
+						call FUNC(checkLoadout);
+						call FUNC(setRadioSettings);
+					},
+					[]
+				] call CBA_fnc_waitUntilAndExecute;
+			};
+		}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
+	}
+] call CBA_fnc_waitUntilAndExecute;
 
 ADDON = true;

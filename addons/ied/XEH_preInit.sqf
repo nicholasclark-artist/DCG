@@ -8,4 +8,6 @@ if !(CHECK_INIT) exitWith {};
 
 ADDON = false;
 
+PREP(handleLoadData);
+
 GVAR(list) = [];

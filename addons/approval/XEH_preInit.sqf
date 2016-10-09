@@ -11,6 +11,7 @@ ADDON = false;
 PREP(addValue);
 PREP(getValue);
 PREP(getRegion);
+PREP(handleLoadData);
 PREP(handleKilled);
 PREP(handleHostile);
 PREP(spawnHostile);

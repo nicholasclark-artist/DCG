@@ -10,44 +10,31 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	INFO("Addon is disabled.");
 };
 
-[{
-	if (DOUBLES(PREFIX,main) && {time > 15}) exitWith {
-		[_this select 1] call CBA_fnc_removePerFrameHandler;
-
-		[
-			{!isNull player && {alive player}},
-			{
-				{
-					_x call EFUNC(main,setAction);
-				} forEach [
-					[QUOTE(ADDON),"Tasks","","true",""],
-					[QUOTE(DOUBLES(ADDON,primary)),"Cancel Primary Task",QUOTE([1] call FUNC(cancel)),QUOTE(isServer || serverCommandAvailable '#logout'),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]],
-					[QUOTE(DOUBLES(ADDON,secondary)),"Cancel Secondary Task",QUOTE([0] call FUNC(cancel)),QUOTE(isServer || serverCommandAvailable '#logout'),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]]
-				];
-			}
-		] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute), 0, true];
-
+[
+	{DOUBLES(PREFIX,main)},
+	{
 		// load data
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
-		if !(_data isEqualTo []) then {
-			_data params ["_primary","_secondary"];
 
-			if !(_primary isEqualTo []) then {
-				[_primary select 1] spawn (missionNamespace getVariable [_primary select 0,{}]);
-			} else {
-				[1,0] call FUNC(select);
-			};
+		[_data] call FUNC(handleLoadData);
 
-			if !(_secondary isEqualTo []) then {
-				[_secondary select 1] spawn (missionNamespace getVariable [_secondary select 0,{}]);
-			} else {
-				[0,10] call FUNC(select);
+		[[],{
+			if (hasInterface) then {
+				[
+					{!isNull player && {alive player}},
+					{
+						{
+							_x call EFUNC(main,setAction);
+						} forEach [
+							[QUOTE(ADDON),"Tasks","","true",""],
+							[QUOTE(DOUBLES(ADDON,primary)),"Cancel Primary Task",QUOTE([1] call FUNC(cancel)),QUOTE(isServer || serverCommandAvailable '#logout'),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]],
+							[QUOTE(DOUBLES(ADDON,secondary)),"Cancel Secondary Task",QUOTE([0] call FUNC(cancel)),QUOTE(isServer || serverCommandAvailable '#logout'),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]]
+						];
+					}
+				] call CBA_fnc_waitUntilAndExecute;
 			};
-		} else { // if previous data was saved without task addon
-			[1,0] call FUNC(select);
-			[0,10] call FUNC(select);
-		};
-	};
-}, 0, []] call CBA_fnc_addPerFrameHandler;
+		}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
+	}
+] call CBA_fnc_waitUntilAndExecute;
 
 ADDON = true;

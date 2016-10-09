@@ -11,6 +11,7 @@ call FUNC(init); // do not change
 
 if ((GVAR(enable) isEqualTo 0) || {!isServer}) exitWith {};
 
+PREP(handleLoadData);
 PREP(armory);
 PREP(arsenal);
 PREP(createLocation);
@@ -74,7 +75,6 @@ GVAR(enemySide) = EAST;
 GVAR(markerCleanup) = [];
 GVAR(objectCleanup) = [];
 GVAR(saveDataCurrent) = [DATA_MISSION_ID];
-GVAR(actions) = [];
 
 publicVariable QUOTE(ADDON);
 publicVariable QFUNC(armory);

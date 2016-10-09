@@ -1,0 +1,1 @@
+#include "\d\dcg\addons\ied\script_component.hpp"

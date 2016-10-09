@@ -9,6 +9,7 @@ if !(CHECK_INIT) exitWith {};
 ADDON = false;
 
 PREP(findLocation);
+PREP(handleLoadData);
 PREP(handleOccupied);
 PREP(setOccupied);
 

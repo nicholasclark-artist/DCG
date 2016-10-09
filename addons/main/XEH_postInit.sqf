@@ -173,19 +173,23 @@ if !(isNil {HEADLESSCLIENT}) then {
 	} forEach (nearestObjects [locationPosition GVAR(baseLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],GVAR(baseRadius)]);
 }, 60, []] call CBA_fnc_addPerFrameHandler;
 
-[
-	{!isNull player && {alive player} && {!isNil {DOUBLES(PREFIX,main)}} && {DOUBLES(PREFIX,main)}},
-	{
-		{
-			_x call EFUNC(main,setAction);
-		} forEach [
-			[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"",QUOTE(true),"",player,1,["ACE_SelfActions"]],
-			[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","",QUOTE(true),""],
-			[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
-			[QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",QUOTE(call FUNC(deleteDataClient)),QUOTE(isServer || {serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
-		];
-	}
-] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute), 0, true];
+[[],{
+	if (hasInterface) then {
+		[
+			{!isNull player && {alive player} && {!isNil {DOUBLES(PREFIX,main)}} && {DOUBLES(PREFIX,main)}},
+			{
+				{
+					_x call EFUNC(main,setAction);
+				} forEach [
+					[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"",QUOTE(true),"",player,1,["ACE_SelfActions"]],
+					[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","",QUOTE(true),""],
+					[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
+					[QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",QUOTE(call FUNC(deleteDataClient)),QUOTE(isServer || {serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
+				];
+			}
+		] call CBA_fnc_waitUntilAndExecute;
+	};
+}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 
 DATA_SAVEPVEH addPublicVariableEventHandler {
 	call FUNC(saveData);
@@ -199,16 +203,7 @@ DATA_DELETEPVEH addPublicVariableEventHandler {
 // load data
 _data = QUOTE(ADDON) call FUNC(loadDataAddon);
 
-if !(_data isEqualTo []) then {
-	{
-		_x params ["_type","_pos","_dir","_vector"];
-
-		_veh = _type createVehicle [0,0,0];
-		_veh setDir _dir;
-		_veh setPosASL _pos;
-		_veh setVectorUp _vector;
-	} forEach _data;
-};
+[_data] call FUNC(handleLoadData);
 
 ADDON = true;
 publicVariable QUOTE(ADDON);

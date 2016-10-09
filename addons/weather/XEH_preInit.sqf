@@ -7,3 +7,8 @@ __________________________________________________________________*/
 if !(CHECK_INIT) exitWith {};
 
 ADDON = false;
+
+PREP(handleLoadData);
+
+GVAR(overcast) = 0;
+GVAR(date) = [];

@@ -11,6 +11,7 @@ ADDON = false;
 PREP(deploy);
 PREP(delete);
 PREP(request);
+PREP(handleLoadData);
 PREP(handleRequest);
 PREP(setup);
 PREP(getChildren);
