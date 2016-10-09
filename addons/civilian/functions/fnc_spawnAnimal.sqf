@@ -6,53 +6,34 @@ Description:
 spawns animals
 
 Arguments:
-0: position to spawn animals <ARRAY>
-1: type of position <STRING>
+0: position to spawn <ARRAY>
+1: types to spawn <ARRAY>
 
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_agentArray","_type","_agent"];
-params ["_pos","_expression"];
+params ["_pos","_types"];
 
-SET_LOCVAR(_pos,true);
+private _agentList = [];
 
-_agentArray = [];
-_type = "";
-_count = 0;
+_id = str _pos;
 
-call {
-	if (_expression isEqualTo "hills") exitWith {
-		_type = "Goat_random_F";
-		_count = 15;
-	};
-	if (_expression isEqualTo "houses") exitWith {
-		_type = "Fin_random_F";
-		_count = 5;
-	};
-	if (_expression isEqualTo "forest") exitWith {
-		_type = "Goat_random_F";
-		_count = 15;
-	};
+missionNamespace setVariable [LOCVAR(_id),true];
 
-	_type = "Sheep_random_F";
-	_count = 15;
-};
-
-for "_i" from 0 to (_count - 1) do {
-	_agent = createAgent [_type, _pos, [], 150, "NONE"];
-	_agentArray pushBack _agent;
+for "_i" from 1 to 10 do {
+	private _agent = createAgent [selectRandom _types, _pos, [], 150, "NONE"];
+	_agentList pushBack _agent;
 };
 
 [{
 	params ["_args","_idPFH"];
-	_args params ["_pos","_agentArray"];
+	_args params ["_pos","_agentList"];
 
-	if ({_x distance _pos < GVAR(spawnDist)} count allPlayers isEqualTo 0) exitWith {
+	if ({CHECK_DIST(_x,_pos,GVAR(spawnDist))} count allPlayers isEqualTo 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		SET_LOCVAR(_pos,false);
-		_agentArray call EFUNC(main,cleanup);
+		missionNamespace setVariable [LOCVAR(_id),false];
+		_agentList call EFUNC(main,cleanup);
 	};
-}, 30, [_pos,_agentArray]] call CBA_fnc_addPerFrameHandler;
+}, 30, [_pos,_agentList]] call CBA_fnc_addPerFrameHandler;

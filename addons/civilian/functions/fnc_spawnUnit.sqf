@@ -14,12 +14,10 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define EMPTYDIST 0.5
-#define RANGE 200
 
 params ["_pos","_unitCount","_townName"];
 
-SET_LOCVAR(_townName,true);
+missionNamespace setVariable [LOCVAR(_townName),true];
 
 _grp = [_pos,0,_unitCount,CIVILIAN,false,1] call EFUNC(main,spawnGroup);
 
@@ -48,7 +46,7 @@ _grp = [_pos,0,_unitCount,CIVILIAN,false,1] call EFUNC(main,spawnGroup);
 
 			if ({CHECK_DIST(_x,_pos,GVAR(spawnDist))} count allPlayers isEqualTo 0) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
-				SET_LOCVAR(_townName,false);
+				missionNamespace setVariable [LOCVAR(_townName),false];
 				(units _grp) call EFUNC(main,cleanup);
 			};
 		}, 30, [_pos,_townName,_grp]] call CBA_fnc_addPerFrameHandler;
