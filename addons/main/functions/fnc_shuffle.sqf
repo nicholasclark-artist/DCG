@@ -14,12 +14,14 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_arr","_cnt"];
+params [
+	"_arr",
+	["_cnt",-1]
+];
 
-_arr = _this select 0;
-_cnt = count _arr;
+_cnt = _cnt max (count _arr);
 
-for "_i" from 1 to (_this select 1) do {
+for "_i" from 1 to _cnt do {
     _arr pushBack (_arr deleteAt floor random _cnt);
 };
 
