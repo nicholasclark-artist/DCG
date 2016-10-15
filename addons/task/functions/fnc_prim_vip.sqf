@@ -21,18 +21,13 @@ params [["_position",[]]];
 _taskID = str diag_tickTime;
 _drivers = [];
 _town = [];
-_base = [];
 _strength = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
 _vehGrp = grpNull;
 
 if (_position isEqualTo []) then {
-	if (toLower worldName in EGVAR(main,simpleWorlds)) then {
-		_position = [EGVAR(main,center),EGVAR(main,range),"meadow",10] call EFUNC(main,findPos);
-	} else {
-		_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findPos);
-		if !(_position isEqualTo []) then {
-			_position = (_position select 1);
-		};
+	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findPos);
+	if !(_position isEqualTo []) then {
+		_position = _position select 1;
 	};
 };
 
@@ -49,16 +44,6 @@ if !(EGVAR(main,locations) isEqualTo []) then {
 // TODO add vanilla compatible version
 if (_position isEqualTo [] || {_town isEqualTo []} || {!(CHECK_ADDON_1("ace_captives"))}) exitWith {
 	[TASK_TYPE,0] call FUNC(select);
-};
-
-if (toLower worldName in EGVAR(main,simpleWorlds)) then {
-	_base = [_position,0.6 + random 1] call EFUNC(main,spawnBase);
-	if !((_base select 3) isEqualTo []) then {
-		_position = selectRandom (_base select 3);
-		_position = _position select 0;
-	} else {
-		_position = [_position,0,15,0.5,0] call EFUNC(main,findPosSafe);
-	};
 };
 
 _vip = (createGroup civilian) createUnit ["C_Nikos", [0,0,0], [], 0, "NONE"];
@@ -89,10 +74,6 @@ if !(_vehPos isEqualTo _position) then {
 	] call CBA_fnc_waitUntilAndExecute;
 };
 
-if !(_base isEqualTo []) then {
-	_base = _base select 2;
-};
-
 // SET TASK
 _taskPos = ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe));
 _taskDescription = format ["We have intel that the son of a local elder has been taken hostage by enemy forces somewhere near %1. Locate the VIP, %2, and safely escort him to %3.",mapGridPosition _taskPos, name _vip, _town select 0];
@@ -107,14 +88,14 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_vip","_grp","_vehGrp","_town","_base"];
+	_args params ["_taskID","_vip","_grp","_vehGrp","_town"];
 
 	_success = false;
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + (units _vehGrp) + [_vip] + _base + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
+		((units _grp) + (units _vehGrp) + [_vip] + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		[TASK_TYPE,30] call FUNC(select);
 	};
 
@@ -122,7 +103,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL((getPos _vip),TASK_AV * -1);
-		((units _grp) + (units _vehGrp) + [_vip] + _base + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
+		((units _grp) + (units _vehGrp) + [_vip] + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
 
@@ -143,7 +124,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL((getPos _vip),TASK_AV);
-		((units _grp) + (units _vehGrp) + [_vip] + _base + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
+		((units _grp) + (units _vehGrp) + [_vip] + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_vip,_grp,_vehGrp,_town,_base]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_vip,_grp,_vehGrp,_town]] call CBA_fnc_addPerFrameHandler;
