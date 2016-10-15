@@ -20,6 +20,10 @@ if !(isServer) exitWith {};
     private _ptype = getText (missionConfigFile >> "Params" >> _pname >> "typeName");
     private _pset = getNumber (missionConfigFile >> "Params" >> _pname >> QUOTE(DOUBLES(PREFIX,setting)));
 
+    if (_ptype isEqualTo "") then {
+        _ptype = "SCALAR";
+    };
+
     if (_pset > 0) then {
         if (_ptype isEqualTo "BOOL") then {
             _pval = _pval > 0

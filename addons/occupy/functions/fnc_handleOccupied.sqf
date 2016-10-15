@@ -145,9 +145,7 @@ missionNamespace setVariable [SURRENDER_VAR(_town select 0),false];
 					deleteVehicle _x;
 				} forEach _objArray;
 
-				if (CHECK_DEBUG) then {
-					deleteMarker (format["%1_%2_debug",QUOTE(ADDON),_name]);
-				};
+				[format["%1_%2_debug",QUOTE(ADDON),_name]] call EFUNC(main,removeDebugMarker);
 
 				// setup next round of occupied locations
 				if (GVAR(locations) isEqualTo []) then {

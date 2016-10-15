@@ -16,7 +16,7 @@ __________________________________________________________________*/
 _args = _this select 0;
 
 {
-	if !(missionNamespace getVariable [LOCVAR(_x select 0),false]) then {
+	if !(missionNamespace getVariable [LOCATION_ID(_x select 0),false]) then {
 		_x params ["_pos","_types"];
 
 		_near = _pos nearEntities [["Man", "LandVehicle"], GVAR(spawnDist)];

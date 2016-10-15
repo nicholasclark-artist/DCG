@@ -3,7 +3,6 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define DEBUG_VAR(LOC) format ["%1_%2_debug",ADDON,LOC]
 
 if !(CHECK_INIT) exitWith {};
 
@@ -46,19 +45,15 @@ PVEH_AVADD addPublicVariableEventHandler {(_this select 1) call EFUNC(approval,a
 			};
  		}] remoteExecCall [QUOTE(BIS_fnc_call),0,true];
 
-		if (CHECK_DEBUG) then {
-			[{
-				{
-					if (CHECK_MARKER(DEBUG_VAR(_x select 0))) then {
-						DEBUG_VAR(_x select 0) setMarkerText (format ["AV: %1", missionNamespace getVariable [AV_VAR(_x select 0),0]]);
-					} else {
-						_mrk = createMarker [DEBUG_VAR(_x select 0),_x select 1];
-						_mrk setMarkerType "mil_dot";
-						_mrk setMarkerText (format ["AV: %1", missionNamespace getVariable [AV_VAR(_x select 0),0]]);
-					};
-				} count EGVAR(main,locations);
-			}, 5, []] call CBA_fnc_addPerFrameHandler;
-		};
+		{
+			_mrk = createMarker [LOCATION_DEBUG_ID(_x select 0),_x select 1];
+			_mrk setMarkerType "mil_dot";
+			_mrk setMarkerText LOCATION_DEBUG_TEXT(_x select 0);
+
+			[_mrk] call EFUNC(main,setDebugMarker);
+
+			false
+		} count EGVAR(main,locations);
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 

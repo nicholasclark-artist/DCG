@@ -20,16 +20,16 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	{
 		_locations = EGVAR(main,locations) select {!(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))};
 
-		if (CHECK_DEBUG) then {
-			{
-				_mrk = createMarker [LOCVAR(_x select 0),_x select 1];
-				_mrk setMarkerColor "ColorCivilian";
-				_mrk setMarkerShape "ELLIPSE";
-				_mrk setMarkerBrush "SolidBorder";
-				_mrk setMarkerAlpha 0.5;
-				_mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
-			} forEach _locations;
-		};
+		{
+			_mrk = createMarker [LOCATION_ID(_x select 0),_x select 1];
+			_mrk setMarkerColor "ColorCivilian";
+			_mrk setMarkerShape "ELLIPSE";
+			_mrk setMarkerBrush "Solid";
+			_mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
+			[_mrk] call EFUNC(main,setDebugMarker);
+
+			false
+		} count _locations;
 
 		[FUNC(handleUnit), 15, [_locations]] call CBA_fnc_addPerFrameHandler;
 
@@ -61,17 +61,17 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			_animalList pushBack [_x select 0,HILLS_TYPE];
 		} forEach _hills;
 
-		if (CHECK_DEBUG) then {
-			{
-				_pos = _x select 0;
-				_mrk = createMarker [format["%1_animal_%2",QUOTE(ADDON),_pos],_pos];
-				_mrk setMarkerColor "ColorBlack";
-				_mrk setMarkerShape "ELLIPSE";
-				_mrk setMarkerBrush "SolidBorder";
-				_mrk setMarkerAlpha 0.5;
-				_mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
-			} forEach _animalList;
-		};
+		{
+			_pos = _x select 0;
+			_mrk = createMarker [format["%1_animal_%2",QUOTE(PREFIX),_pos],_pos];
+			_mrk setMarkerColor "ColorBlack";
+			_mrk setMarkerShape "ELLIPSE";
+			_mrk setMarkerBrush "Solid";
+			_mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
+			[_mrk] call EFUNC(main,setDebugMarker);
+
+			false
+		} count _animalList;
 
 		[FUNC(handleAnimal), 15, [_animalList]] call CBA_fnc_addPerFrameHandler;
 

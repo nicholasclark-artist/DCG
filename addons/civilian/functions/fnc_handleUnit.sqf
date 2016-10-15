@@ -16,7 +16,7 @@ __________________________________________________________________*/
 _args = _this select 0;
 
 {
-	if (!(missionNamespace getVariable [LOCVAR(_x select 0),false]) && {GVAR(blacklist) find (_x select 0) isEqualTo -1}) then {
+	if (!(missionNamespace getVariable [LOCATION_ID(_x select 0),false]) && {GVAR(blacklist) find (_x select 0) isEqualTo -1}) then {
 		private "_unitCount";
 		private _position = _x select 1;
 

@@ -43,9 +43,8 @@
 #define TASK_SLEEP 5
 
 #define TASK_DEBUG(POS) \
-	if (CHECK_DEBUG) then { \
-		_mrk = createMarker [format ["%1_%2",TASK, diag_tickTime],POS]; \
-		_mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)]; \
-		_mrk setMarkerType "mil_dot"; \
-		_mrk setMarkerText TASK; \
-	}
+	_mrk = createMarker [format ["%1_%2",TASK, diag_tickTime],POS]; \
+	_mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)]; \
+	_mrk setMarkerType "mil_dot"; \
+	_mrk setMarkerText TASK; \
+	[_mrk] call EFUNC(main,setDebugMarker)

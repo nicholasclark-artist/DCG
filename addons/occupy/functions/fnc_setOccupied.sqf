@@ -150,12 +150,11 @@ GVAR(locations) pushBack _town;
 
 EGVAR(civilian,blacklist) pushBack _name; // stop civilians from spawning in town
 
-if (CHECK_DEBUG) then {
-	private _mrk = createMarker [format["%1_%2_debug",QUOTE(ADDON),_name],_position];
-	_mrk setMarkerShape "ELLIPSE";
-	_mrk setMarkerSize [_size,_size];
-	_mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)];
-	_mrk setMarkerBrush "SolidBorder";
-};
+private _mrk = createMarker [format["%1_%2_debug",QUOTE(ADDON),_name],_position];
+_mrk setMarkerShape "ELLIPSE";
+_mrk setMarkerSize [_size,_size];
+_mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)];
+_mrk setMarkerBrush "SolidBorder";
+[_mrk] call EFUNC(main,setDebugMarker);
 
 LOG_2("%1, %2",_town,count _objArray);

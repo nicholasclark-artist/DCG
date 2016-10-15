@@ -12,7 +12,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_HCs","_players","_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect","_mrk"];
+private ["_HCs","_players","_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
 
 if (count GVAR(drivers) <= GVAR(vehMaxCount)) then {
 	_HCs = entities "HeadlessClient_F";
@@ -79,17 +79,6 @@ if (count GVAR(drivers) <= GVAR(vehMaxCount)) then {
 				{!(CHECK_DIST2D(_roadStart,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} &&
 				{!(CHECK_DIST2D(_roadEnd,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))}) then {
 					[_roadStart,_roadMid,_roadEnd,_player] call FUNC(spawnVehicle);
-					if (CHECK_DEBUG) then {
-						_mrk = createMarker [format ["%1_%2", _roadStart,time], getpos _roadStart];
-						_mrk setMarkerType "mil_dot";
-						_mrk setMarkerColor "colorGREEN";
-						_mrk setMarkerText format ["ROAD START - %1", _roadStart distance2D _roadEnd];
-
-						_mrk = createMarker [format ["%1_%2", _roadEnd,time], getpos _roadEnd];
-						_mrk setMarkerType "mil_dot";
-						_mrk setMarkerColor "colorRED";
-						_mrk setMarkerText format ["ROAD END - %1", _roadStart distance2D _roadEnd];
-					};
 			};
 		};
 	};

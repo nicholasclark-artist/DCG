@@ -55,12 +55,13 @@ call {
 		CACHE_DISABLE(_grp,true);
 	};
 
-	if(CHECK_DEBUG) then {
-		private _mrk = createMarker [format["%1_sniper_%2",QUOTE(PREFIX),_unit],getposATL leader _grp];
-		_mrk setMarkerType "o_recon";
-		_mrk setMarkerColor format ["Color%1",side _unit];
-		_mrk setMarkerSize [0.7,0.7];
-	};
-} forEach _overwatch;
+	private _mrk = createMarker [format["%1_sniper_%2",QUOTE(PREFIX),_unit],getposATL leader _grp];
+	_mrk setMarkerType "o_recon";
+	_mrk setMarkerColor format ["Color%1",side _unit];
+	_mrk setMarkerSize [0.7,0.7];
+	[_mrk] call EFUNC(main,setDebugMarker);
+
+	false
+} count _overwatch;
 
 _return

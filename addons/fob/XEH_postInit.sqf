@@ -57,7 +57,9 @@ addMissionEventHandler ["HandleDisconnect",{
 
 		[[],{
 			if (hasInterface) then {
-	 			[QUOTE(ADDON),"Forward Operating Base","",QUOTE(true),QUOTE(call FUNC(getChildren))] call EFUNC(main,setAction);
+				if (toUpper (GVAR(whitelist) select 0) isEqualTo "ALL" || {player in GVAR(whitelist)}) then {
+	 				[QUOTE(ADDON),"Forward Operating Base","",QUOTE(true),QUOTE(call FUNC(getChildren))] call EFUNC(main,setAction);
+				};
 
 	 			[ADDON_TITLE, DEPLOY_ID, DEPLOY_NAME, {DEPLOY_KEYCODE}, ""] call CBA_fnc_addKeybind;
 	 			[ADDON_TITLE, REQUEST_ID, REQUEST_NAME, {REQUEST_KEYCODE}, ""] call CBA_fnc_addKeybind;

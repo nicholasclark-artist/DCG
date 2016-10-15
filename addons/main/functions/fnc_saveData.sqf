@@ -139,7 +139,7 @@ if (CHECK_ADDON_2(approval)) then {
 	private ["_data"];
 	_data = [];
 	{
-		_data pushBack [_x select 0,missionNamespace getVariable [AV_VAR(_x select 0),AV_MAX*0.1]];
+		_data pushBack [_x select 0,missionNamespace getVariable [AV_LOCATION_ID(_x select 0),AV_MAX*0.1]];
 		false
 	} count GVAR(locations);
 

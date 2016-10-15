@@ -19,7 +19,7 @@ _value = 0;
 _locations = [_this select 0] call FUNC(getRegion);
 
 {
-	_value = _value + (missionNamespace getVariable [AV_VAR(_x select 0),0]);
+	_value = _value + (missionNamespace getVariable [AV_LOCATION_ID(_x select 0),0]);
 	false
 } count _locations;
 

@@ -19,9 +19,9 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 			(owner HEADLESSCLIENT) publicVariableClient QFUNC(handlePatrol);
 			(owner HEADLESSCLIENT) publicVariableClient QGVAR(groups);
 
-			remoteExecCall [QFUNC(handlePatrol), owner HEADLESSCLIENT, false];
+			[FUNC(handlePatrol), GVAR(cooldown), []] remoteExecCall [QUOTE(CBA_fnc_addPerFrameHandler), owner HEADLESSCLIENT, false];
 		} else {
-			call FUNC(handlePatrol);
+			[FUNC(handlePatrol), GVAR(cooldown), []] call CBA_fnc_addPerFrameHandler;
 		};
 	}
 ] call CBA_fnc_waitUntilAndExecute;

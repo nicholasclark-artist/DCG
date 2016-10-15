@@ -81,9 +81,6 @@ GVAR(curator) addCuratorCameraArea [0,getPos GVAR(anchor),GVAR(range)];
 GVAR(curator) setCuratorCameraAreaCeiling 40;
 [GVAR(curator),"object",["UnitPos","Rank","Lock"]] call BIS_fnc_setCuratorAttributes;
 
-/*GVAR(AVBonus) = round(AV_FOB);
-publicVariable QGVAR(AVBonus);*/
-
 if !(isNull _unit) then {
 	[getPosASL GVAR(anchor),AV_FOB] call EFUNC(approval,addValue);
 

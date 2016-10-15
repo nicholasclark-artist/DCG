@@ -17,12 +17,12 @@ params ["_data"];
 
 if !(_data isEqualTo []) then {
 	{
-		missionNamespace setVariable [AV_VAR(_x select 0),_x select 1,false];
+		missionNamespace setVariable [AV_LOCATION_ID(_x select 0),_x select 1,false];
 		false
 	} count _data;
 } else {
 	{
-		missionNamespace setVariable [AV_VAR(_x select 0),AV_MAX*0.1,false];
+		missionNamespace setVariable [AV_LOCATION_ID(_x select 0),AV_MAX*0.1,false];
 		false
 	} count EGVAR(main,locations);
 };

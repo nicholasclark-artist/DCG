@@ -17,7 +17,7 @@ __________________________________________________________________*/
 
 params ["_pos","_unitCount","_townName"];
 
-missionNamespace setVariable [LOCVAR(_townName),true];
+missionNamespace setVariable [LOCATION_ID(_townName),true];
 
 _grp = [_pos,0,_unitCount,CIVILIAN,false,1] call EFUNC(main,spawnGroup);
 
@@ -46,7 +46,7 @@ _grp = [_pos,0,_unitCount,CIVILIAN,false,1] call EFUNC(main,spawnGroup);
 
 			if ({CHECK_DIST(_x,_pos,GVAR(spawnDist))} count allPlayers isEqualTo 0) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
-				missionNamespace setVariable [LOCVAR(_townName),false];
+				missionNamespace setVariable [LOCATION_ID(_townName),false];
 				(units _grp) call EFUNC(main,cleanup);
 			};
 		}, 30, [_pos,_townName,_grp]] call CBA_fnc_addPerFrameHandler;

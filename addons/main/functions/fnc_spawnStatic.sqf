@@ -12,12 +12,12 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define DEBUG_MRK \
-	if (CHECK_DEBUG) then { \
-		_mrk = createMarker [format["%1_static_%2",QUOTE(PREFIX),getposATL _gunner],getposATL _gunner]; \
-		_mrk setMarkerType "o_installation"; \
-		_mrk setMarkerColor format ["Color%1",side _gunner]; \
-		_mrk setMarkerSize [0.7,0.7]; \
-	};
+	_mrk = createMarker [format["%1_static_%2",QUOTE(PREFIX),getposATL _gunner],getposATL _gunner]; \
+	_mrk setMarkerType "o_installation"; \
+	_mrk setMarkerColor format ["Color%1",side _gunner]; \
+	_mrk setMarkerSize [0.7,0.7]; \
+	[_mrk] call EFUNC(main,setDebugMarker)
+
 
 private ["_mrk","_gunner","_pos","_range","_count","_side","_objArray","_gunnerArray","_posArray","_unit","_static1","_static2","_static3","_type","_tower","_roads","_road","_roadConnectedTo","_staticPos","_check","_bunker","_dir","_static","_fort","_fortPos"];
 
@@ -69,7 +69,7 @@ call {
 			_gunner setSkill ["spotDistance",0.90];
 			_gunnerArray pushBack _gunner;
 			_objArray pushBack _tower;
-			DEBUG_MRK
+			DEBUG_MRK;
 		};
 		if (_type isEqualTo 2) exitWith { // bunkered static
 			_roads = _x nearRoads 200;
@@ -96,7 +96,7 @@ call {
 			_gunnerArray pushBack _gunner;
 			_objArray pushBack _bunker;
 			_objArray pushBack _static;
-			DEBUG_MRK
+			DEBUG_MRK;
 		};
 		 // mortar
 		 if !(_x isFlatEmpty [2, -1, 0.4, 3, -1] isEqualTo []) then {
@@ -127,7 +127,7 @@ call {
 			_gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
 			_gunner moveInGunner _static;
 			_gunnerArray pushBack _gunner;
-			DEBUG_MRK
+			DEBUG_MRK;
 		 };
 	};
 } forEach _posArray;

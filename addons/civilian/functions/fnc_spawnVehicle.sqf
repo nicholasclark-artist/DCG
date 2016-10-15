@@ -59,6 +59,8 @@ _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 		}];
 
 		GVAR(drivers) pushBack _driver;
+
+		INFO_1("Spawned civilian driver at %1.",getPos _driver);
 	},
 	[_grp,_start,_mid,_end,_player]
 ] call CBA_fnc_waitUntilAndExecute;

@@ -20,7 +20,7 @@ private _agentList = [];
 
 _id = str _pos;
 
-missionNamespace setVariable [LOCVAR(_id),true];
+missionNamespace setVariable [LOCATION_ID(_id),true];
 
 for "_i" from 1 to 10 do {
 	private _agent = createAgent [selectRandom _types, _pos, [], 150, "NONE"];
@@ -33,7 +33,7 @@ for "_i" from 1 to 10 do {
 
 	if ({CHECK_DIST(_x,_pos,GVAR(spawnDist))} count allPlayers isEqualTo 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		missionNamespace setVariable [LOCVAR(_id),false];
+		missionNamespace setVariable [LOCATION_ID(_id),false];
 		_agentList call EFUNC(main,cleanup);
 	};
 }, 30, [_pos,_agentList]] call CBA_fnc_addPerFrameHandler;
