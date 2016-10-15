@@ -18,6 +18,11 @@ class DOUBLES(PREFIX,settings) {
         typeDetail = "";
         value = 1;
     };
+    class GVAR(autoSave) {
+        typeName = "BOOL";
+        typeDetail = "";
+        value = 0;
+    };
     class GVAR(baseName) {
         typeName = "STRING";
         typeDetail = "";
