@@ -19,16 +19,8 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 		missionnamespace setVariable ["bis_fnc_arsenal_data",_data,true];
 
 		[[],{
-			if (hasInterface) then {
-				[
-					{!isNull player && {alive player}},
-					{
-						call FUNC(checkLoadout);
-						call FUNC(setRadioSettings);
-					},
-					[]
-				] call CBA_fnc_waitUntilAndExecute;
-			};
+			call FUNC(checkLoadout);
+			call FUNC(setRadioSettings);
 		}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 	}
 ] call CBA_fnc_waitUntilAndExecute;
