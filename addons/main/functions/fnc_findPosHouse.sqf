@@ -13,13 +13,14 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define BAD_HOUSES ["Land_HouseV_1L2"]
 
 private _center = param [0,[0,0,0]];
 private _range = param [1,100,[0]];
 private _return = [];
 
 private _houseArray = _center nearObjects ["House",_range];
-_houseArray = _houseArray select {!((_x buildingPos -1) isEqualTo [])};
+_houseArray = _houseArray select {!((_x buildingPos -1) isEqualTo []) && {!(typeOf _x in BAD_HOUSES)}};
 
 if !(_houseArray isEqualTo []) then {
 	private _house = selectRandom _houseArray;
@@ -27,11 +28,10 @@ if !(_houseArray isEqualTo []) then {
 
 	{
 		if (_x call FUNC(inBuilding)) exitWith {
-			private _pos = _x;
-			_pos set [2,getTerrainHeightASL _pos];
-			_return = [_house,_pos];
+			_return = [_house,ATLtoASL _x];
 		};
-	} foreach _housePosArray;
+		false
+	} count _housePosArray;
 };
 
 _return
