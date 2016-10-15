@@ -13,8 +13,6 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define PRESET QUOTE(DOUBLES(PREFIX,preset))
 
-if !(hasInterface) exitWith {};
-
 if (CHECK_ADDON_1("acre_main")) then {
 	[GVAR(acre_command), "default", PRESET] call acre_api_fnc_copyPreset;
 	[GVAR(acre_squad), "default", PRESET] call acre_api_fnc_copyPreset;
@@ -81,15 +79,17 @@ if (CHECK_ADDON_1("acre_main")) then {
 	[GVAR(acre_command), PRESET] call acre_api_fnc_setPreset;
 	[GVAR(acre_support), PRESET] call acre_api_fnc_setPreset;
 
-	player addEventHandler ["respawn",{
-		[
-			{!isNull player && {alive player}},
-			{
-				call FUNC(setRadioACRE)
-			},
-			[]
-		] call CBA_fnc_waitUntilAndExecute;
-	}];
+	if (hasInterface) then {
+		player addEventHandler ["respawn",{
+			[
+				{!isNull player && {alive player}},
+				{
+					call FUNC(setRadioACRE)
+				},
+				[]
+			] call CBA_fnc_waitUntilAndExecute;
+		}];
+	};
 };
 
 if (CHECK_ADDON_1("task_force_radio")) then {
