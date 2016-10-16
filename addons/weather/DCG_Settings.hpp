@@ -5,22 +5,18 @@
 class DOUBLES(PREFIX,settings) {
     class GVAR(enable) {
         typeName = "SCALAR";
-        typeDetail = "";
         value = 1;
     };
     class GVAR(season) {
         typeName = "SCALAR";
-        typeDetail = "";
         value = -1;
     };
     class GVAR(time) {
         typeName = "SCALAR";
-        typeDetail = "";
         value = -1;
     };
     class GVAR(mapData) { // weatherspark.com
-        typeName = "ARRAY";
-        typeDetail = "WORLD";
+        typeName = "WORLD";
         value[] = {
             {"ALTIS",0.67,0.65,0.56,0.52,0.44,0.34,0.26,0.27,0.33,0.47,0.54,0.62},
             {"STRATIS",0.67,0.65,0.56,0.52,0.44,0.34,0.26,0.27,0.33,0.47,0.54,0.62},

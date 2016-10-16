@@ -13,97 +13,93 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_optionEntry"];
+params ["_entry"];
 
 private _fnc_getValueWithType = {
-    private ["_value"];
-    params ["_optionEntry", "_typeName"];
+    params ["_entry", "_typeName"];
 
-    _value = (_optionEntry >> "value");
-    if (_typeName isEqualTo "SCALAR") exitWith {
+    private _value = (_entry >> "value");
+
+    if (COMPARE_STR(_typeName,"scalar")) exitWith {
         getNumber _value
     };
-    if (_typeName isEqualTo "BOOL") exitWith {
+    if (COMPARE_STR(_typeName,"bool")) exitWith {
         (getNumber _value) > 0
     };
-    if (_typeName isEqualTo "STRING") exitWith {
+    if (COMPARE_STR(_typeName,"string")) exitWith {
         getText _value
     };
-    if (_typeName isEqualTo "ARRAY") exitWith {
-        getArray _value
-    };
-    if (_typeName isEqualTo "COLOR") exitWith {
+    if (COMPARE_STR(_typeName,"array") || {COMPARE_STR(_typeName,"pool")} || {COMPARE_STR(_typeName,"world")}) exitWith {
         getArray _value
     };
 
     getNumber _value // default
 };
 
-private _fnc_fixSettingValue = {
-    private ["_pool","_class"];
-    params ["_name","_typeName","_typeDetail","_value"];
+private _fnc_setValueWithType = {
+    params ["_name","_typeName","_value"];
 
-    if (toUpper _typeDetail isEqualTo "POOL") then {
-        _pool = [];
-        {
-            if (toUpper (_x select 0) isEqualTo "ALL" || {toUpper (_x select 0) isEqualTo toUpper worldName} || {toUpper (_x select 0) isEqualTo toUpper missionName}) then {
-                _x deleteAt 0;
-                _pool append _x;
-            };
-            false
-        } count _value;
+    call {
+        if (COMPARE_STR(_typeName,"pool")) exitWith {
+            private _pool = [];
+            {
+                if (COMPARE_STR(_x select 0,"all") || {COMPARE_STR(_x select 0,worldName)} || {COMPARE_STR(_x select 0,missionName)}) then {
+                    _x deleteAt 0;
+                    _pool append _x;
+                };
+                false
+            } count _value;
 
-        _pool = _pool arrayIntersect _pool;
-        _value = _pool;
+            _pool = _pool arrayIntersect _pool; // remove duplicates
+            _pool = _pool select {_x isEqualType ""}; // remove non string elements
 
-        for "_i" from (count _value - 1) to 0 step -1 do {
-            _class = _value select _i;
-            if (_class isEqualType "") then {
+            for "_i" from (count _pool - 1) to 0 step -1 do { // remove bad classes
+                private _class = _pool select _i;
+
                 if !(isClass (configfile >> "CfgVehicles" >> _class)) then {
-                    INFO_1("%1 does not exist on server.", _class);
-                    _value deleteAt _i;
+                    INFO_2("%1 does not exist on server, removing class from %2", _class,_name);
+                    _pool deleteAt _i;
                 };
             };
-        };
 
-        if (_value isEqualTo []) then {
-            WARNING_1("%1 is empty.", _name);
-        };
-    };
-
-    if (toUpper _typeDetail isEqualTo "WORLD") then {
-        private _arr = [];
-        {
-            if (toUpper (_x select 0) isEqualTo toUpper worldName) then {
-                _x deleteAt 0;
-                _arr append _x;
+            if (_pool isEqualTo []) then {
+                INFO_1("%1 is empty.", _name);
             };
-            false
-        } count _value;
 
-        _value = _arr;
+            _value = _pool;
+        };
+
+        if (COMPARE_STR(_typeName,"world")) exitWith {
+            private _arr = [];
+
+            {
+                if (COMPARE_STR(_x select 0,worldName)) exitWith {
+                    _x deleteAt 0;
+                    _arr append _x;
+                };
+                false
+            } count _value;
+
+             _value = _arr;
+        };
     };
 
     _value
 };
 
-_name = configName _optionEntry;
-private _typeDetail = getText (_optionEntry >> "typeDetail");
+_name = configName _entry;
+private _typeName = getText (_entry >> "typeName");
+
+if (_typeName isEqualTo "") then {
+    _typeName = "scalar";
+};
 
 // Check if the variable is already defined
 if (isNil _name) then {
-    // Get type from config
-    private _typeName = toUpper (getText (_optionEntry >> "typeName"));
-
-    if (_typeName isEqualTo "") then {
-        _typeName = "SCALAR";
-    };
-
     // Read entry and cast it to the correct type
-    _value = [_optionEntry, _typeName] call _fnc_getValueWithType;
+    private _value = [_entry, _typeName] call _fnc_getValueWithType;
 
-    // get correct pool for map and check if values exists on server
-    _value = [_name,_typeName,_typeDetail,_value] call _fnc_fixSettingValue;
+    _value = [_name,_typeName,_value] call _fnc_setValueWithType;
 
     // Init the variable
     missionNamespace setVariable [_name,_value];
@@ -112,27 +108,17 @@ if (isNil _name) then {
     private _settingData = [
         _name,
         _typeName,
-        _typeDetail,
         _value
     ];
 
     GVAR(settings) pushBack _settingData;
 } else {
-    private _typeName = "";
-    {
-        if ((_x select 0) isEqualTo _name) then {
-            _typeName = _x select 1;
-        };
-        false
-    } count GVAR(settings);
-
     // Read entry and cast it to the correct type from the existing variable
-    private _value = [_optionEntry, _typeName] call _fnc_getValueWithType;
+    private _value = [_entry, _typeName] call _fnc_getValueWithType;
 
-    // get correct pool for map and check if values exists on server
-    _value = [_name,_typeName,_typeDetail,_value] call _fnc_fixSettingValue;
+    _value = [_name,_typeName,_value] call _fnc_setValueWithType;
 
-    INFO_4("Include userconfig setting: %1, %2, %3, %4", _name, _typeName, _typeDetail, _value);
+    INFO_3("Include userconfig setting: %1, %2, %3", _name, _typeName, _value);
 
     // Update the variable
     missionNamespace setVariable [_name,_value];

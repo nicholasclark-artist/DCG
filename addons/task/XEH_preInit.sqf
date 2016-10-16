@@ -3,8 +3,8 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define PREP_PRIM(FUNC) PREP(FUNC); GVAR(primaryList) pushBack QUOTE(FUNC)
-#define PREP_SEC(FUNC) PREP(FUNC); GVAR(secondaryList) pushBack QUOTE(FUNC)
+#define PREP_PRIM(TASK) PREP(TASK); GVAR(primaryList) pushBack QFUNC(TASK)
+#define PREP_SEC(TASK) PREP(TASK); GVAR(secondaryList) pushBack QFUNC(TASK)
 
 if !(CHECK_INIT) exitWith {};
 
