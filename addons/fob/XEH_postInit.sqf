@@ -57,7 +57,7 @@ addMissionEventHandler ["HandleDisconnect",{
 
 		[[],{
 			if (hasInterface) then {
-				if (toUpper (GVAR(whitelist) select 0) isEqualTo "ALL" || {player in GVAR(whitelist)}) then {
+				if (COMPARE_STR(GVAR(whitelist) select 0,"all") || {{COMPARE_STR(_x,player)} count GVAR(whitelist) > 0}) then {
 	 				[QUOTE(ADDON),"Forward Operating Base","",QUOTE(true),QUOTE(call FUNC(getChildren))] call EFUNC(main,setAction);
 				};
 

@@ -22,11 +22,13 @@ private _fnc_parseConfigForInit = {
         private _optionEntry = _config select _index;
         if (configName _optionEntry isEqualTo QGVAR(init)) exitWith {
     		{
-			    if (toUpper _x isEqualTo "ALL" || {toUpper _x isEqualTo toUpper worldName} || {toUpper _x isEqualTo toUpper missionName}) exitWith {
+			    if (COMPARE_STR(_x,"all") || {COMPARE_STR(_x,worldName)} || {COMPARE_STR(_x,missionName)}) exitWith {
 			        GVAR(enable) = 1;
 			    };
 			    GVAR(enable) = 0;
-			} forEach (getArray (_optionEntry >> "value"));
+
+                false
+			} count (getArray (_optionEntry >> "value"));
         };
     };
 };

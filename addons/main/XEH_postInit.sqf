@@ -41,9 +41,6 @@ _mrk setMarkerShape "ELLIPSE";
 _mrk setMarkerSize [GVAR(baseRadius), GVAR(baseRadius)];
 [_mrk] call EFUNC(main,setDebugMarker);
 
-GVAR(blacklistLocations) = GVAR(blacklistLocations) apply {toLower _x};
-GVAR(simpleWorlds) = GVAR(simpleWorlds) apply {toLower _x};
-
 // get map locations from config
 _cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";
 _typeLocations = ["namecitycapital","namecity","namevillage"];
@@ -61,7 +58,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 
 	call {
 		if (toLower _type in _typeLocations) exitWith {
-			if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(toLower _name in GVAR(blacklistLocations))} && {!(_name isEqualTo "")}) then {
+			if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {{COMPARE_STR(_x,_name)} count GVAR(blacklistLocations) isEqualTo 0} && {!(_name isEqualTo "")}) then {
 				GVAR(locations) pushBack [_name,_position,_size,_type];
 			};
 		};
@@ -82,6 +79,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 		};
 	};
 };
+{!(toLower _name in GVAR(blacklistLocations))}
 
 {
 	// update locations with center positions if available
