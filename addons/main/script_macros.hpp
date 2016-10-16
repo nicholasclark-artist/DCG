@@ -100,6 +100,9 @@
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
 
+#define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
+#define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
+
 #define CACHE_DISABLE_VAR QUOTE(TRIPLES(PREFIX,cache,disableCaching))
 #define CACHE_DISABLE(GRP,BOOL) GRP setVariable [CACHE_DISABLE_VAR,BOOL,true]
 
