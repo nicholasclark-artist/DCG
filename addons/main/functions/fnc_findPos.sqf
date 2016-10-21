@@ -32,16 +32,16 @@ private _ret = [];
 private _expression = "";
 
 call {
-	if (toLower _terrain isEqualTo "meadow") exitWith {
+	if (COMPARE_STR(_terrain,"meadow")) exitWith {
 		_expression = "(1 + meadow) * (1 - forest) * (1 - sea)";
 	};
-	if (toLower _terrain isEqualTo "forest") exitWith {
+	if (COMPARE_STR(_terrain,"forest")) exitWith {
 		_expression = "(1 + forest + trees) * (1 - sea)";
 	};
-	if (toLower _terrain isEqualTo "house") exitWith {
+	if (COMPARE_STR(_terrain,"house")) exitWith {
 		_expression = "(1 + houses) * (1 - sea)";
 	};
-	if (toLower _terrain isEqualTo "hill") exitWith {
+	if (COMPARE_STR(_terrain,"hill")) exitWith {
 		_expression = "(1 + hills) * (1 - sea)";
 	};
 };
