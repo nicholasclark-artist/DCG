@@ -14,70 +14,39 @@ __________________________________________________________________*/
 #define PRESET QUOTE(DOUBLES(PREFIX,preset))
 
 if (CHECK_ADDON_1("acre_main")) then {
-	[GVAR(acre_command), "default", PRESET] call acre_api_fnc_copyPreset;
-	[GVAR(acre_squad), "default", PRESET] call acre_api_fnc_copyPreset;
-	[GVAR(acre_support), "default", PRESET] call acre_api_fnc_copyPreset;
-	// setup command radio
-	call {
-		if (GVAR(acre_command) isEqualTo "ACRE_PRC343") exitWith {
+	{
+		[_x, "default", PRESET] call acre_api_fnc_copyPreset;
 
-		};
-		if (GVAR(acre_command) isEqualTo "ACRE_PRC148") exitWith {
-			[GVAR(acre_command), PRESET, 1, "label", "COMMAND"] call acre_api_fnc_setPresetChannelField;
-			[GVAR(acre_command), PRESET, 2, "label", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
-		};
-		if (GVAR(acre_command) isEqualTo "ACRE_PRC152") exitWith {
-			[GVAR(acre_command), PRESET, 1, "description", "COMMAND"] call acre_api_fnc_setPresetChannelField;
-			[GVAR(acre_command), PRESET, 2, "description", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
-		};
-		if (GVAR(acre_command) isEqualTo "ACRE_PRC117F") exitWith {
-			[GVAR(acre_command), PRESET, 1, "name", "COMMAND"] call acre_api_fnc_setPresetChannelField;
-			[GVAR(acre_command), PRESET, 2, "name", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
-		};
-		WARNING_1("%1 is not a recognized type.",GVAR(acre_command));
-	};
-	// setup support radio
-	call {
-		if (GVAR(acre_support) isEqualTo "ACRE_PRC343") exitWith {
+		call {
+			_channel = _forEachIndex + 1;
+			_name = ["Comm Net", str _channel] joinString " ";
 
-		};
-		if (GVAR(acre_support) isEqualTo "ACRE_PRC148") exitWith {
-			[GVAR(acre_support), PRESET, 1, "label", "COMMAND"] call acre_api_fnc_setPresetChannelField;
-			[GVAR(acre_support), PRESET, 2, "label", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
-		};
-		if (GVAR(acre_support) isEqualTo "ACRE_PRC152") exitWith {
-			[GVAR(acre_support), PRESET, 1, "description", "COMMAND"] call acre_api_fnc_setPresetChannelField;
-			[GVAR(acre_support), PRESET, 2, "description", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
-		};
-		if (GVAR(acre_support) isEqualTo "ACRE_PRC117F") exitWith {
-			[GVAR(acre_support), PRESET, 1, "name", "COMMAND"] call acre_api_fnc_setPresetChannelField;
-			[GVAR(acre_support), PRESET, 2, "name", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
-		};
-		WARNING_1("%1 is not a recognized type.",GVAR(acre_support));
-	};
-	// setup squad radio
-	call {
-		if (GVAR(acre_squad) isEqualTo "ACRE_PRC343") exitWith {
+			if (_x == "ACRE_PRC343") exitWith {};
 
-		};
-		if (GVAR(acre_squad) isEqualTo "ACRE_PRC148") exitWith {
-			[GVAR(acre_squad), PRESET, 1, "label", "COMMAND"] call acre_api_fnc_setPresetChannelField;
-			[GVAR(acre_squad), PRESET, 2, "label", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
-		};
-		if (GVAR(acre_squad) isEqualTo "ACRE_PRC152") exitWith {
-			[GVAR(acre_squad), PRESET, 1, "description", "COMMAND"] call acre_api_fnc_setPresetChannelField;
-			[GVAR(acre_squad), PRESET, 2, "description", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
-		};
-		if (GVAR(acre_squad) isEqualTo "ACRE_PRC117F") exitWith {
-			[GVAR(acre_squad), PRESET, 1, "name", "COMMAND"] call acre_api_fnc_setPresetChannelField;
-			[GVAR(acre_squad), PRESET, 2, "name", "SUPPORT"] call acre_api_fnc_setPresetChannelField;
-		};
-		WARNING_1("%1 is not a recognized type.",GVAR(acre_squad));
-	};
+			if (_x == "ACRE_PRC148") exitWith {
+				[_x, PRESET, _channel, "label", _name] call acre_api_fnc_setPresetChannelField;
+			};
 
-	[GVAR(acre_squad), PRESET] call acre_api_fnc_setPreset;
-	[GVAR(acre_command), PRESET] call acre_api_fnc_setPreset;
-	[GVAR(acre_support), PRESET] call acre_api_fnc_setPreset;
+			if (_x == "ACRE_PRC152") exitWith {
+				[_x, PRESET, _channel, "description", _name] call acre_api_fnc_setPresetChannelField;
+			};
+
+			if (_x == "ACRE_PRC117F") exitWith {
+				[_x, PRESET, _channel, "name", _name] call acre_api_fnc_setPresetChannelField;
+			};
+
+			INFO_1("%1 is not a recognized type.",_x);
+		};
+
+		[_x, PRESET] call acre_api_fnc_setPreset;
+	} forEach [
+		GVAR(commNet01_ACRE),
+		GVAR(commNet02_ACRE),
+		GVAR(commNet03_ACRE),
+		GVAR(commNet04_ACRE),
+		GVAR(commNet05_ACRE),
+		GVAR(commNet06_ACRE)
+	];
 
 	if (hasInterface) then {
 		player addEventHandler ["respawn",{
@@ -92,10 +61,11 @@ if (CHECK_ADDON_1("acre_main")) then {
 	};
 };
 
-if (CHECK_ADDON_1("task_force_radio")) then {
-	tf_give_personal_radio_to_regular_soldier = false;
-	tf_no_auto_long_range_radio = true;
-	tf_give_microdagr_to_soldier = false;
-	tf_same_sw_frequencies_for_side = true;
-	tf_same_lr_frequencies_for_side = true;
-};
+// set in postInit
+/*if (CHECK_ADDON_1("task_force_radio")) then {
+  tf_give_personal_radio_to_regular_soldier = false;
+  tf_no_auto_long_range_radio = true;
+  tf_give_microdagr_to_soldier = false;
+  tf_same_sw_frequencies_for_side = true;
+  tf_same_lr_frequencies_for_side = true;
+};*/
