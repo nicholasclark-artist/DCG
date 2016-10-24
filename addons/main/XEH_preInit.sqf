@@ -133,3 +133,7 @@ publicVariable QGVAR(actions);
 call FUNC(setSettings);
 call FUNC(setParams);
 call FUNC(loadData);
+
+if (GVAR(debug) isEqualTo 1) then {
+  [true] call FUNC(debug);
+};
