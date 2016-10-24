@@ -13,6 +13,6 @@
 #define TITLE QUOTE(Dynamic Combat Generator)
 #define TITLESHORT QUOTE(DCG)
 
-#define URL QUOTE(https://github.com/nicholasclark-artist/dcg)
+#define URL "github.com/nicholasclark-artist/dcg"
 #define AUTHOR_NAME QUOTE(Nicholas Clark (SENSEI))
 #define COMPONENT_NAME QUOTE(DCG - COMPONENT)
