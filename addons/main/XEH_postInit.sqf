@@ -79,7 +79,6 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 		};
 	};
 };
-{!(toLower _name in GVAR(blacklistLocations))}
 
 {
 	// update locations with center positions if available
@@ -172,7 +171,6 @@ DATA_DELETEPVEH addPublicVariableEventHandler {
 
 // load data
 _data = QUOTE(ADDON) call FUNC(loadDataAddon);
-
 [_data] call FUNC(handleLoadData);
 
 ADDON = true;
