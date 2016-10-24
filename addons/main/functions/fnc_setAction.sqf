@@ -39,16 +39,11 @@ params [
 	["_params",[]]
 ];
 
-if !(local _obj) exitWith {
-	WARNING_1("Cannot set action, %1 is not local.",_obj);
-};
-
 _actions = [];
 
 if (CHECK_ADDON_1("ace_interact_menu")) then {
 	_addAction = [_id,_name,"",compile _statement,compile _condition,compile _child,_params,_pos] call ace_interact_menu_fnc_createAction;
-	[_obj, _type, _path, _addAction] call ace_interact_menu_fnc_addActionToObject;
-	_path pushBack _id;
+	_path = [_obj, _type, _path, _addAction] call ace_interact_menu_fnc_addActionToObject;
 	_actions append _path;
 } else {
 	if (_name isEqualTo "") exitWith {
@@ -69,6 +64,7 @@ if (CHECK_ADDON_1("ace_interact_menu")) then {
 		_actions pushBack [-1];
 	};
 
+  _EH = -1;
 	_EHStr = format [
 		"
 			if !(%2 isEqualTo '') then {
@@ -81,7 +77,12 @@ if (CHECK_ADDON_1("ace_interact_menu")) then {
 		",str _name,str _statement,_params,str _condition,str _child
 	];
 
-	_EH = _obj addEventHandler ["Respawn", _EHStr];
+  if (local _obj) then {
+    _EH = _obj addEventHandler ["Respawn", _EHStr];
+  } else {
+    [_obj, "Respawn", _EHStr] remoteExecCall [QUOTE(addEventHandler), _obj, false];
+    WARNING_1("Adding respawn eventhandler to %1 over network.",_obj);
+  };
 
 	_actions pushBack _EH;
 };
