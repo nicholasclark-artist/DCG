@@ -25,7 +25,7 @@ if (CHECK_ADDON_1("ace_main") && {isNull _killer || _unit isEqualTo _killer}) th
 };
 
 if (isNull _unit || {!isPlayer (driver (vehicle _killer))} || {_killer isEqualTo _unit}) exitWith {
-	INFO_2("Exit approval handleKilled with %1, %2.",_unit,_killer);
+	INFO_2("Exit handleKilled with killer: %1, victim: %2.",_killer,_unit);
 };
 
 private _unitValue = 0;
