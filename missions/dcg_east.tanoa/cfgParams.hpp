@@ -18,6 +18,14 @@ class dcg_main_loadData {
    dcg_setting = 1;
    typeName = "BOOL";
 };
+class dcg_main_autoSave {
+   title = "Autosave Mission Data";
+   values[] = {0,1};
+   texts[] = {"Off", "On"};
+   default = 0;
+   dcg_setting = 1;
+   typeName = "BOOL";
+};
 class dcg_main_enemySide {
    title = "Enemy Side";
    values[] = {1,2};

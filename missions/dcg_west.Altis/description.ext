@@ -1,4 +1,3 @@
-#include "scripts\hud\dialog.hpp"
 #include "scripts\VVS\menu.h"
 
 respawnOnStart = -1;
@@ -16,7 +15,4 @@ class Params {
 };
 class CfgFunctions {
   #include "scripts\VVS\Functions.h"
-};
-class RscTitles {
-	#include "scripts\hud\hud_titles.sqf"
 };
