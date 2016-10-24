@@ -17,13 +17,13 @@ __________________________________________________________________*/
     player addItemToBackpack PACK; \
   } else { \
     [format [""Cannot add %1 to your inventory."", [configFile >> ""cfgWeapons"" >> PACK] call BIS_fnc_displayName], true] call EFUNC(main,displayText); \
-  }
-#define STATE_RADIO call EFUNC(radio,setRadio)
+  };
+#define STATE_RADIO call EFUNC(radio,setRadio);
 #define STATE_ARMORY \
 	if (CHECK_ADDON_1('acre_main')) then { \
 		{player removeItem _x} forEach (call acre_api_fnc_getCurrentRadioList); \
 	}; \
-	['Open',true] spawn FUNC(arsenal)
+	['Open',true] spawn FUNC(arsenal);
 
 private _obj = _this select 0;
 
