@@ -8,7 +8,7 @@ class dcg_main_debug {
    texts[] = {"Off", "On"};
    default = 0;
    dcg_setting = 1;
-   typeName = "";
+   typeName = "SCALAR";
 };
 class dcg_main_loadData {
    title = "Load Mission Data";
@@ -48,7 +48,7 @@ class dcg_weather_season {
    texts[] = {"Random","Summer","Fall","Winter","Spring"};
    default = -1;
    dcg_setting = 1;
-   typeName = "";
+   typeName = "SCALAR";
 };
 class dcg_weather_time {
    title = "Time of Day";
@@ -56,5 +56,5 @@ class dcg_weather_time {
    texts[] = {"Random","Morning","Midday","Evening","Night"};
    default = -1;
    dcg_setting = 1;
-   typeName = "";
+   typeName = "SCALAR";
 };

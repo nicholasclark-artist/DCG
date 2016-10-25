@@ -16,3 +16,8 @@ class Params {
 class CfgFunctions {
   #include "scripts\VVS\Functions.h"
 };
+
+// mission config settings
+// class dcg_settings {
+//
+// };
