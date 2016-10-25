@@ -15,6 +15,11 @@ __________________________________________________________________*/
 
 if !(hasInterface) exitWith {};
 
+// arsenal workaround, remove items from communications tab
+_data = missionnamespace getVariable "bis_fnc_arsenal_data";
+_data set [12,[]];
+missionnamespace setVariable ["bis_fnc_arsenal_data",_data];
+
 if (CHECK_ADDON_1("acre_main")) then {
   [
   	{!(LOADOUT_DATA isEqualTo [])},
