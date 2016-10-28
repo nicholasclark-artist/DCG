@@ -29,7 +29,7 @@ private _obj = _this select 0;
 
 [[QUOTE(PREFIX),_obj,"armory"] joinString "_","Open Armory",QUOTE(STATE_ARMORY),QUOTE(true),"",_obj,0,["ACE_MainActions"]] call FUNC(setAction);
 
-if (CHECK_ADDON_2(radio)) then {
+if (CHECK_ADDON_1("acre_main") || {CHECK_ADDON_1("task_force_radio")}) then {
   [[QUOTE(PREFIX),_obj,"armoryRadio"] joinString "_","Take Radio",QUOTE(STATE_RADIO),QUOTE(true),"",_obj,0,["ACE_MainActions"]] call FUNC(setAction);
 };
 
