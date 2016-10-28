@@ -42,15 +42,16 @@ PREP(removeAction);
 PREP(removeParticle);
 PREP(saveInventory);
 PREP(setAction);
+PREP(setSettingsValue);
 PREP(setSettings);
-PREP(setSettingsFromConfig);
+PREP(setSettingsConfig);
+PREP(setSettingsParams);
 PREP(exportSettings);
 PREP(exportBase);
 PREP(shuffle);
 PREP(setOwner);
 PREP(setTask);
 PREP(setTaskState);
-PREP(setParams);
 PREP(setPatrol);
 PREP(setSide);
 PREP(setAnim);
@@ -67,7 +68,6 @@ PREP(spawnReinforcements);
 PREP(spawnSniper);
 PREP(spawnStatic);
 
-GVAR(settings) = [];
 GVAR(locations) = [];
 GVAR(locals) = [];
 GVAR(hills) = [];
@@ -128,10 +128,8 @@ publicVariable QGVAR(enemySide);
 publicVariable QGVAR(playerSide);
 publicVariable QGVAR(markerCleanup);
 publicVariable QGVAR(objectCleanup);
-publicVariable QGVAR(actions);
 
 call FUNC(setSettings);
-call FUNC(setParams);
 call FUNC(loadData);
 
 if (GVAR(debug) isEqualTo 1) then {
