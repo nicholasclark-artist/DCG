@@ -14,7 +14,7 @@ class dcg_main_loadData {
    title = "Load Mission Data";
    values[] = {0,1};
    texts[] = {"Off", "On"};
-   default = 1;
+   default = 0;
    dcg_setting = 1;
    typeName = "BOOL";
 };
