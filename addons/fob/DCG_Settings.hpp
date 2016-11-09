@@ -19,11 +19,11 @@ class DOUBLES(PREFIX,settings) {
         typeName = "ARRAY";
         value[] = {"ALL"};
     };
-    class GVAR(placingMultiplier) {
+    class GVAR(placeCoef) {
         typeName = "SCALAR";
         value = -0.025;
     };
-    class GVAR(deletingMultiplier) {
+    class GVAR(deleteCoef) {
         typeName = "SCALAR";
         value = 0.025;
     };

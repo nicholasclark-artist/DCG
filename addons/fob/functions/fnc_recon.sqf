@@ -37,26 +37,25 @@ if (_ifRecon) then {
 		};
 	};
 
-	RECON = createVehicle [_type, _position, [], 0, "FLY"];
-	(owner (getAssignedCuratorUnit GVAR(curator))) publicVariableClient QUOTE(RECON);
-    createVehicleCrew RECON;
-	RECON allowDamage false;
-	RECON setCaptive true;
+	FOB_RECON = createVehicle [_type, _position, [], 0, "FLY"];
+	publicVariable QUOTE(FOB_RECON);
+    createVehicleCrew FOB_RECON;
+	FOB_RECON allowDamage false;
+	FOB_RECON setCaptive true;
 
     {
         _x setCaptive true;
-    } forEach crew RECON;
+    } forEach crew FOB_RECON;
 
-	RECON lockDriver true;
-	RECON flyInHeight 200;
+	FOB_RECON lockDriver true;
+	FOB_RECON flyInHeight 200;
 
-	RECON addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
+	FOB_RECON addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
 
-	_wp = group RECON addWaypoint [_position, 0];
+	_wp = group FOB_RECON addWaypoint [_position, 0];
 	_wp setWaypointType "LOITER";
 	_wp setWaypointLoiterType "CIRCLE_L";
 	_wp setWaypointLoiterRadius GVAR(range);
 } else {
-	deleteVehicle RECON;
+	deleteVehicle FOB_RECON;
 };
-
