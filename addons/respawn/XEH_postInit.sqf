@@ -14,7 +14,7 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 	{DOUBLES(PREFIX,main)},
 	{
 		[[],{
- 			if (hasInterface && {!(CHECK_ADDON_1("ace_respawn"))}) then {
+ 			if (hasInterface && {isNil "ace_respawn_savePreDeathGear" || !(ace_respawn_savePreDeathGear)}) then {
  				player addEventHandler ["Killed",{
  					player setVariable [UNITGEAR, getUnitLoadout player];
     					player setVariable [UNITWEAPON, [currentWeapon player, currentMuzzle player, currentWeaponMode player]];
