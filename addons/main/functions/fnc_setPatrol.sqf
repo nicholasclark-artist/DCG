@@ -38,14 +38,14 @@ if (_units isEqualTo []) exitWith {false};
             };
         } forEach _units;
 
-        _grp setBehaviour toUpper (_behavior);
+        _grp setBehaviour toUpper _behavior;
         _posStart = getPosATL (leader _grp);
 
         private _posPrev = _posStart;
 
-        for "_i" from 0 to (2 + (floor (random 3))) do {
+        for "_i" from 0 to 3 do {
             private _pos = [_posPrev,_range*0.5,_range] call FUNC(findPosSafe);
-            _posPrev = ASLToAGL _pos;
+            _posPrev = _pos;
             private _waypoint = _grp addWaypoint [ASLToAGL _pos,0];
             _waypoint setWaypointType "MOVE";
             _waypoint setWaypointCompletionRadius 20;
@@ -67,7 +67,7 @@ if (_units isEqualTo []) exitWith {false};
 
     call {
         _waypoint = WAYPOINT_EMPTY;
-        _x setBehaviour toUpper (_behavior);
+        _x setBehaviour toUpper _behavior;
 
         if (_x isEqualTo driver objectParent _x) exitWith { // if unit is driver of vehicle
             private _veh = vehicle _x;
