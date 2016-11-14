@@ -79,6 +79,11 @@
 #endif
 
 #define ADDON_TITLE (toUpper QUOTE(ADDON)) splitString "_" joinString " "
+#define ADDON_EXIT \
+    if (GVAR(enable) isEqualTo 0) exitWith { \
+    	INFO("Addon is disabled"); \
+    }
+
 #define DATA_SAVEVAR QUOTE(DOUBLES(MAIN_ADDON,saveData))
 #define DATA_SAVEPVEH QUOTE(DOUBLES(MAIN_ADDON,saveDataPVEH))
 #define DATA_DELETEPVEH QUOTE(DOUBLES(MAIN_ADDON,deleteDataPVEH))
@@ -89,7 +94,7 @@
 
 #define HEADLESSCLIENT DOUBLES(PREFIX,HC)
 
-#define ACTIONPATH ['ACE_SelfActions',QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
+#define ACTIONPATH ["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
 
 #define CHECK_INIT ((EGVAR(main,enable) isEqualTo 1) && {isServer} && {isMultiplayer})
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
