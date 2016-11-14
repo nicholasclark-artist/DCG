@@ -11,9 +11,9 @@ if (GVAR(enable) isEqualTo 0) exitWith {
 };
 
 [[],{
-	INFO("Init radio settings.");
+	INFO("Init radio settings");
 
-	call FUNC(checkLoadout);
+	call FUNC(handleLoadout);
 	call FUNC(setRadioSettings);
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 

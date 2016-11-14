@@ -26,7 +26,7 @@ private _type = "";
 call {
 	if (_center isEqualType objNull) exitWith {
 		_unit = _center;
-		_pos = _center modelToWorld [0,4,0];
+		_pos = _center modelToWorld [0,3,0];
 	};
 	if (_center isEqualType []) exitWith {
 		_unit = objNull;

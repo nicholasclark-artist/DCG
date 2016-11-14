@@ -14,8 +14,8 @@ __________________________________________________________________*/
 #define ANIM "AinvPknlMstpSnonWnonDnon_medic4"
 #define ANIM_TIME 9
 
-if !([player modelToWorld [0,2,0],8,0,0.5] call EFUNC(main,isPosSafe)) exitWith {
-	[format ["Unsuitable position for %1. Select a flat, open area.",GVAR(name)],true] call EFUNC(main,displayText);
+if !([player modelToWorld [0,3,0],4,0] call EFUNC(main,isPosSafe)) exitWith {
+	[format ["Select an open area to deploy %1.",GVAR(name)],true] call EFUNC(main,displayText);
 };
 
 [player,ANIM] call EFUNC(main,setAnim);

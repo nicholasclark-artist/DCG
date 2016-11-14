@@ -50,7 +50,7 @@ if !(_pairs isEqualTo []) then {
       {
         _id = _x;
         _class = [_id] call acre_api_fnc_getBaseRadio;
-  
+
         _matches = _pairs select {COMPARE_STR(_x select 0,_class)}; // get all pairs that match current radio class
 
         if !(_matches isEqualTo []) then {
@@ -65,6 +65,7 @@ if !(_pairs isEqualTo []) then {
 };
 
 if !(_missing isEqualTo []) then {
+    _missing = _missing apply {[configFile >> "cfgWeapons" >> _x] call BIS_fnc_displayName};
 	_missing = _missing joinString ", ";
 	[format ["Cannot add the following radios to your inventory: %1",_missing],true] call EFUNC(main,displayText);
 };

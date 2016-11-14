@@ -12,12 +12,11 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-[QUOTE(ADDON),"Forward Operating Base","",QUOTE(true),QUOTE(call FUNC(getChildren))] call EFUNC(main,setAction);
+[QUOTE(ADDON),"Forward Operating Base",{},QUOTE(true),{call FUNC(getChildren)}] call EFUNC(main,setAction);
 
 // if ace interaction menu is enabled add transfer action to receiving unit's menu, instead of self menu
 if (CHECK_ADDON_1("ace_interact_menu")) then {
     _action = [TRANSFER_ID, TRANSFER_NAME, "", {TRANSFER_STATEMENT_ACE}, {TRANSFER_COND_ACE}, {}, []] call ace_interact_menu_fnc_createAction;
-
     ["CAManBase", 0, ["ACE_MainActions"],_action,true] call ace_interact_menu_fnc_addActionToClass;
 };
 

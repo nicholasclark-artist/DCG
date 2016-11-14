@@ -48,3 +48,8 @@
 	_mrk setMarkerType "mil_dot"; \
 	_mrk setMarkerText TASK; \
 	[_mrk] call EFUNC(main,setDebugMarker)
+
+#define PRIM_STATEMENT [1] call FUNC(cancel)
+#define PRIM_COND (isServer || serverCommandAvailable QUOTE(QUOTE(#logout))) && {!(GVAR(primary) isEqualTo [])}
+#define SEC_STATEMENT [0] call FUNC(cancel)
+#define SEC_COND (isServer || serverCommandAvailable QUOTE(QUOTE(#logout))) && {!(GVAR(secondary) isEqualTo [])}

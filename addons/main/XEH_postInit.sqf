@@ -128,25 +128,6 @@ if !(isNil {HEADLESSCLIENT}) then {
 	}, 10, []] remoteExecCall [QUOTE(CBA_fnc_addPerFrameHandler),owner HEADLESSCLIENT,false];
 };
 
-// set client actions
-[[],{
-	if (hasInterface) then {
-		[
-			{!isNull player && {alive player} && {!isNil {DOUBLES(PREFIX,main)}} && {DOUBLES(PREFIX,main)}},
-			{
-				{
-					_x call EFUNC(main,setAction);
-				} forEach [
-					[QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],"",QUOTE(true),"",player,1,["ACE_SelfActions"]],
-					[QUOTE(DOUBLES(PREFIX,data)),"Mission Data","",QUOTE(true),""],
-					[QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",QUOTE(call FUNC(saveDataClient)),QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
-					[QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",QUOTE(call FUNC(deleteDataClient)),QUOTE(isServer || {serverCommandAvailable '#logout'}),"",player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
-				];
-			}
-		] call CBA_fnc_waitUntilAndExecute;
-	};
-}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
-
 // save functionality
 if (GVAR(autoSave)) then {
 	[
@@ -172,6 +153,20 @@ DATA_DELETEPVEH addPublicVariableEventHandler {
 // load data
 _data = QUOTE(ADDON) call FUNC(loadDataAddon);
 [_data] call FUNC(handleLoadData);
+
+// set client actions
+[[],{
+	if (hasInterface) then {
+        {
+            _x call EFUNC(main,setAction);
+        } forEach [
+            [QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],{},QUOTE(true),{},[],player,1,["ACE_SelfActions"]],
+            [QUOTE(DOUBLES(PREFIX,data)),"Mission Data"],
+            [QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",{call FUNC(saveDataClient)},QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
+            [QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",{call FUNC(deleteDataClient)},QUOTE(isServer || {serverCommandAvailable '#logout'}),{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
+        ];
+	};
+}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 
 ADDON = true;
 publicVariable QUOTE(ADDON);

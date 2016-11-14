@@ -17,7 +17,7 @@ class DOUBLES(PREFIX,settings) {
     };
     class GVAR(infCountCapital) {
         typeName = "SCALAR";
-        value = 30;
+        value = 35;
     };
     class GVAR(vehCountCapital) {
         typeName = "SCALAR";
@@ -29,7 +29,7 @@ class DOUBLES(PREFIX,settings) {
     };
     class GVAR(infCountCity) {
         typeName = "SCALAR";
-        value = 15;
+        value = 25;
     };
     class GVAR(vehCountCity) {
         typeName = "SCALAR";
@@ -41,7 +41,7 @@ class DOUBLES(PREFIX,settings) {
     };
     class GVAR(infCountVillage) {
         typeName = "SCALAR";
-        value = 10;
+        value = 15;
     };
     class GVAR(vehCountVillage) {
         typeName = "SCALAR";

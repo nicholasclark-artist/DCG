@@ -2,15 +2,15 @@
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 
-// #define DEBUG_MODE_FULL
-// #define DISABLE_COMPILE_CACHE
+#define DEBUG_MODE_FULL
+#define DISABLE_COMPILE_CACHE
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
 #define UNITVAR QUOTE(DOUBLES(ADDON,unit))
 #define SET_UNITVAR(OBJ) (OBJ) setVariable [QUOTE(DOUBLES(ADDON,unit)),true]
 #define GET_UNITVAR(OBJ) (OBJ) getVariable [QUOTE(DOUBLES(ADDON,unit)),false]
-#define SPAWN_DELAY 1.5
+#define SPAWN_DELAY 1
 
 #define PREP_INF(POS,UNIT_COUNT,SIZE) \
 	_grp = [POS,0,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \

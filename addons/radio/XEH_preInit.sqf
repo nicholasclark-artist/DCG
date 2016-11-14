@@ -8,13 +8,13 @@ if !(CHECK_INIT) exitWith {};
 
 ADDON = false;
 
-PREP(checkLoadout);
+PREP(handleLoadout);
 PREP(setRadio);
 PREP(setRadioSettings);
 PREP(setRadioACRE);
 PREP(setRadioTFAR);
 
-publicVariable QFUNC(checkLoadout);
+publicVariable QFUNC(handleLoadout);
 publicVariable QFUNC(setRadio);
 publicVariable QFUNC(setRadioSettings);
 publicVariable QFUNC(setRadioACRE);

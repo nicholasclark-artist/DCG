@@ -48,7 +48,7 @@ if (_ifRecon) then {
     } forEach crew FOB_RECON;
 
 	FOB_RECON lockDriver true;
-	FOB_RECON flyInHeight 200;
+	FOB_RECON flyInHeight 180;
 
 	FOB_RECON addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
 

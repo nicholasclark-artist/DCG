@@ -20,7 +20,7 @@ QUOTE(DOUBLES(ADDON,getLocations)) addPublicVariableEventHandler {
 [
 	{DOUBLES(PREFIX,main)},
 	{
-		[QUOTE(ADDON),"Transport","",QUOTE(call FUNC(canCallTransport)),QUOTE(call FUNC(getChildren))] remoteExecCall [QEFUNC(main,setAction), 0, true];
+		[QUOTE(ADDON),"Transport",{},QUOTE(call FUNC(canCallTransport)),{call FUNC(getChildren)}] remoteExecCall [QEFUNC(main,setAction), 0, true];
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 
