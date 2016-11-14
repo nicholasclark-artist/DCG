@@ -18,7 +18,6 @@ PREP(handleSafezone);
 PREP(setDebugMarker);
 PREP(removeDebugMarker);
 PREP(armory);
-PREP(arsenal);
 PREP(createLocation);
 PREP(cleanup);
 PREP(findPosHouse);
@@ -85,7 +84,6 @@ GVAR(debugMarkers) = [];
 
 publicVariable QUOTE(ADDON);
 publicVariable QFUNC(armory);
-publicVariable QFUNC(arsenal);
 publicVariable QFUNC(createLocation);
 publicVariable QFUNC(cleanup);
 publicVariable QFUNC(findPosHouse);
