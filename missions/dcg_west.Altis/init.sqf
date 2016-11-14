@@ -12,12 +12,3 @@ dcg_main_playerSide = WEST;
 enableSaving [false, false];
 enableSentences false;
 enableRadio false;
-
-// preload arsenal after main addon is loaded
-[
-	{!isNil "dcg_main" && {dcg_main}},
-	{
-		["Preload"] call dcg_main_fnc_arsenal;
-	},
-	[]
-] call CBA_fnc_waitUntilAndExecute;
