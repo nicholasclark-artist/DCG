@@ -6,7 +6,7 @@ __________________________________________________________________*/
 #define PREP_PRIM(TASK) PREP(TASK); GVAR(primaryList) pushBack QFUNC(TASK)
 #define PREP_SEC(TASK) PREP(TASK); GVAR(secondaryList) pushBack QFUNC(TASK)
 
-if !(CHECK_INIT) exitWith {};
+CHECK_INIT;
 
 ADDON = false;
 

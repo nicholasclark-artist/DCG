@@ -4,11 +4,9 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(CHECK_INIT) exitWith {};
+CHECK_INIT;
 
-if (GVAR(enable) isEqualTo 0) exitWith {
-	INFO("Addon is disabled.");
-};
+CHECK_ADDON;
 
 [
 	{DOUBLES(PREFIX,main)},

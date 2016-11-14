@@ -11,7 +11,7 @@ __________________________________________________________________*/
 	GVAR(baseLocation) attachObject BASE
 #define CREATE_DEFAULTBASE GVAR(baseLocation) = createLocation ["NameCity", DEFAULTPOS, 10, 10]
 
-if !(CHECK_INIT) exitWith {};
+CHECK_INIT;
 
 if (CHECK_MARKER(QUOTE(BASE))) then {
 	BASE = "Land_HelipadEmpty_F" createVehicle [0,0,0];

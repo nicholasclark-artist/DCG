@@ -21,7 +21,7 @@ params ["_position","_add"];
 	missionNamespace setVariable [AV_LOCATION_ID(_x select 0),_value + _add];
 
 	LOCATION_DEBUG_ID(_x select 0) setMarkerText LOCATION_DEBUG_TEXT(_x select 0);
-	INFO_3("Location: %1, added value: %2, current value: %3",_x select 0,_add,_value + _add);
+	// INFO_3("Location: %1, added value: %2, current value: %3",_x select 0,_add,_value + _add);
 
 	false
 } count ([_position] call FUNC(getRegion));

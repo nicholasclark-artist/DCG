@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(CHECK_INIT) exitWith {};
+CHECK_INIT;
 
 ADDON = false;
 
@@ -33,7 +33,7 @@ GVAR(curator) = GVAR(group) createUnit ["ModuleCurator_F",[0,0,0], [], 0, "FORM"
 GVAR(curator) setVariable ["showNotification", false, true];
 GVAR(curator) setVariable ["birdType", "", true];
 GVAR(curator) setVariable ["Owner", "", true];
-GVAR(curator) setVariable ["Addons", 3, true];
+// GVAR(curator) setVariable ["Addons", 3, true];
 GVAR(curator) setVariable ["Forced", 0, true];
 
 INFO_1("Init curator %1",GVAR(curator));

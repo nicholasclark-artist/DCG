@@ -9,11 +9,9 @@ __________________________________________________________________*/
 #define LIMIT 8
 #define INTERATIONS 3
 
-if !(CHECK_INIT) exitWith {};
+CHECK_INIT;
 
-if (GVAR(enable) isEqualTo 0) exitWith {
-	INFO("Addon is disabled.");
-};
+CHECK_ADDON;
 
 [
 	{DOUBLES(PREFIX,main)},

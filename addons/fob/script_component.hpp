@@ -122,11 +122,9 @@
 #define RECON_NAME "FOB Aerial Recon"
 #define RECON_STATEMENT \
 	if (((UAVControl FOB_RECON) select 0) isEqualTo player) then { \
-		player allowDamage true; \
 		objNull remoteControl gunner FOB_RECON; \
 		player switchCamera "internal"; \
 	} else { \
-		player allowDamage false; \
 		player remoteControl gunner FOB_RECON; \
 		FOB_RECON switchCamera "internal"; \
 	}

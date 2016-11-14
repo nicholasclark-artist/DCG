@@ -6,7 +6,7 @@ Description:
 handles approval value when object dies
 
 Arguments:
-0: killed object <OBJECT>
+0: victim object <OBJECT>
 1: killer object <OBJECT>
 
 Return:
@@ -24,8 +24,8 @@ if (CHECK_ADDON_1("ace_main") && {isNull _killer || _unit isEqualTo _killer}) th
     _killer = _unit getVariable ["ace_medical_lastDamageSource", _killer];
 };
 
-if (isNull _unit || {!isPlayer (driver (vehicle _killer))} || {_killer isEqualTo _unit}) exitWith {
-	INFO_2("Exit handleKilled with killer: %1, victim: %2.",_killer,_unit);
+if (isNull _unit || {isNull _killer} || {_killer isEqualTo _unit} || {!(_killer isKindOf "Man")}) exitWith {
+	INFO_2("Exit handleKilled with killer: %1, victim: %2",_killer,_unit);
 };
 
 private _unitValue = 0;

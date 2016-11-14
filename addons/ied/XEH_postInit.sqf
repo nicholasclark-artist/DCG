@@ -5,11 +5,9 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define TYPE_EXP ["R_TBG32V_F","HelicopterExploSmall"]
 
-if !(CHECK_INIT) exitWith {};
+CHECK_INIT;
 
-if (GVAR(enable) isEqualTo 0) exitWith {
-	INFO("Addon is disabled.");
-};
+CHECK_ADDON;
 
 [
 	{DOUBLES(PREFIX,main)},
