@@ -34,7 +34,7 @@ if (_dir < 0) then {
 };
 
 private _pos = _center getPos [floor (random ((_max - _min) + 1)) + _min, _dir];
-_pos set [2,getTerrainHeightASL _pos];
+_pos = AGLToASL _pos;
 
 if !(_model isEqualTo objNull) then {
 	if !([_pos,_model,_water,_gradient] call FUNC(isPosSafe)) then {
