@@ -51,7 +51,7 @@ if (count GVAR(groups) <= GVAR(groupsMaxCount)) then {
 
 			if !(_posArray isEqualTo []) then {
 				_grp = grpNull;
-				_pos = selectRandom _posArray;
+				_pos = ASLtoAGL (selectRandom _posArray);
 				if (random 1 < GVAR(vehChance)) then {
 					_grp = [_pos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
 					[
