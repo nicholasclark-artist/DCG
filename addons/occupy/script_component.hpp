@@ -2,8 +2,8 @@
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 
-#define DEBUG_MODE_FULL
-#define DISABLE_COMPILE_CACHE
+// #define DEBUG_MODE_FULL
+// #define DISABLE_COMPILE_CACHE
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
@@ -31,7 +31,7 @@
 	if (random 1 < CHANCE) then { \
 		_grid = [POS,25,100,0,8,false,false] call EFUNC(main,findPosGrid); \
 		if !(_grid isEqualTo []) then { \
-			_grp = [selectRandom _grid,1,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
+			_grp = [ASLtoAGL (selectRandom _grid),1,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
 			[ \
 				{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count units (_this select 0) >= (_this select 1)}, \
 				{ \
