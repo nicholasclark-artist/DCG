@@ -13,10 +13,10 @@ class DOUBLES(PREFIX,settings) {
     };
     class GVAR(groupsMaxCount) {
         typeName = "SCALAR";
-        value = 10;
+        value = 8;
     };
     class GVAR(vehChance) {
         typeName = "SCALAR";
-        value = 0.2;
+        value = 0.25;
     };
 };
