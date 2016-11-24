@@ -9,7 +9,7 @@ class DOUBLES(PREFIX,settings) {
     };
     class GVAR(spawnDist) {
         typeName = "SCALAR";
-        value = 400;
+        value = 350;
     };
     class GVAR(countCapital) {
         typeName = "SCALAR";
@@ -29,6 +29,6 @@ class DOUBLES(PREFIX,settings) {
     };
     class GVAR(vehCooldown) {
         typeName = "SCALAR";
-        value = 300;
+        value = 600;
     };
 };
