@@ -47,7 +47,7 @@ missionNamespace setVariable [SURRENDER_VAR(_town select 0),false];
 
 	if (random 1 < REINFORCE_CHANCE) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_town select 1,EGVAR(main,enemySide),_town select 2] spawn EFUNC(main,spawnReinforcements);
+		[_town select 1,EGVAR(main,enemySide)] spawn EFUNC(main,spawnReinforcements);
 	};
 }, 60, [_town]] call CBA_fnc_addPerFrameHandler;
 
