@@ -10,7 +10,7 @@ Arguments:
 1: killer object <OBJECT>
 
 Return:
-none
+boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -20,47 +20,24 @@ params [
 ];
 
 // ACE workaround, https://github.com/acemod/ACE3/issues/3790
-if (CHECK_ADDON_1("ace_main") && {isNull _killer || _unit isEqualTo _killer}) then {
+if (isNull _killer || {_unit isEqualTo _killer}) then {
     _killer = _unit getVariable ["ace_medical_lastDamageSource", _killer];
 };
 
-if (isNull _unit || {isNull _killer} || {_killer isEqualTo _unit} || {!(_killer isKindOf "Man")}) exitWith {
+if (isNull _unit || {isNull _killer} || {_killer isEqualTo _unit}) exitWith {
 	INFO_2("Exit handleKilled with killer: %1, victim: %2",_killer,_unit);
+    false
 };
 
 private _unitValue = 0;
 
 call {
-	if (_unit isKindOf "Man") exitWith {
-		if (side group _unit isEqualTo CIVILIAN) then {
-			_unitValue = AV_CIV;
-		} else {
-			_unitValue = AV_MAN;
-			call {
-				if (rank _unit isEqualTo "PRIVATE") exitWith {
-					_unitValue = _unitValue + (_unitValue*0.10);
-				};
-				if (rank _unit isEqualTo "CORPORAL") exitWith {
-					_unitValue = _unitValue + (_unitValue*0.15);
-				};
-				if (rank _unit isEqualTo "SERGEANT") exitWith {
-					_unitValue = _unitValue + (_unitValue*0.20);
-				};
-				if (rank _unit isEqualTo "LIEUTENANT") exitWith {
-					_unitValue = _unitValue + (_unitValue*0.25);
-				};
-				if (rank _unit isEqualTo "CAPTAIN") exitWith {
-					_unitValue = _unitValue + (_unitValue*0.30);
-				};
-				if (rank _unit isEqualTo "MAJOR") exitWith {
-					_unitValue = _unitValue + (_unitValue*0.35);
-				};
-				if (rank _unit isEqualTo "COLONEL") exitWith {
-					_unitValue = _unitValue + (_unitValue*0.40);
-				};
-			};
-		};
+    if (_unit isKindOf "Man" && {!(side group _unit isEqualTo CIVILIAN)}) exitWith {
+		_unitValue = AV_MAN;
 	};
+    if (_unit isKindOf "Man" && {side group _unit isEqualTo CIVILIAN}) exitWith {
+        _unitValue = AV_CIV;
+    };
 	if (_unit isKindOf "Car") exitWith {
 		_unitValue = AV_CAR;
 	};
@@ -85,3 +62,5 @@ if (isServer) then {
 	missionNamespace setVariable [PVEH_AVADD,[getPos _unit, _unitValue]];
 	publicVariableServer PVEH_AVADD;
 };
+
+true
