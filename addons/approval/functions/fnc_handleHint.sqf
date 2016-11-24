@@ -24,7 +24,7 @@ _locations = _locations joinString ", ";
 private _format = format ["
 Regional Breakdown \n \n
 Approval: %3/%4 \n
-Hostility: %5%6 \n
+Hostility Chance: %5%6 \n
 Region: %2
 ",_player,_locations,round _value,AV_MAX,round((AV_CHANCE(getPos _player))*100),"%"];
 
