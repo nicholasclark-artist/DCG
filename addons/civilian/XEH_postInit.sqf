@@ -7,7 +7,7 @@ __________________________________________________________________*/
 #define LOCALS_TYPE ["Sheep_random_F","Rabbit_F"]
 #define HILLS_TYPE ["Sheep_random_F","Goat_random_F"]
 #define LIMIT 8
-#define INTERATIONS 3
+#define INTERATIONS 2
 
 CHECK_INIT;
 
