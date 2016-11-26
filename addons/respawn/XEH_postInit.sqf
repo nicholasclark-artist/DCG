@@ -30,5 +30,3 @@ CHECK_ADDON;
 ] call CBA_fnc_waitUntilAndExecute;
 
 ADDON = true;
-
-(hasInterface && ({isNil "ace_respawn_savePreDeathGear"} || {!ace_respawn_savePreDeathGear}))
