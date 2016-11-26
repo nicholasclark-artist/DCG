@@ -34,7 +34,7 @@ CHECK_ADDON;
 
 				false
 			} count GVAR(list);
-		}, 1.5, []] call CBA_fnc_addPerFrameHandler;
+		}, 1.25, []] call CBA_fnc_addPerFrameHandler;
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 
