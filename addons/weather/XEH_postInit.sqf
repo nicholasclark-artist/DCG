@@ -12,18 +12,10 @@ CHECK_ADDON;
 	{DOUBLES(PREFIX,main)},
 	{
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
-
 		[_data] call FUNC(handleLoadData);
 
 		setDate GVAR(date);
-		GVAR(overcast) call BIS_fnc_setOvercast;
-		/*[
-			{
-				GVAR(overcast) call BIS_fnc_setOvercast;
-			},
-			[],
-			5
-		] call CBA_fnc_waitAndExecute;*/
+		GVAR(overcast) call BIS_fnc_setOvercast; 
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 
