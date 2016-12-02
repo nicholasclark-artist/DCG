@@ -28,9 +28,11 @@ _type = "";
 _cargo = "";
 
 if (count _posArray > 1) then {
-	if ({CHECK_DIST2D(_x select 1,_posArray select 0,1000) && {CHECK_DIST2D(_x select 1,_posArray select 1,1000)}} count EGVAR(occupy,locations) isEqualTo 0) then {
-		_posConvoy = _posArray select 0;
-		_posDeliver = _posArray select 1;
+	if ({CHECK_DIST2D(_x select 1,(_posArray select 0) select 0,1000) && {CHECK_DIST2D(_x select 1,(_posArray select 1) select 0,1000)}} count EGVAR(occupy,locations) isEqualTo 0) then {
+		_posConvoy = (_posArray select 0) select 0;
+		_locConvoy = (_posArray select 0) select 1;
+		_posDeliver = (_posArray select 1) select 0;
+		_locDeliver = (_posArray select 1) select 1;
 	};
 };
 
@@ -62,12 +64,12 @@ if (_posArray isEqualTo []) then {
 	_roads = _posConvoy nearRoads 200;
 	if !(_roads isEqualTo []) then {
 		_posConvoy = getPos (selectRandom _roads);
-		_posArray pushBack _posConvoy;
+		_posArray pushBack [_posConvoy,_locConvoy];
 	};
 	_roads = _posDeliver nearRoads 50;
 	if !(_roads isEqualTo []) then {
 		_posDeliver = getPos (selectRandom _roads);
-		_posArray pushBack _posDeliver;
+		_posArray pushBack [_posDeliver,_locDeliver];
 	};
 };
 
@@ -123,7 +125,7 @@ _grp = [_posConvoy,0,UNITCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,s
 
 // SET TASK
 _taskDescription = format["A convoy enroute to deliver medical supplies to %1 broke down somewhere near %2. Repair the convoy and complete the delivery to %1.",_locDeliver, _locConvoy];
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_posConvoy,false,true,"Support"] call EFUNC(main,setTask);
+[true,_taskID,[_taskDescription,TASK_TITLE,""],_posConvoy,false,true,"run"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
 TASK_PUBLISH(_posArray);
@@ -164,15 +166,15 @@ TASK_PUBLISH(_posArray);
 			} forEach _posArray;
 
 			if !(_posArray isEqualTo []) then {
-				_grp = [selectRandom _posArray,0,[TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength),EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+				_grp = [selectRandom _posArray,0,TASK_STRENGTH,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
 				_wp = _grp addWaypoint [getposATL _veh,0];
-				_wp setWaypointBehaviour "AWARE";
-				_wp setWaypointFormation "STAG COLUMN";
+                _grp setCombatMode "RED";
+				_wp setWaypointType "SAD";
 				_cond = "!(behaviour this isEqualTo ""COMBAT"")";
 				_wp setWaypointStatements [_cond, format ["thisList call %1;",QEFUNC(main,cleanup)]];
 			};
 		} else {
-			[getpos _veh,EGVAR(main,enemySide),300] spawn EFUNC(main,spawnReinforcements);
+			[getpos _veh,EGVAR(main,enemySide)] spawn EFUNC(main,spawnReinforcements);
 		};
 	};
 }, TASK_SLEEP, [_taskID,_posDeliver,_veh,_grp]] call CBA_fnc_addPerFrameHandler;

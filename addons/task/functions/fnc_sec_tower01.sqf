@@ -14,18 +14,18 @@ __________________________________________________________________*/
 #define TASK_SECONDARY
 #define TASK_NAME 'Destroy Communications Tower'
 #define TOWER "Land_TTowerBig_2_F"
-#define UNITCOUNT 8
 #include "script_component.hpp"
 
 params [["_pos",[]]];
 
 // CREATE TASK
 _taskID = str diag_tickTime;
+_strength = TASK_STRENGTH;
 
 if (!(EGVAR(main,hills) isEqualTo []) && {_pos isEqualTo []}) then {
 	_temp = TOWER createVehicleLocal [0,0,0];
 	_hillPos = (selectRandom EGVAR(main,hills)) select 0;
-	_pos = [_hillPos,0,100,_temp,0] call EFUNC(main,findPosSafe);
+	_pos = [_hillPos,0,100,_temp,0,1] call EFUNC(main,findPosSafe);
 
 	deleteVehicle _temp;
 
@@ -39,18 +39,20 @@ if (_pos isEqualTo []) exitWith {
 };
 
 _tower = TOWER createVehicle _pos;
+_tower setPosATL [(getposATL _tower) select 0,(getposATL _tower) select 1,-1];
 _tower setVectorUp [0,0,1];
+[_tower] call FUNC(handleDamage);
 
-_grp = [_pos,0,UNITCOUNT] call EFUNC(main,spawnGroup);
+_grp = [_pos,0,_strength] call EFUNC(main,spawnGroup);
 
 [
-	{count units (_this select 0) >= UNITCOUNT},
+	{count units (_this select 0) >= (_this select 1)},
 	{
 		_this params ["_grp"];
 
 		[units _grp] call EFUNC(main,setPatrol);
 	},
-	[_grp]
+	[_grp,_strength]
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
@@ -74,7 +76,7 @@ TASK_PUBLISH(_pos);
 
 	if !(alive _tower) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
+		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_pos,TASK_AV);
 		((units _grp) + [_tower]) call EFUNC(main,cleanup);
 		TASK_EXIT;

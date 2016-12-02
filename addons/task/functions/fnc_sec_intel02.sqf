@@ -14,7 +14,8 @@ __________________________________________________________________*/
 #define TASK_SECONDARY
 #define TASK_NAME 'Find Map Intel'
 #define INTEL_CLASS QUOTE(ItemMap)
-#define UNITCOUNT 6
+#define INTEL_CONTAINER GVAR(DOUBLES(intel02,container))
+#define UNITCOUNT 8
 #include "script_component.hpp"
 
 params [["_position",[]]];
@@ -23,6 +24,7 @@ params [["_position",[]]];
 _taskID = str diag_tickTime;
 _classes = [];
 _vehicle = objNull;
+INTEL_CONTAINER = objNull;
 
 if (_position isEqualTo []) then {
 	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findPos);
@@ -49,7 +51,7 @@ _vehPos = [_position,5,30,7,0] call EFUNC(main,findPosSafe);
 
 if !(_position isEqualTo _vehPos) then {
 	_vehicle = (selectRandom _classes) createVehicle [0,0,0];
-	[_vehicle] call EFUNC(main,setPosSafe);
+	[_vehicle,_vehPos] call EFUNC(main,setPosSafe);
 };
 
 _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
@@ -57,17 +59,23 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
 [
 	{count units (_this select 0) >= UNITCOUNT},
 	{
-		_this params ["_grp"];
+		params ["_grp","_position","_vehicle","_taskID"];
 
-		[units _grp,20] call EFUNC(main,setPatrol);
+		[units _grp,30] call EFUNC(main,setPatrol);
+
+        removeFromRemainsCollector units _grp;
 
 		{
 			removeAllAssignedItems _x;
 			removeHeadgear _x;
-			removeVest _x;
+            removeVest _x;
 		} forEach (units _grp);
 
-		(leader _grp) linkItem INTEL_CLASS;
+        {
+            leader _grp removeItemFromUniform _x;
+        } forEach (uniformItems leader _grp);
+
+        INTEL_CONTAINER = [leader _grp,INTEL_CLASS] call FUNC(addItem);
 	},
 	[_grp]
 ] call CBA_fnc_waitUntilAndExecute;
@@ -75,7 +83,7 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
 TASK_DEBUG(_position);
 
 // SET TASK
-_taskDescription = format["Aerial reconnaissance spotted an enemy fireteam at %1. This is an opportunity to gain the upper hand. Ambush the unit and search the enemy combatants for intel.", mapGridPosition _position];
+_taskDescription = format["Aerial reconnaissance spotted an enemy fireteam at grid %1. This is an opportunity to gain the upper hand. Ambush the unit and search the enemy combatants for intel.", mapGridPosition _position];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"search"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
@@ -83,21 +91,21 @@ TASK_PUBLISH(_position);
 
 // TASK HANDLER
 [{
-	params ["_args","_idPFH"];
-	_args params ["_taskID","_grp","_vehicle"];
+    params ["_args","_idPFH"];
+    _args params ["_taskID","_grp","_vehicle"];
 
-	if (TASK_GVAR isEqualTo []) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + [_vehicle]) call EFUNC(main,cleanup);
-		[TASK_TYPE,30] call FUNC(select);
-	};
+    if (TASK_GVAR isEqualTo []) exitWith {
+        [_idPFH] call CBA_fnc_removePerFrameHandler;
+        [_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+        ((units _grp) + [_vehicle]) call EFUNC(main,cleanup);
+        [TASK_TYPE,30] call FUNC(select);
+    };
 
-	if !(INTEL_CLASS in (assignedItems (leader _grp))) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
-		TASK_APPROVAL(getPos (leader _grp),TASK_AV);
-		((units _grp) + [_vehicle]) call EFUNC(main,cleanup);
-		TASK_EXIT;
-	};
+    if (!isNull INTEL_CONTAINER && {{COMPARE_STR(INTEL_CLASS,_x)} count itemCargo INTEL_CONTAINER < 1}) exitWith {
+        [_idPFH] call CBA_fnc_removePerFrameHandler;
+        [_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+        TASK_APPROVAL(getPos (leader _grp),TASK_AV);
+        ((units _grp) + [_vehicle]) call EFUNC(main,cleanup);
+        TASK_EXIT;
+    };
 }, TASK_SLEEP, [_taskID,_grp,_vehicle]] call CBA_fnc_addPerFrameHandler;

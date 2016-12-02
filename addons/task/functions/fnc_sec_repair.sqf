@@ -13,7 +13,7 @@ none
 __________________________________________________________________*/
 #define TASK_SECONDARY
 #define TASK_NAME 'Repair Patrol'
-#define VEHCOUNT 2
+#define VEHCOUNT 1
 #include "script_component.hpp"
 
 params [["_position",[]]];
@@ -32,10 +32,8 @@ if (_position isEqualTo []) then {
 	} forEach ([EGVAR(main,center),worldSize*0.04,worldSize] call EFUNC(main,findPosGrid));
 };
 
-if (CHECK_ADDON_2(occupy)) then {
-	if ({CHECK_DIST2D(_x select 1,_position,1000)} count EGVAR(occupy,locations) > 0) then {
-		_position = [];
-	};
+if (!([_position,12,0] call EFUNC(main,isPosSafe)) || {{CHECK_DIST2D(_x select 1,_position,1000)} count EGVAR(occupy,locations) > 0}) then {
+    _position = [];
 };
 
 if (_position isEqualTo []) exitWith {
@@ -45,12 +43,12 @@ if (_position isEqualTo []) exitWith {
 _grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,spawnGroup);
 
 [
-	{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) >= VEHCOUNT},
+	{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) >= VEHCOUNT},
 	{
 		_this params ["_grp","_drivers","_vehicles"];
 
 		{
-			if (_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]) then {
+			if (_x getVariable [SPAWNED_DRIVER,false]) then {
 				_drivers pushBack _x;
 				_vehicles pushBack (vehicle _x);
 				_x removeItems "ToolKit";

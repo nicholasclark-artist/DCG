@@ -20,7 +20,7 @@ params [["_position",[]]];
 // CREATE TASK
 _taskID = str diag_tickTime;
 _classes = [];
-_strength = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
+_strength = TASK_STRENGTH;
 
 if (_position isEqualTo []) then {
 	if !(EGVAR(main,locals) isEqualTo []) then {
@@ -47,8 +47,6 @@ call {
 	if (EGVAR(main,enemySide) isEqualTo RESISTANCE) exitWith {
 		_classes = EGVAR(main,officerPoolInd);
 	};
-
-	_classes = EGVAR(main,officerPoolEast);
 };
 
 if !([_position,1,0] call EFUNC(main,isPosSafe)) then {
@@ -59,7 +57,6 @@ _base = [_position,random 0.2] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 
 _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, ASLtoAGL _position, [], 0, "NONE"];
-removeFromRemainsCollector [_officer];
 [[_officer],_bRadius] call EFUNC(main,setPatrol);
 
 _grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);

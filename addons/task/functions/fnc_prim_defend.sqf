@@ -13,8 +13,8 @@ none
 __________________________________________________________________*/
 #define TASK_PRIMARY
 #define TASK_NAME 'Defend Supplies'
-#define COUNTDOWN 450
-#define FRIENDLY_COUNT 8
+#define COUNTDOWN 600
+#define FRIENDLY_COUNT 4
 #define ENEMY_COUNT 6
 #include "script_component.hpp"
 
@@ -38,7 +38,7 @@ if (_position isEqualTo []) exitWith {
 };
 
 for "_i" from 1 to 100 do {
-	_vehPos = [_position,0,50,16,0,.35] call EFUNC(main,findPosSafe);
+	_vehPos = [_position,0,25,16,0,.35] call EFUNC(main,findPosSafe);
 
 	if !(_vehPos isEqualTo _position) exitWith {};
 
@@ -65,12 +65,12 @@ _truck lock 3;
 _truck allowDamage false;
 _driver = (createGroup CIVILIAN) createUnit ["C_man_w_worker_F", [0,0,0], [], 0, "NONE"];
 _driver moveInDriver _truck;
-_driver allowFleeing 0;
 _driver setBehaviour "CARELESS";
 _driver setCombatMode "BLUE";
 _driver disableAI "TARGET";
 _driver disableAI "AUTOTARGET";
-_truck allowCrewInImmobile true;
+_driver disableAI "AUTOCOMBAT";
+_driver disableAI "FSM";
 
 _grp = [_position,0,FRIENDLY_COUNT,EGVAR(main,playerSide)] call EFUNC(main,spawnGroup);
 
@@ -105,7 +105,6 @@ TASK_PUBLISH(_position);
 	if ({CHECK_VECTORDIST(getPosASL _x,getPosASL _truck,TASK_DIST_START)} count allPlayers > 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		_timerID = [COUNTDOWN,60,TASK_NAME] call EFUNC(main,setTimer);
-		_enemyCount = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
 
 		[{
 			params ["_args","_idPFH"];
@@ -130,12 +129,15 @@ TASK_PUBLISH(_position);
 
 			if (EGVAR(main,timer) < 1) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
-			  	_truck setDamage 0;
-			  	(group driver _truck) move ([getPos _truck,4000,5000] call EFUNC(main,findPosSafe));
 				[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 				((units _grp) + GVAR(defend_enemies) + [_truck]) call EFUNC(main,cleanup);
 				TASK_APPROVAL(getPos _truck,TASK_AV);
 				TASK_EXIT;
+
+                _pos = [getPos _truck,3000,4000] call EFUNC(main,findPosSafe);
+                _wp = (group driver _truck) addWaypoint [_pos, 0];
+                _wp setWaypointSpeed "NORMAL";
+                _wp setWaypointBehaviour "CARELESS";
 			};
 
 			GVAR(defend_enemies) = GVAR(defend_enemies) select {!(isNull _x)};
@@ -146,11 +148,12 @@ TASK_PUBLISH(_position);
 					{count units (_this select 0) >= ENEMY_COUNT},
 					{
 						GVAR(defend_enemies) append (units (_this select 0));
-						_wp = (_this select 0) addWaypoint [getpos (_this select 1),30];
+						_wp = (_this select 0) addWaypoint [_this select 1,30];
+                        _wp setWaypointType "SAD";
 					},
 					[_grp,_truck]
 				] call CBA_fnc_waitUntilAndExecute;
 			};
-		}, TASK_SLEEP, [_taskID,_truck,_grp,_enemyCount,_timerID]] call CBA_fnc_addPerFrameHandler;
+		}, TASK_SLEEP, [_taskID,_truck,_grp,TASK_STRENGTH,_timerID]] call CBA_fnc_addPerFrameHandler;
 	};
 }, TASK_SLEEP, [_taskID,_truck,_grp]] call CBA_fnc_addPerFrameHandler;

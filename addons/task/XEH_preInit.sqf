@@ -3,8 +3,6 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define PREP_PRIM(TASK) PREP(TASK); GVAR(primaryList) pushBack QFUNC(TASK)
-#define PREP_SEC(TASK) PREP(TASK); GVAR(secondaryList) pushBack QFUNC(TASK)
 
 CHECK_INIT;
 
@@ -15,7 +13,9 @@ GVAR(secondaryList) = [];
 
 PREP(select);
 PREP(cancel);
+PREP(handleDamage);
 PREP(handleLoadData);
+PREP(addItem);
 
 PREP_PRIM(prim_vip);
 PREP_PRIM(prim_cache);

@@ -20,7 +20,7 @@ params [["_position",[]]];
 // CREATE TASK
 _taskID = str diag_tickTime;
 _classes = [];
-_strength = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
+_strength = TASK_STRENGTH;
 _vehGrp = grpNull;
 
 if (_position isEqualTo []) then {
@@ -37,8 +37,6 @@ call {
 	if (EGVAR(main,enemySide) isEqualTo RESISTANCE) exitWith {
 		_classes = EGVAR(main,officerPoolInd);
 	};
-
-	_classes = EGVAR(main,officerPoolEast);
 };
 
 if (_position isEqualTo []) exitWith {
@@ -49,8 +47,7 @@ _base = [_position,0.65 + random 1] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 
 _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, ASLtoAGL _position, [], 0, "NONE"];
-removeFromRemainsCollector [_officer];
-[[_officer],_bRadius] call EFUNC(main,setPatrol);
+[[_officer],25] call EFUNC(main,setPatrol);
 
 _grp = [_position,0,_strength,EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
 
@@ -67,7 +64,7 @@ _vehPos = [_position,100,200,8,0] call EFUNC(main,findPosSafe);
 if !(_vehPos isEqualTo _position) then {
 	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
 	[
-		{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
+		{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) > 0},
 		{
 			[units (_this select 0),((_this select 1)*4 min 300) max 100] call EFUNC(main,setPatrol);
 		},
@@ -76,7 +73,7 @@ if !(_vehPos isEqualTo _position) then {
 } else {
 	_vehGrp = [_vehPos,2,1,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
 	[
-		{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
+		{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) > 0},
 		{
 			[units (_this select 0),1200] call EFUNC(main,setPatrol);
 		},

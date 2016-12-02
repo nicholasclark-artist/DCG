@@ -21,7 +21,7 @@ params [["_position",[]]];
 // CREATE TASK
 _taskID = str diag_tickTime;
 _base = [];
-_strength = [TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength);
+_strength = TASK_STRENGTH;
 _vehGrp = grpNull;
 _artyClass = "";
 _gunnerClass = "";
@@ -53,7 +53,7 @@ _bRadius = _base select 0;
 _bNodes = _base select 3;
 _objs append (_base select 2);
 
-_bNodes = _bNodes select {(_x select 1) >= ARTY_SIZE && {[_x select 0,ARTY_SIZE,0] call EFUNC(main,isPosSafe)}};
+_bNodes = _bNodes select {(_x select 1) >= ARTY_SIZE && {[_x select 0,ARTY_SIZE,0] call EFUNC(main,isPosSafe)} && {(nearestTerrainObjects [_x select 0, [], ARTY_SIZE, false]) isEqualTo []}};
 
 if (_bNodes isEqualTo []) exitWith {
 	(_base select 2) call EFUNC(main,cleanup);
@@ -97,7 +97,7 @@ if !(_vehPos isEqualTo _position) then {
 	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
 
 	[
-		{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
+		{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) > 0},
 		{
 			[units (_this select 0),((_this select 1)*4 min 300) max 100] call EFUNC(main,setPatrol);
 			(_this select 2) append (units (_this select 0));
@@ -107,7 +107,7 @@ if !(_vehPos isEqualTo _position) then {
 } else {
 	_vehGrp = [_vehPos,2,1,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
 	[
-		{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
+		{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) > 0},
 		{
 			[units (_this select 0),1200] call EFUNC(main,setPatrol);
 		},
@@ -126,7 +126,7 @@ if !(_tar isEqualTo []) then {
 _timerID = [
 	3600,
 	60,
-	"Artillery Countdown",
+    format ["%1 Countdown", TASK_NAME],
 	{
 		if (isServer) then {
 			(_this select 1) doArtilleryFire [(_this select 2), "32Rnd_155mm_Mo_shells", 4];
@@ -136,7 +136,7 @@ _timerID = [
 ] call EFUNC(main,setTimer);
 
 // SET TASK
-_taskDescription = format ["An enemy FOB housing an artillery unit is targetting a local settlement that's sympathetic to our cause. To keep the civilian's on our side, we must elminate the artillery."];
+_taskDescription = format ["An enemy FOB, housing an artillery unit is targetting a local settlement that's sympathetic to our cause. To keep the civilian's on our side, we must elminate the artillery."];
 [true,_taskID,[_taskDescription,TASK_TITLE,""], ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"destroy"] call EFUNC(main,setTask);
 
 TASK_DEBUG(_posArty);
@@ -147,7 +147,7 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_arty","_vehGrp","_position","_objs","_timerID"];
+	_args params ["_taskID","_arty","_vehGrp","_position","_objs","_timerID","_tar"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -170,6 +170,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		(_objs + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
+        TASK_APPROVAL(_tar,TASK_AV * -1);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_arty,_vehGrp,_position,_objs,_timerID]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_arty,_vehGrp,_position,_objs,_timerID,_tar]] call CBA_fnc_addPerFrameHandler;
