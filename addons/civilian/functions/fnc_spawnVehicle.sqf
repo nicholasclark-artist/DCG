@@ -22,7 +22,7 @@ params ["_start","_mid","_end","_player"];
 _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 
 [
-	{{_x getVariable [QUOTE(EGVAR(main,spawnDriver)),false]} count (units (_this select 0)) > 0},
+	{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) > 0},
 	{
 		_this params ["_grp","_start","_mid","_end","_player"];
 
