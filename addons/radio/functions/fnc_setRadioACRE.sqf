@@ -22,7 +22,7 @@ private _pairs = [];
 
 	if ({COMPARE_STR(str player,_x)} count _net > 0) then { // check if player in comm net
 		if (player canAdd _class) then {
-      _channel = _forEachIndex + 1;
+            _channel = _forEachIndex + 1;
 			player addItem _class;
 			_pairs pushBack [_class,_channel]; // pushBack classname and channel pair
 		} else {
@@ -57,6 +57,8 @@ if !(_pairs isEqualTo []) then {
           _selected = _matches select 0; // get the first matching pair
           [_id, _selected select 1] call acre_api_fnc_setRadioChannel;
           _pairs deleteAt (_pairs find _selected); // remove pair from array after setting channel
+
+          INFO_3("Assign ACRE radio: id: %1, base class: %2, channel: %3",_id,_class,_selected select 1);
         };
       } forEach ([] call acre_api_fnc_getCurrentRadioList);
   	},
