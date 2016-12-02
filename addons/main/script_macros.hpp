@@ -92,6 +92,8 @@
 
 #define ACTIONPATH ["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
 
+#define SPAWNED_DRIVER QEGVAR(main,DOUBLES(spawned,driver))
+
 #define CHECK_INIT if !((EGVAR(main,enable) isEqualTo 1) && {isServer} && {isMultiplayer}) exitWith {}
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
@@ -113,13 +115,13 @@
 
 #define COST_MAN 1.5
 #define COST_CAR 3
-#define COST_TANK 5
-#define COST_AIR 7
-#define COST_SHIP 2.5
+#define COST_TANK 6
+#define COST_AIR 8
+#define COST_SHIP 3
 #define COST_AMMO 0.1
 #define COST_STRUCT 2
 #define COST_ITEM 0.1
-#define COST_FORT 0.075
+#define COST_FORT 0.2
 #define COST_SIGN 0.1
 
 #define PVEH_AVADD QEGVAR(approval,pveh_add)
