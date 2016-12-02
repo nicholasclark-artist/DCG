@@ -14,8 +14,6 @@ __________________________________________________________________*/
 
 private ["_config","_export","_entry","_typeName","_value","_format","_br","_tab","_compiledEntry"];
 
-if (!isServer) exitWith {};
-
 _config = configFile >> QUOTE(DOUBLES(PREFIX,settings));
 _export = "";
 
@@ -74,4 +72,5 @@ for "_i" from 0 to count _config - 1 do {
     _export = _export + _compiledEntry;
 };
 
+titleText ["Exporting serverConfig settings", "PLAIN"];
 copyToClipboard _export;
