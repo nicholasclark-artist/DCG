@@ -9,7 +9,7 @@ class DOUBLES(PREFIX,settings) {
     };
     class GVAR(spawnDist) {
         typeName = "SCALAR";
-        value = 350;
+        value = 400;
     };
     class GVAR(countCapital) {
         typeName = "SCALAR";
