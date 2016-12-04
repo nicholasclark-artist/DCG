@@ -27,7 +27,7 @@ _fnc_getCargo = {
 		if (isText(_x >> 'proxyType') && {getText(_x >> 'proxyType') isEqualTo 'CPCargo'}) then {
 			true
 		};
-	"configClasses ( _baseCfg >> "Turrets" )) + getNumber ( _baseCfg >> "transportSoldier" );
+	"configClasses (_baseCfg >> "Turrets")) + getNumber (_baseCfg >> "transportSoldier");
 
 	_numCargo
 };

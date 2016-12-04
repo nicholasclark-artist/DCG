@@ -16,15 +16,10 @@ PREP(canCallTransport);
 GVAR(ready) = 1;
 GVAR(count) = 0;
 GVAR(wait) = false;
-GVAR(exfil) = [];
-GVAR(infil) = [];
 
-publicVariable QFUNC(handleRequest);
 publicVariable QFUNC(request);
 publicVariable QFUNC(canCallTransport);
 publicVariable QFUNC(getChildren);
 publicVariable QGVAR(ready);
 publicVariable QGVAR(count);
 publicVariable QGVAR(wait);
-publicVariable QGVAR(exfil);
-publicVariable QGVAR(infil);
