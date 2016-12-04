@@ -4,6 +4,7 @@ Nicholas Clark (SENSEI)
 
 Description:
 server config settings, this file only has an effect on the server
+https://github.com/nicholasclark-artist/DCG/wiki/Settings-Framework
 
 settings framework load order:
 1. mod config
@@ -168,7 +169,7 @@ class dcg_occupy_locationCount {
 };
 class dcg_occupy_infCountCapital {
 	typeName = "SCALAR";
-	value = 30;
+	value = 35;
 };
 class dcg_occupy_vehCountCapital {
 	typeName = "SCALAR";
@@ -180,7 +181,7 @@ class dcg_occupy_airCountCapital {
 };
 class dcg_occupy_infCountCity {
 	typeName = "SCALAR";
-	value = 15;
+	value = 25;
 };
 class dcg_occupy_vehCountCity {
 	typeName = "SCALAR";
@@ -192,7 +193,7 @@ class dcg_occupy_airCountCity {
 };
 class dcg_occupy_infCountVillage {
 	typeName = "SCALAR";
-	value = 10;
+	value = 15;
 };
 class dcg_occupy_vehCountVillage {
 	typeName = "SCALAR";
@@ -208,45 +209,21 @@ class dcg_patrol_enable {
 };
 class dcg_patrol_cooldown {
 	typeName = "SCALAR";
-	value = 600;
+	value = 900;
 };
 class dcg_patrol_groupsMaxCount {
 	typeName = "SCALAR";
-	value = 10;
+	value = 8;
 };
 class dcg_patrol_vehChance {
 	typeName = "SCALAR";
-	value = 0.15;
+	value = 0.25;
 };
 class dcg_radio_enable {
 	typeName = "SCALAR";
 	value = 1;
 };
-class dcg_radio_tfar_command {
-	typeName = "STRING";
-	value = "tf_anprc152";
-};
-class dcg_radio_tfar_support {
-	typeName = "STRING";
-	value = "tf_rt1523g_big";
-};
-class dcg_radio_tfar_squad {
-	typeName = "STRING";
-	value = "tf_rf7800str";
-};
-class dcg_radio_acre_command {
-	typeName = "STRING";
-	value = "ACRE_PRC152";
-};
-class dcg_radio_acre_support {
-	typeName = "STRING";
-	value = "ACRE_PRC117F";
-};
-class dcg_radio_acre_squad {
-	typeName = "STRING";
-	value = "ACRE_PRC343";
-};
-class dcg_radio_commandNet {
+class dcg_radio_commNet01 {
 	typeName = "ARRAY";
 	value[] = {
 		"plt_co",
@@ -254,7 +231,15 @@ class dcg_radio_commandNet {
 		"b_sl"
 	};
 };
-class dcg_radio_supportNet {
+class dcg_radio_commNet01_ACRE {
+	typeName = "STRING";
+	value = "ACRE_PRC152";
+};
+class dcg_radio_commNet01_TFAR {
+	typeName = "STRING";
+	value = "tf_anprc152";
+};
+class dcg_radio_commNet02 {
 	typeName = "ARRAY";
 	value[] = {
 		"plt_sgt",
@@ -265,15 +250,100 @@ class dcg_radio_supportNet {
 		"rh1_co"
 	};
 };
-class dcg_radio_squadNet {
+class dcg_radio_commNet02_ACRE {
+	typeName = "STRING";
+	value = "ACRE_PRC117F";
+};
+class dcg_radio_commNet02_TFAR {
+	typeName = "STRING";
+	value = "tf_rt1523g_big";
+};
+class dcg_radio_commNet03 {
 	typeName = "ARRAY";
 	value[] = {
-		{"plt_co","plt_sgt","plt_med","plt_eng"},
-		{"a_sl","a_med","a1_ftl","a1_ar","a1_aar","a1_at","a1_ab","a1_eng","a2_ftl","a2_ar","a2_aar","a2_at","a2_ab","a2_eng"},
-		{"b_sl","b_med","b1_ftl","b1_ar","b1_aar","b1_at","b1_ab","b1_eng","b2_ftl","b2_ar","b2_aar","b2_at","b2_ab","b2_eng"},
-		{"rh1_co","rh1_driver","rh1_gunner"},
-		{"r_1","r_2","r_3","r_4"}
+		"plt_co",
+		"plt_sgt",
+		"plt_med",
+		"plt_eng"
 	};
+};
+class dcg_radio_commNet03_ACRE {
+	typeName = "STRING";
+	value = "ACRE_PRC343";
+};
+class dcg_radio_commNet03_TFAR {
+	typeName = "STRING";
+	value = "tf_rf7800str";
+};
+class dcg_radio_commNet04 {
+	typeName = "ARRAY";
+	value[] = {
+		"a_sl",
+		"a_med",
+		"a1_ftl",
+		"a1_ar",
+		"a1_aar",
+		"a1_at",
+		"a1_ab",
+		"a1_eng",
+		"a2_ftl",
+		"a2_ar",
+		"a2_aar",
+		"a2_at",
+		"a2_ab",
+		"a2_eng"
+	};
+};
+class dcg_radio_commNet04_ACRE {
+	typeName = "STRING";
+	value = "ACRE_PRC343";
+};
+class dcg_radio_commNet04_TFAR {
+	typeName = "STRING";
+	value = "tf_rf7800str";
+};
+class dcg_radio_commNet05 {
+	typeName = "ARRAY";
+	value[] = {
+		"b_sl",
+		"b_med",
+		"b1_ftl",
+		"b1_ar",
+		"b1_aar",
+		"b1_at",
+		"b1_ab",
+		"b1_eng",
+		"b2_ftl",
+		"b2_ar",
+		"b2_aar",
+		"b2_at",
+		"b2_ab",
+		"b2_eng"
+	};
+};
+class dcg_radio_commNet05_ACRE {
+	typeName = "STRING";
+	value = "ACRE_PRC343";
+};
+class dcg_radio_commNet05_TFAR {
+	typeName = "STRING";
+	value = "tf_rf7800str";
+};
+class dcg_radio_commNet06 {
+	typeName = "ARRAY";
+	value[] = {
+		"rh1_co",
+		"rh1_driver",
+		"rh1_gunner"
+	};
+};
+class dcg_radio_commNet06_ACRE {
+	typeName = "STRING";
+	value = "ACRE_PRC343";
+};
+class dcg_radio_commNet06_TFAR {
+	typeName = "STRING";
+	value = "tf_rf7800str";
 };
 class dcg_respawn_enable {
 	typeName = "SCALAR";
@@ -370,7 +440,7 @@ class dcg_civilian_vehMaxCount {
 };
 class dcg_civilian_vehCooldown {
 	typeName = "SCALAR";
-	value = 300;
+	value = 600;
 };
 class dcg_fob_enable {
 	typeName = "SCALAR";
