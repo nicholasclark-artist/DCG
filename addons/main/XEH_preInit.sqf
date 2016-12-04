@@ -46,6 +46,7 @@ PREP(setSettingsValue);
 PREP(setSettings);
 PREP(setSettingsConfig);
 PREP(setSettingsParams);
+PREP(exportConfigList);
 PREP(exportSettings);
 PREP(exportBase);
 PREP(shuffle);
