@@ -16,6 +16,7 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define SAFE_DIST 2
 #define CHANCE_VEH_CAP 1
 #define CHANCE_AIR_CAP 0.5
 #define SNIPER_CAP 3
@@ -32,18 +33,18 @@ __________________________________________________________________*/
 
 _this params ["_name","_center","_size","_type",["_data",nil]];
 
-// find new position in case original is on water or not empty
-private _position = [];
 private _town = [_name,_center,_size,_type];
 private _objArray = [];
 private _officerPool = [];
 private _unitPool = [];
 private _taskType = "";
 private _taskID = format ["L_%1", diag_tickTime];
+private _position = [];
 
-if !([_center,1,0] call EFUNC(main,isPosSafe)) then {
+// find new position in case original is on water or not empty
+if !([_center,SAFE_DIST,0] call EFUNC(main,isPosSafe)) then {
 	for "_i" from 1 to _size step 2 do {
-		_position = [_center,0,_i,1,0] call EFUNC(main,findPosSafe);
+		_position = [_center,0,_i,SAFE_DIST,0] call EFUNC(main,findPosSafe);
 		if !(_position isEqualTo _center) exitWith {};
 	};
 } else {
@@ -52,29 +53,10 @@ if !([_center,1,0] call EFUNC(main,isPosSafe)) then {
 
 _position = ASLtoAGL _position;
 
-call {
-	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
-		_officerPool = EGVAR(main,officerPoolEast);
-		_unitPool = EGVAR(main,unitPoolEast);
-	};
-	if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
-		_officerPool = EGVAR(main,officerPoolWest);
-		_unitPool = EGVAR(main,unitPoolWest);
-	};
-	_officerPool = EGVAR(main,officerPoolInd);
-	_unitPool = EGVAR(main,unitPoolInd);
-};
-
-private _grp = createGroup EGVAR(main,enemySide);
-private _officer = _grp createUnit [selectRandom _officerPool, _position, [], 0, "NONE"];
-_officer setVariable [QUOTE(DOUBLES(ADDON,officer)),true,true];
-SET_UNITVAR(_officer);
-[[_officer],_size*0.5] call EFUNC(main,setPatrol);
-removeFromRemainsCollector [_officer];
-
 // spawn vehicle wrecks
 for "_i" from 0 to (ceil random 3) do {
 	_vehPos = [_position,0,_size,8,0] call EFUNC(main,findPosSafe);
+
 	if (!(_vehPos isEqualTo _position) && {!isOnRoad _vehPos}) then {
 		private _veh = createSimpleObject [selectRandom WRECKS,[0,0,0]];
 		_veh setDir random 360;
@@ -87,7 +69,28 @@ for "_i" from 0 to (ceil random 3) do {
 };
 
 call {
-	if (_type isEqualTo "NameCityCapital") exitWith {
+	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
+		_officerPool = EGVAR(main,officerPoolEast);
+		_unitPool = EGVAR(main,unitPoolEast);
+	};
+	if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
+		_officerPool = EGVAR(main,officerPoolWest);
+		_unitPool = EGVAR(main,unitPoolWest);
+	};
+    if (EGVAR(main,enemySide) isEqualTo RESISTANCE) exitWith {
+        _officerPool = EGVAR(main,officerPoolInd);
+    	_unitPool = EGVAR(main,unitPoolInd);
+    };
+};
+
+private _grp = createGroup EGVAR(main,enemySide);
+private _officer = _grp createUnit [selectRandom _officerPool, _position, [], 0, "NONE"];
+_officer setVariable [QUOTE(DOUBLES(ADDON,officer)),true,true];
+SET_UNITVAR(_officer);
+[[_officer],_size*0.25] call EFUNC(main,setPatrol);
+
+call {
+	if (COMPARE_STR(_type,"NameCityCapital")) exitWith {
 		_taskType = "Capital";
 		if (isNil "_data") then {
 			PREP_INF(_position,ceil GVAR(infCountCapital),_size);
@@ -103,7 +106,7 @@ call {
 		PREP_SNIPER(_position,SNIPER_CAP,_size);
 	};
 
-	if (_type isEqualTo "NameCity") exitWith {
+	if (COMPARE_STR(_type,"NameCity")) exitWith {
 		_taskType = "City";
 		if (isNil "_data") then {
 			PREP_INF(_position,ceil GVAR(infCountCity),_size);
@@ -119,24 +122,27 @@ call {
 		PREP_SNIPER(_position,SNIPER_CITY,_size);
 	};
 
-	_taskType = "Village";
-	if (isNil "_data") then {
-		PREP_INF(_position,ceil GVAR(infCountVillage),_size);
-		PREP_VEH(_position,ceil GVAR(vehCountVillage),_size,CHANCE_VEH_VILL);
-		PREP_AIR(_position,ceil GVAR(airCountVillage),CHANCE_AIR_VILL);
-	} else {
-		PREP_INF(_position,ceil (_data select 0),_size);
-		PREP_VEH(_position,ceil (_data select 1),_size,1);
-		PREP_AIR(_position,ceil (_data select 2),1);
-	};
-	PREP_GARRISON(_position,5,_size,_unitPool);
-	PREP_STATIC(_position,STATIC_VILL,_size,_objArray);
-	PREP_SNIPER(_position,SNIPER_VILL,_size);
+    if (COMPARE_STR(_type,"NameVillage")) exitWith {
+    	_taskType = "Village";
+    	if (isNil "_data") then {
+    		PREP_INF(_position,ceil GVAR(infCountVillage),_size);
+    		PREP_VEH(_position,ceil GVAR(vehCountVillage),_size,CHANCE_VEH_VILL);
+    		PREP_AIR(_position,ceil GVAR(airCountVillage),CHANCE_AIR_VILL);
+    	} else {
+    		PREP_INF(_position,ceil (_data select 0),_size);
+    		PREP_VEH(_position,ceil (_data select 1),_size,1);
+    		PREP_AIR(_position,ceil (_data select 2),1);
+    	};
+    	PREP_GARRISON(_position,5,_size,_unitPool);
+    	PREP_STATIC(_position,STATIC_VILL,_size,_objArray);
+    	PREP_SNIPER(_position,SNIPER_VILL,_size);
+    };
 };
 
-GVAR(locations) pushBack _town;
+GVAR(locations) pushBack _town; // set as occupied location
+EGVAR(civilian,blacklist) pushBack _name; // stop civilians from spawning in location
 
-[true,_taskID,[format ["Enemy forces have occupied %1! Liberate the settlement!",_name],format ["Liberate %1", _taskType],""],_position,false,true,"rifle"] call EFUNC(main,setTask);
+[true,_taskID,[format ["Enemy forces have occupied %1! Liberate the %2!",_name,tolower _taskType],format ["Liberate %1", _taskType],""],_position,false,true,"rifle"] call EFUNC(main,setTask);
 
 [{
 	params ["_args","_idPFH"];
@@ -146,9 +152,7 @@ GVAR(locations) pushBack _town;
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		_args call FUNC(handleOccupied);
 	};
-}, 10, [_town,_objArray,_officer,_taskID]] call CBA_fnc_addPerFrameHandler;
-
-EGVAR(civilian,blacklist) pushBack _name; // stop civilians from spawning in town
+}, 5, [_town,_objArray,_officer,_taskID]] call CBA_fnc_addPerFrameHandler;
 
 private _mrk = createMarker [format["%1_%2_debug",QUOTE(ADDON),_name],_position];
 _mrk setMarkerShape "ELLIPSE";
@@ -157,4 +161,4 @@ _mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)];
 _mrk setMarkerBrush "SolidBorder";
 [_mrk] call EFUNC(main,setDebugMarker);
 
-LOG_2("%1, %2",_town,count _objArray);
+INFO_2("%1, %2",_town,count _objArray);
