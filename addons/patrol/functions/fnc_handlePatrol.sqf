@@ -42,8 +42,7 @@ if (count GVAR(groups) <= GVAR(groupsMaxCount)) then {
 			{ // remove positions in blacklist, that are near players or that players can see
 				_y = _x;
 				if ({CHECK_DIST2D(_y,(_x select 0),(_x select 1))} count GVAR(blacklist) > 0 ||
-				    {count ([_y,100] call EFUNC(main,getNearPlayers)) > 0} /*||
-					{[_y,_player] call EFUNC(main,inLOS)}*/ ||
+				    {count ([_y,100] call EFUNC(main,getNearPlayers)) > 0} ||
 					{{[_y,_x] call EFUNC(main,inLOS)} count _players > 0}) then {
 					_posArray deleteAt _forEachIndex;
 				};
@@ -62,7 +61,7 @@ if (count GVAR(groups) <= GVAR(groupsMaxCount)) then {
 						[_grp]
 					] call CBA_fnc_waitUntilAndExecute;
 
-					INFO_1("Spawning vehicle patrol at %1.",_pos);
+					INFO_1("Spawning vehicle patrol at %1",_pos);
 				} else {
 					_count = UNITCOUNT(4,6);
 					_grp = [_pos,0,_count,EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
@@ -82,7 +81,7 @@ if (count GVAR(groups) <= GVAR(groupsMaxCount)) then {
 						[_grp,_player,_count]
 					] call CBA_fnc_waitUntilAndExecute;
 
-					INFO_1("Spawning infantry patrol at %1.",_pos);
+					INFO_1("Spawning infantry patrol at %1",_pos);
 				};
 				GVAR(groups) pushBack _grp;
 			};
