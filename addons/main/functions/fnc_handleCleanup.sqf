@@ -44,8 +44,3 @@ if !(GVAR(objectCleanup) isEqualTo []) then {
 		};
 	};
 };
-
-{
-	if (_x getVariable [QUOTE(DOUBLES(PREFIX,cleanup)),true]) then {deleteVehicle _x};
-	false
-} count (nearestObjects [locationPosition GVAR(baseLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],GVAR(baseRadius)]);
