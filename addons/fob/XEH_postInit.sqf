@@ -9,6 +9,8 @@ CHECK_INIT;
 
 CHECK_ADDON;
 
+call FUNC(init);
+
 PVEH_CREATE addPublicVariableEventHandler {[_this select 1] call FUNC(handleCreate)};
 PVEH_DELETE addPublicVariableEventHandler {[_this select 1] call FUNC(handleDelete)};
 PVEH_TRANSFER addPublicVariableEventHandler {(_this select 1) call FUNC(handleTransfer)};
@@ -44,7 +46,5 @@ addMissionEventHandler ["HandleDisconnect",{
  		}] remoteExecCall [QUOTE(BIS_fnc_call),0,true];
 	}
 ] call CBA_fnc_waitUntilAndExecute;
-
-INFO_1("Curator list %1",allCurators);
 
 ADDON = true;

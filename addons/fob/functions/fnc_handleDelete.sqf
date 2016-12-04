@@ -12,6 +12,8 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+private _unit = getAssignedCuratorUnit GVAR(curator);
+
 {
     // ignore units in vehicles, only subtract cost of vehicle
     if (EGVAR(approval,enable) isEqualTo 1 && {!(_x isKindOf "Man") || (_x isKindOf "Man" && (isNull objectParent _x))}) then {
@@ -27,9 +29,21 @@ __________________________________________________________________*/
 GVAR(curator) removeCuratorEditableObjects [curatorEditableObjects GVAR(curator),true];
 
 [FOB_POSITION,AV_FOB*-1] call EFUNC(approval,addValue);
-unassignCurator GVAR(curator);
-[false] call FUNC(recon);
+[false] call FUNC(handleRecon);
 deleteVehicle GVAR(anchor);
+unassignCurator GVAR(curator);
+
+// reassign previous curator
+if !(isNull GVAR(curatorExternal)) then {
+    [
+        {
+            (_this select 0) assignCurator GVAR(curatorExternal);
+            GVAR(curatorExternal) = objNull;
+        },
+        [_unit],
+        2
+    ] call CBA_fnc_waitAndExecute;
+};
 
 GVAR(respawnPos) call BIS_fnc_removeRespawnPosition;
 

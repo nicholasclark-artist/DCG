@@ -15,7 +15,6 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_type","_wp"];
 params [
 	["_ifRecon",true],
 	["_position",[0,0,0]],
@@ -23,7 +22,7 @@ params [
 ];
 
 if (_ifRecon) then {
-	_type = "";
+	private _type = "";
 
 	call {
 		if (_side isEqualTo WEST) exitWith {
@@ -48,14 +47,18 @@ if (_ifRecon) then {
     } forEach crew FOB_RECON;
 
 	FOB_RECON lockDriver true;
-	FOB_RECON flyInHeight 180;
+	FOB_RECON flyInHeight 140;
 
 	FOB_RECON addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
 
-	_wp = group FOB_RECON addWaypoint [_position, 0];
+	private _wp = group FOB_RECON addWaypoint [_position, 0];
 	_wp setWaypointType "LOITER";
 	_wp setWaypointLoiterType "CIRCLE_L";
-	_wp setWaypointLoiterRadius GVAR(range);
+	_wp setWaypointLoiterRadius (GVAR(range)*1.5);
 } else {
+    {
+        FOB_RECON deleteVehicleCrew _x;
+    } forEach crew FOB_RECON;
+
 	deleteVehicle FOB_RECON;
 };

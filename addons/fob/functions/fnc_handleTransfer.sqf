@@ -29,7 +29,7 @@ unassignCurator GVAR(curator);
         (_this select 0) assignCurator GVAR(curator);
     },
     [_new],
-    3
+    2
 ] call CBA_fnc_waitAndExecute;
 
 [
