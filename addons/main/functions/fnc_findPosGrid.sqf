@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-create grid of positions
+find grid of positions (positionASL)
 
 Arguments:
 0: center position <ARRAY>
@@ -15,12 +15,16 @@ Arguments:
 6: shuffle position array <BOOL>
 
 Return:
-array (positionASL)
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define POS_COUNT floor (_range/_dist)
 #define ANCHOR_OFFSET [(_anchor select 0) - (_range/2),(_anchor select 1) - (_range/2)]
-#define SHOW_DEBUG false
+#ifdef DEBUG_MODE_FULL
+  #define GRID_DEBUG true
+#else
+  #define GRID_DEBUG false
+#endif
 
 private ["_ret","_retTemp","_fnc_createRow"];
 params [
