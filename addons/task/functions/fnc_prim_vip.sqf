@@ -56,7 +56,7 @@ _grp = [[_position,10,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,en
 [
 	{count units (_this select 0) >= (_this select 1)},
 	{
-		[units (_this select 0)] call EFUNC(main,setPatrol);
+		[_this select 0] call EFUNC(main,setPatrol);
 	},
 	[_grp,_strength]
 ] call CBA_fnc_waitUntilAndExecute;
@@ -66,9 +66,9 @@ _vehPos = [_position,50,100,8,0] call EFUNC(main,findPosSafe);
 if !(_vehPos isEqualTo _position) then {
 	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
 	[
-		{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) > 0},
+		{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) > 0},
 		{
-			[units (_this select 0),200] call EFUNC(main,setPatrol);
+			[_this select 0,200] call EFUNC(main,setPatrol);
 		},
 		[_vehGrp]
 	] call CBA_fnc_waitUntilAndExecute;

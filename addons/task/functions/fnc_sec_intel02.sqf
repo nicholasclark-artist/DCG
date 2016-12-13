@@ -61,7 +61,7 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
 	{
 		params ["_grp","_position","_vehicle","_taskID"];
 
-		[units _grp,30] call EFUNC(main,setPatrol);
+		[_grp,30] call EFUNC(main,setPatrol);
 
         removeFromRemainsCollector units _grp;
 

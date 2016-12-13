@@ -1,6 +1,6 @@
 /*
 Author:
-SENSEI
+Nicholas Clark (SENSEI)
 
 Description:
 check if in position in line of sight

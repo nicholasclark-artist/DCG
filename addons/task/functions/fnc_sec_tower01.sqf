@@ -50,7 +50,7 @@ _grp = [_pos,0,_strength] call EFUNC(main,spawnGroup);
 	{
 		_this params ["_grp"];
 
-		[units _grp] call EFUNC(main,setPatrol);
+		[_grp] call EFUNC(main,setPatrol);
 	},
 	[_grp,_strength]
 ] call CBA_fnc_waitUntilAndExecute;

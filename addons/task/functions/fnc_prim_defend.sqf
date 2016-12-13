@@ -77,7 +77,7 @@ _grp = [_position,0,FRIENDLY_COUNT,EGVAR(main,playerSide)] call EFUNC(main,spawn
 [
 	{count units (_this select 0) >= FRIENDLY_COUNT},
 	{
-		[units (_this select 0)] call EFUNC(main,setPatrol);
+		[_this select 0] call EFUNC(main,setPatrol);
 	},
 	[_grp]
 ] call CBA_fnc_waitUntilAndExecute;

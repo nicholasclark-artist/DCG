@@ -17,14 +17,14 @@
 	[ \
 		{count units (_this select 0) >= (_this select 1)}, \
 		{ \
-			params ["_grp"]; \
-			[units _grp,SIZE] call EFUNC(main,setPatrol); \
+			params ["_grp","_count","_size"]; \
+			[_grp,_size] call EFUNC(main,setPatrol); \
 			{ \
 				SET_UNITVAR(_x); \
 				false \
 			} count units _grp; \
 		}, \
-		[_grp,UNIT_COUNT] \
+		[_grp,UNIT_COUNT,SIZE] \
 	] call CBA_fnc_waitUntilAndExecute
 
 #define PREP_VEH(POS,UNIT_COUNT,SIZE,CHANCE) \
@@ -33,20 +33,18 @@
 		if !(_grid isEqualTo []) then { \
 			_grp = [ASLtoAGL (selectRandom _grid),1,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
 			[ \
-				{{_x getVariable [SPAWNED_DRIVER,false]} count units (_this select 0) >= (_this select 1)}, \
+				{{_x getVariable [ISDRIVER,false]} count units (_this select 0) >= (_this select 1)}, \
 				{ \
-					params ["_grp"]; \
-					_drivers = []; \
+					params ["_grp","_count","_size"]; \
 					{ \
-						if (_x getVariable [SPAWNED_DRIVER,false]) then { \
-							_drivers pushBack _x; \
+						if (_x getVariable [ISDRIVER,false]) then { \
 							SET_UNITVAR(_x); \
 						}; \
 						false \
 					} count (units _grp); \
-					[_drivers,SIZE*2] call EFUNC(main,setPatrol); \
+					[_grp,_size*2] call EFUNC(main,setPatrol); \
 				}, \
-				[_grp,UNIT_COUNT] \
+				[_grp,UNIT_COUNT,SIZE] \
 			] call CBA_fnc_waitUntilAndExecute; \
 		}; \
 	}
@@ -55,18 +53,16 @@
 	if (random 1 < CHANCE) then { \
 		_grp = [POS,2,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
 		[ \
-			{{_x getVariable [SPAWNED_DRIVER,false]} count units (_this select 0) >= (_this select 1)}, \
+			{{_x getVariable [ISDRIVER,false]} count units (_this select 0) >= (_this select 1)}, \
 			{ \
 				params ["_grp"]; \
-				_drivers = []; \
 				{ \
-					if (_x getVariable [SPAWNED_DRIVER,false]) then { \
-						_drivers pushBack _x; \
+					if (_x getVariable [ISDRIVER,false]) then { \
 						SET_UNITVAR(_x); \
 					}; \
 					false \
 				} count (units _grp); \
-				[_drivers,2000] call EFUNC(main,setPatrol); \
+				[_grp,1000] call EFUNC(main,setPatrol); \
 			}, \
 			[_grp,UNIT_COUNT] \
 		] call CBA_fnc_waitUntilAndExecute; \

@@ -6,181 +6,173 @@ Description:
 set units on patrol
 
 Arguments:
-0: array of units <ARRAY>
-1: max distance from original position a unit will patrol or max distance from previous position if group patrol <NUMBER>
-2: patrol as group or individual <BOOL>
+0: group of units <GROUP>
+1: max patrol distance <NUMBER>
+2: infantry patrol as individuals <BOOL>
 
 Return:
 boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define PATROL_VAR QUOTE(DOUBLES(PREFIX,isOnPatrol))
-#define MINRANGE _range*0.4
-#define WAYPOINT_UNITREADY (!(behaviour _unit isEqualTo "COMBAT") && {simulationEnabled _unit})
-#define WAYPOINT_POS (_waypoint select 0)
-#define WAYPOINT_TIME (_waypoint select 1)
-#define WAYPOINT_BUFFER (_waypoint select 2)
-#define WAYPOINT_RESET _waypoint set [0,[]]; _waypoint set [1,0]; _waypoint set [2,0]
-#define WAYPOINT_EMPTY [[],0,0]
-#define WAYPOINT_ADD(DIST) _waypoint set [0,_pos]; _waypoint set [1,diag_tickTime + (((_unit distance2D _pos)/DIST)*60)]; _waypoint set [2,((_unit distance2D _pos)*0.1) max 5]
+#define RADIUS_MIN 45
+#define RADIUS_COMPMIN 20
+#define LIMITSPEED_SLOW 5
+#define LIMITSPEED_NONE 999999
+#define HOUSE_DIST 50
+#define HOUSE_CHANCE 0.25
+#define HOUSE_TIMEOUT 60
+#define HOUSE_DELAY 15 + random 15
+#define HOUSE_POSRADIUS 3
+#define SETPATROL(PATROLUNITS) \
+{ \
+    _x setVariable [ISONPATROL,1]; \
+} forEach PATROLUNITS
 
-private ["_pos","_grp","_posStart","_type","_d","_r","_roads","_veh","_road","_houses","_housePosArray"];
-params ["_units",["_range",100],["_individual",true],["_behavior","SAFE"]];
+params [
+    ["_grp",grpNull,[grpNull]],
+    ["_radius",100,[0]],
+    ["_individual",true,[false]],
+    ["_behavior","SAFE",[""]]
+];
 
-if (_units isEqualTo []) exitWith {false};
+if !(local _grp) exitWith {
+    WARNING_1("Cannot set patrol for non local group, %1",_grp);
+    false
+};
 
-{
-    if !(_individual) exitWith { // group patrol
-        _grp = group _x;
-        {
-            if !(group _x isEqualTo _grp) exitWith { // place all units in same group
-                [_x] joinSilent _grp;
-            };
-        } forEach _units;
+_behavior = toUpper _behavior;
+_grp setBehaviour _behavior;
+_leader = leader _grp;
+_radius = _radius max RADIUS_MIN;
 
-        _grp setBehaviour toUpper _behavior;
-        _posStart = getPosATL (leader _grp);
+[_grp] call CBA_fnc_clearWaypoints;
 
-        private _posPrev = _posStart;
+if !(isNull objectParent _leader) then { // if unit is in vehicle
+    private _veh = objectParent _leader;
 
-        for "_i" from 0 to 3 do {
-            private _pos = [_posPrev,_range*0.5,_range] call FUNC(findPosSafe);
-            _posPrev = _pos;
-            private _waypoint = _grp addWaypoint [ASLToAGL _pos,0];
-            _waypoint setWaypointType "MOVE";
-            _waypoint setWaypointCompletionRadius 20;
+    if (_veh isKindOf "Air") exitWith {
+        private _waypoint = _grp addWaypoint [getPos _veh,0];
+        _waypoint setWaypointType "LOITER";
+        _waypoint setWaypointLoiterRadius _radius;
+        _waypoint setWaypointLoiterType "CIRCLE";
+        _waypoint setWaypointSpeed "NORMAL";
+        _waypoint setWaypointBehaviour _behavior;
 
-            if (_i isEqualTo 0) then {
-                _waypoint setWaypointSpeed "LIMITED";
-                _waypoint setWaypointFormation "STAG COLUMN";
-            };
-        };
-
-        private _waypoint = _grp addWaypoint [_posStart, 0];
-        _waypoint setWaypointType "CYCLE";
-        _waypoint setWaypointCompletionRadius 20;
-
-        (leader _grp) setVariable [PATROL_VAR,1];
+        SETPATROL(units _grp);
 
         true
     };
 
-    call {
-        _waypoint = WAYPOINT_EMPTY;
-        _x setBehaviour toUpper _behavior;
+    private _center = getPos _leader;
+    private _posPrev = _center;
+    private _compRadius = _radius*0.15 max RADIUS_COMPMIN;
 
-        if (_x isEqualTo driver objectParent _x) exitWith { // if unit is driver of vehicle
-            private _veh = vehicle _x;
-            private _roads = [];
-
-            _veh addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
-            _veh forceSpeed (_veh getSpeed "NORMAL");
-
-            if (_veh isKindOf "LandVehicle") then {
-                _roads = (getPosATL _x) nearRoads (_range min 1000);
-                _veh forceSpeed (_veh getSpeed "SLOW");
-            };
-
-            if (_veh isKindOf "Air") then {
-                _veh flyInHeight 150;
-            };
-
-            [{
-                params ["_args","_idPFH"];
-                _args params ["_unit","_posStart","_range","_waypoint","_roads","_type"];
-
-                _veh = vehicle _unit;
-
-                if (!alive _veh || {!alive _unit} || {_unit getVariable [PATROL_VAR,-1] isEqualTo 0}) exitWith {
-                    [_idPFH] call CBA_fnc_removePerFrameHandler;
-                    _veh forceSpeed (_veh getSpeed "AUTO");
-                    LOG_2("%1 exiting patrol at %2.",_type,getPosASL _veh);
-                };
-
-                if (WAYPOINT_UNITREADY) then {
-                    if !(WAYPOINT_POS isEqualTo []) then { // unit has a waypoint
-                        if (CHECK_DIST2D(WAYPOINT_POS,_unit,WAYPOINT_BUFFER)) then { // unit is close enough to waypoint, delete waypoint
-                            WAYPOINT_RESET;
-                        };
-                    };
-                    if (_waypoint isEqualTo WAYPOINT_EMPTY || {diag_tickTime >= WAYPOINT_TIME}) then { // if unit near waypoint or unit did not reach waypoint in time, find new waypoint
-                        if (_roads isEqualTo []) then {
-                            _d = random 360;
-                            _r = floor (random ((_range - MINRANGE) + 1)) + MINRANGE;
-                            _pos = [(_posStart select 0) + (sin _d) * _r, (_posStart select 1) + (cos _d) * _r, (getPosATL _unit) select 2];
-                            if (_veh isKindOf "LandVehicle") then {
-                                if !(surfaceIsWater _pos) then {
-                                    _unit doMove _pos;
-                                    WAYPOINT_ADD(250); // set waypoint array, argument determines how long unit has to reach waypoint
-                                };
-                            } else {
-                                if (_veh isKindOf "Ship") then {
-                                    if (surfaceIsWater _pos) then {
-                                        _unit doMove _pos;
-                                        WAYPOINT_ADD(250); // set waypoint array, argument determines how long unit has to reach waypoint
-                                    };
-                                } else {
-                                    _unit doMove _pos;
-                                    WAYPOINT_ADD(500);
-                                };
-                            };
-                        } else {
-                            _pos = getPosATL (selectRandom _roads);
-                            _unit doMove _pos;
-                            WAYPOINT_ADD(250);
-                        };
-                    };
-                };
-            }, 20, [_x,getPosATL _x,_range,_waypoint,_roads,typeOf (vehicle _x)]] call CBA_fnc_addPerFrameHandler;
-
-            _x setVariable [PATROL_VAR,1];
-        };
-
-        if (isNull (objectParent _x)) exitWith { // if unit is on foot
-            _x forceSpeed (_x getSpeed "SLOW");
-            private _houses = (getposATL _x) nearObjects ["house",_range min 1000];
-
-            [{
-                params ["_args","_idPFH"];
-                _args params ["_unit","_posStart","_range","_waypoint","_houses","_type"];
-
-                if (!alive _unit || {_unit getVariable [PATROL_VAR,-1] isEqualTo 0}) exitWith {
-                    [_idPFH] call CBA_fnc_removePerFrameHandler;
-                    _unit forceSpeed (_unit getSpeed "AUTO");
-                    LOG_2("%1 exiting patrol at %2.", _type, getPosASL _unit);
-                };
-
-                if (WAYPOINT_UNITREADY) then {
-                    if !(WAYPOINT_POS isEqualTo []) then { // unit has a waypoint
-                        if (CHECK_DIST2D(WAYPOINT_POS,_unit,WAYPOINT_BUFFER)) then { // unit is close enough to waypoint, delete waypoint
-                            WAYPOINT_RESET;
-                        };
-                    };
-                    if (_waypoint isEqualTo WAYPOINT_EMPTY || {diag_tickTime >= WAYPOINT_TIME}) then { // if unit near waypoint or unit did not reach waypoint in time, find new waypoint
-                        // TODO add code to reset units when they get stuck
-                        if (!(_houses isEqualTo []) && {random 1 < 0.5}) then {
-                            private _housePosArray = (selectRandom _houses) buildingPos -1;
-                            if !(_housePosArray isEqualTo []) then {
-                                _pos = selectRandom _housePosArray;
-                                _unit doMove _pos;
-                                WAYPOINT_ADD(100); // set waypoint array, argument determines how long unit has to reach waypoint
-                            };
-                        } else {
-                            _d = random 360;
-                            _r = floor (random ((_range - MINRANGE) + 1)) + MINRANGE;
-                            _pos = [(_posStart select 0) + (sin _d) * _r, (_posStart select 1) + (cos _d) * _r, 0];
-                            if !(surfaceIsWater _pos) then {
-                                _unit doMove _pos;
-                                WAYPOINT_ADD(100);
-                            };
-                        };
-                    };
-                };
-            }, 30, [_x,getPosATL _x,_range,_waypoint,_houses,typeOf (vehicle _x)]] call CBA_fnc_addPerFrameHandler;
-
-            _x setVariable [PATROL_VAR,1];
-        };
+    for "_d" from 0 to 4 do {
+        private _pos = [_posPrev,_radius,_radius,objNull,-1,-1,72*_d] call FUNC(findPosSafe);
+        private _waypoint = _grp addWaypoint [ASLToAGL _pos,0];
+        _waypoint setWaypointType "MOVE";
+        _waypoint setWaypointCompletionRadius _compRadius;
+        _waypoint setWaypointSpeed "LIMITED";
+        _waypoint setWaypointFormation "COLUMN";
+        _waypoint setWaypointBehaviour _behavior;
+        _posPrev = _pos;
     };
-} forEach _units;
 
-true
+    ((waypoints _grp) select (count (waypoints _grp) - 1)) setWaypointType "CYCLE";
+
+    SETPATROL(units _grp);
+
+    true
+} else { // if unit is on foot
+    if !(_individual) exitWith { // group patrol
+        private _center = getPos _leader;
+        private _posPrev = _center;
+        private _compRadius = _radius*0.15 max RADIUS_COMPMIN;
+
+        for "_d" from 0 to 4 do {
+            private _pos = [_posPrev,_radius,_radius,objNull,-1,-1,72*_d] call FUNC(findPosSafe);
+            private _waypoint = _grp addWaypoint [ASLToAGL _pos,0];
+            _waypoint setWaypointType "MOVE";
+            _waypoint setWaypointCompletionRadius _compRadius;
+            _waypoint setWaypointSpeed "LIMITED";
+            _waypoint setWaypointFormation "COLUMN";
+            _waypoint setWaypointBehaviour _behavior;
+            _posPrev = _pos;
+        };
+
+        ((waypoints _grp) select (count (waypoints _grp) - 1)) setWaypointType "CYCLE";
+
+        SETPATROL(units _grp);
+
+        true
+    };
+
+    {
+        [{
+            params ["_args","_idPFH"];
+            _args params ["_unit","_center","_radius","_behavior"];
+
+            if (!alive _unit || {_unit getVariable [ISONPATROL,-1] isEqualTo 0}) exitWith {
+                [_idPFH] call CBA_fnc_removePerFrameHandler;
+                _unit limitSpeed LIMITSPEED_NONE;
+
+                LOG_2("%1 exiting patrol at %2", _unit, getPosASL _unit);
+            };
+
+            if !(behaviour _unit isEqualTo "COMBAT") then {
+                if (unitReady _unit) then {
+                    _unit limitSpeed LIMITSPEED_SLOW;
+                    _unit setBehaviour _behavior;
+
+                    if (random 1 < HOUSE_CHANCE) exitWith {
+                        private _houses = (getposATL _unit) nearObjects ["house",HOUSE_DIST];
+                        private _housePosArray = (selectRandom _houses) buildingPos -1;
+                        if !(_housePosArray isEqualTo []) then {
+                            _pos = selectRandom _housePosArray;
+                            _unit doMove _pos;
+                            LOG_2("%1 moving to house position %2", _unit, _pos);
+
+                            // move to house position and wait for some time
+                            [
+                                {CHECK_DIST2D(_this select 0,_this select 1,HOUSE_POSRADIUS) || {diag_tickTime > (_this select 2) + HOUSE_TIMEOUT}},
+                                {
+                                    params ["_unit","_pos","_time"];
+
+                                    if (diag_tickTime <= _time + HOUSE_TIMEOUT) then {
+                                        _unit limitSpeed 0;
+                                        LOG_1("Stopping %1 in house position", _unit);
+
+                                        [
+                                            {
+                                                params ["_unit"];
+
+                                                LOG_1("%1 leaving house position", _unit);
+                                                _unit limitSpeed LIMITSPEED_SLOW;
+                                            },
+                                            [_unit],
+                                            HOUSE_DELAY
+                                        ] call CBA_fnc_waitAndExecute;
+                                    };
+                                },
+                                [_unit,_pos,diag_tickTime]
+                            ] call CBA_fnc_waitUntilAndExecute;
+                        };
+                    };
+
+                    _d = random 360;
+                    _rMin = _radius*0.25;
+                    _r = floor (random ((_radius - _rMin) + 1)) + _rMin;
+                    _pos = [(_center select 0) + (sin _d) * _r, (_center select 1) + (cos _d) * _r, 0];
+
+                    if !(surfaceIsWater _pos) then {
+                        _unit doMove _pos;
+                    };
+                };
+            };
+        }, 10, [_x,getPosATL _x,_radius,_behavior]] call CBA_fnc_addPerFrameHandler;
+    } forEach units _grp;
+
+    SETPATROL(units _grp);
+
+    true
+};

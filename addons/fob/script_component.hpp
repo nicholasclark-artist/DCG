@@ -102,12 +102,12 @@
 #define PATROL_NAME "Set FOB Groups on Patrol"
 #define PATROL_STATEMENT \
 	{ \
-		if (_x isKindOf 'Man' && {_x isEqualTo leader group _x} && {!(_x getVariable ['dcg_isOnPatrol',-1] isEqualTo 1)}) then { \
-			[units group _x,GVAR(range),false] call EFUNC(main,setPatrol); \
+		if (_x isKindOf 'Man' && {_x isEqualTo leader group _x} && {!(_x getVariable [QUOTE(ISONPATROL),-1] isEqualTo 1)}) then { \
+			[group _x,GVAR(range),false] call EFUNC(main,setPatrol); \
 			_x addEventHandler ['Local',{ \
 				if (_this select 1) then { \
-					_x setVariable ['dcg_isOnPatrol',0]; \
-					[units group (_this select 0),GVAR(range),false] call EFUNC(main,setPatrol); \
+					_x setVariable [QUOTE(ISONPATROL),0]; \
+					[group (_this select 0),GVAR(range),false] call EFUNC(main,setPatrol); \
 				}; \
 			}]; \
 		}; \

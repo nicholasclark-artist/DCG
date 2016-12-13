@@ -66,7 +66,8 @@ clearBackpackCargoGlobal GVAR(anchor);
      	[GVAR(anchor)] call EFUNC(main,armory);
     };
 
- 	[getPos GVAR(anchor),"NameCity",GVAR(range),GVAR(name),QGVAR(location)] call EFUNC(main,createLocation);
+    GVAR(location) = createLocation ["NameCity",getPos GVAR(anchor),GVAR(range)];
+    GVAR(location) setText GVAR(name);
 }] remoteExecCall [QUOTE(BIS_fnc_call),0,GVAR(anchor)];
 
 // make sure setup occurs at correct position
