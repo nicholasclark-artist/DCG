@@ -43,12 +43,12 @@ if (_position isEqualTo []) exitWith {
 _grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,spawnGroup);
 
 [
-	{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) >= VEHCOUNT},
+	{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) >= VEHCOUNT},
 	{
 		_this params ["_grp","_drivers","_vehicles"];
 
 		{
-			if (_x getVariable [SPAWNED_DRIVER,false]) then {
+			if (_x getVariable [ISDRIVER,false]) then {
 				_drivers pushBack _x;
 				_vehicles pushBack (vehicle _x);
 				_x removeItems "ToolKit";

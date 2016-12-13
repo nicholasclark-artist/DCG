@@ -84,7 +84,7 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,2] call EFUNC(main,spa
 [
 	{count units (_this select 0) >= (_this select 2)},
 	{
-		[units (_this select 0),_this select 1] call EFUNC(main,setPatrol);
+		[_this select 0,_this select 1] call EFUNC(main,setPatrol);
 		(_this select 3) append (units (_this select 0));
 		(_this select 4) doWatch ((_this select 4) modelToWorld [0,50,50]);
 	},
@@ -97,9 +97,9 @@ if !(_vehPos isEqualTo _position) then {
 	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
 
 	[
-		{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) > 0},
+		{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) > 0},
 		{
-			[units (_this select 0),((_this select 1)*4 min 300) max 100] call EFUNC(main,setPatrol);
+			[_this select 0,((_this select 1)*4 min 300) max 100] call EFUNC(main,setPatrol);
 			(_this select 2) append (units (_this select 0));
 		},
 		[_vehGrp,_bRadius,_objs]
@@ -107,9 +107,9 @@ if !(_vehPos isEqualTo _position) then {
 } else {
 	_vehGrp = [_vehPos,2,1,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
 	[
-		{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) > 0},
+		{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) > 0},
 		{
-			[units (_this select 0),1200] call EFUNC(main,setPatrol);
+			[_this select 0,1200] call EFUNC(main,setPatrol);
 		},
 		[_vehGrp,_bRadius]
 	] call CBA_fnc_waitUntilAndExecute;

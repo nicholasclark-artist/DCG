@@ -47,14 +47,14 @@ _base = [_position,0.65 + random 1] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 
 _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, ASLtoAGL _position, [], 0, "NONE"];
-[[_officer],25] call EFUNC(main,setPatrol);
+[group _officer,25] call EFUNC(main,setPatrol);
 
 _grp = [_position,0,_strength,EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},
 	{
-		[units (_this select 0),_this select 1] call EFUNC(main,setPatrol);
+		[_this select 0,_this select 1] call EFUNC(main,setPatrol);
 	},
 	[_grp,_bRadius,_strength]
 ] call CBA_fnc_waitUntilAndExecute;
@@ -64,18 +64,18 @@ _vehPos = [_position,100,200,8,0] call EFUNC(main,findPosSafe);
 if !(_vehPos isEqualTo _position) then {
 	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
 	[
-		{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) > 0},
+		{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) > 0},
 		{
-			[units (_this select 0),((_this select 1)*4 min 300) max 100] call EFUNC(main,setPatrol);
+			[_this select 0,((_this select 1)*4 min 300) max 100] call EFUNC(main,setPatrol);
 		},
 		[_vehGrp,_bRadius]
 	] call CBA_fnc_waitUntilAndExecute;
 } else {
 	_vehGrp = [_vehPos,2,1,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
 	[
-		{{_x getVariable [SPAWNED_DRIVER,false]} count (units (_this select 0)) > 0},
+		{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) > 0},
 		{
-			[units (_this select 0),1200] call EFUNC(main,setPatrol);
+			[_this select 0,1200] call EFUNC(main,setPatrol);
 		},
 		[_vehGrp,_bRadius]
 	] call CBA_fnc_waitUntilAndExecute;

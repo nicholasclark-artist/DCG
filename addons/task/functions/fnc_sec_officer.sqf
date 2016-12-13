@@ -57,14 +57,14 @@ _base = [_position,random 0.2] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 
 _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, ASLtoAGL _position, [], 0, "NONE"];
-[[_officer],_bRadius] call EFUNC(main,setPatrol);
+[group _officer,_bRadius] call EFUNC(main,setPatrol);
 
 _grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},
 	{
-		[units (_this select 0),_this select 1] call EFUNC(main,setPatrol);
+		[_this select 0,_this select 1] call EFUNC(main,setPatrol);
 	},
 	[_grp,_bRadius,_strength]
 ] call CBA_fnc_waitUntilAndExecute;

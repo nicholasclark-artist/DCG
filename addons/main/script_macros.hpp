@@ -92,7 +92,8 @@
 
 #define ACTIONPATH ["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
 
-#define SPAWNED_DRIVER QEGVAR(main,DOUBLES(spawned,driver))
+#define ISDRIVER QEGVAR(main,isDriver)
+#define ISONPATROL QEGVAR(main,isOnPatrol)
 
 #define CHECK_INIT if !((EGVAR(main,enable) isEqualTo 1) && {isServer} && {isMultiplayer}) exitWith {}
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)

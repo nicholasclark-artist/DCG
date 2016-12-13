@@ -87,7 +87,7 @@ private _grp = createGroup EGVAR(main,enemySide);
 private _officer = _grp createUnit [selectRandom _officerPool, _position, [], 0, "NONE"];
 _officer setVariable [QUOTE(DOUBLES(ADDON,officer)),true,true];
 SET_UNITVAR(_officer);
-[[_officer],_size*0.25] call EFUNC(main,setPatrol);
+[_grp,_size*0.25] call EFUNC(main,setPatrol);
 
 call {
 	if (COMPARE_STR(_type,"NameCityCapital")) exitWith {

@@ -82,7 +82,7 @@ for "_i" from 0 to POS_COUNT do {
 	};
 } forEach _retTemp;
 
-if (SHOW_DEBUG) then {
+if (GRID_DEBUG) then {
 	{
 		_mrk = createMarker [format ["%1", _x], _x];
 		_mrk setMarkerType "mil_dot";

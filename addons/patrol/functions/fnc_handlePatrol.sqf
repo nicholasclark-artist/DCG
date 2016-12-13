@@ -56,7 +56,7 @@ if (count GVAR(groups) <= GVAR(groupsMaxCount)) then {
 					[
 						{count units (_this select 0) > 0},
 						{
-							[units (_this select 0),PATROL_RANGE] call EFUNC(main,setPatrol);
+							[_this select 0,PATROL_RANGE] call EFUNC(main,setPatrol);
 						},
 						[_grp]
 					] call CBA_fnc_waitUntilAndExecute;
@@ -76,7 +76,7 @@ if (count GVAR(groups) <= GVAR(groupsMaxCount)) then {
 							_wp setWaypointBehaviour "SAFE";
 							_wp setWaypointFormation "STAG COLUMN";
 							_wp setWaypointSpeed "LIMITED";
-							_wp setWaypointStatements ["!(behaviour this isEqualTo ""COMBAT"")", format ["[thisList,%2,false] call %1;",QEFUNC(main,setPatrol),PATROL_RANGE]];
+							_wp setWaypointStatements ["!(behaviour this isEqualTo ""COMBAT"")", format ["[group this,%2,false] call %1;",QEFUNC(main,setPatrol),PATROL_RANGE]];
 						},
 						[_grp,_player,_count]
 					] call CBA_fnc_waitUntilAndExecute;

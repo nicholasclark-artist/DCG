@@ -95,7 +95,7 @@ if (_type isEqualTo 0) exitWith {
 	};
 
 	_unit = _grp createUnit [selectRandom _unitPool, [0,0,0], [], 0, "NONE"];
-	_unit setVariable [SPAWNED_DRIVER,true];
+	_unit setVariable [ISDRIVER,true];
 	_unit moveInDriver _veh;
 
 	if ((_veh emptyPositions "gunner") > 0) then {
