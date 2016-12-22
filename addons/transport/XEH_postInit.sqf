@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-if (true) exitWith {};
+
 CHECK_POSTINIT;
 
 PVEH_REQUEST addPublicVariableEventHandler {
