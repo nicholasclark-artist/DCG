@@ -1,6 +1,6 @@
 /*
 Author:
-esteldunedain, SENSEI
+esteldunedain, Nicholas Clark (SENSEI)
 
 Description:
 load settings

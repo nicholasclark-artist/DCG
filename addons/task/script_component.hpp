@@ -51,9 +51,9 @@
 	[_mrk] call EFUNC(main,setDebugMarker)
 
 #define PRIM_STATEMENT [1] call FUNC(cancel)
-#define PRIM_COND (isServer || serverCommandAvailable QUOTE(QUOTE(#logout)))
+#define PRIM_COND isServer || {serverCommandAvailable QUOTE(QUOTE(#logout))}
 #define SEC_STATEMENT [0] call FUNC(cancel)
-#define SEC_COND (isServer || serverCommandAvailable QUOTE(QUOTE(#logout)))
+#define SEC_COND isServer || {serverCommandAvailable QUOTE(QUOTE(#logout))}
 
 #define PREP_PRIM(TASK) PREP(TASK); GVAR(primaryList) pushBack QFUNC(TASK)
 #define PREP_SEC(TASK) PREP(TASK); GVAR(secondaryList) pushBack QFUNC(TASK)

@@ -3,34 +3,6 @@
 */
 
 class DOUBLES(PREFIX,settings) {
-    class GVAR(init) {
-        typeName = "ARRAY";
-        value[] = {"ALL"};
-    };
-    class GVAR(debug) {
-        typeName = "SCALAR";
-        value = 0;
-    };
-    class GVAR(loadData) {
-        typeName = "BOOL";
-        value = 1;
-    };
-    class GVAR(autoSave) {
-        typeName = "BOOL";
-        value = 0;
-    };
-    class GVAR(baseName) {
-        typeName = "STRING";
-        value = "MOB Dodge";
-    };
-    class GVAR(baseRadius) {
-        typeName = "SCALAR";
-        value = (worldSize*0.055);
-    };
-    class GVAR(baseSafezone) {
-        typeName = "BOOL";
-        value = 1;
-    };
     class GVAR(blacklistLocations) {
         typeName = "ARRAY";
         value[] = {};

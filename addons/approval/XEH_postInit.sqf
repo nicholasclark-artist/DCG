@@ -4,16 +4,14 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_INIT;
-
-CHECK_ADDON;
+CHECK_POSTINIT;
 
 PVEH_QUESTION addPublicVariableEventHandler {(_this select 1) call FUNC(handleQuestion)};
 PVEH_HINT addPublicVariableEventHandler {[_this select 1] call FUNC(handleHint)};
 PVEH_AVADD addPublicVariableEventHandler {(_this select 1) call FUNC(addValue)};
 
 [
-	{DOUBLES(PREFIX,main)},
+	{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},
 	{
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
 		[_data] call FUNC(handleLoadData);

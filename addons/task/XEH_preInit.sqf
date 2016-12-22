@@ -4,13 +4,14 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_INIT;
+CHECK_PREINIT;
 
 ADDON = false;
 
 GVAR(primaryList) = [];
 GVAR(secondaryList) = [];
 
+PREP(initSettings);
 PREP(select);
 PREP(cancel);
 PREP(handleDamage);
@@ -32,4 +33,7 @@ PREP_SEC(sec_tower01);
 GVAR(primary) = [];
 GVAR(secondary) = [];
 
+publicVariable QFUNC(initSettings);
 publicVariable QFUNC(cancel);
+
+INITSETTINGS;

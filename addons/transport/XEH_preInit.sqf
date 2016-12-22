@@ -4,10 +4,11 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_INIT;
+CHECK_PREINIT;
 
 ADDON = false;
 
+PREP(initSettings);
 PREP(handleRequest);
 PREP(request);
 PREP(getChildren);
@@ -23,3 +24,6 @@ publicVariable QFUNC(getChildren);
 publicVariable QGVAR(ready);
 publicVariable QGVAR(count);
 publicVariable QGVAR(wait);
+publicVariable QGVAR(initSettings);
+
+INITSETTINGS;

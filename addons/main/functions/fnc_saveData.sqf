@@ -15,9 +15,10 @@ __________________________________________________________________*/
 	INFO_2("Saving %1: %2.",QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE); \
 	GVAR(saveDataCurrent) pushBack [QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE]
 
-if (!isServer) exitWith {};
+if (!isServer || {time < 60}) exitWith {};
 
-GVAR(saveDataCurrent) = [DATA_MISSION_ID]; // overwrite current data
+// overwrite current data
+GVAR(saveDataCurrent) = [DATA_MISSION_ID];
 
 // don't need to check for main addon, it's always enabled
 private _data = [];
@@ -34,7 +35,7 @@ PUSHBACK_DATA(main,_data);
 
 if (CHECK_ADDON_2(occupy)) then {
 	private ["_data","_locations","_infCount","_vehCount","_airCount","_players"];
-	_locations = []; // active locations
+	_locations = [];
 
 	for "_i" from 0 to count EGVAR(occupy,locations) - 1 do {
 		(EGVAR(occupy,locations) select _i) params ["_name","_position","_size","_type"];

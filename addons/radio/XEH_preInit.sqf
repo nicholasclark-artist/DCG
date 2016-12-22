@@ -4,10 +4,11 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_INIT;
+CHECK_PREINIT;
 
 ADDON = false;
 
+PREP(initSettings);
 PREP(handleLoadout);
 PREP(setRadio);
 PREP(setRadioSettings);
@@ -19,3 +20,6 @@ publicVariable QFUNC(setRadio);
 publicVariable QFUNC(setRadioSettings);
 publicVariable QFUNC(setRadioACRE);
 publicVariable QFUNC(setRadioTFAR);
+publicVariable QFUNC(initSettings);
+
+INITSETTINGS;

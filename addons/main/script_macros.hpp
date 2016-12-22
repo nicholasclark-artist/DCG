@@ -78,24 +78,17 @@
     #define PREP(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
 #endif
 
+///////////////////
+
 #define ADDON_TITLE (toUpper QUOTE(ADDON)) splitString "_" joinString " "
-
-#define DATA_SAVEVAR QUOTE(DOUBLES(MAIN_ADDON,saveData))
-#define DATA_SAVEPVEH QUOTE(DOUBLES(MAIN_ADDON,saveDataPVEH))
-#define DATA_DELETEPVEH QUOTE(DOUBLES(MAIN_ADDON,deleteDataPVEH))
-#define DATA_OBJVAR QUOTE(DOUBLES(MAIN_ADDON,saveObject))
-#define DATA_SETVAR(VAR1) profileNamespace setVariable [DATA_SAVEVAR,VAR1]
-#define DATA_GETVAR profileNamespace getVariable [DATA_SAVEVAR,[]]
-#define DATA_MISSION_ID ([toUpper worldName, toUpper missionName] joinString "_")
-
 #define HEADLESSCLIENT DOUBLES(PREFIX,HC)
-
-#define ACTIONPATH ["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
+#define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
+#define INITSETTINGS call FUNC(initSettings); remoteExecCall [QFUNC(initSettings), -2, true]
 
 #define ISDRIVER QEGVAR(main,isDriver)
 #define ISONPATROL QEGVAR(main,isOnPatrol)
 
-#define CHECK_INIT if !((EGVAR(main,enable) isEqualTo 1) && {isServer} && {isMultiplayer}) exitWith {}
+#define CHECK_POSTBRIEFING (getClientStateNumber > 9)
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> 'CfgPatches' >> PATCH))
@@ -103,10 +96,10 @@
 #define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= (DIST)
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
-#define CHECK_ADDON \
-    if (GVAR(enable) isEqualTo 0) exitWith { \
-    	INFO("Addon is disabled"); \
-    }
+#define CHECK_PREINIT \
+    if (!isServer || {!isMultiplayer}) exitWith {}
+#define CHECK_POSTINIT \
+    if (!(EGVAR(main,enable)) || {!(GVAR(enable))} || {!isServer} || {!isMultiplayer}) exitWith {}
 
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))

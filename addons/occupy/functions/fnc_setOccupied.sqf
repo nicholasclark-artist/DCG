@@ -101,7 +101,7 @@ call {
 			PREP_VEH(_position,ceil (_data select 1),_size,1);
 			PREP_AIR(_position,ceil (_data select 2),1);
 		};
-		PREP_GARRISON(_position,15,_size,_unitPool);
+		PREP_GARRISON(_position,10,_size*0.4,_unitPool);
 		PREP_STATIC(_position,STATIC_CAP,_size,_objArray);
 		PREP_SNIPER(_position,SNIPER_CAP,_size);
 	};
@@ -117,7 +117,7 @@ call {
 			PREP_VEH(_position,ceil (_data select 1),_size,1);
 			PREP_AIR(_position,ceil (_data select 2),1);
 		};
-		PREP_GARRISON(_position,10,_size,_unitPool);
+		PREP_GARRISON(_position,10,_size*0.4,_unitPool);
 		PREP_STATIC(_position,STATIC_CITY,_size,_objArray);
 		PREP_SNIPER(_position,SNIPER_CITY,_size);
 	};
@@ -133,7 +133,7 @@ call {
     		PREP_VEH(_position,ceil (_data select 1),_size,1);
     		PREP_AIR(_position,ceil (_data select 2),1);
     	};
-    	PREP_GARRISON(_position,5,_size,_unitPool);
+    	PREP_GARRISON(_position,5,_size*0.4,_unitPool);
     	PREP_STATIC(_position,STATIC_VILL,_size,_objArray);
     	PREP_SNIPER(_position,SNIPER_VILL,_size);
     };

@@ -4,10 +4,15 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_INIT;
+CHECK_PREINIT;
 
 ADDON = false;
 
+PREP(initSettings);
 PREP(handleLoadData);
 
 GVAR(list) = [];
+
+publicVariable QFUNC(initSettings);
+
+INITSETTINGS;

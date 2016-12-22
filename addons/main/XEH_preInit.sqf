@@ -4,13 +4,11 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+if !(isServer) exitWith {};
+
 ADDON = false;
 
-PREP(init); // do not change
-call FUNC(init); // do not change
-
-if ((GVAR(enable) isEqualTo 0) || {!isServer}) exitWith {};
-
+PREP(initSettings);
 PREP(debug);
 PREP(handleLoadData);
 PREP(handleCleanup);
@@ -27,8 +25,6 @@ PREP(findPosSafe);
 PREP(findPos);
 PREP(getNearPlayers);
 PREP(saveData);
-PREP(saveDataClient);
-PREP(deleteDataClient);
 PREP(loadData);
 PREP(loadDataAddon);
 PREP(inBuilding);
@@ -73,62 +69,29 @@ GVAR(marines) = [];
 GVAR(baseLocation) = locationNull;
 GVAR(range) = worldSize*0.5;
 GVAR(center) = [GVAR(range),GVAR(range),0];
-GVAR(playerSide) = WEST;
-GVAR(enemySide) = EAST;
+GVAR(playerSide) = sideUnknown;
+GVAR(enemySide) = sideUnknown;
 GVAR(markerCleanup) = [];
 GVAR(objectCleanup) = [];
 GVAR(saveDataCurrent) = [DATA_MISSION_ID];
 GVAR(debugMarkers) = [];
 
 publicVariable QUOTE(ADDON);
-// publicVariable QFUNC(cleanup);
-// publicVariable QFUNC(findPosHouse);
-// publicVariable QFUNC(replaceString);
-// publicVariable QFUNC(findPosOverwatch);
-// publicVariable QFUNC(findPosGrid);
-// publicVariable QFUNC(findPosSafe);
-// publicVariable QFUNC(findPos);
-// publicVariable QFUNC(getNearPlayers);
-// publicVariable QFUNC(removeParticle);
-// publicVariable QFUNC(shuffle);
-// publicVariable QFUNC(setPatrol);
-// publicVariable QFUNC(setSide);
-// publicVariable QFUNC(setAnim);
-// publicVariable QFUNC(setStrength);
-// publicVariable QFUNC(setTimer);
-// publicVariable QFUNC(setUnitDamaged);
-// publicVariable QFUNC(setSurrender);
-// publicVariable QFUNC(setVehDamaged);
-// publicVariable QFUNC(setWaypointPos);
-// publicVariable QFUNC(spawnBase);
-// publicVariable QFUNC(spawnGroup);
-// publicVariable QFUNC(spawnReinforcements);
-// publicVariable QFUNC(spawnSniper);
-// publicVariable QFUNC(spawnStatic);
-// publicVariable QFUNC(inBuilding);
-// publicVariable QFUNC(inLOS);
-// publicVariable QFUNC(isPosSafe);
-// publicVariable QFUNC(setPosSafe);
 
 // functions required on all machines
+publicVariable QFUNC(initSettings);
 publicVariable QFUNC(setAction);
 publicVariable QFUNC(removeAction);
 publicVariable QFUNC(displayText);
 publicVariable QFUNC(displayGUIMessage);
-publicVariable QFUNC(saveDataClient);
-publicVariable QFUNC(deleteDataClient);
 publicVariable QFUNC(armory);
 
 publicVariable QGVAR(range);
 publicVariable QGVAR(center);
 publicVariable QGVAR(enemySide);
 publicVariable QGVAR(playerSide);
-// publicVariable QGVAR(markerCleanup);
-// publicVariable QGVAR(objectCleanup);
 
+INITSETTINGS;
+
+// set config and mission settings
 call FUNC(setSettings);
-call FUNC(loadData);
-
-if (GVAR(debug) isEqualTo 1) then {
-  [true] call FUNC(debug);
-};

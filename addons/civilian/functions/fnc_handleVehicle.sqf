@@ -14,7 +14,7 @@ __________________________________________________________________*/
 
 private ["_HCs","_players","_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
 
-if (count GVAR(drivers) <= GVAR(vehMaxCount)) then {
+if (count GVAR(drivers) <= ceil GVAR(vehMaxCount)) then {
 	_HCs = entities "HeadlessClient_F";
 	_players = allPlayers - _HCs;
 

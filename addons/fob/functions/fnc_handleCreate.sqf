@@ -66,8 +66,8 @@ clearBackpackCargoGlobal GVAR(anchor);
      	[GVAR(anchor)] call EFUNC(main,armory);
     };
 
-    GVAR(location) = createLocation ["NameCity",getPos GVAR(anchor),GVAR(range)];
-    GVAR(location) setText GVAR(name);
+    GVAR(location) = createLocation ["NameCity",getPos GVAR(anchor),GVAR(range),GVAR(range)];
+    GVAR(location) setText "Forward Operating Base";
 }] remoteExecCall [QUOTE(BIS_fnc_call),0,GVAR(anchor)];
 
 // make sure setup occurs at correct position
@@ -76,7 +76,7 @@ clearBackpackCargoGlobal GVAR(anchor);
     {
         params ["_unit","_points"];
 
-        GVAR(respawnPos) = [missionNamespace,FOB_POSITION,GVAR(name)] call BIS_fnc_addRespawnPosition;
+        GVAR(respawnPos) = [missionNamespace,FOB_POSITION,"Forward Operating Base"] call BIS_fnc_addRespawnPosition;
         GVAR(curator) addCuratorPoints _points;
         GVAR(curator) setCuratorCoef ["Place", GVAR(placeCoef) min 0];
         GVAR(curator) setCuratorCoef ["Delete", GVAR(deleteCoef) max 0];

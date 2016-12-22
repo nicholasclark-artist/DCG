@@ -4,10 +4,11 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_INIT;
+CHECK_PREINIT;
 
 ADDON = false;
 
+PREP(initSettings);
 PREP(init);
 PREP(handleCreate);
 PREP(handleDelete);
@@ -18,25 +19,24 @@ PREP(handleRecon);
 PREP(getKeybind);
 PREP(getChildren);
 PREP(getCuratorCost);
-PREP(canCreate);
-PREP(canAddAction);
+PREP(isAllowedOwner);
 PREP(curatorEH);
-PREP(createOnClient);
-PREP(deleteOnClient);
 
 GVAR(location) = locationNull;
 GVAR(respawnPos) = [];
 GVAR(anchor) = objNull;
 GVAR(curatorExternal) = objNull;
+GVAR(placeCoef) = -0.25;
+GVAR(deleteCoef) = 0.25;
 
+publicVariable QFUNC(initSettings);
 publicVariable QFUNC(getKeybind);
 publicVariable QFUNC(getChildren);
 publicVariable QFUNC(getCuratorCost);
-publicVariable QFUNC(canCreate);
-publicVariable QFUNC(canAddAction);
+publicVariable QFUNC(isAllowedOwner);
 publicVariable QFUNC(curatorEH);
-publicVariable QFUNC(createOnClient);
-publicVariable QFUNC(deleteOnClient);
 publicVariable QFUNC(handleClient);
 
 publicVariable QGVAR(location);
+
+INITSETTINGS;

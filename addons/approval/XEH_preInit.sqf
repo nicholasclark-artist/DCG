@@ -4,10 +4,11 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_INIT;
+CHECK_PREINIT;
 
 ADDON = false;
 
+PREP(initSettings);
 PREP(addValue);
 PREP(getValue);
 PREP(getRegion);
@@ -19,5 +20,8 @@ PREP(handleHostile);
 PREP(handleHint);
 PREP(spawnHostile);
 
+publicVariable QFUNC(initSettings);
 publicVariable QFUNC(handleKilled);
 publicVariable QFUNC(handleClient);
+
+INITSETTINGS;

@@ -20,8 +20,16 @@
 
 #define CREATE_ID QUOTE(DOUBLES(ADDON,create))
 #define CREATE_NAME "Deploy FOB"
-#define CREATE_STATEMENT call FUNC(createOnClient)
-#define CREATE_COND call FUNC(canCreate)
+#define CREATE_STATEMENT \
+    [player,"AinvPknlMstpSnonWnonDnon_medic4"] call EFUNC(main,setAnim); \
+    [{ \
+        _format = format ["Forward Operating Base Deployed \n \nPress [%1] to start building",call FUNC(getKeybind)]; \
+        [_format,true] call EFUNC(main,displayText); \
+    	missionNamespace setVariable [PVEH_CREATE,player]; \
+    	publicVariableServer PVEH_CREATE; \
+    }, [], 9] call CBA_fnc_waitAndExecute
+
+#define CREATE_COND !(FOB_DEPLOYED) && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {!(((player modelToWorld [0,3,0]) isFlatEmpty  [3, -1, -1, -1, 0, false, player]) isEqualTo [])}
 #define CREATE_KEYCODE \
 	if (CREATE_COND) then { \
 		CREATE_STATEMENT \
@@ -30,41 +38,15 @@
 #define TRANSFER_ID QUOTE(DOUBLES(ADDON,transfer))
 #define TRANSFER_NAME "Transfer FOB Control"
 #define TRANSFER_STATEMENT \
-    if ([cursorObject] call FUNC(canAddAction)) then { \
-        missionNamespace setVariable [PVEH_TRANSFER,[player,cursorObject]]; \
-        publicVariableServer PVEH_TRANSFER; \
-        [format ["FOB control transferred to %1", name cursorObject],true] call EFUNC(main,displayText); \
-    } else { \
-        [ \
-            format ["%1 is not a whitelisted player. Are you sure you want to transfer FOB control to %1?", name cursorObject], \
-            TITLE, \
-            format ["FOB control transferred to %1", name cursorObject], \
-            { \
-                missionNamespace setVariable [PVEH_TRANSFER,[player,_this select 0,true]]; \
-                publicVariableServer PVEH_TRANSFER; \
-            }, \
-            [cursorObject] \
-        ] call EFUNC(main,displayGUIMessage); \
-    }
+    missionNamespace setVariable [PVEH_TRANSFER,[player,cursorObject]]; \
+    publicVariableServer PVEH_TRANSFER; \
+    [format ["FOB control transferred to %1", name cursorObject],true] call EFUNC(main,displayText)
 #define TRANSFER_STATEMENT_ACE \
-    if ([_target] call FUNC(canAddAction)) then { \
-        missionNamespace setVariable [PVEH_TRANSFER,[player,_target]]; \
-        publicVariableServer PVEH_TRANSFER; \
-        [format ["FOB control transferred to %1", name _target],true] call EFUNC(main,displayText); \
-    } else { \
-        [ \
-            format ["%1 is not a whitelisted player. Are you sure you want to transfer FOB control to %1?", name _target], \
-            TITLE, \
-            format ["FOB control transferred to %1", name _target], \
-            { \
-                missionNamespace setVariable [PVEH_TRANSFER,[player,_this select 0,true]]; \
-                publicVariableServer PVEH_TRANSFER; \
-            }, \
-            [_target] \
-        ] call EFUNC(main,displayGUIMessage); \
-    }
-#define TRANSFER_COND FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer cursorObject} && {cursorObject isKindOf 'CAManBase'}
-#define TRANSFER_COND_ACE FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer _target} && {_target isKindOf 'CAManBase'}
+    missionNamespace setVariable [PVEH_TRANSFER,[player,_target]]; \
+    publicVariableServer PVEH_TRANSFER; \
+    [format ["FOB control transferred to %1", name _target],true] call EFUNC(main,displayText)
+#define TRANSFER_COND FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer cursorObject} && {cursorObject isKindOf 'CAManBase'} && {[cursorObject] call FUNC(isAllowedOwner)}
+#define TRANSFER_COND_ACE FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer _target} && {_target isKindOf 'CAManBase'} && {[_target] call FUNC(isAllowedOwner)}
 #define TRANSFER_KEYCODE \
     if (CHECK_ADDON_1('ace_interact_menu')) then { \
         if (TRANSFER_COND_ACE) then { \
@@ -82,7 +64,7 @@
     missionNamespace setVariable [PVEH_ASSIGN,player]; \
     publicVariableServer PVEH_ASSIGN; \
     call FUNC(curatorEH); \
-    [format ["You've taken control of %1",GVAR(name)],true] call EFUNC(main,displayText)
+    ["You've taken control of the Forward Operating Base",true] call EFUNC(main,displayText)
 #define CONTROL_COND FOB_DEPLOYED && {isNull (getAssignedCuratorUnit GVAR(curator))}
 #define CONTROL_KEYCODE \
 	if (CONTROL_COND) then { \
@@ -91,7 +73,14 @@
 
 #define DELETE_ID QUOTE(DOUBLES(ADDON,delete))
 #define DELETE_NAME "Dismantle FOB"
-#define DELETE_STATEMENT call FUNC(deleteOnClient)
+#define DELETE_STATEMENT \
+    [ \
+        "Are you sure you want to dismantle the Forward Operating Base?", \
+        TITLE, \
+        "Forward Operating Base dismantled.", \
+        {missionNamespace setVariable [(_this select 0),true]; publicVariableServer (_this select 0);}, \
+        [PVEH_DELETE] \
+    ] call EFUNC(main,displayGUIMessage)
 #define DELETE_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {cameraOn isEqualTo player} && {!(visibleMap)}
 #define DELETE_KEYCODE \
 	if (DELETE_COND) then { \

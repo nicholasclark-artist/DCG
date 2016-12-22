@@ -4,9 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_INIT;
-
-CHECK_ADDON;
+CHECK_POSTINIT;
 
 [FUNC(handleCache), 15, []] call CBA_fnc_addPerFrameHandler;
 

@@ -45,6 +45,10 @@ call {
 };
 
 {
+    if (count _actions > 3) exitWith {
+        WARNING("Exceeded limit for transport actions");
+    };
+
 	if (_x isKindOf "Helicopter" && {([_x] call _fnc_getCargo) > 0}) then {
 		_displayName = format ["Call in %1",getText (configfile >> "CfgVehicles" >> _x >> "displayName")];
 		if (CHECK_ADDON_1("ace_interact_menu")) then {

@@ -29,7 +29,7 @@ if !(GVAR(groups) isEqualTo []) then {
 	};
 };
 
-if (count GVAR(groups) <= GVAR(groupsMaxCount)) then {
+if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 	_HCs = entities "HeadlessClient_F";
 	_players = allPlayers - _HCs;
 

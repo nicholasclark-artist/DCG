@@ -7,18 +7,20 @@ __________________________________________________________________*/
 #define DEFAULTPOS [-5000,-5000]
 #define CREATE_BASE \
 	GVAR(baseLocation) = createLocation ["NameCity", getPos BASE, GVAR(baseRadius), GVAR(baseRadius)]; \
-	GVAR(baseLocation) setText GVAR(baseName); \
+	GVAR(baseLocation) setText "Main Operating Base"; \
 	GVAR(baseLocation) attachObject BASE
 #define CREATE_DEFAULTBASE GVAR(baseLocation) = createLocation ["NameCity", DEFAULTPOS, 10, 10]
 
-CHECK_INIT;
+CHECK_POSTINIT;
 
+// if marker exist, create base on marker position
 if (CHECK_MARKER(QUOTE(BASE))) then {
 	BASE = "Land_HelipadEmpty_F" createVehicle [0,0,0];
 	BASE setPos (getMarkerPos QUOTE(BASE));
 	publicVariable QUOTE(BASE);
 };
 
+// if base object created from marker or created in editor exists, create base location
 if !(isNil QUOTE(BASE)) then {
 	CREATE_BASE;
 	{
@@ -26,6 +28,7 @@ if !(isNil QUOTE(BASE)) then {
 	} remoteExecCall [QUOTE(BIS_fnc_call),-2,true];
 };
 
+// if base object does not exist
 if (isNull GVAR(baseLocation)) then {
 	CREATE_DEFAULTBASE;
 	{
@@ -34,12 +37,6 @@ if (isNull GVAR(baseLocation)) then {
 
 	WARNING_1("Base object does not exist. Base location created at %1.",DEFAULTPOS);
 };
-
-_mrk = createMarker [QUOTE(DOUBLES(PREFIX,baseMrk)),locationPosition GVAR(baseLocation)];
-_mrk setMarkerBrush "Border";
-_mrk setMarkerShape "ELLIPSE";
-_mrk setMarkerSize [GVAR(baseRadius), GVAR(baseRadius)];
-[_mrk] call EFUNC(main,setDebugMarker);
 
 // get map locations from config
 _cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";
@@ -115,9 +112,9 @@ if (GVAR(baseSafezone)) then {
 	[FUNC(handleSafezone), 60, []] call CBA_fnc_addPerFrameHandler;
 };
 
-// set cleanup handlers
 [FUNC(handleCleanup), 120, []] call CBA_fnc_addPerFrameHandler;
 
+// handle dropped weapons separately from other objects
 [{
     {
     	if (_x getVariable [QUOTE(DOUBLES(PREFIX,cleanup)),true]) then {deleteVehicle _x};
@@ -137,15 +134,9 @@ if !(isNil {HEADLESSCLIENT}) then {
 
 // save functionality
 if (GVAR(autoSave)) then {
-	[
-		{
-			[{
-				call FUNC(saveData);
-			}, 1800, []] call CBA_fnc_addPerFrameHandler;
-		},
-		[],
-		1800
-	] call CBA_fnc_waitAndExecute;
+    [{
+        call FUNC(saveData);
+    }, 1800, []] call CBA_fnc_addPerFrameHandler;
 };
 
 DATA_SAVEPVEH addPublicVariableEventHandler {
@@ -169,8 +160,8 @@ _data = QUOTE(ADDON) call FUNC(loadDataAddon);
         } forEach [
             [QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],{},QUOTE(true),{},[],player,1,["ACE_SelfActions"]],
             [QUOTE(DOUBLES(PREFIX,data)),"Mission Data"],
-            [QUOTE(DOUBLES(ADDON,saveData)),"Save Mission Data",{call FUNC(saveDataClient)},QUOTE(time > 60 && {isServer || serverCommandAvailable '#logout'}),{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
-            [QUOTE(DOUBLES(ADDON,deleteSaveData)),"Delete All Saved Mission Data",{call FUNC(deleteDataClient)},QUOTE(isServer || {serverCommandAvailable '#logout'}),{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
+            [SAVEDATA_ID,SAVEDATA_NAME,{SAVEDATA_STATEMENT},QUOTE(SAVEDATA_COND),{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
+            [DELETEDATA_ID,DELETEDATA_NAME,{DELETEDATA_STATEMENT},QUOTE(DELETEDATA_COND),{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
         ];
 	};
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];

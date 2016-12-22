@@ -5,15 +5,12 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define TYPE_EXP ["R_TBG32V_F","HelicopterExploSmall"]
 
-CHECK_INIT;
-
-CHECK_ADDON;
+CHECK_POSTINIT;
 
 [
-	{DOUBLES(PREFIX,main)},
+	{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},
 	{
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
-
 		[_data] call FUNC(handleLoadData);
 
 		[{

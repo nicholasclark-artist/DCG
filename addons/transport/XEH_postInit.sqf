@@ -3,10 +3,8 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-
-CHECK_INIT;
-
-CHECK_ADDON;
+if (true) exitWith {};
+CHECK_POSTINIT;
 
 PVEH_REQUEST addPublicVariableEventHandler {
 	(_this select 1) call FUNC(handleRequest);

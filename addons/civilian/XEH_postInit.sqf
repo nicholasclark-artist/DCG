@@ -9,12 +9,10 @@ __________________________________________________________________*/
 #define LIMIT 8
 #define INTERATIONS 2
 
-CHECK_INIT;
-
-CHECK_ADDON;
+CHECK_POSTINIT;
 
 [
-	{DOUBLES(PREFIX,main)},
+	{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},
 	{
 		_locations = EGVAR(main,locations) select {!(CHECK_DIST2D((_x select 1),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))};
 
