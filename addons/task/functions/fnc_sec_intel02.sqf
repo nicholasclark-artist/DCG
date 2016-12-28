@@ -27,7 +27,7 @@ _vehicle = objNull;
 INTEL_CONTAINER = objNull;
 
 if (_position isEqualTo []) then {
-	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findPos);
+	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findPosTerrain);
 };
 
 if (_position isEqualTo []) exitWith {

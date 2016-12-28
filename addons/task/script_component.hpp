@@ -45,7 +45,7 @@
 
 #define TASK_DEBUG(POS) \
 	_mrk = createMarker [format ["%1_%2",TASK, diag_tickTime],POS]; \
-	_mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)]; \
+	_mrk setMarkerColor ([EGVAR(main,enemySide),true] call BIS_fnc_sideColor); \
 	_mrk setMarkerType "mil_dot"; \
 	_mrk setMarkerText TASK; \
 	[_mrk] call EFUNC(main,setDebugMarker)

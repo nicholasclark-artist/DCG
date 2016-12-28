@@ -25,7 +25,7 @@ _strength = TASK_STRENGTH;
 _vehGrp = grpNull;
 
 if (_position isEqualTo []) then {
-	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findPos);
+	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findPosTerrain);
 	if !(_position isEqualTo []) then {
 		_position = _position select 1;
 	};
