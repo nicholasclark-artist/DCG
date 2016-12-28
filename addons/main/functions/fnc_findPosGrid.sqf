@@ -18,80 +18,52 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define POS_COUNT floor (_range/_dist)
-#define ANCHOR_OFFSET [(_anchor select 0) - (_range/2),(_anchor select 1) - (_range/2)]
 #ifdef DEBUG_MODE_FULL
   #define GRID_DEBUG true
 #else
   #define GRID_DEBUG false
 #endif
 
-private ["_ret","_retTemp","_fnc_createRow"];
 params [
 	"_anchor",
 	["_dist",25,[0]],
 	["_range",100,[0]],
 	["_rangeMin",0,[0]],
 	["_distObj",-1,[0]],
-	["_water",false],
-	["_shuffle",true]
+	["_water",-1,[0]],
+	["_shuffle",false]
 ];
 
-_retTemp = [];
-_ret = [];
+private _ret = [];
+private _origin = [(_anchor select 0) - (_range/2),(_anchor select 1) - (_range/2)];
+private _count = floor (_range/_dist);
 
-_fnc_createRow = {
-	private ["_ret"];
-	params ["_anchor","_range"];
+for "_y" from 0 to _count do {
+    private _column = [_origin select 0,(_origin select 1) + (_range*(_y/_count))];
+	_ret pushBack _column;
 
-	_ret = [];
-	for "_i" from 0 to POS_COUNT do {
-		_ret pushBack [(_anchor select 0) + (_range*(_i/POS_COUNT)), _anchor select 1];
-	};
-
-	_ret
+    for "_x" from 1 to _count do {
+        private _row = [(_column select 0) + (_range*(_x/_count)), _column select 1];
+        _ret pushBack _row;
+    };
 };
 
-for "_i" from 0 to POS_COUNT do {
-	_retTemp append ([[ANCHOR_OFFSET select 0,(ANCHOR_OFFSET select 1) + (_range*(_i/POS_COUNT))],_range] call _fnc_createRow);
-};
+_ret = _ret select {!(_x inArea [_anchor, _rangeMin, _rangeMin, 0, false, -1]) && {[_x,_distObj,_water] call FUNC(isPosSafe)}};
 
 {
-	private ["_posASL","_check","_pos"];
-	_check = true;
-	_pos = _x;
-
-	if !(_water) then {
-		if (surfaceIsWater _pos) then {
-			_check = false;
-		};
-	};
-
-	if (_pos distance2D _anchor < _rangeMin) then {
-		_check = false;
-	};
-
-	if (_check) then {
-		_posASL = _pos isFlatEmpty [_distObj,-1,-1,1,-1];
-		if !(_posASL isEqualTo []) then {
-			if (floor (_posASL select 2) < 0) then {
-				_posASL set [2,0];
-			};
-			_ret pushBack _posASL;
-		};
-	};
-} forEach _retTemp;
-
-if (GRID_DEBUG) then {
-	{
-		_mrk = createMarker [format ["%1", _x], _x];
-		_mrk setMarkerType "mil_dot";
-		_mrk setMarkerText str (_x select 2);
-	} forEach _ret;
-};
+    _x set [2,(getTerrainHeightASL _x) max 0]
+} forEach _ret;
 
 if (_shuffle) then {
 	[_ret,(count _ret)*3] call FUNC(shuffle);
+};
+
+if (GRID_DEBUG) then {
+    {
+        _mrk = createMarker [format ["%1", _x], _x];
+        _mrk setMarkerType "mil_dot";
+        _mrk setMarkerText str (_x select 2);
+    } forEach _ret;
 };
 
 _ret
