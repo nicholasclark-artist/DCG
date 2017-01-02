@@ -1,4 +1,4 @@
-/*
+    /*
 Author:
 Nicholas Clark (SENSEI)
 
@@ -13,30 +13,32 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_data"];
+params [
+    ["_data",[],[[]]]
+];
 
 if (_data isEqualTo []) then {
-	private ["_mapdata"];
+	private "_mapdata";
 
     if (GVAR(month) isEqualTo -1) then {
-        GVAR(month) = ceil random 12;
+        GVAR(month) = random 12;
     };
 
     if (GVAR(time) isEqualTo -1) then {
-        GVAR(time) = round random 23;
+        GVAR(time) = random 23;
     };
 
-	GVAR(date) = [missionStart select 0, GVAR(month), ceil random 27, GVAR(time), round random 59];
+	GVAR(date) = [missionStart select 0, ceil GVAR(month), ceil random 27, round GVAR(time), round random 59];
 
     {
         if (COMPARE_STR(_x select 0,worldName)) exitWith {
-            _mapdata = +(GVAR(mapData) select _forEachIndex);
+            _mapdata =+ GVAR(mapData) select _forEachIndex;
             _mapdata deleteAt 0;
         };
     } forEach GVAR(mapData);
 
 	if !(_mapdata isEqualTo []) then {
-		GVAR(overcast) = ((_mapdata select (_month - 1)) + random 0.05) min 1;
+		GVAR(overcast) = ((_mapdata select (GVAR(month) - 1)) + random 0.05) min 1;
 	} else {
 		GVAR(overcast) = random [0,0.5,1];
 	};
