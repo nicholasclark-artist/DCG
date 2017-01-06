@@ -12,4 +12,4 @@ boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-GVAR(ready) isEqualTo 1 && {GVAR(count) <= ceil GVAR(maxCount)} && {cameraOn isEqualTo player}
+COMPARE_STR(GVAR(status),TR_READY) && {GVAR(count) <= ceil GVAR(maxCount)} && {cameraOn isEqualTo player}

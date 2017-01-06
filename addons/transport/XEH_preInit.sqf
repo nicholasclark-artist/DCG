@@ -14,16 +14,16 @@ PREP(request);
 PREP(getChildren);
 PREP(canCallTransport);
 
-GVAR(ready) = 1;
+GVAR(status) = TR_READY;
 GVAR(count) = 0;
-GVAR(wait) = false;
 
 publicVariable QFUNC(request);
+publicVariable QFUNC(handleRequest);
 publicVariable QFUNC(canCallTransport);
 publicVariable QFUNC(getChildren);
-publicVariable QGVAR(ready);
+
+publicVariable QGVAR(status);
 publicVariable QGVAR(count);
-publicVariable QGVAR(wait);
 publicVariable QGVAR(initSettings);
 
 INITSETTINGS;

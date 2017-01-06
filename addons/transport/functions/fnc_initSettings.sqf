@@ -23,9 +23,24 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
+    QGVAR(cargoThreshold),
+    "SLIDER",
+    ["Minimum Cargo Positions","Minimum number of cargo positions for passengers."],
+    COMPONENT_NAME,
+    [
+        1,
+        16,
+        4,
+        0
+    ],
+    true,
+    {}
+] call CBA_Settings_fnc_init;
+
+[
     QGVAR(maxCount),
     "SLIDER",
-    "Max Transport Count",
+    ["Max Transport Count","Maximum number of active transports."],
     COMPONENT_NAME,
     [
         1,
@@ -40,7 +55,7 @@ __________________________________________________________________*/
 [
     QGVAR(cooldown),
     "SLIDER",
-    "Transport Cooldown",
+    ["Transport Cooldown","Time in seconds until a player can request another transport."],
     COMPONENT_NAME,
     [
         1,

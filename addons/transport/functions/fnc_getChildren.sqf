@@ -49,7 +49,7 @@ call {
         WARNING("Exceeded limit for transport actions");
     };
 
-	if (_x isKindOf "Helicopter" && {([_x] call _fnc_getCargo) > 0}) then {
+	if (_x isKindOf "Helicopter" && {([_x] call _fnc_getCargo) > GVAR(cargoThreshold)}) then {
 		_displayName = format ["Call in %1",getText (configfile >> "CfgVehicles" >> _x >> "displayName")];
 		if (CHECK_ADDON_1("ace_interact_menu")) then {
 			_action = [_x, _displayName, "", {[_this select 2] call FUNC(request)}, {true}, {}, _x] call ace_interact_menu_fnc_createAction;

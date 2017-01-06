@@ -21,42 +21,27 @@ __________________________________________________________________*/
 #define COOLDOWN \
 	[ \
 		{ \
-			GVAR(ready) = 1; \
+			GVAR(status) = TR_READY; \
 			GVAR(count) = GVAR(count) - 1; \
-            (owner (_this select 0)) publicVariableClient QGVAR(ready); \
 			publicVariable QGVAR(count); \
 		}, \
-		[_unit], \
+		[], \
 		GVAR(cooldown) \
 	] call CBA_fnc_waitAndExecute
 
-LOG_1("%1.",_this);
-
-private _unit = _this select 0;
-private _classname = _this select 1;
-private _exfil = _this select 2;
-GVAR(infil) = _this select 3;
-private _exfilMrk = _this select 4;
-private _infilMrk = _this select 5;
+private _classname = _this select 0;
+private _exfil = _this select 1;
+GVAR(infil) = _this select 2;
+private _exfilMrk = _this select 3;
+private _infilMrk = _this select 4;
 
 private _pilot = "";
-private _dir = 0;
-GVAR(ready) = 0;
+
+GVAR(status) = TR_NOTREADY;
 GVAR(count) = GVAR(count) + 1;
-(owner _unit) publicVariableClient QGVAR(ready);
 publicVariable QGVAR(count);
 
-// find position away from an occupied location
-if (CHECK_ADDON_2(occupy)) then {
-	{
-		_dir = _dir + ([_exfil, ((EGVAR(occupy,occupiedLocations) select _forEachIndex) select 1)] call BIS_fnc_dirTo);
-	} forEach EGVAR(occupy,occupiedLocations);
-	_dir = (_dir/(count EGVAR(occupy,occupiedLocations))) + 180;
-} else {
-	_dir = random 360;
-};
-
-_spawnPos = [_exfil,5000,6000,objNull,-1,-1,_dir] call EFUNC(main,findPosSafe);
+_spawnPos = [_exfil,4000,4000] call EFUNC(main,findPosSafe);
 _transport = createVehicle [_classname,_spawnPos,[],0,"FLY"];
 
 _transport addEventHandler ["GetIn",{
@@ -71,14 +56,13 @@ _transport addEventHandler ["GetIn",{
 		_veh removeEventHandler ["GetIn",_thisEventHandler];
 		_wp = group driver _veh addWaypoint [GVAR(infil), 0];
         _wp setWaypointCompletionRadius 100;
-        _wp setWaypointSpeed "FULL";
 		_wp setWaypointStatements ["true", format ["
 			(vehicle this) land ""GET OUT"";
 
             [
-                {isTouchingGround (vehicle (_this select 0)) || {(missionNamespace getVariable ['%1',-1]) isEqualTo 1}},
+                {isTouchingGround (vehicle (_this select 0)) || {(missionNamespace getVariable '%1') == '%2'}},
                 {
-                    if ((missionNamespace getVariable ['%1',-1]) isEqualTo 1) exitWith {};
+                    if ((missionNamespace getVariable '%1') == '%2') exitWith {};
 
                     [
                         {
@@ -86,7 +70,7 @@ _transport addEventHandler ["GetIn",{
                                 if (isPlayer _x) then {moveOut _x};
                             } forEach (crew (vehicle (_this select 0)));
 
-                            missionNameSpace setVariable ['%1', -1];
+                            missionNameSpace setVariable ['%1', '%3'];
                             _wp = group (_this select 0) addWaypoint [[0,0,100], 0];
                         },
                         [_this select 0],
@@ -95,7 +79,7 @@ _transport addEventHandler ["GetIn",{
                 },
                 [this]
             ] call CBA_fnc_waitUntilAndExecute;
-		",QGVAR(ready)]];
+		",QGVAR(status),TR_READY,TR_WAITING]];
 	};
 }];
 
@@ -112,18 +96,14 @@ call {
 	_pilot = "C_man_w_worker_F";
 };
 
-_pilot = createGroup EGVAR(main,playerSide) createUnit [_pilot,[0,0,0], [], 0, "NONE"];
-_pilot moveInDriver _transport;
-_pilot setBehaviour "CARELESS";
-_pilot disableAI "TARGET";
-_pilot disableAI "AUTOTARGET";
-_pilot disableAI "AUTOCOMBAT";
-_pilot disableAI "FSM";
-
 _transport allowCrewInImmobile true;
 _transport enableCopilot false;
 _transport lockDriver true;
-_transport flyInHeight 100;
+
+_pilot = createGroup EGVAR(main,playerSide) createUnit [_pilot,[0,0,0], [], 0, "NONE"];
+_pilot moveInDriver _transport;
+_pilot disableAI "FSM";
+_pilot setBehaviour "CARELESS";
 
 _wp = group _pilot addWaypoint [_exfil, 0];
 _wp setWaypointCompletionRadius 100;
@@ -131,54 +111,55 @@ _wp setWaypointStatements ["true", "(vehicle this) land ""GET IN"";"];
 
 [{
 	params ["_args","_idPFH"];
-	_args params ["_unit","_transport","_pilot","_exfilMrk","_infilMrk"];
+	_args params ["_transport","_pilot","_exfilMrk","_infilMrk"];
 
-	if (GVAR(ready) isEqualTo -1) exitWith { // if transport route complete
+	if (COMPARE_STR(GVAR(status),TR_WAITING)) exitWith { // if transport route complete
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		deleteMarker _exfilMrk;
 		deleteMarker _infilMrk;
 		_transport call EFUNC(main,cleanup);
 		COOLDOWN;
 	};
-	if (!alive _pilot || {isNull (objectParent _pilot)} || {isTouchingGround _transport && (!(canMove _transport) || (fuel _transport isEqualTo 0))}) exitWith { // if transport destroyed enroute
+
+	if (!alive _pilot || {isTouchingGround _transport && (!(canMove _transport) || (fuel _transport isEqualTo 0))}) exitWith { // if transport destroyed enroute
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		GVAR(ready) = -1;
+		GVAR(status) = TR_WAITING;
 		deleteMarker _exfilMrk;
 		deleteMarker _infilMrk;
 		_transport call EFUNC(main,cleanup);
 		COOLDOWN;
 	};
-}, 1, [_unit,_transport,_pilot,_exfilMrk,_infilMrk]] call CBA_fnc_addPerFrameHandler;
+}, 1, [_transport,_pilot,_exfilMrk,_infilMrk]] call CBA_fnc_addPerFrameHandler;
 
 // handle transport timeout if player not in copilot
 [{
 	params ["_args","_idPFH"];
 	_args params ["_transport","_pilot"];
 
-	if (GVAR(ready) isEqualTo 1 || {GVAR(ready) isEqualTo -1}) exitWith {
+	if (COMPARE_STR(GVAR(status),TR_READY) || {COMPARE_STR(GVAR(status),TR_WAITING)}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 	};
 
-	if (isTouchingGround _transport && {alive _pilot} && {objectParent _pilot isEqualTo _transport} && {canMove _transport}) exitWith {
+	if (isTouchingGround _transport && {alive _pilot} && {canMove _transport}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 
 		[
 			{
-				params ["_pilot","_transport","_unit"];
+				params ["_pilot","_transport"];
 
 				if (isTouchingGround _transport) then {
-					GVAR(ready) = -1;
+					GVAR(status) = TR_WAITING;
 
 					{
 						if (isPlayer _x) then {moveOut _x};
 					} forEach (crew _transport);
 
 					_wp = group _pilot addWaypoint [[0,0,100], 0];
-					(vehicle _pilot) call EFUNC(main,cleanup);
+					_transport call EFUNC(main,cleanup);
 					COOLDOWN;
 				};
 			},
-			[_pilot,_transport,_unit],
+			[_pilot,_transport],
 			IDLE_TIME
 		] call CBA_fnc_waitAndExecute;
 	};
