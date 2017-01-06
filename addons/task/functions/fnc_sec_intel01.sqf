@@ -19,7 +19,9 @@ __________________________________________________________________*/
 #define UNITCOUNT 6
 #include "script_component.hpp"
 
-params [["_position",[]]];
+params [
+    ["_position",[],[[]]]
+];
 
 // CREATE TASK
 _taskID = str diag_tickTime;
@@ -38,7 +40,7 @@ if (_position isEqualTo [] && {!(EGVAR(main,locals) isEqualTo [])}) then {
 };
 
 if (_position isEqualTo []) exitWith {
-	[TASK_TYPE,0] call FUNC(select);
+	TASK_EXIT_DELAY(0);
 };
 
 _grp = [_position,0,UNITCOUNT,CIVILIAN,true,0.5] call EFUNC(main,spawnGroup);
@@ -49,7 +51,7 @@ _grp = [_position,0,UNITCOUNT,CIVILIAN,true,0.5] call EFUNC(main,spawnGroup);
 		params ["_position","_grp"];
 
         _units = units _grp;
-		removeFromRemainsCollector units _grp;
+		removeFromRemainsCollector _units;
 
 		{
 			removeAllItems _x;
@@ -82,8 +84,7 @@ TASK_DEBUG(_position);
 
 // SET TASK
 _taskPos = ASLToAGL ([_position,120,150] call EFUNC(main,findPosSafe));
-_taskDescription = format["A few days ago an informant didn't show for a meeting. He was suppose to hand off a GPS device with vital intel on the enemy's whereabouts. Today, UAV reconnaissance spotted activity near grid %1. Search the area for the informant and retrieve the GPS.", mapGridPosition _position];
-
+_taskDescription = "A few days ago an informant didn't show for a meeting. He was suppose to hand off a GPS device with vital intel on the enemy's whereabouts. Today, UAV reconnaissance spotted activity nearby. Search the area for the informant and retrieve the GPS.";
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"search"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
@@ -98,7 +99,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		(units _grp) call EFUNC(main,cleanup);
-		[TASK_TYPE,30] call FUNC(select);
+		TASK_EXIT_DELAY(30);
 	};
 
 	if (!isNull INTEL_CONTAINER && {{COMPARE_STR(INTEL_CLASS,_x)} count itemCargo INTEL_CONTAINER < 1}) exitWith {

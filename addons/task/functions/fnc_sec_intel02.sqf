@@ -18,7 +18,9 @@ __________________________________________________________________*/
 #define UNITCOUNT 8
 #include "script_component.hpp"
 
-params [["_position",[]]];
+params [
+    ["_position",[],[[]]]
+];
 
 // CREATE TASK
 _taskID = str diag_tickTime;
@@ -31,7 +33,7 @@ if (_position isEqualTo []) then {
 };
 
 if (_position isEqualTo []) exitWith {
-	[TASK_TYPE,0] call FUNC(select);
+	TASK_EXIT_DELAY(0);
 };
 
 call {
@@ -47,7 +49,7 @@ call {
 };
 
 _position = _position select 1;
-_vehPos = [_position,5,30,7,0] call EFUNC(main,findPosSafe);
+_vehPos = [_position,5,30,8,0] call EFUNC(main,findPosSafe);
 
 if !(_position isEqualTo _vehPos) then {
 	_vehicle = (selectRandom _classes) createVehicle [0,0,0];
@@ -59,9 +61,7 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
 [
 	{count units (_this select 0) >= UNITCOUNT},
 	{
-		params ["_grp","_position","_vehicle","_taskID"];
-
-		[_grp,30] call EFUNC(main,setPatrol);
+		params ["_grp"];
 
         removeFromRemainsCollector units _grp;
 
@@ -76,6 +76,8 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
         } forEach (uniformItems leader _grp);
 
         INTEL_CONTAINER = [leader _grp,INTEL_CLASS] call FUNC(addItem);
+
+        [_grp,_grp,30,1,true] call CBA_fnc_taskDefend;
 	},
 	[_grp]
 ] call CBA_fnc_waitUntilAndExecute;
@@ -98,7 +100,7 @@ TASK_PUBLISH(_position);
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         [_taskID, "CANCELED"] call EFUNC(main,setTaskState);
         ((units _grp) + [_vehicle]) call EFUNC(main,cleanup);
-        [TASK_TYPE,30] call FUNC(select);
+        TASK_EXIT_DELAY(30);
     };
 
     if (!isNull INTEL_CONTAINER && {{COMPARE_STR(INTEL_CLASS,_x)} count itemCargo INTEL_CONTAINER < 1}) exitWith {

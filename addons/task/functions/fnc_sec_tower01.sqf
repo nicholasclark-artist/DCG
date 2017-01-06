@@ -16,26 +16,24 @@ __________________________________________________________________*/
 #define TOWER "Land_TTowerBig_2_F"
 #include "script_component.hpp"
 
-params [["_pos",[]]];
+params [
+    ["_pos",[],[[]]]
+];
 
 // CREATE TASK
 _taskID = str diag_tickTime;
 _strength = TASK_STRENGTH;
 
 if (!(EGVAR(main,hills) isEqualTo []) && {_pos isEqualTo []}) then {
-	_temp = TOWER createVehicleLocal [0,0,0];
 	_hillPos = (selectRandom EGVAR(main,hills)) select 0;
-	_pos = [_hillPos,0,100,_temp,0,1] call EFUNC(main,findPosSafe);
-
-	deleteVehicle _temp;
-
+	_pos = [_hillPos,0,100,6,0,1] call EFUNC(main,findPosSafe);
 	if (_pos isEqualTo _hillPos) then {
 		_pos = [];
 	};
 };
 
 if (_pos isEqualTo []) exitWith {
-	[TASK_TYPE,0] call FUNC(select);
+	TASK_EXIT_DELAY(0);
 };
 
 _tower = TOWER createVehicle _pos;
@@ -43,14 +41,14 @@ _tower setPosATL [(getposATL _tower) select 0,(getposATL _tower) select 1,-1];
 _tower setVectorUp [0,0,1];
 [_tower] call FUNC(handleDamage);
 
-_grp = [_pos,0,_strength] call EFUNC(main,spawnGroup);
+_grp = [_pos,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 1)},
 	{
 		_this params ["_grp"];
 
-		[_grp] call EFUNC(main,setPatrol);
+		[_grp,_grp,50,1,false] call CBA_fnc_taskDefend;
 	},
 	[_grp,_strength]
 ] call CBA_fnc_waitUntilAndExecute;
@@ -71,7 +69,7 @@ TASK_PUBLISH(_pos);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		((units _grp) + [_tower]) call EFUNC(main,cleanup);
-		[TASK_TYPE,30] call FUNC(select);
+		TASK_EXIT_DELAY(30);
 	};
 
 	if !(alive _tower) exitWith {

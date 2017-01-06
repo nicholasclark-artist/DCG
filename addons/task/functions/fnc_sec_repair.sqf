@@ -16,7 +16,9 @@ __________________________________________________________________*/
 #define VEHCOUNT 1
 #include "script_component.hpp"
 
-params [["_position",[]]];
+params [
+    ["_position",[],[[]]]
+];
 
 // CREATE TASK
 _taskID = str diag_tickTime;

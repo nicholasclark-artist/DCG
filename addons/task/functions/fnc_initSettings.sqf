@@ -25,7 +25,7 @@ __________________________________________________________________*/
 [
     QGVAR(cooldown),
     "SLIDER",
-    "Task Cooldown",
+        ["Task Cooldown","Time in seconds between task spawns."],
     COMPONENT_NAME,
     [
         60,
