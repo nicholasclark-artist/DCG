@@ -12,41 +12,24 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define PRESET QUOTE(DOUBLES(PREFIX,preset))
+#define NETWORK_COUNT 6
+#define ACRE_BASERADIOS ["ACRE_PRC343","ACRE_PRC148","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_SEM52SL"]
 
 if (CHECK_ADDON_1("acre_main")) then {
-	{
-		[_x, "default", PRESET] call acre_api_fnc_copyPreset;
+    {
+        [_x, "default", PRESET] call acre_api_fnc_copyPreset;
+    } forEach ACRE_BASERADIOS;
 
-		call {
-			_channel = _forEachIndex + 1;
-			_name = ["Comm Net", str _channel] joinString " ";
+    for "_c" from 1 to NETWORK_COUNT do {
+        _name = ["Comm Net", _c] joinString " ";
+        ["ACRE_PRC148", PRESET, _c, "name", _name] call acre_api_fnc_setPresetChannelField;
+        ["ACRE_PRC152", PRESET, _c, "description", _name] call acre_api_fnc_setPresetChannelField;
+        ["ACRE_PRC117F", PRESET, _c, "label", _name] call acre_api_fnc_setPresetChannelField;
+    };
 
-			if (_x == "ACRE_PRC343") exitWith {};
-
-			if (_x == "ACRE_PRC148") exitWith {
-				[_x, PRESET, _channel, "label", _name] call acre_api_fnc_setPresetChannelField;
-			};
-
-			if (_x == "ACRE_PRC152") exitWith {
-				[_x, PRESET, _channel, "description", _name] call acre_api_fnc_setPresetChannelField;
-			};
-
-			if (_x == "ACRE_PRC117F") exitWith {
-				[_x, PRESET, _channel, "name", _name] call acre_api_fnc_setPresetChannelField;
-			};
-
-			INFO_1("%1 is not a recognized type.",_x);
-		};
-
-		[_x, PRESET] call acre_api_fnc_setPreset;
-	} forEach [
-		GVAR(commNet01_ACRE),
-		GVAR(commNet02_ACRE),
-		GVAR(commNet03_ACRE),
-		GVAR(commNet04_ACRE),
-		GVAR(commNet05_ACRE),
-		GVAR(commNet06_ACRE)
-	];
+    {
+        [_x, PRESET] call acre_api_fnc_setPreset;
+    } forEach ACRE_BASERADIOS;
 
 	if (hasInterface) then {
 		player addEventHandler ["respawn",{
