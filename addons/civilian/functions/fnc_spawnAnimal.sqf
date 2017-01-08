@@ -17,8 +17,7 @@ __________________________________________________________________*/
 params ["_pos","_types"];
 
 private _agentList = [];
-
-_id = str _pos;
+private _id = str _pos;
 
 missionNamespace setVariable [LOCATION_ID(_id),true];
 
@@ -31,9 +30,9 @@ for "_i" from 1 to 10 do {
 	params ["_args","_idPFH"];
 	_args params ["_pos","_agentList"];
 
-	if ({CHECK_DIST(_x,_pos,GVAR(spawnDist))} count allPlayers isEqualTo 0) exitWith {
+	if ((allPlayers inAreaArray [_pos,GVAR(spawnDist),GVAR(spawnDist),0,false,ZDIST]) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
+        _agentList call EFUNC(main,cleanup);
 		missionNamespace setVariable [LOCATION_ID(_id),false];
-		_agentList call EFUNC(main,cleanup);
 	};
-}, 30, [_pos,_agentList]] call CBA_fnc_addPerFrameHandler;
+}, HANDLER_DELAY, [_pos,_agentList]] call CBA_fnc_addPerFrameHandler;

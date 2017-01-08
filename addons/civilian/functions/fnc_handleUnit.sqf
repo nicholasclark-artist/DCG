@@ -13,29 +13,28 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-_args = _this select 0;
-
 {
-	if (!(missionNamespace getVariable [LOCATION_ID(_x select 0),false]) && {GVAR(blacklist) find (_x select 0) isEqualTo -1}) then {
-		private "_unitCount";
-		private _position = _x select 1;
+    _x params ["_name","_position","_size","_type"];
 
-		private _near = _position nearEntities [["Man", "LandVehicle"], GVAR(spawnDist)];
-		_near = _near select {isPlayer _x && {(getPosATL _x select 2) < ZDIST}};
+	if (!(missionNamespace getVariable [LOCATION_ID(_name),false]) && {GVAR(blacklist) find _name isEqualTo -1}) then {
+        _players = [_position,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers);
 
-		if !(_near isEqualTo []) then {
+		if !(_players isEqualTo []) then {
+            private "_unitCount";
+
 			call {
-				if ((_x select 3) isEqualTo "NameCityCapital") exitWith {
-					_unitCount = ceil(GVAR(countCapital));
+				if (_type isEqualTo "NameVillage") exitWith {
+					_unitCount = ceil(5*GVAR(multiplier));
 				};
-				if ((_x select 3) isEqualTo "NameCity") exitWith {
-					_unitCount = ceil(GVAR(countCity));
+				if (_type isEqualTo "NameCity") exitWith {
+					_unitCount = ceil(10*GVAR(multiplier));
 				};
-				_unitCount = ceil(GVAR(countVillage));
+                _unitCount = ceil(15*GVAR(multiplier));
 			};
-			[ASLToAGL _position,_unitCount,_x select 0] call FUNC(spawnUnit);
+
+			[ASLToAGL _position,_unitCount,_name] call FUNC(spawnUnit);
 		};
 	};
 
 	false
-} count (_args select 0);
+} count (_this select 0);

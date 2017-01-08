@@ -11,6 +11,9 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define ITERATIONS 350
+#define BUFFER 150
+#define RANGE 1100
 
 private ["_HCs","_players","_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
 
@@ -73,11 +76,10 @@ if (count GVAR(drivers) <= ceil GVAR(vehMaxCount)) then {
 
 			if (!(_roadStart isEqualTo _roadEnd) &&
 				{!(CHECK_VECTORDIST(getPosASL _roadStart,getPosASL _roadEnd,RANGE))} &&
-			    {!([getPosASL _roadStart,_player] call EFUNC(main,inLOS))} &&
-			    {([_roadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
-			    {([_roadEnd,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
-				{!(CHECK_DIST2D(_roadStart,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))} &&
-				{!(CHECK_DIST2D(_roadEnd,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))}) then {
+			    {!([getPosASL _roadStart,eyePos _player] call EFUNC(main,inLOS))} &&
+			    {([getPos _roadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
+			    {([getPos _roadEnd,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
+				{([_roadStart,_roadEnd] inAreaArray EGVAR(main,baseLocation)) isEqualTo []}) then {
 					[_roadStart,_roadMid,_roadEnd,_player] call FUNC(spawnVehicle);
 			};
 		};

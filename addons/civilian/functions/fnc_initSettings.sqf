@@ -23,12 +23,26 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(spawnDist),
-    "SLIDER",
-    "Spawn Distance",
+    QGVAR(multiplier),
+    "LIST",
+    ["Civilian Count","Amount of civilian units spawned in a location."],
     COMPONENT_NAME,
     [
-        100,
+        [1,1.5],
+        ["Low","High"],
+        0
+    ],
+    true,
+    {}
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(spawnDist),
+    "SLIDER",
+    ["Spawn Distance","Distance from location center that units will spawn."],
+    COMPONENT_NAME,
+    [
+        300,
         1000,
         400,
         0
@@ -38,54 +52,9 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(countCapital),
-    "SLIDER",
-    "Civilian Count in Capitals",
-    COMPONENT_NAME,
-    [
-        0,
-        20,
-        15,
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(countCity),
-    "SLIDER",
-    "Civilian Count in Cities",
-    COMPONENT_NAME,
-    [
-        0,
-        20,
-        10,
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(countVillage),
-    "SLIDER",
-    "Civilian Count in Villages",
-    COMPONENT_NAME,
-    [
-        0,
-        20,
-        5,
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
     QGVAR(vehMaxCount),
     "SLIDER",
-    "Max Vehicle Count",
+    ["Max Vehicle Count","Max number of active civilian vehicles."],
     COMPONENT_NAME,
     [
         0,
@@ -100,7 +69,7 @@ __________________________________________________________________*/
 [
     QGVAR(vehCooldown),
     "SLIDER",
-    "Vehicle Cooldown",
+    ["Vehicle Cooldown","Time in seconds between potential vehicle spawns."],
     COMPONENT_NAME,
     [
         300,
