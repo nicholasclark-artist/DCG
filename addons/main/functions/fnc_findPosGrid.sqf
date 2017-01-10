@@ -10,7 +10,7 @@ Arguments:
 1: distance between positions <NUMBER>
 2: max distance from center <NUMBER>
 3: min distance from center <NUMBER>
-4: min distance from objects <NUMBER>
+4: min distance from object <NUMBER>
 5: allow water <BOOL>
 6: shuffle position array <BOOL>
 
@@ -25,13 +25,13 @@ __________________________________________________________________*/
 #endif
 
 params [
-	"_anchor",
-	["_dist",25,[0]],
-	["_range",100,[0]],
+	["_anchor",[0,0,0],[[]]],
+	["_dist",64,[0]],
+	["_range",256,[0]],
 	["_rangeMin",0,[0]],
-	["_distObj",-1,[0]],
+	["_distObj",0,[0]],
 	["_water",-1,[0]],
-	["_shuffle",false]
+	["_shuffle",false,[false]]
 ];
 
 private _ret = [];
@@ -39,16 +39,19 @@ private _origin = [(_anchor select 0) - (_range/2),(_anchor select 1) - (_range/
 private _count = floor (_range/_dist);
 
 for "_y" from 0 to _count do {
-    private _column = [_origin select 0,(_origin select 1) + (_range*(_y/_count))];
+    private _column = [_origin select 0,(_origin select 1) + (_dist*_y)];
 	_ret pushBack _column;
 
     for "_x" from 1 to _count do {
-        private _row = [(_column select 0) + (_range*(_x/_count)), _column select 1];
+        private _row = [(_column select 0) + (_dist*_x), _column select 1];
         _ret pushBack _row;
     };
 };
 
-_ret = _ret select {!(_x inArea [_anchor, _rangeMin, _rangeMin, 0, false, -1]) && {[_x,_distObj,_water] call FUNC(isPosSafe)}};
+_ret = _ret select {
+    !(_x inArea [_anchor, _rangeMin, _rangeMin, 0, false, -1]) &&
+    {[_x,_distObj,_water] call FUNC(isPosSafe)}
+};
 
 {
     _x set [2,(getTerrainHeightASL _x) max 0]
@@ -60,8 +63,9 @@ if (_shuffle) then {
 
 if (GRID_DEBUG) then {
     {
-        _mrk = createMarker [format ["%1", _x], _x];
+        _mrk = createMarker [format ["debug_%1", _x], _x];
         _mrk setMarkerType "mil_dot";
+        _mrk setMarkerColor "ColorRed";
         _mrk setMarkerText str (_x select 2);
     } forEach _ret;
 };
