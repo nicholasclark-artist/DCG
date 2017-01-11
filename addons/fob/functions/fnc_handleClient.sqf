@@ -11,6 +11,7 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
+#include "\a3\editor_f\Data\Scripts\dikCodes.h"
 
 [QUOTE(ADDON),"Forward Operating Base",{},QUOTE(true),{call FUNC(getChildren)}] call EFUNC(main,setAction);
 
@@ -19,6 +20,13 @@ if (CHECK_ADDON_1("ace_interact_menu")) then {
     _action = [TRANSFER_ID, TRANSFER_NAME, "", {TRANSFER_STATEMENT_ACE}, {TRANSFER_COND_ACE}, {}, []] call ace_interact_menu_fnc_createAction;
     ["CAManBase", 0, ["ACE_MainActions"],_action,true] call ace_interact_menu_fnc_addActionToClass;
 };
+
+[ADDON_TITLE, CREATE_ID, CREATE_NAME, {CREATE_KEYCODE}, ""] call CBA_fnc_addKeybind;
+[ADDON_TITLE, DELETE_ID, DELETE_NAME, {DELETE_KEYCODE}, ""] call CBA_fnc_addKeybind;
+[ADDON_TITLE, TRANSFER_ID, TRANSFER_NAME, {TRANSFER_KEYCODE}, ""] call CBA_fnc_addKeybind;
+[ADDON_TITLE, CONTROL_ID, CONTROL_NAME, {CONTROL_KEYCODE}, ""] call CBA_fnc_addKeybind;
+[ADDON_TITLE, RECON_ID, RECON_NAME, {RECON_KEYCODE}, ""] call CBA_fnc_addKeybind;
+[ADDON_TITLE, BUILD_ID, BUILD_NAME, {BUILD_KEYCODE}, "", [DIK_DOWN, [true, false, false]]] call CBA_fnc_addKeybind;
 
 player addEventHandler ["Respawn",{
     if ((_this select 1) isEqualTo getAssignedCuratorUnit GVAR(curator)) then {

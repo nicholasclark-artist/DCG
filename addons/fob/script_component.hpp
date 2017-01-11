@@ -3,7 +3,7 @@
 #include "\d\dcg\addons\main\script_mod.hpp"
 
 // #define DEBUG_MODE_FULL
-// #define DISABLE_COMPILE_CACHE
+#define DISABLE_COMPILE_CACHE
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
@@ -29,7 +29,7 @@
     	publicVariableServer PVEH_CREATE; \
     }, [], 9] call CBA_fnc_waitAndExecute
 
-#define CREATE_COND !(FOB_DEPLOYED) && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {!(((player modelToWorld [0,3,0]) isFlatEmpty  [3, -1, -1, -1, 0, false, player]) isEqualTo [])}
+#define CREATE_COND !(FOB_DEPLOYED) && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {!((getpos player isFlatEmpty  [6, -1, -1, -1, 0, false, player]) isEqualTo [])}
 #define CREATE_KEYCODE \
 	if (CREATE_COND) then { \
 		CREATE_STATEMENT \
@@ -85,26 +85,6 @@
 #define DELETE_KEYCODE \
 	if (DELETE_COND) then { \
 		DELETE_STATEMENT \
-	}
-
-#define PATROL_ID QUOTE(DOUBLES(ADDON,patrol))
-#define PATROL_NAME "Set FOB Groups on Patrol"
-#define PATROL_STATEMENT \
-	{ \
-		if (_x isKindOf 'Man' && {_x isEqualTo leader group _x} && {!(_x getVariable [QUOTE(ISONPATROL),-1] isEqualTo 1)}) then { \
-			[group _x,GVAR(range),false] call EFUNC(main,setPatrol); \
-			_x addEventHandler ['Local',{ \
-				if (_this select 1) then { \
-					_x setVariable [QUOTE(ISONPATROL),0]; \
-					[group (_this select 0),GVAR(range),false] call EFUNC(main,setPatrol); \
-				}; \
-			}]; \
-		}; \
-	} forEach (curatorEditableObjects GVAR(curator));
-#define PATROL_COND player isEqualTo (getAssignedCuratorUnit GVAR(curator))
-#define PATROL_KEYCODE \
-	if (PATROL_COND) then { \
-		PATROL_STATEMENT \
 	}
 
 #define RECON_ID QUOTE(DOUBLES(ADDON,recon))
