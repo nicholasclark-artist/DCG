@@ -20,8 +20,11 @@ PREP(handleHostile);
 PREP(handleHint);
 PREP(spawnHostile);
 
+GVAR(regions) = [];
+
 publicVariable QFUNC(initSettings);
 publicVariable QFUNC(handleKilled);
 publicVariable QFUNC(handleClient);
+publicVariable QFUNC(getRegion);
 
 INITSETTINGS;

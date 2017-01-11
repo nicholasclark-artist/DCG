@@ -14,14 +14,15 @@ number
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_position","_add"];
+params [
+    ["_position",[],[[]]],
+    ["_add",0,[0]]
+];
 
-{
-	private _value = missionNamespace getVariable [AV_LOCATION_ID(_x select 0),0];
-	missionNamespace setVariable [AV_LOCATION_ID(_x select 0),_value + _add];
+private _region = [_position] call FUNC(getRegion);
+private _value = _region getVariable QGVAR(regionValue);
+ISNILS(_value,AV_DEFAULT);
+private _newValue = _value + _add;
+_region setVariable [QGVAR(regionValue),_newValue];
 
-	LOCATION_DEBUG_ID(_x select 0) setMarkerText LOCATION_DEBUG_TEXT(_x select 0);
-	// INFO_3("Location: %1, added value: %2, current value: %3",_x select 0,_add,_value + _add);
-
-	false
-} count ([_position] call FUNC(getRegion));
+_newValue

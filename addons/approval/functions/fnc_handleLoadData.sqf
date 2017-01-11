@@ -12,17 +12,24 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define REGION_SIZE 3000
 
-params ["_data"];
+params [
+    ["_data",[],[[]]]
+];
 
-if !(_data isEqualTo []) then {
-	{
-		missionNamespace setVariable [AV_LOCATION_ID(_x select 0),_x select 1,false];
-		false
-	} count _data;
-} else {
-	{
-		missionNamespace setVariable [AV_LOCATION_ID(_x select 0),AV_MAX*0.1,false];
-		false
-	} count EGVAR(main,locations);
-};
+{
+    private _pos =+ _x;
+    _pos deleteAt 2;
+
+    private _value = if (count _data > _forEachIndex + 1) then {
+        _data select _forEachIndex
+    } else {
+        AV_DEFAULT
+    };
+
+    private _location = createLocation ["Name", _pos, REGION_SIZE, REGION_SIZE];
+    _location setRectangular true;
+    _location setVariable [QGVAR(regionValue),_value];
+    GVAR(regions) pushBack _location;
+} forEach ([EGVAR(main,center),REGION_SIZE*2,worldSize] call EFUNC(main,findPosGrid));

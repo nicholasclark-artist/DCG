@@ -13,16 +13,13 @@ number
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_value","_locations"];
+params [
+    ["_position",[],[[]]]
+];
 
-_value = 0;
-_locations = [_this select 0] call FUNC(getRegion);
+private _region = [_position] call FUNC(getRegion);
+private _ret = _region getVariable QGVAR(regionValue);
 
-{
-	_value = _value + (missionNamespace getVariable [AV_LOCATION_ID(_x select 0),0]);
-	false
-} count _locations;
+ISNILS(_ret,AV_DEFAULT);
 
-_value = _value*(1/((count _locations) max 1));
-
-_value
+_ret

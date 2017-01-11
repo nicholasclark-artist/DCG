@@ -18,8 +18,8 @@ __________________________________________________________________*/
 #define SEND_MSG(MSG) [MSG] remoteExecCall [QEFUNC(main,displayText), _player, false]
 
 params [
-    "_player",
-    "_unit"
+    ["_player",objNull,[objNull]],
+    ["_unit",objNull,[objNull]]
 ];
 
 if (diag_tickTime < (_unit getVariable [QVAR,COOLDOWN * -1]) + COOLDOWN) exitWith {

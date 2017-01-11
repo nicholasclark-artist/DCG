@@ -33,13 +33,13 @@ private _posArray = [_pos,50,500,200] call EFUNC(main,findPosGrid);
 } forEach _posArray;
 
 if (_posArray isEqualTo []) exitWith {
-	WARNING("Hostile spawn position empty.");
+	WARNING("Hostile spawn position empty");
 };
 
 private _hostilePos = selectRandom _posArray;
 
-if ({[_hostilePos,_x] call EFUNC(main,inLOS)} count _nearPlayers > 0) exitWith {
-	WARNING("Hostile position in line of sight.");
+if ({[_hostilePos,eyePos _x] call EFUNC(main,inLOS)} count _nearPlayers > 0) exitWith {
+	WARNING("Hostile position in line of sight");
 };
 
 call {
@@ -86,7 +86,7 @@ call {
 				_cond = "!(behaviour this isEqualTo ""COMBAT"")";
 				_wp setWaypointStatements [_cond, format ["thisList call %1;",QEFUNC(main,cleanup)]];
 
-				INFO_1("Rebels spawned at %1.",getPos leader _grp);
+				INFO_1("Rebels spawned at %1",getPos leader _grp);
 			},
 			[_grp,_pos,_vest,_weapon,_mags]
 		] call CBA_fnc_waitUntilAndExecute;
@@ -94,7 +94,7 @@ call {
 
 	if (_type isEqualTo 1) exitWith {
 		if (EGVAR(civilian,drivers) isEqualTo []) exitWith {
-			WARNING("No drivers available to turn hostile.");
+			WARNING("No drivers available to turn hostile");
 		};
 
 		_driver = objNull;
@@ -153,7 +153,7 @@ call {
 						};
 					}, 0.1, [_unit,_player]] call CBA_fnc_addPerFrameHandler;
 
-					INFO_1("Suicide vehicle spawned at %1.", getPos _unit);
+					INFO_1("Suicide vehicle spawned at %1", getPos _unit);
 				},
 				[_player,_driver,_wp],
 				5
@@ -197,6 +197,6 @@ call {
 			};
 		}, 0.1, [_unit,_player]] call CBA_fnc_addPerFrameHandler;
 
-		INFO_1("Suicide bomber spawned at %1.", getPos _unit);
+		INFO_1("Suicide bomber spawned at %1", getPos _unit);
 	};
 };

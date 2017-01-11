@@ -13,19 +13,17 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private _player = _this select 0;
-private _fobBonus = 0;
-private _value = [getpos _player] call FUNC(getValue);
-private _locations = [getpos _player] call FUNC(getRegion);
+params [
+    ["_player",objNull,[objNull]]
+];
 
-_locations = _locations apply {_x select 0};
-_locations = _locations joinString ", ";
+private _value = round ([getpos _player] call FUNC(getValue));
+private _safety = round ((AV_CHANCE(getPos _player))*100);
 
 private _format = format ["
-Regional Breakdown \n \n
-Approval: %3/%4 \n
-Hostility Chance: %5%6 \n
-Region: %2
-",_player,_locations,round _value,AV_MAX,round((AV_CHANCE(getPos _player))*100),"%"];
+    %4 \n \n
+    Region Approval: %1/%3 \n
+    Region Safety: %2/%3 \n
+",_value,_safety,AV_MAX,toUpper COMPONENT_NAME];
 
 [_format,true] remoteExecCall [QEFUNC(main,displayText),_player,false];

@@ -17,16 +17,18 @@
     _mrk setMarkerSizeLocal (size _region); \
     _mrk setMarkerShapeLocal "RECTANGLE"; \
     _mrk setMarkerAlphaLocal 1; \
-    ["Current region shown on map.",true] call EFUNC(main,displayText); \
-    [{ \
-        params ["_args","_idPFH"]; \
-		_args params ["_mrk"]; \
-        if (markerAlpha _mrk < 0.01) exitWith { \
-            [_idPFH] call CBA_fnc_removePerFrameHandler; \
-            deleteMarker _mrk; \
-        }; \
-        _mrk setMarkerAlphaLocal (markerAlpha _mrk - .005); \
-    }, 0, [_mrk]] call CBA_fnc_addPerFrameHandler;
+    if (CHECK_MARKER(_mrk)) then { \
+        ["Current region shown on map.",true] call EFUNC(main,displayText); \
+        [{ \
+            params ["_args","_idPFH"]; \
+    		_args params ["_mrk"]; \
+            if (markerAlpha _mrk < 0.01) exitWith { \
+                [_idPFH] call CBA_fnc_removePerFrameHandler; \
+                deleteMarker _mrk; \
+            }; \
+            _mrk setMarkerAlphaLocal (markerAlpha _mrk - .005); \
+        }, 0, [_mrk]] call CBA_fnc_addPerFrameHandler; \
+    };
 #define MARK_COND_ACE true
 #define MARK_KEYCODE \
     if (MARK_COND_ACE) then { \

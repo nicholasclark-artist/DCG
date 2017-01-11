@@ -25,7 +25,7 @@ __________________________________________________________________*/
 [
     QGVAR(multiplier),
     "SLIDER",
-    "Approval Multiplier",
+    ["Approval Multiplier",""],
     COMPONENT_NAME,
     [
         0.1,
@@ -40,7 +40,7 @@ __________________________________________________________________*/
 [
     QGVAR(hostileCooldown),
     "SLIDER",
-    "Hostile Spawn Cooldown",
+    ["Hostile Spawn Cooldown","Time in seconds between possible hostile spawns."],
     COMPONENT_NAME,
     [
         300,
