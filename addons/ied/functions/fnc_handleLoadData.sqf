@@ -12,15 +12,18 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define DIST_MIN 750
-#define DIST worldSize*0.057 max DIST_MIN
-#define TYPE_IED "a3\weapons_f\explosives\ied_urban_big.p3d"
-#define DEBUG_IED \
-	_mrk = createMarker [format["%1_%2",QUOTE(ADDON),getPosATL _ied],getPosATL _ied]; \
-	_mrk setMarkerType "mil_triangle"; \
-	_mrk setMarkerSize [0.5,0.5]; \
-	_mrk setMarkerColor "ColorRed"; \
-	[_mrk] call EFUNC(main,setDebugMarker)
+#define DIST_MIN 512
+#define DIST worldSize*0.055 max DIST_MIN
+#define ACE_TYPES ["IEDUrbanBig_Remote_Mag","IEDUrbanSmall_Remote_Mag"]
+#define VANILLA_TYPES ["IEDUrbanBig_F","IEDUrbanSmall_F"]
+#define CREATE_IED(POS) \
+    if !(CHECK_ADDON_1("ace_explosives")) then { \
+        _ied = createSimpleObject [selectRandom VANILLA_TYPES, AGLtoASL (POS getPos [5, random 360])]; \
+        GVAR(list) pushBack _ied; \
+    } else { \
+        _ied = [objNull, POS getPos [5, random 360], random 360, selectRandom ACE_TYPES, "PressurePlate", []] call ACE_Explosives_fnc_placeExplosive; \
+        GVAR(list) pushBack _ied; \
+    }
 
 params ["_data"];
 
@@ -32,18 +35,16 @@ if (_data isEqualTo []) then {
 			_road = selectRandom _roads;
 			_pos = getPos _road;
 
-			if (!(CHECK_DIST2D(_pos,locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius))) && {isOnRoad _road} && {(nearestLocations [_pos, ["NameCityCapital","NameCity","NameVillage"], 500]) isEqualTo []}) then {
-                _ied = createSimpleObject [TYPE_IED, AGLtoASL (_pos getPos [5, random 360])];
-				GVAR(list) pushBack _ied;
-				DEBUG_IED;
+			if (!(_pos inArea EGVAR(main,baseLocation)) && {isOnRoad _road}) then {
+                CREATE_IED(_pos);
 			};
 		};
 		false
-	} count ([EGVAR(main,center),DIST,worldSize,0,-1,false,false] call EFUNC(main,findPosGrid));
+	} count ([EGVAR(main,center),DIST,worldSize,0,0,0] call EFUNC(main,findPosGrid));
 } else {
 	for "_index" from 0 to count _data - 1 do {
-        _ied = createSimpleObject [TYPE_IED, AGLtoASL (_data select _index)];
-		GVAR(list) pushBack _ied;
-		DEBUG_IED;
+        _pos =+ (_data select _index);
+        _pos set [2,getTerrainHeightASL _pos];
+        CREATE_IED(_pos);
 	};
 };
