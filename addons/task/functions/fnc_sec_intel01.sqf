@@ -25,6 +25,7 @@ params [
 
 // CREATE TASK
 _taskID = str diag_tickTime;
+_cleanup = [];
 
 if (_position isEqualTo [] && {!(EGVAR(main,locals) isEqualTo [])}) then {
 	_position = (selectRandom EGVAR(main,locals)) select 1;
@@ -43,15 +44,16 @@ if (_position isEqualTo []) exitWith {
 	TASK_EXIT_DELAY(0);
 };
 
-_grp = [_position,0,UNITCOUNT,CIVILIAN,true,0.5] call EFUNC(main,spawnGroup);
+_grp = [_position,0,UNITCOUNT,CIVILIAN,true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 1) >= UNITCOUNT},
 	{
-		params ["_position","_grp"];
+		params ["_position","_grp","_cleanup"];
 
         _units = units _grp;
 		removeFromRemainsCollector _units;
+        _cleanup append _units;
 
 		{
 			removeAllItems _x;
@@ -77,7 +79,7 @@ _grp = [_position,0,UNITCOUNT,CIVILIAN,true,0.5] call EFUNC(main,spawnGroup);
             _mound setVectorUp surfaceNormal getPos _mound;
         };
 	},
-	[_position,_grp]
+	[_position,_grp,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 TASK_DEBUG(_position);
@@ -93,12 +95,12 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_grp"];
+	_args params ["_taskID","_grp","_cleanup"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		(units _grp) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
 
@@ -116,7 +118,7 @@ TASK_PUBLISH(_position);
 			} forEach _posArray;
 
 			if !(_posArray isEqualTo []) then {
-				_grp = [selectRandom _posArray,0,TASK_STRENGTH,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+				_grp = [selectRandom _posArray,0,TASK_STRENGTH,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 				_wp = _grp addWaypoint [getposATL (leader _grp),0];
                 _wp setWaypointType "SAD";
 				_cond = "!(behaviour this isEqualTo ""COMBAT"")";
@@ -126,7 +128,7 @@ TASK_PUBLISH(_position);
 			[getpos (leader _grp),EGVAR(main,enemySide)] spawn EFUNC(main,spawnReinforcements);
 		};
 
-        (units _grp) call EFUNC(main,cleanup);
+        _cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_grp]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_grp,_cleanup]] call CBA_fnc_addPerFrameHandler;

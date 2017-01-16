@@ -27,7 +27,7 @@ _strength = TASK_STRENGTH + TASK_GARRISONCOUNT;
 _vehGrp = grpNull;
 _artyClass = "";
 _gunnerClass = "";
-_objs = [];
+_cleanup = [];
 
 if (_position isEqualTo []) then {
 	_position = [EGVAR(main,center),EGVAR(main,range),"meadow",10] call EFUNC(main,findPosTerrain);
@@ -56,7 +56,7 @@ call {
 _base = [_position,0.65 + random 1] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 _bNodes = _base select 3;
-_objs append (_base select 2);
+_cleanup append (_base select 2);
 
 _bNodes = _bNodes select {[_x select 0,ARTY_SIZE,0] call EFUNC(main,isPosSafe)};
 
@@ -73,7 +73,7 @@ _arty setDir random 360;
 _arty setPos _posArty;
 _arty lock 3;
 _arty allowCrewInImmobile true;
-_objs pushBack _arty;
+_cleanup pushBack _arty;
 
 _gunner = (createGroup EGVAR(main,enemySide)) createUnit [_gunnerClass, [0,0,0], [], 0, "NONE"];
 _gunner assignAsGunner _arty;
@@ -83,21 +83,21 @@ _gunner setDir (getDir _arty);
 _gunner disableAI "FSM";
 _gunner setBehaviour "CARELESS";
 _gunner doWatch (_gunner modelToWorld [0,50,50]);
-_objs pushBack _gunner;
+_cleanup pushBack _gunner;
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},
 	{
-        params ["_grp","_bRadius","_strength","_objs"];
+        params ["_grp","_bRadius","_strength","_cleanup"];
 
-		_objs append (units _grp);
+		_cleanup append (units _grp);
 
         // regroup garrison units
         _garrisonGrp = createGroup EGVAR(main,enemySide);
         ((units _grp) select [0,TASK_GARRISONCOUNT]) joinSilent _garrisonGrp;
-        [_garrisonGrp,_garrisonGrp,_bRadius,2,false] call CBA_fnc_taskDefend;
+        [_garrisonGrp,_garrisonGrp,_bRadius,1,false] call CBA_fnc_taskDefend;
 
         // regroup patrols
         for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
@@ -106,20 +106,23 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
             [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol;
         };
 	},
-	[_grp,_bRadius,_strength,_objs]
+	[_grp,_bRadius,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 _vehPos = [_position,_bRadius,_bRadius + 100,8,0] call EFUNC(main,findPosSafe);
 _vehGrp = if !(_vehPos isEqualTo _position) then {
-	[_vehPos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
+	[_vehPos,1,1,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY,true] call EFUNC(main,spawnGroup);
 } else {
-	[_vehPos,2,1,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+	[_vehPos,2,1,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 };
 
 [
     {{_x getVariable [ISDRIVER,false]} count (units (_this select 1)) > 0},
     {
-        params ["_position","_vehGrp","_bRadius","_objs"];
+        params ["_position","_vehGrp","_bRadius","_cleanup"];
+
+        _cleanup pushBack (objectParent leader _vehGrp);
+        _cleanup pushBack (units _vehGrp);
 
         if (objectParent leader _vehGrp isKindOf "AIR") then {
             _waypoint = _vehGrp addWaypoint [_position,0];
@@ -131,10 +134,8 @@ _vehGrp = if !(_vehPos isEqualTo _position) then {
         } else {
             [_vehGrp, _position, _bRadius*2, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] call CBA_fnc_taskPatrol;
         };
-
-        _objs pushBack (objectParent leader _vehGrp);
     },
-    [_position,_vehGrp,_bRadius,_objs]
+    [_position,_vehGrp,_bRadius,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 _tar = EGVAR(main,locations) select {!(CHECK_DIST2D(_x select 1,_posArty,(worldSize*0.04) max 1000))};
@@ -169,13 +170,13 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_arty","_vehGrp","_position","_objs","_timerID","_tar"];
+	_args params ["_taskID","_arty","_vehGrp","_position","_cleanup","_timerID","_tar"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_timerID] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		_objs call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
 
@@ -183,7 +184,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_timerID] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
-		_objs call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_APPROVAL(_position,TASK_AV);
 		TASK_EXIT;
 	};
@@ -191,8 +192,8 @@ TASK_PUBLISH(_position);
 	if (EGVAR(main,timer) < 1) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
-		_objs call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
         TASK_APPROVAL(_tar,TASK_AV * -1);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_arty,_vehGrp,_position,_objs,_timerID,_tar]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_arty,_vehGrp,_position,_cleanup,_timerID,_tar]] call CBA_fnc_addPerFrameHandler;

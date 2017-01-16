@@ -43,6 +43,7 @@
 #define TASK_DIST_RET 20
 #define TASK_DIST_MRK 300
 #define TASK_SLEEP 5
+#define TASK_SPAWN_DELAY 2
 
 #define TASK_DEBUG(POS) \
 	_mrk = createMarker [format ["%1_%2",TASK, diag_tickTime],POS]; \

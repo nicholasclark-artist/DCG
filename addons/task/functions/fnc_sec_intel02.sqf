@@ -25,7 +25,7 @@ params [
 // CREATE TASK
 _taskID = str diag_tickTime;
 _classes = [];
-_vehicle = objNull;
+_cleanup = [];
 INTEL_CONTAINER = objNull;
 
 if (_position isEqualTo []) then {
@@ -48,21 +48,14 @@ call {
 	};
 };
 
-_position = _position select 1;
-_vehPos = [_position,5,30,8,0] call EFUNC(main,findPosSafe);
-
-if !(_position isEqualTo _vehPos) then {
-	_vehicle = (selectRandom _classes) createVehicle [0,0,0];
-	[_vehicle,_vehPos] call EFUNC(main,setPosSafe);
-};
-
-_grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+_grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= UNITCOUNT},
 	{
-		params ["_grp"];
+		params ["_grp","_cleanup"];
 
+        _cleanup append (units _grp);
         removeFromRemainsCollector units _grp;
 
 		{
@@ -79,7 +72,7 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,1] call EFUNC(main,spa
 
         [_grp,_grp,30,1,true] call CBA_fnc_taskDefend;
 	},
-	[_grp]
+	[_grp,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 TASK_DEBUG(_position);
@@ -94,12 +87,12 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
     params ["_args","_idPFH"];
-    _args params ["_taskID","_grp","_vehicle"];
+    _args params ["_taskID","_grp","_cleanup"];
 
     if (TASK_GVAR isEqualTo []) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         [_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-        ((units _grp) + [_vehicle]) call EFUNC(main,cleanup);
+        _cleanup call EFUNC(main,cleanup);
         TASK_EXIT_DELAY(30);
     };
 
@@ -107,7 +100,7 @@ TASK_PUBLISH(_position);
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         [_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
         TASK_APPROVAL(getPos (leader _grp),TASK_AV);
-        ((units _grp) + [_vehicle]) call EFUNC(main,cleanup);
+        _cleanup call EFUNC(main,cleanup);
         TASK_EXIT;
     };
-}, TASK_SLEEP, [_taskID,_grp,_vehicle]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_grp,_cleanup]] call CBA_fnc_addPerFrameHandler;

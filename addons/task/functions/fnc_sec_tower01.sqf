@@ -23,6 +23,7 @@ params [
 // CREATE TASK
 _taskID = str diag_tickTime;
 _strength = TASK_STRENGTH;
+_cleanup = [];
 
 if (!(EGVAR(main,hills) isEqualTo []) && {_pos isEqualTo []}) then {
 	_hillPos = (selectRandom EGVAR(main,hills)) select 0;
@@ -39,18 +40,26 @@ if (_pos isEqualTo []) exitWith {
 _tower = TOWER createVehicle _pos;
 _tower setPosATL [(getposATL _tower) select 0,(getposATL _tower) select 1,-1];
 _tower setVectorUp [0,0,1];
+_cleanup pushBack _tower;
 [_tower] call FUNC(handleDamage);
 
-_grp = [_pos,0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+_grp = [_pos,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 1)},
 	{
-		_this params ["_grp"];
+		params ["_grp","_strength","_cleanup"];
 
-		[_grp,_grp,50,1,false] call CBA_fnc_taskDefend;
+        _cleanup append (units _grp);
+
+        // regroup patrols
+        for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
+            _patrolGrp = createGroup EGVAR(main,enemySide);
+            ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
+            [_patrolGrp, _patrolGrp, 50 + random 50, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol;
+        };
 	},
-	[_grp,_strength]
+	[_grp,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
@@ -63,12 +72,12 @@ TASK_PUBLISH(_pos);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_pos","_tower","_grp"];
+	_args params ["_taskID","_pos","_cleanup"];
 
 	if (GVAR(secondary) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + [_tower]) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
 
@@ -76,7 +85,7 @@ TASK_PUBLISH(_pos);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_pos,TASK_AV);
-		((units _grp) + [_tower]) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_pos,_tower,_grp]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_pos,_cleanup]] call CBA_fnc_addPerFrameHandler;

@@ -22,6 +22,7 @@ params [["_posArray",[]]];
 _taskID = str diag_tickTime;
 _posConvoy = [];
 _posDeliver = [];
+_cleanup = [];
 _locConvoy = "";
 _locDeliver = "";
 _type = "";
@@ -91,6 +92,7 @@ _veh setDir random 360;
 _veh setPos _posConvoy;
 _veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.27,0.27,0.27,1)"];
 [_veh] call EFUNC(main,setVehDamaged);
+_cleanup pushBack _veh;
 
 if (CHECK_ADDON_1("ace_cargo")) then {
 	if (CHECK_ADDON_1("ace_medical")) then {
@@ -108,18 +110,21 @@ if (CHECK_ADDON_1("ace_cargo")) then {
 	_veh addItemCargoGlobal ["Medikit", 5];
 };
 
-_grp = [_posConvoy,0,UNITCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,spawnGroup);
+_grp = [_posConvoy,0,UNITCOUNT,EGVAR(main,playerSide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) isEqualTo UNITCOUNT},
 	{
+        params ["_grp","_cleanup"];
+
+        _cleanup append (units _grp);
 		{
 			if (random 1 < 0.5) then {
 				_x setUnitPos "MIDDLE";
 			};
 		} forEach units (_this select 0);
 	},
-	[_grp]
+	[_grp,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
@@ -132,12 +137,12 @@ TASK_PUBLISH(_posArray);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_posDeliver","_veh","_grp"];
+	_args params ["_taskID","_posDeliver","_veh","_cleanup"];
 
 	if (GVAR(secondary) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + [_veh]) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
 
@@ -145,7 +150,7 @@ TASK_PUBLISH(_posArray);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(getPos _veh,TASK_AV * -1);
-		((units _grp) + [_veh]) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
 
@@ -153,7 +158,7 @@ TASK_PUBLISH(_posArray);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(getPos _veh,TASK_AV);
-		((units _grp) + [_veh]) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 
 		if (random 1 < 0.5) then {
@@ -165,7 +170,7 @@ TASK_PUBLISH(_posArray);
 			} forEach _posArray;
 
 			if !(_posArray isEqualTo []) then {
-				_grp = [selectRandom _posArray,0,TASK_STRENGTH,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+				_grp = [selectRandom _posArray,0,TASK_STRENGTH,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 				_wp = _grp addWaypoint [getposATL _veh,0];
                 _grp setCombatMode "RED";
 				_wp setWaypointType "SAD";
@@ -176,4 +181,4 @@ TASK_PUBLISH(_posArray);
 			[getpos _veh,EGVAR(main,enemySide)] spawn EFUNC(main,spawnReinforcements);
 		};
 	};
-}, TASK_SLEEP, [_taskID,_posDeliver,_veh,_grp]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_posDeliver,_veh,_cleanup]] call CBA_fnc_addPerFrameHandler;

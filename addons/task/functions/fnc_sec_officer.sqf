@@ -22,6 +22,7 @@ params [
 // CREATE TASK
 _taskID = str diag_tickTime;
 _classes = [];
+_cleanup = [];
 _strength = TASK_STRENGTH;
 
 if (_position isEqualTo []) then {
@@ -57,20 +58,29 @@ if !([_position,1,0] call EFUNC(main,isPosSafe)) then {
 
 _base = [_position,random 0.2] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
+_cleanup = _base select 2;
 
 _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, ASLtoAGL _position, [], 0, "NONE"];
-[group _officer,_position,_bRadius*0.5,2,false] call CBA_fnc_taskDefend;
+_cleanup pushBack _officer;
+[group _officer,_position,_bRadius*0.5,1,false] call CBA_fnc_taskDefend;
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},
 	{
-        params ["_grp","_bRadius","_strength"];
+        params ["_grp","_bRadius","_strength","_cleanup"];
 
-        [_grp,_grp,_bRadius,2,false] call CBA_fnc_taskDefend;
+        _cleanup append (units _grp);
+
+        // regroup patrols
+        for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
+            _patrolGrp = createGroup EGVAR(main,enemySide);
+            ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
+            [_patrolGrp, _patrolGrp, _bRadius max 40, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol;
+        };
 	},
-	[_grp,_bRadius,_strength]
+	[_grp,_bRadius,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
@@ -84,12 +94,12 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_officer","_grp","_base","_position"];
+	_args params ["_taskID","_officer","_cleanup","_position"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + [_officer] + _base) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
 
@@ -97,7 +107,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_position,TASK_AV);
-		((units _grp) + [_officer] + _base) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_officer,_grp,_base select 2,_position]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_officer,_cleanup,_position]] call CBA_fnc_addPerFrameHandler;

@@ -23,6 +23,7 @@ params [
 _taskID = str diag_tickTime;
 _drivers = [];
 _town = [];
+_cleanup = [];
 _strength = TASK_STRENGTH + TASK_GARRISONCOUNT;
 _vehGrp = grpNull;
 
@@ -56,19 +57,22 @@ if (_position isEqualTo [] || {_town isEqualTo []} || {!(CHECK_ADDON_1("ace_capt
 _vip = (createGroup civilian) createUnit ["C_Nikos", [0,0,0], [], 0, "NONE"];
 _vip setDir random 360;
 _vip setPosASL _position;
+_cleanup pushBack _vip;
 [_vip,"Acts_AidlPsitMstpSsurWnonDnon02",true] call EFUNC(main,setAnim);
 
-_grp = [[_position,5,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,enemySide),false,1] call EFUNC(main,spawnGroup);
+_grp = [[_position,5,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 1)},
 	{
-        params ["_grp","_strength"];
+        params ["_grp","_strength","_cleanup"];
+
+        _cleanup append (units _grp);
 
         // regroup garrison units
         _garrisonGrp = createGroup EGVAR(main,enemySide);
         ((units _grp) select [0,TASK_GARRISONCOUNT]) joinSilent _garrisonGrp;
-        [_garrisonGrp,_garrisonGrp,_bRadius,2,true] call CBA_fnc_taskDefend;
+        [_garrisonGrp,_garrisonGrp,_bRadius,1,true] call CBA_fnc_taskDefend;
 
         // regroup patrols
         for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
@@ -77,21 +81,24 @@ _grp = [[_position,5,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,ene
             [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol;
         };
 	},
-	[_grp,_strength]
+	[_grp,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 _vehPos = [_position,50,100,8,0] call EFUNC(main,findPosSafe);
 
 if !(_vehPos isEqualTo _position) then {
-	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
+	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 	[
 		{{_x getVariable [ISDRIVER,false]} count (units (_this select 1)) > 0},
 		{
             params ["_position","_vehGrp"];
 
+            _cleanup pushBack (objectParent leader _vehGrp);
+            _cleanup pushBack (units _vehGrp);
+
 			[_vehGrp, _position, 200, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] call CBA_fnc_taskPatrol;
 		},
-		[_position,_vehGrp]
+		[_position,_vehGrp,_cleanup]
 	] call CBA_fnc_waitUntilAndExecute;
 };
 
@@ -108,14 +115,14 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_vip","_grp","_vehGrp","_town"];
+	_args params ["_taskID","_vip","_town","_cleanup"];
 
 	_success = false;
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		((units _grp) + (units _vehGrp) + [_vip] + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		[TASK_TYPE,30] call FUNC(select);
 	};
 
@@ -123,7 +130,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL((getPos _vip),TASK_AV * -1);
-		((units _grp) + (units _vehGrp) + [_vip] + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
 
@@ -146,7 +153,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL((getPos _vip),TASK_AV);
-		((units _grp) + (units _vehGrp) + [_vip] + [vehicle leader _vehGrp]) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_vip,_grp,_vehGrp,_town]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_vip,_town,_cleanup]] call CBA_fnc_addPerFrameHandler;

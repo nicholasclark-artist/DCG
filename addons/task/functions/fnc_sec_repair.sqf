@@ -24,6 +24,7 @@ params [
 _taskID = str diag_tickTime;
 _drivers = [];
 _vehicles = [];
+_cleanup = [];
 
 if (_position isEqualTo []) then {
 	{
@@ -42,17 +43,17 @@ if (_position isEqualTo []) exitWith {
 	[TASK_TYPE,0] call FUNC(select);
 };
 
-_grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,spawnGroup);
+_grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) >= VEHCOUNT},
 	{
-		_this params ["_grp","_drivers","_vehicles"];
+		params ["_grp","_cleanup"];
 
 		{
 			if (_x getVariable [ISDRIVER,false]) then {
-				_drivers pushBack _x;
-				_vehicles pushBack (vehicle _x);
+				_cleanup pushBack _x;
+				_cleanup pushBack (vehicle _x);
 				_x removeItems "ToolKit";
 				(vehicle _x) setDir random 360;
 				(vehicle _x) lock 3;
@@ -64,12 +65,11 @@ _grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,1] call EFUNC(main,spa
 			false
 		} count (units _grp);
 	},
-	[_grp,_drivers,_vehicles]
+	[_grp,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
-_taskDescription = format["A friendly patrol, scouting near %1, is in need of repairs. Gather the necessary tools and assist the patrol.", mapGridPosition _position];
-
+_taskDescription = "A friendly patrol is in need of repairs. Gather the necessary tools and assist the patrol.";
 [true,_taskID,[_taskDescription,TASK_TITLE,""],ASLToAGL([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"repair"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
@@ -78,12 +78,12 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_drivers","_vehicles","_position"];
+	_args params ["_taskID","_cleanup","_position"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		(_drivers + _vehicles) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		[TASK_TYPE,30] call FUNC(select);
 	};
 
@@ -91,7 +91,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_position,TASK_AV * -1);
-		(_drivers + _vehicles) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
 
@@ -99,7 +99,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(_position,TASK_AV);
-		(_drivers + _vehicles) call EFUNC(main,cleanup);
+		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_drivers,_vehicles,_position]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_cleanup,_position]] call CBA_fnc_addPerFrameHandler;
