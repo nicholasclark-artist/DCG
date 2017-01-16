@@ -25,7 +25,7 @@ __________________________________________________________________*/
 [
     QGVAR(cargoThreshold),
     "SLIDER",
-    ["Minimum Cargo Positions","Minimum number of cargo positions for passengers."],
+    ["Minimum Cargo Positions","Minimum number of available cargo positions in transport."],
     COMPONENT_NAME,
     [
         1,
