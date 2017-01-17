@@ -16,10 +16,9 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_grp","_driver","_veh","_wp","_statement"];
 params ["_start","_mid","_end","_player"];
 
-_grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
+private _grp = [getPos _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 
 [
 	{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) > 0},
