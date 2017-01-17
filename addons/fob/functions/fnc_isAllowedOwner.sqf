@@ -8,11 +8,13 @@ check if player can handle FOB
 Arguments:
 
 Return:
-none
+bool
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-_player = _this select 0;
+params [
+    ["_player",objNull,[objNull]]
+];
 
 if (GVAR(allow) isEqualTo 0) exitWith {
     true
