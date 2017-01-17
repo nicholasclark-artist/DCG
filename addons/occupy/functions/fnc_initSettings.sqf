@@ -23,151 +23,21 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(cooldown),
-    "SLIDER",
-    "Occupation Cooldown",
+    QGVAR(sniper),
+    "CHECKBOX",
+    ["Spawn Snipers","Spawn sniper units near occupied locations."],
     COMPONENT_NAME,
-    [
-        60,
-        3600,
-        600,
-        0
-    ],
+    true,
     true,
     {}
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(infCountCapital),
-    "SLIDER",
-    "Infantry Count in Capitals",
+    QGVAR(static),
+    "CHECKBOX",
+    ["Spawn Static Emplacements","Spawn static emplacements in occupied locations."],
     COMPONENT_NAME,
-    [
-        1,
-        60,
-        30,
-        0
-    ],
     true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(vehCountCapital),
-    "SLIDER",
-    "Land Vehicle Count in Capitals",
-    COMPONENT_NAME,
-    [
-        0,
-        3,
-        2,
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(airCountCapital),
-    "SLIDER",
-    "Air Vehicle Count in Capitals",
-    COMPONENT_NAME,
-    [
-        0,
-        2,
-        1,
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(infCountCity),
-    "SLIDER",
-    "Infantry Count in Cities",
-    COMPONENT_NAME,
-    [
-        1,
-        40,
-        20,
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(vehCountCity),
-    "SLIDER",
-    "Land Vehicle Count in Cities",
-    COMPONENT_NAME,
-    [
-        0,
-        2,
-        1,
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(airCountCity),
-    "SLIDER",
-    "Air Vehicle Count in Cities",
-    COMPONENT_NAME,
-    [
-        0,
-        1,
-        0,
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(infCountVillage),
-    "SLIDER",
-    "Infantry Count in Village",
-    COMPONENT_NAME,
-    [
-        1,
-        20,
-        10,
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(vehCountVillage),
-    "SLIDER",
-    "Land Vehicle Count in Village",
-    COMPONENT_NAME,
-    [
-        0,
-        1,
-        1,
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(airCountVillage),
-    "SLIDER",
-    "Air Vehicle Count in Village",
-    COMPONENT_NAME,
-    [
-        0,
-        1,
-        0,
-        0
-    ],
     true,
     {}
 ] call CBA_Settings_fnc_init;

@@ -13,10 +13,8 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_data"];
-
-if !(_data isEqualTo []) then {
-	[_data select 0] call FUNC(findLocation);
+if !(_this isEqualTo []) then {
+	_this call FUNC(findLocation);
 } else {
 	[] call FUNC(findLocation);
 };

@@ -3,97 +3,93 @@
 #include "\d\dcg\addons\main\script_mod.hpp"
 
 // #define DEBUG_MODE_FULL
-// #define DISABLE_COMPILE_CACHE
+#define DISABLE_COMPILE_CACHE
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
 #define UNITVAR QUOTE(DOUBLES(ADDON,unit))
 #define SET_UNITVAR(OBJ) (OBJ) setVariable [UNITVAR,true]
 #define GET_UNITVAR(OBJ) (OBJ) getVariable [UNITVAR,false]
-#define SPAWN_DELAY 0.5
+#define SPAWN_DELAY 0.75
+#define PATROL_UNITCOUNT 4
+#define VEH_SPAWN_CHANCE 0.75
 
-#define PREP_INF(POS,UNIT_COUNT,SIZE) \
-	_grp = [POS,0,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
-	[ \
-		{count units (_this select 0) >= (_this select 1)}, \
-		{ \
-			params ["_grp","_count","_size"]; \
-			[_grp,_size] call EFUNC(main,setPatrol); \
-			{ \
-				SET_UNITVAR(_x); \
-				false \
-			} count units _grp; \
-		}, \
-		[_grp,UNIT_COUNT,SIZE] \
-	] call CBA_fnc_waitUntilAndExecute
-
-#define PREP_VEH(POS,UNIT_COUNT,SIZE,CHANCE) \
-	if (random 1 < CHANCE) then { \
-		_grid = [POS,25,150,0,8,false,false] call EFUNC(main,findPosGrid); \
-		if !(_grid isEqualTo []) then { \
-			_grp = [ASLtoAGL (selectRandom _grid),1,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
-			[ \
-				{{_x getVariable [ISDRIVER,false]} count units (_this select 0) >= (_this select 1)}, \
-				{ \
-					params ["_grp","_count","_size"]; \
-					{ \
-						if (_x getVariable [ISDRIVER,false]) then { \
-							SET_UNITVAR(_x); \
-						}; \
-						false \
-					} count (units _grp); \
-					[_grp,_size*2] call EFUNC(main,setPatrol); \
-				}, \
-				[_grp,UNIT_COUNT,SIZE] \
-			] call CBA_fnc_waitUntilAndExecute; \
-		}; \
-	}
-
-#define PREP_AIR(POS,UNIT_COUNT,CHANCE) \
-	if (random 1 < CHANCE) then { \
-		_grp = [POS,2,UNIT_COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
-		[ \
-			{{_x getVariable [ISDRIVER,false]} count units (_this select 0) >= (_this select 1)}, \
-			{ \
-				params ["_grp"]; \
-				{ \
-					if (_x getVariable [ISDRIVER,false]) then { \
-						SET_UNITVAR(_x); \
-					}; \
-					false \
-				} count (units _grp); \
-				[_grp,1000] call EFUNC(main,setPatrol); \
-			}, \
-			[_grp,UNIT_COUNT] \
-		] call CBA_fnc_waitUntilAndExecute; \
-	}
-
-#define PREP_GARRISON(POS,MAX_COUNT,SIZE,POOL) \
-    _houses = []; \
-    _tempHouses = POS nearObjects ["House", SIZE]; \
-    { \
-        if !((_x buildingPos -1) isEqualTo []) then { \
-            _houses pushBack _x; \
-        }; \
-    } forEach _tempHouses; \
-    _grp = [POS,0,count _houses min MAX_COUNT,EGVAR(main,enemySide),true,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
+#define PREP_INF(POS,GRID,COUNT,GARRISON_COUNT,SIZE) \
+    private _grp = [ASLtoAGL (selectRandom GRID),0,COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
     [ \
-        {count units (_this select 0) >= (_this select 2)}, \
-        { \
-            params ["_grp","_houses"]; \
-            { \
-                _posArray = (selectRandom _houses) buildingPos -1; \
-                _x setDir random 360; \
-                _x setPosATL (selectRandom _posArray); \
-                _x disableAI "PATH"; \
-            } forEach (units _grp); \
-        }, \
-        [_grp,_houses,count _houses min MAX_COUNT] \
+    	{count units (_this select 1) >= (_this select 3)}, \
+    	{ \
+            params ["_pos","_grp","_size","_strength","_garrisonCount"];  \
+            _garrisonGrp = createGroup EGVAR(main,enemySide); \
+            ((units _grp) select [0,_garrisonCount]) joinSilent _garrisonGrp; \
+            [_garrisonGrp,_pos,_size,1,false] call CBA_fnc_taskDefend; \
+            for "_i" from 0 to (count units _grp) - 1 step PATROL_UNITCOUNT do { \
+                _patrolGrp = createGroup EGVAR(main,enemySide); \
+                ((units _grp) select [0,PATROL_UNITCOUNT]) joinSilent _patrolGrp; \
+                [_patrolGrp, _pos, _size, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "if (random 1 < 0.2) then {this spawn CBA_fnc_searchNearby}", [0,5,8]] call CBA_fnc_taskPatrol; \
+            }; \
+    	}, \
+    	[POS,_grp,SIZE,COUNT,GARRISON_COUNT] \
     ] call CBA_fnc_waitUntilAndExecute
 
-#define PREP_STATIC(POS,COUNT,SIZE,ARRAY) \
-	_static = [POS, SIZE, COUNT] call EFUNC(main,spawnStatic); \
-	ARRAY append (_static select 1)
+#define PREP_VEH(POS,GRID,COUNT,SIZE) \
+    for "_i" from 0 to (COUNT) - 1 do { \
+        if (GRID isEqualTo []) exitWith {}; \
+        if (random 1 < VEH_SPAWN_CHANCE) then { \
+            private _gridPos = ASLtoAGL (selectRandom GRID); \
+            private _grp = [_gridPos,1,1,EGVAR(main,enemySide),false,SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
+            GRID deleteAt (GRID find _gridPos); \
+            [ \
+                {{_x getVariable [ISDRIVER,false]} count units (_this select 0) >= 1}, \
+                { \
+                    params ["_grp","_size","_center"]; \
+                    [_grp, _center, _size, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] call CBA_fnc_taskPatrol; \
+                    { \
+                        if (_x getVariable [ISDRIVER,false]) then { \
+                            SET_UNITVAR(_x); \
+                        }; \
+                        false \
+                    } count units _grp; \
+                }, \
+                [_grp,SIZE,POS] \
+            ] call CBA_fnc_waitUntilAndExecute; \
+        }; \
+    }
 
-#define PREP_SNIPER(POS,MAX_COUNT,SIZE) \
-	[POS,ceil random MAX_COUNT,SIZE,SIZE+700] call EFUNC(main,spawnSniper)
+#define PREP_AIR(POS,COUNT) \
+    for "_i" from 0 to (COUNT) - 1 do { \
+        if (random 1 < VEH_SPAWN_CHANCE) then { \
+            private _grp = [POS,2,1,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
+            [ \
+                {{_x getVariable [ISDRIVER,false]} count units (_this select 0) >= 1}, \
+                { \
+                    params ["_grp","_center"]; \
+                    [_grp] call CBA_fnc_clearWaypoints; \
+                    private _waypoint = _grp addWaypoint [_center,0]; \
+                    _waypoint setWaypointType "LOITER"; \
+                    _waypoint setWaypointLoiterRadius (500 + random 500); \
+                    _waypoint setWaypointLoiterType "CIRCLE"; \
+                    _waypoint setWaypointSpeed "NORMAL"; \
+                    _waypoint setWaypointBehaviour "AWARE"; \
+                    { \
+                        if (_x getVariable [ISDRIVER,false]) then { \
+                            SET_UNITVAR(_x); \
+                        }; \
+                        false \
+                    } count units _grp; \
+                }, \
+                [_grp,POS] \
+            ] call CBA_fnc_waitUntilAndExecute; \
+        }; \
+    }
+
+#define PREP_STATIC(POS,COUNT,SIZE,GRID,ARRAY) \
+    if (GVAR(static) && {!(GRID isEqualTo [])}) then { \
+    	private _static = [POS, SIZE, ceil random COUNT, EGVAR(main,enemySide),GRID] call EFUNC(main,spawnStatic); \
+    	ARRAY append (_static select 1); \
+    }
+
+#define PREP_SNIPER(POS,COUNT,SIZE) \
+    if (GVAR(sniper)) then { \
+    	[POS,ceil random COUNT,SIZE,SIZE+500] call EFUNC(main,spawnSniper); \
+    }
