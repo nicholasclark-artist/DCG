@@ -7,7 +7,7 @@ __________________________________________________________________*/
 CHECK_POSTINIT;
 
 PVEH_QUESTION addPublicVariableEventHandler {(_this select 1) call FUNC(handleQuestion)};
-PVEH_HINT addPublicVariableEventHandler {[_this select 1] call FUNC(handleHint)};
+PVEH_HINT addPublicVariableEventHandler {[_this select 1,0] call FUNC(handleHint)};
 PVEH_AVADD addPublicVariableEventHandler {(_this select 1) call FUNC(addValue)};
 
 [

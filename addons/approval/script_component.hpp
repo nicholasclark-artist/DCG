@@ -7,34 +7,6 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define MARK_ID QUOTE(DOUBLES(ADDON,markRegion))
-#define MARK_NAME "Show Current Region on Map"
-#define MARK_STATEMENT_ACE \
-    private _region = [getPos player] call FUNC(getRegion); \
-    private _mrk = createMarkerLocal [MARK_ID,getPos _region]; \
-    _mrk setMarkerBrushLocal "SolidBorder"; \
-    _mrk setMarkerColorLocal "ColorBlack"; \
-    _mrk setMarkerSizeLocal (size _region); \
-    _mrk setMarkerShapeLocal "RECTANGLE"; \
-    _mrk setMarkerAlphaLocal 1; \
-    if (CHECK_MARKER(_mrk)) then { \
-        ["Current region shown on map.",true] call EFUNC(main,displayText); \
-        [{ \
-            params ["_args","_idPFH"]; \
-    		_args params ["_mrk"]; \
-            if (markerAlpha _mrk < 0.01) exitWith { \
-                [_idPFH] call CBA_fnc_removePerFrameHandler; \
-                deleteMarker _mrk; \
-            }; \
-            _mrk setMarkerAlphaLocal (markerAlpha _mrk - .005); \
-        }, 0, [_mrk]] call CBA_fnc_addPerFrameHandler; \
-    };
-#define MARK_COND_ACE true
-#define MARK_KEYCODE \
-    if (MARK_COND_ACE) then { \
-        MARK_STATEMENT_ACE \
-    }
-
 #define PVEH_HINT QGVAR(pveh_hint)
 #define HINT_ID QUOTE(DOUBLES(ADDON,hint))
 #define HINT_NAME "Check Approval in Region"
