@@ -25,7 +25,7 @@ __________________________________________________________________*/
 [
     QGVAR(cooldown),
     "SLIDER",
-    "Patrol Spawn Cooldown",
+    ["Patrol Spawn Cooldown","Time in seconds between potential patrol spawns."],
     COMPONENT_NAME,
     [
         300,
@@ -40,7 +40,7 @@ __________________________________________________________________*/
 [
     QGVAR(groupsMaxCount),
     "SLIDER",
-    "Max Group Count",
+    ["Max Group Count","Max number of active patrol groups."],
     COMPONENT_NAME,
     [
         1,
@@ -55,7 +55,7 @@ __________________________________________________________________*/
 [
     QGVAR(vehChance),
     "SLIDER",
-    "Vehicle Spawn Chance",
+    ["Vehicle Spawn Chance","Probability of spawned patrol being a vehicle unit."],
     COMPONENT_NAME,
     [
         0,
