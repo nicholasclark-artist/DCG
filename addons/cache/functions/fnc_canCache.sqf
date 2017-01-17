@@ -15,4 +15,4 @@ __________________________________________________________________*/
 
 params [["_grp",grpNull]];
 
-!isNull _grp && {count units _grp > 1} && {!(_grp in GVAR(groups))} && {!(_grp getVariable [CACHE_DISABLE_VAR,false])} && {([leader _grp,GVAR(dist)] call EFUNC(main,getNearPlayers)) isEqualTo []} && {isNull (leader _grp findNearestEnemy leader _grp)}
+!isNull _grp && {count units _grp > 1} && {!(_grp in GVAR(groups))} && {!(_grp getVariable [CACHE_DISABLE_VAR,false])} && {([getPos leader _grp,GVAR(dist)] call EFUNC(main,getNearPlayers)) isEqualTo []} && {isNull (leader _grp findNearestEnemy leader _grp)}
