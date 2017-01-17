@@ -25,7 +25,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet01_ACRE),
     "LIST",
-    "Network 01 ACRE2 Radio",
+    ["Network 01 ACRE2 Radio", "ACRE2 radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -39,7 +39,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet01_TFAR),
     "LIST",
-    "Network 01 TFAR Radio",
+    ["Network 01 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
@@ -53,7 +53,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet02_ACRE),
     "LIST",
-    "Network 02 ACRE2 Radio",
+    ["Network 02 ACRE2 Radio", "ACRE2 radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -67,7 +67,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet02_TFAR),
     "LIST",
-    "Network 02 TFAR Radio",
+    ["Network 02 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
@@ -81,7 +81,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet03_ACRE),
     "LIST",
-    "Network 03 ACRE2 Radio",
+    ["Network 03 ACRE2 Radio", "ACRE2 radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -95,7 +95,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet03_TFAR),
     "LIST",
-    "Network 03 TFAR Radio",
+    ["Network 03 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
@@ -109,7 +109,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet04_ACRE),
     "LIST",
-    "Network 04 ACRE2 Radio",
+    ["Network 04 ACRE2 Radio", "ACRE2 radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -123,7 +123,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet04_TFAR),
     "LIST",
-    "Network 04 TFAR Radio",
+    ["Network 04 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
@@ -137,7 +137,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet05_ACRE),
     "LIST",
-    "Network 05 ACRE2 Radio",
+    ["Network 05 ACRE2 Radio", "ACRE2 radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -151,7 +151,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet05_TFAR),
     "LIST",
-    "Network 05 TFAR Radio",
+    ["Network 05 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
@@ -165,7 +165,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet06_ACRE),
     "LIST",
-    "Network 06 ACRE2 Radio",
+    ["Network 06 ACRE2 Radio", "ACRE2 radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -179,7 +179,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet06_TFAR),
     "LIST",
-    "Network 06 TFAR Radio",
+    ["Network 06 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
