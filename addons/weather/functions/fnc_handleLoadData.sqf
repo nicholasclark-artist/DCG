@@ -21,14 +21,14 @@ if (_data isEqualTo []) then {
 	private "_mapdata";
 
     if (GVAR(month) isEqualTo -1) then {
-        GVAR(month) = random 12;
+        GVAR(month) = ceil random 12;
     };
 
     if (GVAR(time) isEqualTo -1) then {
-        GVAR(time) = random 23;
+        GVAR(time) = round random 23;
     };
 
-	GVAR(date) = [missionStart select 0, ceil GVAR(month), ceil random 27, round GVAR(time), round random 59];
+	GVAR(date) = [missionStart select 0, GVAR(month), ceil random 27, GVAR(time), round random 59];
 
     {
         if (COMPARE_STR(_x select 0,worldName)) exitWith {
