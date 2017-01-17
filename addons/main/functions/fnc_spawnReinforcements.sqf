@@ -54,12 +54,14 @@ call {
 		_vehPool = GVAR(airPoolWest);
 		_backup = "B_Heli_Light_01_F";
 	};
-	_unitPool = GVAR(unitPoolInd);
-	_vehPool = GVAR(airPoolInd);
-	_backup = "I_Heli_light_03_unarmed_F";
+    if (_side isEqualTo RESISTANCE) exitWith {
+        _unitPool = GVAR(unitPoolInd);
+    	_vehPool = GVAR(airPoolInd);
+    	_backup = "I_Heli_light_03_unarmed_F";
+	};
 };
 
-_grid = [_center,30,DIST_MAX,DIST_MIN,TR_SIZE,false,false] call EFUNC(main,findPosGrid);
+_grid = [_center,30,DIST_MAX,DIST_MIN,TR_SIZE,0] call EFUNC(main,findPosGrid);
 
 if (_grid isEqualTo []) exitWith {
 	INFO("Reinforcements LZ undefined");
@@ -78,15 +80,13 @@ if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
 private _heli = createVehicle [_type,_spawnPos,[],0,"FLY"];
 _heli lock 3;
 _heli flyInHeight 80;
+_heli allowCrewInImmobile true;
 
 private _grp = createGroup _side;
 private _pilot = _grp createUnit [selectRandom _unitPool,[0,0,0], [], 0, "NONE"];
 _pilot assignAsDriver _heli;
 _pilot moveInDriver _heli;
 _pilot setBehaviour "CARELESS";
-_pilot disableAI "TARGET";
-_pilot disableAI "AUTOTARGET";
-_pilot disableAI "AUTOCOMBAT";
 _pilot disableAI "FSM";
 
 private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side,false,0.3] call FUNC(spawnGroup);
@@ -107,12 +107,12 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side,false,0.3] call FUNC(spaw
 ] call CBA_fnc_waitUntilAndExecute;
 
 // add waypoint to pilot
-_wp = _grp addWaypoint [_lz, 200];
+_wp = _grp addWaypoint [_lz, 0];
 _wp setWaypointType "MOVE";
-_wp setWaypointSpeed "FULL";
+_wp setWaypointSpeed "NORMAL";
 _wp setWaypointStatements ["true", "(vehicle this) land ""GET OUT"";"];
 
-_wp = _grp addWaypoint [_spawnPos, 200];
+_wp = _grp addWaypoint [_spawnPos, 0];
 _wp setWaypointType "MOVE";
 _wp setWaypointSpeed "FULL";
 _wp setWaypointStatements ["true", "deleteVehicle (vehicle this); deleteVehicle this;"];
@@ -124,9 +124,12 @@ _wp setWaypointStatements ["true", "deleteVehicle (vehicle this); deleteVehicle 
 		params ["_heli","_grpPatrol","_center"];
 
 		_grpPatrol leaveVehicle _heli;
-        _wp = _grpPatrol addWaypoint [_center, 30];
-        _wp setWaypointType "SAD";
-        _wp setWaypointStatements ["true", format ["thisList call %1;",QFUNC(cleanup)]];
+        _onComplete = format ["
+            if ([%1,1000] call %2 isEqualTo []) then {
+                thisList call %3;
+            };
+        ",_center,QFUNC(getPlayers),QFUNC(cleanup)];
+        [_grpPatrol, [_center, 50, 50, 0, false],"AWARE","NO CHANGE","UNCHANGED","NO CHANGE",_onComplete] call CBA_fnc_taskSearchArea;
 
         INFO_2("Reinforcement dismount at %1, target is %2",getPos leader _grpPatrol,_center);
 	},

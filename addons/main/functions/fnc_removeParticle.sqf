@@ -14,20 +14,12 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-	["_center",[],[[]]],
+	["_fx",[],[[]]],
 	["_range",5,[0]]
 ];
 
-private _arr = [];
-
-call {
-	if ((_center select 0) isEqualType 0) exitWith {
-		_arr = _center nearEntities _range;
-	};
-
-	if ((_center select 0) isEqualType objNull) exitWith {
-		_arr = _center;
-	};
+if ((_fx select 0) isEqualType 0) then {
+    _fx = _fx nearEntities _range;
 };
 
 {
@@ -44,4 +36,4 @@ call {
 
 		_x setDamage 1;
 	};
-} forEach _arr;
+} forEach _fx;

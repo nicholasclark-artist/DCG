@@ -6,6 +6,7 @@ Description:
 add armory to object
 
 Arguments:
+0: armory object <OBJECT>
 
 Return:
 none
@@ -21,7 +22,13 @@ __________________________________________________________________*/
 #define STATE_RADIO call EFUNC(radio,setRadio);
 #define STATE_ARMORY ["Open",true] spawn bis_fnc_arsenal;
 
-private _obj = _this select 0;
+params [
+    ["_obj",objNull,[objNull]]
+];
+
+if (isNull _obj) exitWith {
+    WARNING("Object does not exist");
+};
 
 [[QUOTE(PREFIX),_obj,"armory"] joinString "_","Open Armory",{STATE_ARMORY},QUOTE(true),{},[],_obj,0,["ACE_MainActions"]] call FUNC(setAction);
 

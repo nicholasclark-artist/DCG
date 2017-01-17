@@ -13,10 +13,12 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-{
-	if (side _x isEqualTo GVAR(enemySide) && {!isPlayer _x}) then {
-		deleteVehicle (vehicle _x);
-		deleteVehicle _x;
-	};
-	false
-} count (locationPosition GVAR(baseLocation) nearEntities [["Man","LandVehicle","Ship","Air"], GVAR(baseRadius)]);
+if (GVAR(baseSafezone)) then {
+    {
+    	if (side _x isEqualTo GVAR(enemySide) && {!isPlayer _x}) then {
+    		deleteVehicle (vehicle _x);
+    		deleteVehicle _x;
+    	};
+    	false
+    } count (locationPosition GVAR(baseLocation) nearEntities [["Man","LandVehicle","Ship","Air"], GVAR(baseRadius)]);
+};

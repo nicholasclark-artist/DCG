@@ -65,7 +65,7 @@ if (GRID_DEBUG) then {
     {
         _mrk = createMarker [format ["debug_%1", _x], _x];
         _mrk setMarkerType "mil_dot";
-        _mrk setMarkerColor "ColorRed";
+        _mrk setMarkerColor "ColorGrey";
         _mrk setMarkerText str (_x select 2);
     } forEach _ret;
 };

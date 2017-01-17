@@ -3,28 +3,27 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-set number based on player count
+get unit count based on player count
 
 Arguments:
-0: minimum strength <NUMBER>
-1: maximum strength <NUMBER>
+0: minimum count <NUMBER>
+1: maximum count <NUMBER>
 
 Return:
 number
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_strength", "_playerCount"];
 params [
 	["_min",0],
 	["_max",10000]
 ];
 
-_playerCount = count (call CBA_fnc_players);
-_strength = ceil ((_playerCount max 1) * abs(log(((_playerCount max 1)/3)/256)));
-_strength = (_strength max _min) min _max;
+private _playerCount = count (call CBA_fnc_players);
+private _unitCount = ceil ((_playerCount max 1) * abs(log(((_playerCount max 1)/3)/256)));
+_unitCount = (_unitCount max _min) min _max;
 
-_strength
+_unitCount
 
 /*
 for "_i" from 1 to 40 step 1 do {

@@ -88,14 +88,14 @@
 #define ISDRIVER QEGVAR(main,isDriver)
 #define ISONPATROL QEGVAR(main,isOnPatrol)
 
-#define CHECK_POSTBRIEFING (getClientStateNumber > 9)
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> 'CfgPatches' >> PATCH))
-#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {EGVAR(VAR,enable) isEqualTo 1})
+#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {EGVAR(VAR,enable)})
 #define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= (DIST)
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
+#define CHECK_POSTBRIEFING (getClientStateNumber > 9)
 #define CHECK_PREINIT \
     if (!isServer || {!isMultiplayer}) exitWith {}
 #define CHECK_POSTINIT \
@@ -122,6 +122,7 @@
 #define AV_LOCATION_ID(LOCATION) ([QUOTE(PREFIX),"approval",LOCATION] joinString "_")
 #define AV_MIN 0
 #define AV_MAX 100
+#define AV_DEFAULT AV_MAX*0.1
 #define AV_CAR ((AV_MAX*0.005)*EGVAR(approval,multiplier))
 #define AV_TANK ((AV_MAX*0.0075)*EGVAR(approval,multiplier))
 #define AV_AIR ((AV_MAX*0.01)*EGVAR(approval,multiplier))

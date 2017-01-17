@@ -55,22 +55,22 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 
 	call {
 		if (toLower _type in _typeLocations) exitWith {
-			if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {{COMPARE_STR(_x,_name)} count GVAR(blacklistLocations) isEqualTo 0} && {!(_name isEqualTo "")}) then {
+			if (!(_position inArea GVAR(baseLocation)) && {{COMPARE_STR(_x,_name)} count GVAR(blacklistLocations) isEqualTo 0} && {!(_name isEqualTo "")}) then {
 				GVAR(locations) pushBack [_name,_position,_size,_type];
 			};
 		};
 		if (toLower _type in _typeLocals) exitWith {
-			if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(_name isEqualTo "")}) then {
+			if (!(_position inArea GVAR(baseLocation)) && {!(_name isEqualTo "")}) then {
 				GVAR(locals) pushBack [_name,_position,_size];
 			};
 		};
 		if (toLower _type in _typeHills) exitWith {
-			if !(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) then {
+			if !(_position inArea GVAR(baseLocation)) then {
 				GVAR(hills) pushBack [_position,_size];
 			};
 		};
 		if (toLower _type in _typeMarines) exitWith {
-			if (!(CHECK_DIST2D(_position,locationPosition GVAR(baseLocation),GVAR(baseRadius))) && {!(_name isEqualTo "")}) then {
+			if (!(_position inArea GVAR(baseLocation)) && {!(_name isEqualTo "")}) then {
 				GVAR(marines) pushBack [_name,_position,_size];
 			};
 		};
@@ -108,19 +108,8 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 	false
 } count GVAR(locations);
 
-if (GVAR(baseSafezone)) then {
-	[FUNC(handleSafezone), 60, []] call CBA_fnc_addPerFrameHandler;
-};
-
+[FUNC(handleSafezone), 60, []] call CBA_fnc_addPerFrameHandler;
 [FUNC(handleCleanup), 120, []] call CBA_fnc_addPerFrameHandler;
-
-// handle dropped weapons separately from other objects
-[{
-    {
-    	if (_x getVariable [QUOTE(DOUBLES(PREFIX,cleanup)),true]) then {deleteVehicle _x};
-    	false
-    } count (nearestObjects [locationPosition GVAR(baseLocation),["WeaponHolder","GroundWeaponHolder","WeaponHolderSimulated"],GVAR(baseRadius)]);
-}, 1200, []] call CBA_fnc_addPerFrameHandler;
 
 if !(isNil {HEADLESSCLIENT}) then {
 	[{

@@ -25,7 +25,7 @@ __________________________________________________________________*/
 [
     QGVAR(enemySide),
     "LIST",
-    "Enemy Side (MUST NOT BE PLAYER SIDE)",
+    ["Enemy Side","Enemy side must not be the same as player side."],
     COMPONENT_NAME,
     [
         [EAST,WEST,RESISTANCE],
@@ -39,7 +39,7 @@ __________________________________________________________________*/
 [
     QGVAR(loadData),
     "CHECKBOX",
-    "Load Mission Data",
+    ["Load Mission Data","Load mission data saved to server profile."],
     COMPONENT_NAME,
     false,
     true,
@@ -53,7 +53,7 @@ __________________________________________________________________*/
 [
     QGVAR(autoSave),
     "CHECKBOX",
-    "Autosave Mission Data",
+    ["Autosave Mission Data","Autosave mission data to server profile."],
     COMPONENT_NAME,
     false,
     true,
@@ -63,7 +63,7 @@ __________________________________________________________________*/
 [
     QGVAR(baseRadius),
     "SLIDER",
-    "Main Operating Base Radius",
+    ["Main Operating Base Radius","Base radius."],
     COMPONENT_NAME,
     [
         100,
@@ -78,7 +78,7 @@ __________________________________________________________________*/
 [
     QGVAR(baseSafezone),
     "CHECKBOX",
-    "Main Operating Base Safezone",
+    ["Main Operating Base Safezone","Deletes enemy units within base radius."],
     COMPONENT_NAME,
     true,
     true,

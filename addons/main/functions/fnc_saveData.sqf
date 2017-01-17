@@ -15,7 +15,7 @@ __________________________________________________________________*/
 	INFO_2("Saving %1: %2.",QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE); \
 	GVAR(saveDataCurrent) pushBack [QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE]
 
-if (!isServer || {time < 60}) exitWith {};
+if !(isServer) exitWith {};
 
 // overwrite current data
 GVAR(saveDataCurrent) = [DATA_MISSION_ID];
@@ -34,14 +34,13 @@ private _data = [];
 PUSHBACK_DATA(main,_data);
 
 if (CHECK_ADDON_2(occupy)) then {
-	private ["_data","_locations","_infCount","_vehCount","_airCount","_players"];
-	_locations = [];
+	private _data = [];
 
 	for "_i" from 0 to count EGVAR(occupy,locations) - 1 do {
 		(EGVAR(occupy,locations) select _i) params ["_name","_position","_size","_type"];
-		_infCount = 0;
-		_vehCount = 0;
-		_airCount = 0;
+		private _infCount = 0;
+		private _vehCount = 0;
+		private _airCount = 0;
 		{
 			if ((driver _x) getVariable [QUOTE(TRIPLES(PREFIX,occupy,unit)),false]) then {
 				if (_x isKindOf "Man") exitWith {
@@ -55,25 +54,22 @@ if (CHECK_ADDON_2(occupy)) then {
 				};
 			};
 			false
-		} count (_position nearEntities [["Man","LandVehicle","Air","Ship"],_size*2]);
+		} count (_position nearEntities [["Man","LandVehicle","Air"],_size*2]);
 
-		_locations pushBack [_name,_position,_size,_type,[_infCount,_vehCount,_airCount]];
+		_data pushBack [_name,_position,_size,_type,[_infCount,_vehCount,_airCount]];
 	};
-
-	_data = [_locations];
 
 	PUSHBACK_DATA(occupy,_data);
 };
 
 if (CHECK_ADDON_2(fob)) then {
-	private ["_data","_dataObj","_refund"];
-	_data = [];
+	private _data = [];
 
 	if !(EGVAR(fob,location) isEqualTo locationNull) then {
 		_data pushBack (locationPosition EGVAR(fob,location));
 		_data pushBack (curatorPoints EGVAR(fob,curator));
-		_dataObj = [];
-		_refund = 0;
+		private _dataObj = [];
+		private _refund = 0;
 		{
 			if (!(_x isKindOf "Man") && {!(_x isKindOf "Logic")} && {count crew _x isEqualTo 0}) then {
 				_dataObj pushBack [typeOf _x,getPosASL _x,getDir _x,vectorUp _x];
@@ -109,18 +105,15 @@ if (CHECK_ADDON_2(fob)) then {
 };
 
 if (CHECK_ADDON_2(weather)) then {
-	private ["_data"];
-	_data = [overcast,date];
+	private _data = [overcast,date];
 
 	PUSHBACK_DATA(weather,_data);
 };
 
 if (CHECK_ADDON_2(ied)) then {
-	private ["_data"];
-	_data = [];
+	private _data = [];
 	{
-		private "_pos";
-		_pos = getPos _x;
+		private _pos =+ getPos _x;
 		_pos deleteAt 2;
 		_data pushBack _pos;
 		false
@@ -130,19 +123,17 @@ if (CHECK_ADDON_2(ied)) then {
 };
 
 if (CHECK_ADDON_2(task)) then {
-	private ["_data"];
-	_data = [EGVAR(task,primary),EGVAR(task,secondary)];
+	private _data = [EGVAR(task,primary),EGVAR(task,secondary)];
 
 	PUSHBACK_DATA(task,_data);
 };
 
 if (CHECK_ADDON_2(approval)) then {
-	private ["_data"];
-	_data = [];
-	{
-		_data pushBack [_x select 0,missionNamespace getVariable [AV_LOCATION_ID(_x select 0),AV_MAX*0.1]];
-		false
-	} count GVAR(locations);
+    private _data = [];
+
+    {
+        _data pushBack (_x getVariable [QEGVAR(approval,regionValue),AV_DEFAULT]);
+    } forEach EGVAR(approval,region);
 
 	PUSHBACK_DATA(approval,_data);
 };

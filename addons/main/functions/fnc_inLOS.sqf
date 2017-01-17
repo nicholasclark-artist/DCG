@@ -3,34 +3,22 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-check if in position in line of sight
+check if position A is in line of sight of position B (positionASL)
 
 Arguments:
-0: position to check <ARRAY>
-1: unit to check line of sight for <OBJECT>
+0: position A <ARRAY>
+1: position B <ARRAY>
+2: object to ignore <OBJECT>
 
 Return:
 bool
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_pos","_unit","_ret"];
+params [
+    ["_posA",[0,0,0],[[]]],
+    ["_posB",[0,0,0],[[]]],
+    ["_ignore",objNull,[objNull]]
+];
 
-_pos = _this select 0;
-_unit = _this select 1;
-
-_ret = true;
-
-if ([getPosASL _unit,getDir _unit,90,_pos] call BIS_fnc_inAngleSector) then {
-	if !(terrainIntersectASL [_pos, eyePos _unit]) then {
-	    if (lineIntersects [_pos, eyePos _unit, _unit]) then {
-	        _ret = false;
-	    };
-	} else {
-	    _ret = false;
-	};
-} else {
-	_ret = false;
-};
-
-_ret
+[_ignore, "VIEW"] checkVisibility [_posA, _posB] > 0

@@ -21,11 +21,11 @@ __________________________________________________________________*/
 #define GRAD 0.275
 
 params [
-	"_anchor",
-	"_range",
-	["_terrain",""],
-	["_check",0],
-	["_rural",false]
+	["_anchor",[0,0,0],[[]]],
+	["_range",100,[0]],
+	["_terrain","",[""]],
+	["_check",0,[0]],
+	["_rural",false,[false]]
 ];
 
 private _ret = [];
@@ -53,9 +53,9 @@ if (_terrain isEqualTo "" || {_expression isEqualTo ""}) exitWith {
 private _places = selectBestPlaces [_anchor,_range,_expression,100,20];
 
 _places = if !(_rural) then {
-	_places select {(_x select 1) > 0 && {!(CHECK_DIST2D((_x select 0),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))}};
+	_places select {(_x select 1) > 0 && {!((_x select 0) inArea EGVAR(main,baseLocation))}};
 } else {
-	_places select {(_x select 1) > 0 && {((nearestLocations [(_x select 0), ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo [])} && {!(CHECK_DIST2D((_x select 0),locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)))}};
+	_places select {(_x select 1) > 0 && {((nearestLocations [(_x select 0), ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo [])} && {!((_x select 0) inArea EGVAR(main,baseLocation))}};
 };
 
 {

@@ -57,7 +57,7 @@ call {
 
 	private _mrk = createMarker [format["%1_sniper_%2",QUOTE(PREFIX),_unit],getposATL leader _grp];
 	_mrk setMarkerType "o_recon";
-	_mrk setMarkerColor format ["Color%1",side _unit];
+	_mrk setMarkerColor ([side _unit,true] call BIS_fnc_sideColor); 
 	_mrk setMarkerSize [0.7,0.7];
 	[_mrk] call EFUNC(main,setDebugMarker);
 
