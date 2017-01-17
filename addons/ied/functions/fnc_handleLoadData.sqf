@@ -23,7 +23,7 @@ __________________________________________________________________*/
     } else { \
         _ied = [objNull, POS getPos [5, random 360], random 360, selectRandom ACE_TYPES, "PressurePlate", []] call ACE_Explosives_fnc_placeExplosive; \
         GVAR(list) pushBack _ied; \
-    }
+    };
 
 params ["_data"];
 
@@ -36,7 +36,7 @@ if (_data isEqualTo []) then {
 			_pos = getPos _road;
 
 			if (!(_pos inArea EGVAR(main,baseLocation)) && {isOnRoad _road}) then {
-                CREATE_IED(_pos);
+                CREATE_IED(_pos)
 			};
 		};
 		false
@@ -45,6 +45,6 @@ if (_data isEqualTo []) then {
 	for "_index" from 0 to count _data - 1 do {
         _pos =+ (_data select _index);
         _pos set [2,getTerrainHeightASL _pos];
-        CREATE_IED(_pos);
+        CREATE_IED(_pos)
 	};
 };

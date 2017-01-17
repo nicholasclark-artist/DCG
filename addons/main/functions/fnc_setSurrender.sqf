@@ -11,12 +11,6 @@ Return:
 bool
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SURRENDER(UNIT,ANIM) \
-	if (CHECK_ADDON_1("ace_captives")) then { \
-		[UNIT,true] call ace_captives_fnc_setSurrendered; \
-	} else { \
-		[UNIT,ANIM] call FUNC(setAnim); \
-	}
 
 params [
     ["_obj",objNull,[objNull]]
@@ -31,7 +25,11 @@ if (typeOf _obj isKindOf "LandVehicle") exitWith {
 		moveOut _x;
 		_x setVelocity [0, 0, 0];
 		_x setBehaviour "CARELESS";
-		SURRENDER(_x,"AmovPercMstpSsurWnonDnon");
+        if (CHECK_ADDON_1("ace_captives")) then {
+            [_x,true] call ace_captives_fnc_setSurrendered;
+        } else {
+            [_x,"AmovPercMstpSsurWnonDnon"] call FUNC(setAnim);
+        };
 		false
 	} count (crew _obj);
 
@@ -50,6 +48,11 @@ if (typeOf _obj isKindOf "Ship") exitWith {
 
 doStop _obj;
 _obj setBehaviour "CARELESS";
-SURRENDER(_obj,"AmovPercMstpSsurWnonDnon");
+
+if (CHECK_ADDON_1("ace_captives")) then {
+    [_obj,true] call ace_captives_fnc_setSurrendered;
+} else {
+    [_obj,"AmovPercMstpSsurWnonDnon"] call FUNC(setAnim);
+};
 
 true
