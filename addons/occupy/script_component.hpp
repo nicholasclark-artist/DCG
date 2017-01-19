@@ -3,7 +3,7 @@
 #include "\d\dcg\addons\main\script_mod.hpp"
 
 // #define DEBUG_MODE_FULL
-// #define DISABLE_COMPILE_CACHE
+#define DISABLE_COMPILE_CACHE
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
@@ -23,10 +23,18 @@
             _garrisonGrp = createGroup EGVAR(main,enemySide); \
             ((units _grp) select [0,_garrisonCount]) joinSilent _garrisonGrp; \
             [_garrisonGrp,_pos,_size,1,false] call CBA_fnc_taskDefend; \
+            { \
+                SET_UNITVAR(_x); \
+                false \
+            } count units _garrisonGrp; \
             for "_i" from 0 to (count units _grp) - 1 step PATROL_UNITCOUNT do { \
                 _patrolGrp = createGroup EGVAR(main,enemySide); \
                 ((units _grp) select [0,PATROL_UNITCOUNT]) joinSilent _patrolGrp; \
                 [_patrolGrp, _pos, _size, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "if (random 1 < 0.2) then {this spawn CBA_fnc_searchNearby}", [0,5,8]] call CBA_fnc_taskPatrol; \
+                { \
+                    SET_UNITVAR(_x); \
+                    false \
+                } count units _patrolGrp; \
             }; \
     	}, \
     	[POS,_grp,SIZE,COUNT,GARRISON_COUNT] \
