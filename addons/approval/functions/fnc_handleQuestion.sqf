@@ -7,6 +7,7 @@ question nearby unit
 
 Arguments:
 0: player <OBJECT>
+1: unit to question <OBJECT>
 
 Return:
 none
