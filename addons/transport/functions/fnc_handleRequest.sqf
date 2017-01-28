@@ -96,14 +96,14 @@ call {
 	_pilot = "C_man_w_worker_F";
 };
 
-_transport allowCrewInImmobile true;
-_transport enableCopilot false;
-_transport lockDriver true;
-
 _pilot = createGroup EGVAR(main,playerSide) createUnit [_pilot,[0,0,0], [], 0, "NONE"];
 _pilot moveInDriver _transport;
 _pilot disableAI "FSM";
 _pilot setBehaviour "CARELESS";
+
+_transport allowCrewInImmobile true;
+_transport enableCopilot false;
+_transport lockDriver true;
 
 _wp = group _pilot addWaypoint [_exfil, 0];
 _wp setWaypointCompletionRadius 100;
