@@ -45,7 +45,7 @@ private _typeName = "";
 private _infCount = 0;
 private _vehCount = 0;
 private _airCount = 0;
-private _grid = [_center,16,_size,0,SAFE_DIST,0] call EFUNC(main,findPosGrid);
+private _grid = [_center,32,_size,0,SAFE_DIST,0] call EFUNC(main,findPosGrid);
 
 if (_grid isEqualTo []) exitWith {
     WARNING("Cannot occupy location, grid is empty");
@@ -122,21 +122,13 @@ if (isNil "_data") then {
 };
 
 private _iconPos =+ _center;
-_iconPos set [1,(_iconPos select 1) - 30];
+_iconPos set [1,(_iconPos select 1) - 40];
 _icon = createMarker [[QUOTE(ADDON),_name] joinString "_", _iconPos];
 _icon setMarkerShape "ICON";
 _icon setMarkerColor ([EGVAR(main,enemySide),true] call BIS_fnc_sideColor);
 _icon setMarkerText (["Liberate",_typeName] joinString " ");
 _icon setMarkerType "o_installation";
 _mrkArray pushBack _icon;
-
-/*_mrk = createMarker [[QUOTE(ADDON),_name,"border"] joinString "_", _center];
-_mrk setMarkerShape "ELLIPSE";
-_mrk setMarkerSize [_size,_size];
-_mrk setMarkerAlpha 0.7;
-_mrk setMarkerColor ([EGVAR(main,enemySide),true] call BIS_fnc_sideColor);
-_mrk setMarkerBrush  "DIAGGRID";
-_mrkArray pushBack _mrk;*/
 
 [
     {!([_this select 1,_this select 2] call EFUNC(main,getNearPlayers) isEqualTo [])},
