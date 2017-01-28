@@ -12,7 +12,6 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define INTERVAL 5
 
 params [
 	["_data",[],[[]]]
@@ -54,4 +53,4 @@ if (count _locations < GVAR(locationCount)) exitWith {
         _selected spawn FUNC(setOccupied);
         _occupied pushBack _name;
     };
-}, INTERVAL, [_locations,_occupied]] call CBA_fnc_addPerFrameHandler;
+}, 5, [_locations,_occupied]] call CBA_fnc_addPerFrameHandler;
