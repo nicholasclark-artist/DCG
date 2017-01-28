@@ -8,7 +8,7 @@ export settings
 Arguments:
 
 Return:
-none
+text
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -72,5 +72,5 @@ for "_i" from 0 to count _config - 1 do {
     _export = _export + _compiledEntry;
 };
 
-titleText ["Exporting serverConfig settings", "PLAIN"];
+titleText ["Exporting serverconfig settings to clipboard", "PLAIN"];
 copyToClipboard _export;
