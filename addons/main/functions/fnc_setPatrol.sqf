@@ -39,6 +39,6 @@ if ((objectParent leader _grp) isKindOf "Air") exitWith {
     _waypoint setWaypointStatements ["true", _onComplete];
 };
 
-[_grp, _center, _radius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", _onComplete, [0,5,10]] call CBA_fnc_taskPatrol;
+[_grp, _center, _radius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", _onComplete, [0,5,10]] spawn CBA_fnc_taskPatrol;
 
 true

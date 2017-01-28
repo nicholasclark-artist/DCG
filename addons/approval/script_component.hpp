@@ -22,8 +22,8 @@
 #define QUESTION_NAME "Question Person"
 #define QUESTION_STATEMENT missionNamespace setVariable [PVEH_QUESTION,[player,cursorObject]]; publicVariableServer PVEH_QUESTION;
 #define QUESTION_STATEMENT_ACE missionNamespace setVariable [PVEH_QUESTION,[player,_target]]; publicVariableServer PVEH_QUESTION;
-#define QUESTION_COND cursorObject isKindOf 'CAManBase' && {!(side cursorObject isEqualTo EGVAR(main,enemySide))} && {!(isPlayer cursorObject)}
-#define QUESTION_COND_ACE _target isKindOf 'CAManBase' && {!(side _target isEqualTo EGVAR(main,enemySide))} && {!(isPlayer _target)}
+#define QUESTION_COND cursorObject isKindOf 'CAManBase' && {!(side cursorObject isEqualTo EGVAR(main,enemySide))} && {!(isPlayer cursorObject)} && {alive cursorObject}
+#define QUESTION_COND_ACE _target isKindOf 'CAManBase' && {!(side _target isEqualTo EGVAR(main,enemySide))} && {!(isPlayer _target)} && {alive _target}
 #define QUESTION_KEYCODE \
     if (CHECK_ADDON_1('ace_interact_menu')) then { \
         if (QUESTION_COND_ACE) then { \
