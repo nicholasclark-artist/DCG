@@ -17,15 +17,25 @@ __________________________________________________________________*/
 
 params ["_pos","_count","_name"];
 
-private _units = [];
 missionNamespace setVariable [LOCATION_ID(_name),true];
+
+private _units = [];
+private _buildings = _pos nearObjects ["House", 75];
+
+_buildings = _buildings select {
+    !((_x buildingPos -1) isEqualTo [])
+};
 
 [{
     params ["_args","_idPFH"];
-    _args params ["_pos","_count","_units"];
+    _args params ["_pos","_count","_units","_buildings"];
 
     if (count _units >= _count) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
+    };
+
+    if !(_buildings isEqualTo []) then {
+        _pos = selectRandom ((selectRandom _buildings) buildingPos -1);
     };
 
     _grp = createGroup CIVILIAN;
@@ -34,15 +44,14 @@ missionNamespace setVariable [LOCATION_ID(_name),true];
     leader _grp addEventHandler ["firedNear",{
         [group (_this select 0)] call CBA_fnc_clearWaypoints;
         (_this select 0) removeEventHandler ["firedNear", _thisEventHandler];
-        (_this select 0) forceSpeed ((_this select 0) getSpeed "FAST");
-        (_this select 0) setUnitPos "MIDDLE";
-        (_this select 0) doMove ([getposASL (_this select 0),50,100] call EFUNC(main,findPosSafe));
+        (_this select 0) setUnitPos "DOWN";
+        doStop (_this select 0);
     }];
 
-    [_grp, leader _grp, 100, 5, "MOVE", "CARELESS", "BLUE", "LIMITED", "STAG COLUMN", "", [8,10,20]] call CBA_fnc_taskPatrol;
+    [_grp, leader _grp, 75, 3, "MOVE", "CARELESS", "BLUE", "LIMITED", "STAG COLUMN", "", [8,10,20]] spawn CBA_fnc_taskPatrol;
 
     _units pushBack (leader _grp);
-}, 1, [_pos,_count,_units]] call CBA_fnc_addPerFrameHandler;
+}, 1.25, [_pos,_count,_units,_buildings]] call CBA_fnc_addPerFrameHandler;
 
 [{
     params ["_args","_idPFH"];
