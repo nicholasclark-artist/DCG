@@ -13,6 +13,15 @@ none
 __________________________________________________________________*/
 #define TASK_PRIMARY
 #define TASK_NAME 'Rescue VIP'
+#define SECURE_ID QUOTE(DOUBLES(ADDON,secureVIP))
+#define SECURE_NAME "Secure VIP"
+#define SECURE_STATEMENT \
+    _vip = _this select 0; \
+    _player = _this select 1; \
+    [_vip,"Acts_AidlPsitMstpSsurWnonDnon02",true] call EFUNC(main,setAnim); \
+    [_vip] joinSilent grpNull; \
+    [_vip] joinSilent (group _player)
+#define SECURE_COND (alive _target)
 #include "script_component.hpp"
 
 params [
@@ -21,7 +30,6 @@ params [
 
 // CREATE TASK
 _taskID = str diag_tickTime;
-_drivers = [];
 _town = [];
 _cleanup = [];
 _strength = TASK_STRENGTH + TASK_GARRISONCOUNT;
@@ -36,21 +44,12 @@ if (_position isEqualTo []) then {
 
 // find return location
 if !(EGVAR(main,locations) isEqualTo []) then {
-	if (CHECK_ADDON_2(occupy)) then {
-		_town = selectRandom (EGVAR(main,locations) select {
-            !(_x in EGVAR(occupy,locations)) &&
-            {!(_position inArea [_x select 1, _x select 2,  _x select 2, 0, false, -1])}
-        });
-	} else {
-		_town = selectRandom (EGVAR(main,locations) select {
-            !(_position inArea [_x select 1, _x select 2,  _x select 2, 0, false, -1])
-        });
-	};
+    _town = selectRandom (EGVAR(main,locations) select {
+        !(_position inArea [_x select 1, _x select 2,  _x select 2, 0, false, -1])
+    });
 };
 
-// cannot move vip without ACE captives addon
-// TODO add vanilla compatible version
-if (_position isEqualTo [] || {_town isEqualTo []} || {!(CHECK_ADDON_1("ace_captives"))}) exitWith {
+if (_position isEqualTo [] || {_town isEqualTo []}) exitWith {
 	TASK_EXIT_DELAY(0);
 };
 
@@ -59,6 +58,8 @@ _vip setDir random 360;
 _vip setPosASL _position;
 _cleanup pushBack _vip;
 [_vip,"Acts_AidlPsitMstpSsurWnonDnon02",true] call EFUNC(main,setAnim);
+
+_action = [SECURE_ID,SECURE_NAME,{SECURE_STATEMENT},QUOTE(SECURE_COND),{},[],_vip,0,ACTIONPATH] call EFUNC(main,setAction);
 
 _grp = [[_position,5,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
@@ -78,7 +79,7 @@ _grp = [[_position,5,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,ene
         for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
             _patrolGrp = createGroup EGVAR(main,enemySide);
             ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
-            [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol;
+            [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol;
         };
 	},
 	[_grp,_strength,_cleanup]
@@ -96,7 +97,7 @@ if !(_vehPos isEqualTo _position) then {
             _cleanup pushBack (objectParent leader _vehGrp);
             _cleanup pushBack (units _vehGrp);
 
-			[_vehGrp, _position, 200, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] call CBA_fnc_taskPatrol;
+			[_vehGrp, _position, 200, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] spawn CBA_fnc_taskPatrol;
 		},
 		[_position,_vehGrp,_cleanup]
 	] call CBA_fnc_waitUntilAndExecute;
@@ -115,9 +116,7 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_vip","_town","_cleanup"];
-
-	_success = false;
+	_args params ["_taskID","_vip","_town","_cleanup","_action"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -129,31 +128,55 @@ TASK_PUBLISH(_position);
 	if !(alive _vip) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
+        [_vip,0,_action] call EFUNC(main,removeAction);
 		TASK_APPROVAL((getPos _vip),TASK_AV * -1);
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
 
-    _distRet = (_town select 2)*0.5 max TASK_DIST_RET;
+    // if vip secured
+    if (isPlayer leader group _vip) then {
+        [_idPFH] call CBA_fnc_removePerFrameHandler;
+        [_vip,0,_action] call EFUNC(main,removeAction);
+        [_taskID,_town select 1] call BIS_fnc_taskSetDestination;
 
-	// if vip is returned to town and is alive/awake
-	if (_vip inArea [_town select 1, _distRet, _distRet, 0, false, -1]) then {
-		if (CHECK_ADDON_1("ace_medical")) then {
-			if ([_vip] call ace_common_fnc_isAwake) then {
-				_success = true;
-			};
-		} else {
-			if (alive _vip) then {
-				_success = true;
-			};
-		};
-	};
+        [{
+        	params ["_args","_idPFH"];
+        	_args params ["_taskID","_vip","_town","_cleanup"];
 
-	if (_success) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
-		TASK_APPROVAL((getPos _vip),TASK_AV);
-		_cleanup call EFUNC(main,cleanup);
-		TASK_EXIT;
-	};
-}, TASK_SLEEP, [_taskID,_vip,_town,_cleanup]] call CBA_fnc_addPerFrameHandler;
+            _success = false;
+
+            if (TASK_GVAR isEqualTo []) exitWith {
+                [_idPFH] call CBA_fnc_removePerFrameHandler;
+                [_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+                _cleanup call EFUNC(main,cleanup);
+                TASK_EXIT_DELAY(30);
+            };
+
+            if !(alive _vip) exitWith {
+                [_idPFH] call CBA_fnc_removePerFrameHandler;
+                [_taskID, "FAILED"] call EFUNC(main,setTaskState);
+                TASK_APPROVAL((getPos _vip),TASK_AV * -1);
+                _cleanup call EFUNC(main,cleanup);
+                TASK_EXIT;
+            };
+
+            // if vip is returned to town and is alive/awake
+            if (_vip inArea [_town select 1, TASK_DIST_RET, TASK_DIST_RET, 0, false, 10]) then {
+                if (CHECK_ADDON_1("ace_medical")) then {
+                    _success = [_vip] call ace_common_fnc_isAwake;
+                } else {
+                    _success = alive _vip;
+                };
+            };
+
+            if (_success) exitWith {
+                [_idPFH] call CBA_fnc_removePerFrameHandler;
+                [_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+                TASK_APPROVAL((getPos _vip),TASK_AV);
+                _cleanup call EFUNC(main,cleanup);
+                TASK_EXIT;
+            };
+        }, TASK_SLEEP, [_taskID,_vip,_town,_cleanup]] call CBA_fnc_addPerFrameHandler;
+    };
+}, TASK_SLEEP, [_taskID,_vip,_town,_cleanup,_action]] call CBA_fnc_addPerFrameHandler;

@@ -42,13 +42,10 @@ if (_position isEqualTo []) exitWith {
 
 for "_i" from 1 to 100 do {
 	_vehPos = [_position,0,25,16,0,.35] call EFUNC(main,findPosSafe);
-
 	if !(_vehPos isEqualTo _position) exitWith {};
-
-	_vehPos = [];
 };
 
-if (_vehPos isEqualTo []) exitWith {
+if (_vehPos isEqualTo _position) exitWith {
 	TASK_EXIT_DELAY(0);
 };
 
@@ -103,7 +100,7 @@ TASK_PUBLISH(_position);
 
 		[{
 			params ["_args","_idPFH"];
-			_args params ["_taskID","_truck","_grp","_enemyCount","_timerID"];
+			_args params ["_taskID","_truck","_cleanup","_enemyCount","_timerID"];
 
 			if (TASK_GVAR isEqualTo []) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -148,6 +145,6 @@ TASK_PUBLISH(_position);
 					[_grp,_truck]
 				] call CBA_fnc_waitUntilAndExecute;
 			};
-		}, TASK_SLEEP, [_taskID,_truck,_grp,TASK_STRENGTH,_timerID]] call CBA_fnc_addPerFrameHandler;
+		}, TASK_SLEEP, [_taskID,_truck,_cleanup,TASK_STRENGTH,_timerID]] call CBA_fnc_addPerFrameHandler;
 	};
 }, TASK_SLEEP, [_taskID,_truck,_cleanup]] call CBA_fnc_addPerFrameHandler;

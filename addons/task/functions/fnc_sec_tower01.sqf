@@ -17,7 +17,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_pos",[],[[]]]
+    ["_position",[],[[]]]
 ];
 
 // CREATE TASK
@@ -25,25 +25,25 @@ _taskID = str diag_tickTime;
 _strength = TASK_STRENGTH;
 _cleanup = [];
 
-if (!(EGVAR(main,hills) isEqualTo []) && {_pos isEqualTo []}) then {
+if (!(EGVAR(main,hills) isEqualTo []) && {_position isEqualTo []}) then {
 	_hillPos = (selectRandom EGVAR(main,hills)) select 0;
-	_pos = [_hillPos,0,100,6,0,1] call EFUNC(main,findPosSafe);
-	if (_pos isEqualTo _hillPos) then {
-		_pos = [];
+	_position = [_hillPos,0,100,6,0,1] call EFUNC(main,findPosSafe);
+	if (_position isEqualTo _hillPos) then {
+		_position = [];
 	};
 };
 
-if (_pos isEqualTo []) exitWith {
+if (_position isEqualTo []) exitWith {
 	TASK_EXIT_DELAY(0);
 };
 
-_tower = TOWER createVehicle _pos;
+_tower = TOWER createVehicle _position;
 _tower setPosATL [(getposATL _tower) select 0,(getposATL _tower) select 1,-1];
 _tower setVectorUp [0,0,1];
 _cleanup pushBack _tower;
 [_tower] call FUNC(handleDamage);
 
-_grp = [_pos,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 1)},
@@ -56,23 +56,23 @@ _grp = [_pos,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUN
         for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
             _patrolGrp = createGroup EGVAR(main,enemySide);
             ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
-            [_patrolGrp, _patrolGrp, 50 + random 50, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol;
+            [_patrolGrp, _patrolGrp, 50 + random 50, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol;
         };
 	},
 	[_grp,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
-_taskDescription = "";
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_pos,false,true,"destroy"] call EFUNC(main,setTask);
+_taskDescription = "Hinder enemy communications by destroying the radio tower";
+[true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"destroy"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
-TASK_PUBLISH(_pos);
+TASK_PUBLISH(_position);
 
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_pos","_cleanup"];
+	_args params ["_taskID","_position","_cleanup","_tower"];
 
 	if (GVAR(secondary) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -84,8 +84,8 @@ TASK_PUBLISH(_pos);
 	if !(alive _tower) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
-		TASK_APPROVAL(_pos,TASK_AV);
+		TASK_APPROVAL(_position,TASK_AV);
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_pos,_cleanup]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_position,_cleanup,_tower]] call CBA_fnc_addPerFrameHandler;

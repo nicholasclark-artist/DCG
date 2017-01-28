@@ -55,6 +55,7 @@ for "_i" from 0 to 1 do {
 	_cache setVectorUp surfaceNormal getPos _cache;
     [_cache] call FUNC(handleDamage);
 	_cleanup pushBack _cache;
+	_caches pushBack _cache;
 };
 
 _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
@@ -75,13 +76,13 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
         for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
             _patrolGrp = createGroup EGVAR(main,enemySide);
             ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
-            [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol;
+            [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol;
         };
 	},
 	[_grp,_bRadius,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
-_vehPos = [_position,60,200,8,0] call EFUNC(main,findPosSafe);
+_vehPos = [_position,_bRadius,_bRadius + 100,8,0] call EFUNC(main,findPosSafe);
 
 if !(_vehPos isEqualTo _position) then {
 	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY,true] call EFUNC(main,spawnGroup);
@@ -94,7 +95,7 @@ if !(_vehPos isEqualTo _position) then {
             _cleanup pushBack (objectParent leader _vehGrp);
             _cleanup append (units _vehGrp);
 
-			[_vehGrp, _position, _bRadius*2, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] call CBA_fnc_taskPatrol;
+			[_vehGrp, _position, _bRadius*2, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] spawn CBA_fnc_taskPatrol;
 		},
 		[_position,_vehGrp,_bRadius]
 	] call CBA_fnc_waitUntilAndExecute;
@@ -113,7 +114,7 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_cleanup","_posCache"];
+	_args params ["_taskID","_cleanup","_caches","_posCache"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -122,11 +123,11 @@ TASK_PUBLISH(_position);
 		TASK_EXIT_DELAY(30);
 	};
 
-	if ({alive _x} count _cleanup isEqualTo 0) exitWith {
+	if ({alive _x} count _caches isEqualTo 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		_cleanup call EFUNC(main,cleanup);
 		TASK_APPROVAL(_posCache,TASK_AV);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_cleanup,_posCache]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_cleanup,_caches,_posCache]] call CBA_fnc_addPerFrameHandler;

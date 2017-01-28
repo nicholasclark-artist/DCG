@@ -71,19 +71,9 @@ _posArty = _posArty select 0;
 _arty = _artyClass createVehicle [0,0,0];
 _arty setDir random 360;
 _arty setPos _posArty;
-_arty lock 3;
+_arty lock 2;
 _arty allowCrewInImmobile true;
 _cleanup pushBack _arty;
-
-_gunner = (createGroup EGVAR(main,enemySide)) createUnit [_gunnerClass, [0,0,0], [], 0, "NONE"];
-_gunner assignAsGunner _arty;
-_gunner moveInGunner  _arty;
-_gunner setFormDir (getDir _arty);
-_gunner setDir (getDir _arty);
-_gunner disableAI "FSM";
-_gunner setBehaviour "CARELESS";
-_gunner doWatch (_gunner modelToWorld [0,50,50]);
-_cleanup pushBack _gunner;
 
 _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
@@ -103,7 +93,7 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
         for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
             _patrolGrp = createGroup EGVAR(main,enemySide);
             ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
-            [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol;
+            [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol;
         };
 	},
 	[_grp,_bRadius,_strength,_cleanup]
@@ -132,7 +122,7 @@ _vehGrp = if !(_vehPos isEqualTo _position) then {
             _waypoint setWaypointSpeed "NORMAL";
             _waypoint setWaypointBehaviour "AWARE";
         } else {
-            [_vehGrp, _position, _bRadius*2, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] call CBA_fnc_taskPatrol;
+            [_vehGrp, _position, _bRadius*2, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] spawn CBA_fnc_taskPatrol;
         };
     },
     [_position,_vehGrp,_bRadius,_cleanup]
@@ -152,14 +142,22 @@ _timerID = [
     format ["%1 Countdown", TASK_NAME],
 	{
 		if (isServer) then {
-			(_this select 1) doArtilleryFire [(_this select 2), "32Rnd_155mm_Mo_shells", 4];
+            params ["time","_arty","_class","_tar"];
+
+            _arty lock 3;
+            _gunner = (createGroup EGVAR(main,enemySide)) createUnit [_class, [0,0,0], [], 0, "NONE"];
+            _gunner assignAsGunner _arty;
+            _gunner moveInGunner  _arty;
+            _gunner disableAI "FSM";
+            _gunner setBehaviour "CARELESS";
+			_gunner doArtilleryFire [_tar, "32Rnd_155mm_Mo_shells", 4];
 		};
 	},
-	[_gunner,_tar]
+	[_arty,_gunnerClass,_tar]
 ] call EFUNC(main,setTimer);
 
 // SET TASK
-_taskDescription = "An enemy base, housing an artillery unit, is targetting a local settlement that's sympathetic to our mission. To keep the local sentiment on our side, we're tasked with eliminating the artillery before it's operational.";
+_taskDescription = "Enemy artillery forces are threatening to attack a local settlement that's sympathetic to our mission. To keep the local sentiment on our side, we're tasked with eliminating the artillery before it fires.";
 [true,_taskID,[_taskDescription,TASK_TITLE,""], ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"destroy"] call EFUNC(main,setTask);
 
 TASK_DEBUG(_posArty);
@@ -170,7 +168,7 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_arty","_vehGrp","_position","_cleanup","_timerID","_tar"];
+	_args params ["_taskID","_arty","_position","_cleanup","_timerID","_tar"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -196,4 +194,4 @@ TASK_PUBLISH(_position);
         TASK_APPROVAL(_tar,TASK_AV * -1);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_arty,_vehGrp,_position,_cleanup,_timerID,_tar]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_arty,_position,_cleanup,_timerID,_tar]] call CBA_fnc_addPerFrameHandler;

@@ -13,6 +13,7 @@ none
 __________________________________________________________________*/
 #define TASK_SECONDARY
 #define TASK_NAME 'Eliminate Officer'
+#define SAFE_DIST 4
 #include "script_component.hpp"
 
 params [
@@ -25,15 +26,12 @@ _classes = [];
 _cleanup = [];
 _strength = TASK_STRENGTH;
 
-if (_position isEqualTo []) then {
-	if !(EGVAR(main,locals) isEqualTo []) then {
-		_position = (selectRandom EGVAR(main,locals)) select 1;
-		if !([_position,0.5,0] call EFUNC(main,isPosSafe)) then {
-			_position = [];
-		};
-	} else {
-		_position = [EGVAR(main,center),EGVAR(main,range),"forest",0,true] call EFUNC(main,findPosTerrain);
-	};
+if (_position isEqualTo [] && {!(EGVAR(main,locals) isEqualTo [])}) then {
+    _position = (selectRandom EGVAR(main,locals)) select 1;
+};
+
+if !([_position,SAFE_DIST,0] call EFUNC(main,isPosSafe)) then {
+	_position = [_position,4,64,SAFE_DIST,0,0.5] call EFUNC(main,findPosSafe);
 };
 
 if (_position isEqualTo []) exitWith {
@@ -52,17 +50,13 @@ call {
 	};
 };
 
-if !([_position,1,0] call EFUNC(main,isPosSafe)) then {
-	_position = [_position,5,50,1,0] call EFUNC(main,findPosSafe);
-};
-
 _base = [_position,random 0.2] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
-_cleanup = _base select 2;
+_cleanup append (_base select 2);
 
 _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes, ASLtoAGL _position, [], 0, "NONE"];
 _cleanup pushBack _officer;
-[group _officer,_position,_bRadius*0.5,1,false] call CBA_fnc_taskDefend;
+[group _officer,_position,_bRadius,1,false] call CBA_fnc_taskDefend;
 
 _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
@@ -77,7 +71,7 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
         for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
             _patrolGrp = createGroup EGVAR(main,enemySide);
             ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
-            [_patrolGrp, _patrolGrp, _bRadius max 40, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol;
+            [_patrolGrp, _patrolGrp, _bRadius max 40, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol;
         };
 	},
 	[_grp,_bRadius,_strength,_cleanup]

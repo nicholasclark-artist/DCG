@@ -36,6 +36,8 @@ if (_position isEqualTo []) exitWith {
 	TASK_EXIT_DELAY(0);
 };
 
+_position = _position select 1;
+
 call {
 	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
 		_classes = EGVAR(main,vehPoolEast);
@@ -78,7 +80,7 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
 TASK_DEBUG(_position);
 
 // SET TASK
-_taskDescription = format["Aerial reconnaissance spotted an enemy fireteam at grid %1. This is an opportunity to gain the upper hand. Ambush the unit and search the enemy combatants for intel.", mapGridPosition _position];
+_taskDescription = "Recently, aerial reconnaissance spotted an enemy fireteam patrolling a nearby settlement. This is an opportunity to gain the upper hand; ambush the unit and search the enemy combatants for intel.";
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"search"] call EFUNC(main,setTask);
 
 // PUBLISH TASK

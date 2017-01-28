@@ -108,9 +108,11 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
 		TASK_APPROVAL(getPos (leader _grp),TASK_AV);
+        _cleanup call EFUNC(main,cleanup);
+		TASK_EXIT;
 
 		if (random 1 < 0.5) then {
-			_posArray = [getpos (leader _grp),50,250,175] call EFUNC(main,findPosGrid);
+			_posArray = [getpos (leader _grp),64,256,96] call EFUNC(main,findPosGrid);
 			{
 				if !([_x,100] call EFUNC(main,getNearPlayers) isEqualTo []) then {
 					_posArray deleteAt _forEachIndex;
@@ -127,8 +129,5 @@ TASK_PUBLISH(_position);
 		} else {
 			[getpos (leader _grp),EGVAR(main,enemySide)] spawn EFUNC(main,spawnReinforcements);
 		};
-
-        _cleanup call EFUNC(main,cleanup);
-		TASK_EXIT;
 	};
 }, TASK_SLEEP, [_taskID,_grp,_cleanup]] call CBA_fnc_addPerFrameHandler;

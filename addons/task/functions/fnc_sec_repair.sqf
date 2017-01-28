@@ -52,15 +52,21 @@ _grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,TASK_SPAWN_DELAY] call
 
 		{
 			if (_x getVariable [ISDRIVER,false]) then {
-				_cleanup pushBack _x;
-				_cleanup pushBack (vehicle _x);
-				_x removeItems "ToolKit";
-				(vehicle _x) setDir random 360;
-				(vehicle _x) lock 3;
-				[vehicle _x,2,{(_this select 0) setVariable [TASK_QFUNC,true]}] call EFUNC(main,setVehDamaged);
-				(crew (vehicle _x)) allowGetIn false;
-				_grp leaveVehicle (vehicle _x);
+                _vehicle = vehicle _x;
 
+				_cleanup pushBack _x;
+				_cleanup pushBack _vehicle;
+				_vehicles pushBack _vehicle;
+
+				_vehicle setDir random 360;
+				_vehicle lock 3;
+                _vehicle engineOn false;
+                
+				[_vehicle,2,{(_this select 0) setVariable [TASK_QFUNC,true]}] call EFUNC(main,setVehDamaged);
+
+                _x removeItems "ToolKit";
+				(crew _vehicle) allowGetIn false;
+				_grp leaveVehicle _vehicle;
 			};
 			false
 		} count (units _grp);
@@ -69,7 +75,7 @@ _grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,TASK_SPAWN_DELAY] call
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
-_taskDescription = "A friendly patrol is in need of repairs. Gather the necessary tools and assist the patrol.";
+_taskDescription = "A friendly patrol is in need of repairs. Gather the necessary tools and assist the unit.";
 [true,_taskID,[_taskDescription,TASK_TITLE,""],ASLToAGL([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"repair"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
@@ -78,7 +84,7 @@ TASK_PUBLISH(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_cleanup","_position"];
+	_args params ["_taskID","_vehicles","_cleanup","_position"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -102,4 +108,4 @@ TASK_PUBLISH(_position);
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_cleanup,_position]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_vehicles,_cleanup,_position]] call CBA_fnc_addPerFrameHandler;
