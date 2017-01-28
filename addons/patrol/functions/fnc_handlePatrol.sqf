@@ -38,7 +38,7 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 		_players = [getPosASL _player,100] call EFUNC(main,getNearPlayers);
 
 		if ({_player inArea [_x select 0,_x select 1,_x select 1,0,false,-1]} count GVAR(blacklist) isEqualTo 0) then { // check if player is in a blacklist array
-			_posArray = [getpos _player,100,PATROL_RANGE,PATROL_MINRANGE,10] call EFUNC(main,findPosGrid);
+			_posArray = [getpos _player,100,PATROL_RANGE,PATROL_MINRANGE,10,0,false] call EFUNC(main,findPosGrid);
 			{ // remove positions in blacklist, that are near players or that players can see
 				_y = _x;
 				if ({_y inArea [_x select 0,_x select 1,_x select 1,0,false,-1]} count GVAR(blacklist) > 0 ||
@@ -56,14 +56,14 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 					[
 						{count units (_this select 0) > 0},
 						{
-                            [_this select 0, _this select 0, PATROL_RANGE, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "if (random 1 < 0.2) then {this spawn CBA_fnc_searchNearby}", [5,10,15]] call CBA_fnc_taskPatrol;
+                            [_this select 0, _this select 0, PATROL_RANGE, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "if (random 1 < 0.2) then {this spawn CBA_fnc_searchNearby}", [5,10,15]] spawn CBA_fnc_taskPatrol;
 						},
 						[_grp]
 					] call CBA_fnc_waitUntilAndExecute;
 
 					INFO_1("Spawning vehicle patrol at %1",_pos);
 				} else {
-					_count = 6;
+					_count = 4;
 					_grp = [_pos,0,_count,EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
 					[
 						{count units (_this select 0) isEqualTo (_this select 2)},
@@ -78,7 +78,7 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 							_wp setWaypointSpeed "LIMITED";
 							_wp setWaypointStatements [
                                 "!(behaviour this isEqualTo ""COMBAT"")",
-                                format ["[this, this, %1, 5, ""MOVE"", ""SAFE"", ""YELLOW"", ""LIMITED"", ""STAG COLUMN"", """", [0,0,0]] call CBA_fnc_taskPatrol;",PATROL_RANGE]
+                                format ["[this, this, %1, 5, ""MOVE"", ""SAFE"", ""YELLOW"", ""LIMITED"", ""STAG COLUMN"", """", [0,0,0]] spawn CBA_fnc_taskPatrol;",PATROL_RANGE]
                             ];
 						},
 						[_grp,_player,_count]
