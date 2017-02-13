@@ -16,7 +16,7 @@ __________________________________________________________________*/
 #define BOMB_RANGE 15
 #define SOUNDPATH "A3\Sounds_F\sfx\Beep_Target.wss"
 #define TYPEMAX 2
-#define REBEL_COUNT 8
+#define REBEL_COUNT 6
 
 private ["_grp","_unit","_wp","_driver","_unitPool","_tempGrp","_vest","_weapon","_mags","_y","_cond"];
 
@@ -24,13 +24,8 @@ private _player = _this select 0;
 private _pos = getPos _player;
 private _type = floor random (TYPEMAX + 1);
 private _nearPlayers = [_pos,50] call EFUNC(main,getNearPlayers);
-private _posArray = [_pos,50,500,200] call EFUNC(main,findPosGrid);
-
-{
-	if !([_x,100] call EFUNC(main,getNearPlayers) isEqualTo []) then {
-		_posArray deleteAt _forEachIndex;
-	};
-} forEach _posArray;
+private _posArray = [_pos,64,512,256] call EFUNC(main,findPosGrid);
+_posArray = _posArray select {[_x,100] call EFUNC(main,getNearPlayers) isEqualTo []};
 
 if (_posArray isEqualTo []) exitWith {
 	WARNING("Hostile spawn position empty");
@@ -64,7 +59,7 @@ call {
 
 		deleteVehicle (leader _tempGrp);
 
-		_grp = [_hostilePos,0,REBEL_COUNT,CIVILIAN,false,0.5] call EFUNC(main,spawnGroup);
+		_grp = [_hostilePos,0,REBEL_COUNT,CIVILIAN,false,1] call EFUNC(main,spawnGroup);
 
 		[
 			{count units (_this select 0) >= REBEL_COUNT},
