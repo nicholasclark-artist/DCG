@@ -12,23 +12,20 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define REGION_SIZE 3000
+#define REGION_SIZE 2000
 
 params [
     ["_data",[],[[]]]
 ];
 
 {
-    private _pos =+ _x;
-    _pos deleteAt 2;
-
     private _value = if (count _data > _forEachIndex + 1) then {
         _data select _forEachIndex
     } else {
         AV_DEFAULT
     };
 
-    private _location = createLocation ["Name", _pos, REGION_SIZE, REGION_SIZE];
+    private _location = createLocation ["Name", ASLtoAGL _x, REGION_SIZE, REGION_SIZE];
     _location setRectangular true;
     _location setVariable [QGVAR(regionValue),_value];
     GVAR(regions) pushBack _location;
