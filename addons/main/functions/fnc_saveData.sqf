@@ -113,9 +113,7 @@ if (CHECK_ADDON_2(weather)) then {
 if (CHECK_ADDON_2(ied)) then {
 	private _data = [];
 	{
-		private _pos =+ getPos _x;
-		_pos deleteAt 2;
-		_data pushBack _pos;
+		_data pushBack (getPos _x);
 		false
 	} count EGVAR(ied,list);
 
