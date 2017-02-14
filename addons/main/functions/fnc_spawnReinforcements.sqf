@@ -79,7 +79,7 @@ if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
 
 private _heli = createVehicle [_type,_spawnPos,[],0,"FLY"];
 _heli lock 3;
-_heli flyInHeight 80;
+_heli flyInHeight 100;
 _heli allowCrewInImmobile true;
 
 private _grp = createGroup _side;
@@ -100,8 +100,7 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side,false,0.3] call FUNC(spaw
 		{
 			_x assignAsCargoIndex [_heli, _forEachIndex];
 			_x moveInCargo _heli;
-            false
-		} count (units _grpPatrol);
+		} forEach (units _grpPatrol);
 	},
 	[_heli,_grpPatrol]
 ] call CBA_fnc_waitUntilAndExecute;
