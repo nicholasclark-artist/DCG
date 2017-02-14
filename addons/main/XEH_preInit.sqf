@@ -43,7 +43,6 @@ PREP(shuffle);
 PREP(setOwner);
 PREP(setTask);
 PREP(setTaskState);
-PREP(setPatrol);
 PREP(setSide);
 PREP(setAnim);
 PREP(getUnitCount);
@@ -61,6 +60,7 @@ PREP(spawnStatic);
 PREP(exportSettings);
 PREP(exportPool);
 PREP(exportBase);
+PREP(splitGroup);
 // PREP(exportConfigList);
 
 GVAR(locations) = [];
@@ -87,11 +87,13 @@ publicVariable QFUNC(displayText);
 publicVariable QFUNC(displayGUIMessage);
 publicVariable QFUNC(armory);
 
+// variables required on all machines
 publicVariable QGVAR(range);
 publicVariable QGVAR(center);
 publicVariable QGVAR(enemySide);
 publicVariable QGVAR(playerSide);
 
+// init cba settings
 INITSETTINGS;
 
 // set config and mission settings
