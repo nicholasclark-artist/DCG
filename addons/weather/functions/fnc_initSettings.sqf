@@ -39,7 +39,7 @@ __________________________________________________________________*/
 [
     QGVAR(time),
     "SLIDER",
-    "Time of Day (24 hr)",
+    ["Time of Day","Hour of the day in 24hr format."],
     COMPONENT_NAME,
     [
         -1,
