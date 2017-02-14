@@ -13,14 +13,14 @@ __________________________________________________________________*/
 
 CHECK_POSTINIT;
 
-// if marker exist, create base on marker position
+// if marker exist, create base object on marker position
 if (CHECK_MARKER(QUOTE(BASE))) then {
 	BASE = "Land_HelipadEmpty_F" createVehicle [0,0,0];
 	BASE setPos (getMarkerPos QUOTE(BASE));
 	publicVariable QUOTE(BASE);
 };
 
-// if base object created from marker or created in editor exists, create base location
+// if base object created from marker or created in editor, create base location
 if !(isNil QUOTE(BASE)) then {
 	CREATE_BASE;
 	{
@@ -28,14 +28,13 @@ if !(isNil QUOTE(BASE)) then {
 	} remoteExecCall [QUOTE(BIS_fnc_call),-2,true];
 };
 
-// if base object does not exist
 if (isNull GVAR(baseLocation)) then {
 	CREATE_DEFAULTBASE;
 	{
 		CREATE_DEFAULTBASE;
 	} remoteExecCall [QUOTE(BIS_fnc_call),-2,true];
 
-	WARNING_1("Base object does not exist. Base location created at %1.",DEFAULTPOS);
+	WARNING_1("Base object does not exist. Base location created at %1",DEFAULTPOS);
 };
 
 // get map locations from config
@@ -95,9 +94,9 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 	};
 
 	// update locations with safe positions
-	if !([_x select 1,0.5,0] call FUNC(isPosSafe)) then {
+	if !([_x select 1,2,0] call FUNC(isPosSafe)) then {
 		_places = selectBestPlaces [_x select 1, _x select 2, "(1 + houses) * (1 - sea)", 35, 4];
-		_places = _places select {(_x select 1) > 0 && {[_x select 0,0.5,0] call FUNC(isPosSafe)}};
+		_places = _places select {(_x select 1) > 0 && {[_x select 0,2,0] call FUNC(isPosSafe)}};
 
 		if !(_places isEqualTo []) then {
 			_position = (selectRandom _places) select 0;
@@ -105,8 +104,12 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 			_x set [1,_position];
 		};
 	};
+
 	false
 } count GVAR(locations);
+
+// create world size position grid
+GVAR(grid) = [EGVAR(main,center),1024,worldSize,0,0,0] call FUNC(findPosGrid);
 
 [FUNC(handleSafezone), 60, []] call CBA_fnc_addPerFrameHandler;
 [FUNC(handleCleanup), 120, []] call CBA_fnc_addPerFrameHandler;
@@ -114,9 +117,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 if !(isNil {HEADLESSCLIENT}) then {
 	[{
 		{
-			if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then {
-				deleteGroup _x;
-			};
+			deleteGroup _x; // will only delete local empty groups
 		} forEach allGroups;
 	}, 120, []] remoteExecCall [QUOTE(CBA_fnc_addPerFrameHandler),owner HEADLESSCLIENT,false];
 };
