@@ -2,59 +2,41 @@
     Types (SCALAR, BOOL, SIDE)
 */
 
-class dcg_main_debug {
-   title = "Debug Mode";
-   values[] = {0,1};
-   texts[] = {"Off", "On"};
-   default = 0;
-   dcg_setting = 1;
-   typeName = "SCALAR";
-};
-class dcg_main_loadData {
-   title = "Load Mission Data";
+/*class dcg_main_testSetting {
+   title = "";
    values[] = {0,1};
    texts[] = {"Off", "On"};
    default = 0;
    dcg_setting = 1;
    typeName = "BOOL";
+};*/
+
+class ace_repair_engineerSetting_repair {
+    title = "ACE3 - Players Allowed to Perform Repair Actions";
+    values[] = {0,1,2};
+    texts[] =  {"Anyone", "Engineers", "Repair Specialists"};
+    default = 0;
+    ACE_setting = 1;
+    dcg_setting = 0;
+    typeName = "SCALAR";
 };
-class dcg_main_autoSave {
-   title = "Autosave Mission Data";
-   values[] = {0,1};
-   texts[] = {"Off", "On"};
-   default = 0;
-   dcg_setting = 1;
-   typeName = "BOOL";
+
+class ace_repair_engineerSetting_wheel {
+    title = "ACE3 - Players Allowed to Remove/Replace Wheels";
+    values[] = {0,1,2};
+    texts[] =  {"Anyone", "Engineers", "Repair Specialists"};
+    default = 0;
+    ACE_setting = 1;
+    dcg_setting = 0;
+    typeName = "SCALAR";
 };
-class dcg_main_enemySide {
-   title = "Enemy Side";
-   values[] = {1,2};
-   texts[] = {"West", "Independent"};
-   default = 1;
-   dcg_setting = 1;
-   typeName = "SIDE";
-};
-class dcg_mission_disableCam {
-   title = "Disable Third Person Camera";
-   values[] = {0,1};
-   texts[] = {"Off", "On"};
-   default = 0;
-   dcg_setting = 1;
-   typeName = "BOOL";
-};
-class dcg_weather_season {
-   title = "Season";
-   values[] = {-1,0,1,2,3};
-   texts[] = {"Random","Summer","Fall","Winter","Spring"};
-   default = -1;
-   dcg_setting = 1;
-   typeName = "SCALAR";
-};
-class dcg_weather_time {
-   title = "Time of Day";
-   values[] = {-1,0,1,2,3};
-   texts[] = {"Random","Morning","Midday","Evening","Night"};
-   default = -1;
-   dcg_setting = 1;
-   typeName = "SCALAR";
+
+class ace_explosives_requireSpecialist {
+    title = "ACE3 - Require Specialist to Defuse Explosives";
+    values[] = {1,0};
+    texts[] =  {"Yes", "No"};
+    default = 0;
+    ACE_setting = 1;
+    dcg_setting = 0;
+    typeName = "BOOL";
 };
