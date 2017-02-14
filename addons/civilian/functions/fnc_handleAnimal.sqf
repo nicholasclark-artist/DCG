@@ -17,10 +17,10 @@ __________________________________________________________________*/
 	if !(missionNamespace getVariable [LOCATION_ID(_x select 0),false]) then {
 		_x params ["_pos","_types"];
 
-		_players = [_pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers);
+		_players = [ASLtoAGL _pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers);
 
 		if !(_players isEqualTo []) then {
-			[_pos,_types] call FUNC(spawnAnimal);
+			[ASLtoAGL _pos,_types] call FUNC(spawnAnimal);
 		};
 	};
 
