@@ -11,9 +11,9 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define ITERATIONS 350
-#define BUFFER 150
-#define RANGE 1100
+#define ITERATIONS 300
+#define BUFFER 100
+#define RANGE 1000
 
 private ["_HCs","_players","_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
 
@@ -80,7 +80,7 @@ if (count GVAR(drivers) <= ceil GVAR(vehMaxCount)) then {
 			    {([getPos _roadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
 			    {([getPos _roadEnd,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
 				{([_roadStart,_roadEnd] inAreaArray EGVAR(main,baseLocation)) isEqualTo []}) then {
-					[_roadStart,_roadMid,_roadEnd,_player] call FUNC(spawnVehicle);
+					[getPos _roadStart,getPos _roadMid,getPos _roadEnd,_player] call FUNC(spawnVehicle);
 			};
 		};
 	};
