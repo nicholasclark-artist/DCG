@@ -13,26 +13,11 @@ none
 __________________________________________________________________*/
 #define TASK_PRIMARY
 #define TASK_NAME 'Rescue VIP'
-#define SET_CAPTIVE(VIP) \
-    if (CHECK_ADDON_1("ace_captives")) then { \
-        [VIP, true] call ACE_captives_fnc_setHandcuffed; \
-    } else { \
-        [VIP,"Acts_AidlPsitMstpSsurWnonDnon02",2] call EFUNC(main,setAnim); \
-    }
-#define SET_FREE(VIP) \
-    if (CHECK_ADDON_1("ace_captives")) then { \
-        [VIP, false] call ACE_captives_fnc_setHandcuffed; \
-    } else { \
-        VIP switchMove ""; \
-    }
+#define SET_CAPTIVE(VIP) if (CHECK_ADDON_1("ace_captives")) then { [VIP, true] call ACE_captives_fnc_setHandcuffed; } else { [VIP,"Acts_AidlPsitMstpSsurWnonDnon02",2] call EFUNC(main,setAnim); }
+#define SET_FREE(VIP) if (CHECK_ADDON_1("ace_captives")) then { [VIP, false] call ACE_captives_fnc_setHandcuffed; } else { VIP switchMove ""; }
 #define SECURE_ID QUOTE(DOUBLES(ADDON,secureVIP))
 #define SECURE_NAME "Secure VIP"
-#define SECURE_STATEMENT \
-    _vip = _this select 0; \
-    _player = _this select 1; \
-    SET_FREE(_vip); \
-    [_vip] joinSilent grpNull; \
-    [_vip] joinSilent (group _player)
+#define SECURE_STATEMENT _vip = _this select 0; _player = _this select 1; SET_FREE(_vip); [_vip] joinSilent grpNull; [_vip] joinSilent (group _player)
 #define SECURE_COND (alive _target)
 #include "script_component.hpp"
 
