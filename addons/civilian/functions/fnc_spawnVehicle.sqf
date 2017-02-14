@@ -6,10 +6,10 @@ Description:
 spawn civilian vehicle
 
 Arguments:
-0: road where vehicle will spawn <OBJECT>
-1: road near target player <OBJECT>
-2: road where vehicle will be deleted <OBJECT>
-2: player that vehicle will pass by <OBJECT>
+0: position where vehicle will spawn <ARRAY>
+1: position near target player <ARRAY>
+2: position where vehicle will be deleted <ARRAY>
+3: player that vehicle will pass by <OBJECT>
 
 Return:
 none
@@ -18,31 +18,23 @@ __________________________________________________________________*/
 
 params ["_start","_mid","_end","_player"];
 
-private _grp = [getPos _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
+private _grp = [_start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 
 [
 	{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) > 0},
 	{
-		_this params ["_grp","_start","_mid","_end","_player"];
+		params ["_grp","_start","_mid","_end","_player"];
 
-		_driver = objNull;
+        _veh = vehicle (leader _grp);
+		_driver = driver _veh;
 
-		{
-			if (_x isEqualTo driver (vehicle _x)) exitWith {
-				_driver = _x;
-			};
-			false
-		} count (units _grp);
-
-		_veh = vehicle _driver;
-
-		_wp = _grp addWaypoint [getPosATL _mid,0];
+		_wp = _grp addWaypoint [_mid,0];
 		_wp setWaypointTimeout [0, 0, 0];
 		_wp setWaypointCompletionRadius 100;
 		_wp setWaypointBehaviour "CARELESS";
 		_wp setWaypointSpeed "LIMITED";
 
-		_wp = _grp addWaypoint [getPosATL _end,0];
+		_wp = _grp addWaypoint [_end,0];
 		_statement = format ["deleteVehicle (objectParent this); deleteVehicle this; %1 = %1 - [this];", QGVAR(drivers)];
 		_wp setWaypointStatements ["true", _statement];
 		_veh allowCrewInImmobile true;
