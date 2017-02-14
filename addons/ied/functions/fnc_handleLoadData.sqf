@@ -29,7 +29,7 @@ params ["_data"];
 
 if (_data isEqualTo []) then {
 	{
-		_roads = _x nearRoads DIST_MIN*0.5;
+		_roads = _x nearRoads 200;
 
 		if !(_roads isEqualTo []) then {
 			_road = selectRandom _roads;
@@ -40,11 +40,10 @@ if (_data isEqualTo []) then {
 			};
 		};
 		false
-	} count ([EGVAR(main,center),DIST,worldSize,0,0,0] call EFUNC(main,findPosGrid));
+	} count EGVAR(main,grid);
 } else {
 	for "_index" from 0 to count _data - 1 do {
-        _pos =+ (_data select _index);
-        _pos set [2,getTerrainHeightASL _pos];
+        _pos = _data select _index;
         CREATE_IED(_pos)
 	};
 };
