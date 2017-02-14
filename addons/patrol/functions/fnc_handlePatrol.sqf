@@ -35,28 +35,23 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 
 	if !(_players isEqualTo []) then {
 		_player = selectRandom _players;
-		_players = [getPosASL _player,100] call EFUNC(main,getNearPlayers);
+		_players = [getPos _player,100] call EFUNC(main,getNearPlayers);
 
 		if ({_player inArea [_x select 0,_x select 1,_x select 1,0,false,-1]} count GVAR(blacklist) isEqualTo 0) then { // check if player is in a blacklist array
 			_posArray = [getpos _player,100,PATROL_RANGE,PATROL_MINRANGE,10,0,false] call EFUNC(main,findPosGrid);
-			{ // remove positions in blacklist, that are near players or that players can see
-				_y = _x;
-				if ({_y inArea [_x select 0,_x select 1,_x select 1,0,false,-1]} count GVAR(blacklist) > 0 ||
-				    {!([_y,100] call EFUNC(main,getNearPlayers) isEqualTo [])} ||
-					{{[_y,eyePos _x] call EFUNC(main,inLOS)} count _players > 0}) then {
-					_posArray deleteAt _forEachIndex;
-				};
-			} forEach _posArray;
 
-			if !(_posArray isEqualTo []) then {
+            _pos = selectRandom _posArray;
+
+			if ([_pos,100] call EFUNC(main,getNearPlayers) isEqualTo [] && {{[_pos,eyePos _x] call EFUNC(main,inLOS)} count _players isEqualTo 0}) then {
 				_grp = grpNull;
-				_pos = ASLtoAGL (selectRandom _posArray);
+                _pos = ASLtoAGL _pos;
+
 				if (random 1 < GVAR(vehChance)) then {
 					_grp = [_pos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
 					[
 						{count units (_this select 0) > 0},
 						{
-                            [_this select 0, _this select 0, PATROL_RANGE, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "if (random 1 < 0.2) then {this spawn CBA_fnc_searchNearby}", [5,10,15]] spawn CBA_fnc_taskPatrol;
+                            [_this select 0, _this select 0, PATROL_RANGE, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] spawn CBA_fnc_taskPatrol;
 						},
 						[_grp]
 					] call CBA_fnc_waitUntilAndExecute;
