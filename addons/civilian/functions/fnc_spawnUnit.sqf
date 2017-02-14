@@ -39,9 +39,9 @@ _buildings = _buildings select {
     };
 
     _grp = createGroup CIVILIAN;
-    (selectRandom EGVAR(main,unitPoolCiv)) createUnit [_pos, _grp];
-
-    leader _grp addEventHandler ["firedNear",{
+    (selectRandom EGVAR(main,unitPoolCiv)) createUnit [[0,0,0], _grp];
+    (leader _grp) setPos _pos;
+    (leader _grp) addEventHandler ["firedNear",{
         [group (_this select 0)] call CBA_fnc_clearWaypoints;
         (_this select 0) removeEventHandler ["firedNear", _thisEventHandler];
         (_this select 0) setUnitPos "DOWN";
@@ -57,7 +57,7 @@ _buildings = _buildings select {
     params ["_args","_idPFH"];
     _args params ["_pos","_name","_units"];
 
-    if ((allPlayers inAreaArray [_pos,GVAR(spawnDist),GVAR(spawnDist),0,false,ZDIST]) isEqualTo []) exitWith {
+    if (([_pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         _units call EFUNC(main,cleanup);
         missionNamespace setVariable [LOCATION_ID(_name),false];
