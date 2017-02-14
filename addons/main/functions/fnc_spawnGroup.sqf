@@ -36,7 +36,7 @@ private _drivers = [];
 private _check = [];
 
 _pos =+ _pos;
-_pos deleteAt 2;
+_pos resize 2;
 
 call {
 	if (_side isEqualTo EAST) exitWith {
