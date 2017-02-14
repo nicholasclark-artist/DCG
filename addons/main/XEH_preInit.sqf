@@ -61,6 +61,7 @@ PREP(exportSettings);
 PREP(exportPool);
 PREP(exportBase);
 PREP(splitGroup);
+PREP(exportNetworkTraffic);
 // PREP(exportConfigList);
 
 GVAR(locations) = [];
