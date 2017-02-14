@@ -13,12 +13,7 @@ CHECK_POSTINIT;
 [
 	{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},
 	{
-		_locations =+ EGVAR(main,locations);
-		_locals =+ EGVAR(main,locals);
-		_hills =+ EGVAR(main,hills);
-        _animalList = [];
-
-        [FUNC(handleUnit), HANDLER_DELAY, _locations] call CBA_fnc_addPerFrameHandler;
+        [FUNC(handleUnit), HANDLER_DELAY, EGVAR(main,locations)] call CBA_fnc_addPerFrameHandler;
         [FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
 
         {
@@ -30,29 +25,30 @@ CHECK_POSTINIT;
             [_mrk] call EFUNC(main,setDebugMarker);
 
             false
-        } count _locations;
+        } count EGVAR(main,locations);
 
-        _locations =+ _locations;
-		_locals =+ _locals;
-		_hills =+ _hills;
+        _animalList = [];
 
         for "_i" from 0 to LIMIT - 1 do {
-            if !(_locations isEqualTo []) then {
-                _location = selectRandom _locations;
-                _animalList pushBack [_location select 1,LOCATIONS_TYPE];
-                _locations deleteAt (_locations find _location);
+            if !(EGVAR(main,locations) isEqualTo []) then {
+                _pos = (selectRandom EGVAR(main,locations)) select 1;
+                if ((_animalList find _pos) isEqualTo -1) then {
+                    _animalList pushBack [_pos,LOCATIONS_TYPE];
+                };
             };
 
-            if !(_locals isEqualTo []) then {
-                _local = selectRandom _locals;
-                _animalList pushBack [_local select 1,LOCALS_TYPE];
-                _locals deleteAt (_locals find _local);
+            if !(EGVAR(main,locals) isEqualTo []) then {
+                _pos = (selectRandom EGVAR(main,locals)) select 1;
+                if ((_animalList find _pos) isEqualTo -1) then {
+                    _animalList pushBack [_pos,LOCALS_TYPE];
+                };
             };
 
-            if !(_hills isEqualTo []) then {
-                _hill = selectRandom _hills;
-                _animalList pushBack [_hill select 0,HILLS_TYPE];
-                _hills deleteAt (_hills find _hill);
+            if !(EGVAR(main,hills) isEqualTo []) then {
+                _pos = (selectRandom EGVAR(main,hills)) select 0;
+                if ((_animalList find _pos) isEqualTo -1) then {
+                    _animalList pushBack [_pos,HILLS_TYPE];
+                };
             };
         };
 
