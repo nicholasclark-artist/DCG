@@ -21,4 +21,5 @@ params [
     ["_z",-1,[0]]
 ];
 
+// be sure _center z-axis is correctly formatted if _z is used
 allPlayers inAreaArray [_center,_dist,_dist,0,false,_z]
