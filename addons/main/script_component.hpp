@@ -13,7 +13,7 @@
 #define DATA_OBJVAR QUOTE(DOUBLES(MAIN_ADDON,saveObject))
 #define DATA_SETVAR(VAR1) profileNamespace setVariable [DATA_SAVEVAR,VAR1]
 #define DATA_GETVAR profileNamespace getVariable [DATA_SAVEVAR,[]]
-#define DATA_MISSION_ID ([toUpper worldName, toUpper missionName] joinString "_")
+#define DATA_MISSION_ID ([QUOTE(VERSION), toUpper worldName, toUpper missionName] joinString " - ")
 
 #define SAVEDATA_ID QUOTE(DOUBLES(ADDON,saveData))
 #define SAVEDATA_NAME "Save Mission Data"

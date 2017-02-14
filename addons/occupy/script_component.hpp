@@ -14,30 +14,20 @@
 #define PATROL_UNITCOUNT 4
 #define VEH_SPAWN_CHANCE 0.75
 
-#define PREP_INF(POS,GRID,COUNT,GARRISON_COUNT,SIZE) \
+#define PREP_INF(POS,GRID,COUNT,SIZE) \
     private _grp = [ASLtoAGL (selectRandom GRID),0,COUNT,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
     [ \
     	{count units (_this select 1) >= (_this select 3)}, \
     	{ \
-            params ["_pos","_grp","_size","_strength","_garrisonCount"];  \
-            _garrisonGrp = createGroup EGVAR(main,enemySide); \
-            ((units _grp) select [0,_garrisonCount]) joinSilent _garrisonGrp; \
-            [_garrisonGrp,_pos,_size,1,false] spawn CBA_fnc_taskDefend; \
-            { \
-                SET_UNITVAR(_x); \
-                false \
-            } count units _garrisonGrp; \
-            for "_i" from 0 to (count units _grp) - 1 step PATROL_UNITCOUNT do { \
-                _patrolGrp = createGroup EGVAR(main,enemySide); \
-                ((units _grp) select [0,PATROL_UNITCOUNT]) joinSilent _patrolGrp; \
-                { \
-                    SET_UNITVAR(_x); \
-                    false \
-                } count units _patrolGrp; \
-                [_patrolGrp, _pos, _size, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "if (random 1 < 0.2) then {this spawn CBA_fnc_searchNearby}", [0,5,8]] spawn CBA_fnc_taskPatrol; \
-            }; \
+            params ["_pos","_grp","_size","_strength"];  \
+            [ \
+                _grp, \
+                PATROL_UNITCOUNT, \
+                {[_this select 0, _this select 1, _this select 2, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "if (random 1 < 0.2) then {this spawn CBA_fnc_searchNearby}", [0,5,8]] spawn CBA_fnc_taskPatrol}, \
+                [_pos,_size] \
+            ] call EFUNC(main,splitGroup); \
     	}, \
-    	[POS,_grp,SIZE,COUNT,GARRISON_COUNT] \
+    	[POS,_grp,SIZE,COUNT] \
     ] call CBA_fnc_waitUntilAndExecute
 
 #define PREP_VEH(POS,GRID,COUNT,SIZE) \

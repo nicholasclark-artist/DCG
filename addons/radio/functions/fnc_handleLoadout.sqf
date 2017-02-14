@@ -45,21 +45,21 @@ if (CHECK_ADDON_1("acre_main")) then {
     				_backpackItems = ((_loadout select 2) select 1);
     				{
     					if ((_x select [0,5]) == "ACRE_") then {
-                        _uniformItems set [_forEachindex,"Chemlight_green"];
-                        INFO("Removed ACRE item from uniform");
-                    };
+                            _uniformItems set [_forEachindex,"Chemlight_green"];
+                            INFO("Removed ACRE item from uniform");
+                        };
     				} forEach _uniformItems;
     				{
     					if ((_x select [0,5]) == "ACRE_") then {
-                        _vestItems set [_forEachindex,"Chemlight_green"];
-                        INFO("Removed ACRE item from vest");
-                    };
+                            _vestItems set [_forEachindex,"Chemlight_green"];
+                            INFO("Removed ACRE item from vest");
+                        };
     				} forEach _vestItems;
     				{
     					if ((_x select [0,5]) == "ACRE_") then {
-                        _backpackItems set [_forEachindex,"Chemlight_green"];
-                        INFO("Removed ACRE item from backpack");
-                    };
+                            _backpackItems set [_forEachindex,"Chemlight_green"];
+                            INFO("Removed ACRE item from backpack");
+                        };
     				} forEach _backpackItems;
     			};
     		};

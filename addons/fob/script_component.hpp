@@ -12,6 +12,7 @@
 #define FOB_DEPLOYED !(GVAR(location) isEqualTo locationNull)
 #define FOB_POSITION (getPos GVAR(location))
 #define FOB_MED ["Land_Medevac_house_V1_F", "Land_Medevac_HQ_V1_F","B_Slingload_01_Medevac_F"]
+#define FOB_CREATE_ANIM 'AinvPknlMstpSnonWnonDnon_medic4'
 
 #define PVEH_CREATE QGVAR(pveh_create)
 #define PVEH_DELETE QGVAR(pveh_delete)
@@ -21,7 +22,7 @@
 #define CREATE_ID QUOTE(DOUBLES(ADDON,create))
 #define CREATE_NAME "Deploy FOB"
 #define CREATE_STATEMENT \
-    [player,"AinvPknlMstpSnonWnonDnon_medic4"] call EFUNC(main,setAnim); \
+    [player,FOB_CREATE_ANIM] call EFUNC(main,setAnim); \
     [{ \
         _format = format ["Forward Operating Base Deployed \n \nPress [%1] to start building",call FUNC(getKeybind)]; \
         [_format,true] call EFUNC(main,displayText); \
@@ -29,7 +30,7 @@
     	publicVariableServer PVEH_CREATE; \
     }, [], 9] call CBA_fnc_waitAndExecute
 
-#define CREATE_COND !(FOB_DEPLOYED) && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {[player] call FUNC(isAllowedOwner)} && {!((getpos player isFlatEmpty  [6, -1, -1, -1, 0, false, player]) isEqualTo [])}
+#define CREATE_COND !(FOB_DEPLOYED) && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {!(COMPARE_STR(animationState player,FOB_CREATE_ANIM))} && {[player] call FUNC(isAllowedOwner)} && {!((getpos player isFlatEmpty  [6, -1, -1, -1, 0, false, player]) isEqualTo [])}
 #define CREATE_KEYCODE \
 	if (CREATE_COND) then { \
 		CREATE_STATEMENT \

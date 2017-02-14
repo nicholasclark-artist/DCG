@@ -29,6 +29,8 @@ __________________________________________________________________*/
 		GVAR(cooldown) \
 	] call CBA_fnc_waitAndExecute
 
+// TODO replace land script with new landAt command
+
 private _classname = _this select 0;
 private _exfil = _this select 1;
 GVAR(infil) = _this select 2;
