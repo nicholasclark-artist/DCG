@@ -58,14 +58,14 @@ _ret = _ret select {
 } forEach _ret;
 
 if (_shuffle) then {
-	[_ret,(count _ret)*3] call FUNC(shuffle);
+	[_ret] call FUNC(shuffle);
 };
 
 if (GRID_DEBUG) then {
     {
         _mrk = createMarker [format ["debug_%1", _x], _x];
         _mrk setMarkerType "mil_dot";
-        _mrk setMarkerColor "ColorGrey";
+        _mrk setMarkerColor "ColorUNKNOWN";
         _mrk setMarkerText str (_x select 2);
     } forEach _ret;
 };
