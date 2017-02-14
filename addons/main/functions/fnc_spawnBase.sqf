@@ -46,7 +46,7 @@ for "_index" from 0 to (count (CONFIG)) - 1 do {
     _bases pushBack [_index,_normalized];
 };
 
-private _bases = [_bases,count _bases] call FUNC(shuffle);
+private _bases = [_bases] call FUNC(shuffle);
 
 // find base with strength close to passed strength
 {
