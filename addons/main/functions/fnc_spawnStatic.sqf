@@ -24,7 +24,7 @@ params [
 if (_pos isEqualTo [0,0,0]) exitWith {};
 
 if (_grid isEqualTo []) then {
-    _grid = [_pos,32,_range,0,7,0] call FUNC(findPosGrid);
+    _grid = [_pos,32,_range,0,10,0] call FUNC(findPosGrid);
 };
 
 private _objArray = [];
