@@ -54,71 +54,52 @@ private _maxCount = 0;
 	params ["_args","_idPFH"];
 	_args params ["_name","_center","_size","_type","_objArray","_mrkArray","_maxCount"];
 
-	private _count = 0;
-
-	{
-		if (side _x isEqualTo EGVAR(main,enemySide)) then {
-			_count = _count + 1;
-		};
-	} forEach (_center nearEntities [ENTITY, _size]);
+    _entities = _center nearEntities [ENTITY, _size];
+    _count = count (_entities select {side _x isEqualTo EGVAR(main,enemySide)});
 
 	// if enemy has lost a certain amount of units, move to next phase
 	if (_count <= _maxCount*ENEMYMAX_MULTIPLIER) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-
-		["",[format ["The enemy is losing control of %1! Keep up the fight and they may surrender!",_name]]] remoteExecCall [QUOTE(BIS_fnc_showNotification), allPlayers, false];
+		["TaskUpdated",["",format ["The enemy is losing control of %1! Keep up the fight and they may surrender!",_name]]] remoteExecCall [QUOTE(BIS_fnc_showNotification), allPlayers, false];
 		EGVAR(patrol,blacklist) pushBack [_center,_size]; // stop patrols from spawning in town
 
 		[{
 			params ["_args","_idPFH"];
 			_args params ["_name","_center","_size","_type","_objArray","_mrkArray","_maxCount"];
 
-			private _friendlyScore = 1;
-			private _enemyScore = 1;
-			private _enemyArray = [];
+            // start scores at 1 to avoid zero divisor
+			_friendlyScore = 1;
+			_enemyScore = 1;
 
 			// get scores for all units in town
-			{
-				if (side _x isEqualTo EGVAR(main,playerSide)) then {
-					if (vehicle _x isKindOf "Man") then {
-						_friendlyScore = _friendlyScore + 1;
-					} else {
-						_friendlyScore = _friendlyScore + 2;
-					};
-				} else {
-					if (side _x isEqualTo EGVAR(main,enemySide)) then {
-						if (vehicle _x isKindOf "Man") then {
-							_enemyScore = _enemyScore + 1;
-						} else {
-							_enemyScore = _enemyScore + 2;
-						};
-						_enemyArray pushBack _x;
-					};
-				};
-			} forEach (_center nearEntities [ENTITY, _size]);
+            _entities = _center nearEntities [ENTITY, _size];
+            _friendlies = _entities select {side _x isEqualTo EGVAR(main,playerSide)};
+            _enemies = _entities select {side _x isEqualTo EGVAR(main,enemySide)};
 
-			// get chance for enemies to surrender
-			// surrender chance is capped
+            _friendlyScore = _friendlyScore + count (_friendlies select {isNull (objectParent _x)}); // add infantry score
+            _friendlyScore = _friendlyScore + (count (_friendlies select {!(isNull (objectParent _x))})) * 2; // add vehicle score
+
+            _enemyScore = _enemyScore + count (_enemies select {isNull (objectParent _x)});
+            _enemyScore = _enemyScore + (count (_enemies select {!(isNull (objectParent _x))})) * 2;
+
+			// get chance for enemies to surrender, surrender chance is capped
 			_chanceSurrender = (_friendlyScore/_enemyScore) min SURRENDER_CHANCE;
-			LOG_4("E_Score: %1, F_Score: %2, E_Count: %3, S_Chance: %4",_enemyScore,_friendlyScore,count _enemyArray,_chanceSurrender);
+			LOG_4("E_Score: %1, F_Score: %2, E_Count: %3, S_Chance: %4",_enemyScore,_friendlyScore,count _enemies,_chanceSurrender);
 
-			if (count _enemyArray isEqualTo 0 || {_enemyScore <= _friendlyScore && (random 1 < _chanceSurrender)}) exitWith {
+			if (count _enemies isEqualTo 0 || {_enemyScore <= _friendlyScore && (random 1 < _chanceSurrender)}) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 				missionNamespace setVariable [SURRENDER_VAR(_name),true];
-
-                ["",[format ["%1 Liberated!",_name]]] remoteExecCall [QUOTE(BIS_fnc_showNotification), allPlayers, false];
+                ["TaskSucceeded",["",format ["%1 Liberated!",_name]]] remoteExecCall [QUOTE(BIS_fnc_showNotification), allPlayers, false];
 
 				{
-					if !(isNull _x) then {
-						if !(typeOf (vehicle _x) isKindOf "AIR") then {
-							[vehicle _x] call EFUNC(main,setSurrender);
-							_x call EFUNC(main,cleanup);
-						} else {
-							_x setBehaviour "CARELESS";
-							(vehicle _x) call EFUNC(main,cleanup);
-						};
+					if !(typeOf (vehicle _x) isKindOf "AIR") then {
+						[vehicle _x] call EFUNC(main,setSurrender);
+						_x call EFUNC(main,cleanup);
+					} else {
+						_x setBehaviour "CARELESS";
+						(vehicle _x) call EFUNC(main,cleanup);
 					};
-				} forEach _enemyArray;
+				} forEach _enemies;
 
 				if (CHECK_ADDON_2(approval)) then {
 					if (_type isEqualTo "NameCityCapital") exitWith {
