@@ -25,14 +25,8 @@ if !(_data isEqualTo []) exitWith {
 	} forEach _data;
 };
 
-private _locations = [];
 private _occupied = [];
-
-{
-	if !((_x select 1) inArea EGVAR(main,baseLocation)) then {
-		_locations pushBack _x;
-	};
-} forEach EGVAR(main,locations);
+private _locations = EGVAR(main,locations) select {!((_x select 1) inArea EGVAR(main,baseLocation))};
 
 if (count _locations < GVAR(locationCount)) exitWith {
     WARNING_1("%1 exceeds terrain location count",QGVAR(locationCount));
