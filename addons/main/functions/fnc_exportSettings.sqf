@@ -72,5 +72,5 @@ for "_i" from 0 to count _config - 1 do {
     _export = _export + _compiledEntry;
 };
 
-titleText ["Exporting serverconfig settings to clipboard", "PLAIN"];
+titleText ["Exporting config settings to clipboard", "PLAIN"];
 copyToClipboard _export;
