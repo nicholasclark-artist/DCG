@@ -30,7 +30,7 @@ for "_i" from 1 to 10 do {
 	params ["_args","_idPFH"];
 	_args params ["_pos","_agentList"];
 
-	if ((allPlayers inAreaArray [_pos,GVAR(spawnDist),GVAR(spawnDist),0,false,ZDIST]) isEqualTo []) exitWith {
+	if (([_pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
         _agentList call EFUNC(main,cleanup);
 		missionNamespace setVariable [LOCATION_ID(_id),false];
