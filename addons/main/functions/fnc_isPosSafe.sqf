@@ -6,7 +6,7 @@ Description:
 checks if position is safe
 
 Arguments:
-0: position <ARRAY>
+0: positionAGL <ARRAY>
 1: min distance from object <NUMBER>
 2: allow water <NUMBER>
 3: max gradient <NUMBER>
@@ -33,8 +33,8 @@ if !(_objs isEqualTo []) exitWith {false};
 _objs = _pos nearObjects ["All",_dist];
 _objs = _objs select {
     !(_x isEqualTo _ignore) &&
-    {getNumber (configFile >> "CfgVehicles" >> typeOf _x >> "scope") > 1} &&
-    {!(_x isKindOf "Logic")}
+    {!(_x isKindOf "Logic")} &&
+    {getNumber (configFile >> "CfgVehicles" >> typeOf _x >> "scope") > 1}
 };
 
 if (!(_objs isEqualTo []) || {_pos isFlatEmpty [-1, -1, _gradient, 30, _water] isEqualTo []}) exitWith {false};
