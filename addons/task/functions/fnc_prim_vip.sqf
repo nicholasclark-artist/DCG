@@ -13,12 +13,24 @@ none
 __________________________________________________________________*/
 #define TASK_PRIMARY
 #define TASK_NAME 'Rescue VIP'
+#define SET_CAPTIVE(VIP) \
+    if (CHECK_ADDON_1("ace_captives")) then { \
+        [VIP, true] call ACE_captives_fnc_setHandcuffed; \
+    } else { \
+        [VIP,"Acts_AidlPsitMstpSsurWnonDnon02",2] call EFUNC(main,setAnim); \
+    }
+#define SET_FREE(VIP) \
+    if (CHECK_ADDON_1("ace_captives")) then { \
+        [VIP, false] call ACE_captives_fnc_setHandcuffed; \
+    } else { \
+        VIP switchMove ""; \
+    }
 #define SECURE_ID QUOTE(DOUBLES(ADDON,secureVIP))
 #define SECURE_NAME "Secure VIP"
 #define SECURE_STATEMENT \
     _vip = _this select 0; \
     _player = _this select 1; \
-    [_vip,"Acts_AidlPsitMstpSsurWnonDnon02",true] call EFUNC(main,setAnim); \
+    SET_FREE(_vip); \
     [_vip] joinSilent grpNull; \
     [_vip] joinSilent (group _player)
 #define SECURE_COND (alive _target)
@@ -56,8 +68,11 @@ if (_position isEqualTo [] || {_town isEqualTo []}) exitWith {
 _vip = (createGroup civilian) createUnit ["C_Nikos", [0,0,0], [], 0, "NONE"];
 _vip setDir random 360;
 _vip setPosASL _position;
+_vip disableAI "ALL";
+_vip enableAI "ANIM";
+_vip enableAI "MOVE";
 _cleanup pushBack _vip;
-[_vip,"Acts_AidlPsitMstpSsurWnonDnon02",true] call EFUNC(main,setAnim);
+SET_CAPTIVE(_vip);
 
 _action = [SECURE_ID,SECURE_NAME,{SECURE_STATEMENT},QUOTE(SECURE_COND),{},[],_vip,0,ACTIONPATH] call EFUNC(main,setAction);
 
@@ -76,11 +91,12 @@ _grp = [[_position,5,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,ene
         [_garrisonGrp,_garrisonGrp,_bRadius,1,true] call CBA_fnc_taskDefend;
 
         // regroup patrols
-        for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
-            _patrolGrp = createGroup EGVAR(main,enemySide);
-            ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
-            [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol;
-        };
+        [
+            _grp,
+            TASK_PATROL_UNITCOUNT,
+            {[_this select 0, _this select 0, _this select 1, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol},
+            [_bRadius]
+        ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
@@ -122,7 +138,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		_cleanup call EFUNC(main,cleanup);
-		[TASK_TYPE,30] call FUNC(select);
+		TASK_EXIT_DELAY(30);
 	};
 
 	if !(alive _vip) exitWith {
@@ -144,8 +160,6 @@ TASK_PUBLISH(_position);
         	params ["_args","_idPFH"];
         	_args params ["_taskID","_vip","_town","_cleanup"];
 
-            _success = false;
-
             if (TASK_GVAR isEqualTo []) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
                 [_taskID, "CANCELED"] call EFUNC(main,setTaskState);
@@ -160,6 +174,8 @@ TASK_PUBLISH(_position);
                 _cleanup call EFUNC(main,cleanup);
                 TASK_EXIT;
             };
+
+            _success = false;
 
             // if vip is returned to town and is alive/awake
             if (_vip inArea [_town select 1, TASK_DIST_RET, TASK_DIST_RET, 0, false, 10]) then {

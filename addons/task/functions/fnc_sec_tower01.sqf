@@ -53,17 +53,17 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
         _cleanup append (units _grp);
 
         // regroup patrols
-        for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
-            _patrolGrp = createGroup EGVAR(main,enemySide);
-            ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
-            [_patrolGrp, _patrolGrp, 50 + random 50, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol;
-        };
+        [
+            _grp,
+            TASK_PATROL_UNITCOUNT,
+            {[_this select 0, _this select 0, 50 + random 50, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol}
+        ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
-_taskDescription = "Hinder enemy communications by destroying the radio tower";
+_taskDescription = "Hinder enemy communications by destroying a nearby radio tower.";
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"destroy"] call EFUNC(main,setTask);
 
 // PUBLISH TASK

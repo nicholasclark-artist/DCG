@@ -70,7 +70,7 @@ _posArty = _posArty select 0;
 
 _arty = _artyClass createVehicle [0,0,0];
 _arty setDir random 360;
-_arty setPos _posArty;
+[_arty,AGLtoASL _posArty] call EFUNC(main,setPosSafe);
 _arty lock 2;
 _arty allowCrewInImmobile true;
 _cleanup pushBack _arty;
@@ -90,16 +90,17 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
         [_garrisonGrp,_garrisonGrp,_bRadius,1,false] call CBA_fnc_taskDefend;
 
         // regroup patrols
-        for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
-            _patrolGrp = createGroup EGVAR(main,enemySide);
-            ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
-            [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol;
-        };
+        [
+            _grp,
+            TASK_PATROL_UNITCOUNT,
+            {[_this select 0, _this select 0, _this select 1, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol},
+            [_bRadius]
+        ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_bRadius,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
-_vehPos = [_position,_bRadius,_bRadius + 100,8,0] call EFUNC(main,findPosSafe);
+_vehPos = [_position,_bRadius + 20,_bRadius + 150,8,0] call EFUNC(main,findPosSafe);
 _vehGrp = if !(_vehPos isEqualTo _position) then {
 	[_vehPos,1,1,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY,true] call EFUNC(main,spawnGroup);
 } else {
@@ -112,7 +113,7 @@ _vehGrp = if !(_vehPos isEqualTo _position) then {
         params ["_position","_vehGrp","_bRadius","_cleanup"];
 
         _cleanup pushBack (objectParent leader _vehGrp);
-        _cleanup pushBack (units _vehGrp);
+        _cleanup append (units _vehGrp);
 
         if (objectParent leader _vehGrp isKindOf "AIR") then {
             _waypoint = _vehGrp addWaypoint [_position,0];
@@ -157,7 +158,7 @@ _timerID = [
 ] call EFUNC(main,setTimer);
 
 // SET TASK
-_taskDescription = "Enemy artillery forces are threatening to attack a local settlement that's sympathetic to our mission. To keep the local sentiment on our side, we're tasked with eliminating the artillery before it fires.";
+_taskDescription = "Enemy artillery forces are threatening to attack a local settlement that's sympathetic to our mission. We're tasked with eliminating the artillery before it fires.";
 [true,_taskID,[_taskDescription,TASK_TITLE,""], ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"destroy"] call EFUNC(main,setTask);
 
 TASK_DEBUG(_posArty);

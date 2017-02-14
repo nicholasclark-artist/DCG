@@ -168,11 +168,7 @@ TASK_PUBLISH(_positions);
 
         		if (random 1 < 0.5) then {
         			_posArray = [getpos _veh,64,400,300] call EFUNC(main,findPosGrid);
-        			{
-        				if !([_x,100] call EFUNC(main,getNearPlayers) isEqualTo []) then {
-        					_posArray deleteAt _forEachIndex;
-        				};
-        			} forEach _posArray;
+                    _posArray = _posArray select {[_x,100] call EFUNC(main,getNearPlayers) isEqualTo []};
 
         			if !(_posArray isEqualTo []) then {
         				_grp = [selectRandom _posArray,0,TASK_STRENGTH,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);

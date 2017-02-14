@@ -22,57 +22,68 @@ params [
 
 // CREATE TASK
 _taskID = str diag_tickTime;
-_drivers = [];
+_unitPool = [];
+_vehPool = [];
 _vehicles = [];
 _cleanup = [];
 
 if (_position isEqualTo []) then {
-	{
-		_roads = (ASLToAGL _x) nearRoads 350;
-		if !(_roads isEqualTo []) exitWith {
-			_position = getPos (selectRandom _roads);
-		};
-	} forEach ([EGVAR(main,center),worldSize*0.04,worldSize] call EFUNC(main,findPosGrid));
+        _roads = (ASLToAGL (selectRandom EGVAR(main,grid))) nearRoads 300;
+    if !(_roads isEqualTo []) exitWith {
+        _position = getPos (selectRandom _roads);
+    };
 };
 
-if (!([_position,12,0] call EFUNC(main,isPosSafe)) || {{CHECK_DIST2D(_x select 1,_position,1000)} count EGVAR(occupy,locations) > 0}) then {
-    _position = [];
+if !(_position isEqualTo []) then {
+    if !([_position,12,0] call EFUNC(main,isPosSafe)) exitWith {
+        _position = [];;
+    };
+
+    if (CHECK_ADDON_2(occupy)) then {
+        if ({CHECK_DIST2D(_x select 1,_position,1000)} count EGVAR(occupy,locations) > 0) then {
+            _position = [];
+        };
+    };
 };
 
 if (_position isEqualTo []) exitWith {
 	[TASK_TYPE,0] call FUNC(select);
 };
 
-_grp = [_position,1,VEHCOUNT,EGVAR(main,playerSide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+call {
+	if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
+		_unitPool = EGVAR(main,unitPoolEast);
+		_vehPool = EGVAR(main,vehPoolEast);
+	};
+	if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
+		_unitPool = EGVAR(main,unitPoolWest);
+		_vehPool = EGVAR(main,vehPoolWest);
+	};
+    if (EGVAR(main,playerSide) isEqualTo RESISTANCE) exitWith {
+        _unitPool = EGVAR(main,unitPoolInd);
+    	_vehPool = EGVAR(main,vehPoolInd);
+	};
+};
 
-[
-	{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) >= VEHCOUNT},
-	{
-		params ["_grp","_cleanup"];
+_vehicle = (selectRandom _vehPool) createVehicle [0,0,0];
+_vehicle setDir random 360;
+[_vehicle,AGLtoASL _position] call EFUNC(main,setPosSafe);
+_vehicle lock 3;
+_vehicle engineOn false;
 
-		{
-			if (_x getVariable [ISDRIVER,false]) then {
-                _vehicle = vehicle _x;
+_grp = createGroup EGVAR(main,playerSide);
+_unit = _grp createUnit [selectRandom _unitPool, [0,0,0], [], 0, "NONE"];
+_unit moveInDriver _vehicle;
+_unit removeItems "ToolKit";
 
-				_cleanup pushBack _x;
-				_cleanup pushBack _vehicle;
-				_vehicles pushBack _vehicle;
+(crew _vehicle) allowGetIn false;
+_grp leaveVehicle _vehicle;
 
-				_vehicle setDir random 360;
-				_vehicle lock 3;
-                _vehicle engineOn false;
-                
-				[_vehicle,2,{(_this select 0) setVariable [TASK_QFUNC,true]}] call EFUNC(main,setVehDamaged);
+[_vehicle,2,{(_this select 0) setVariable [TASK_QFUNC,true]}] call EFUNC(main,setVehDamaged);
 
-                _x removeItems "ToolKit";
-				(crew _vehicle) allowGetIn false;
-				_grp leaveVehicle _vehicle;
-			};
-			false
-		} count (units _grp);
-	},
-	[_grp,_cleanup]
-] call CBA_fnc_waitUntilAndExecute;
+_cleanup pushBack _unit;
+_cleanup pushBack _vehicle;
+_vehicles pushBack _vehicle;
 
 // SET TASK
 _taskDescription = "A friendly patrol is in need of repairs. Gather the necessary tools and assist the unit.";
@@ -90,7 +101,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
 		_cleanup call EFUNC(main,cleanup);
-		[TASK_TYPE,30] call FUNC(select);
+        TASK_EXIT_DELAY(30);
 	};
 
 	if ({!alive _x} count _vehicles > 0) exitWith {

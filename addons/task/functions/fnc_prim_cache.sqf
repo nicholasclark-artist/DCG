@@ -73,11 +73,12 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
         [_garrisonGrp,_garrisonGrp,_bRadius,1,false] call CBA_fnc_taskDefend;
 
         // regroup patrols
-        for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
-            _patrolGrp = createGroup EGVAR(main,enemySide);
-            ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
-            [_patrolGrp, _patrolGrp, _bRadius, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol;
-        };
+        [
+            _grp,
+            TASK_PATROL_UNITCOUNT,
+            {[_this select 0, _this select 0, _this select 1, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol},
+            [_bRadius]
+        ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_bRadius,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
@@ -103,7 +104,7 @@ if !(_vehPos isEqualTo _position) then {
 
 // SET TASK
 _taskPos = ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe));
-_taskDescription = "An enemy base, housing an ammunitions cache, has been located nearby. These supplies are critical to the opposition's efforts, destroy the cache and weaken the enemy supply lines.";
+_taskDescription = "An enemy base, housing an ammunitions cache, has been located nearby. Destroy the cache and weaken the enemy supply lines.";
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"destroy"] call EFUNC(main,setTask);
 
 TASK_DEBUG(_posCache);

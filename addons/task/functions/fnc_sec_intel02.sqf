@@ -72,7 +72,12 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
 
         INTEL_CONTAINER = [leader _grp,INTEL_CLASS] call FUNC(addItem);
 
-        [_grp,_grp,30,1,true] call CBA_fnc_taskDefend;
+        // regroup patrols
+        [
+            _grp,
+            2,
+            {[_this select 0, _this select 0, 30, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol}
+        ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
@@ -80,7 +85,7 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
 TASK_DEBUG(_position);
 
 // SET TASK
-_taskDescription = "Recently, aerial reconnaissance spotted an enemy fireteam patrolling a nearby settlement. This is an opportunity to gain the upper hand; ambush the unit and search the enemy combatants for intel.";
+_taskDescription = "Aerial reconnaissance spotted an enemy fireteam patrolling a nearby settlement. Ambush the unit and search the enemy combatants for intel.";
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"search"] call EFUNC(main,setTask);
 
 // PUBLISH TASK

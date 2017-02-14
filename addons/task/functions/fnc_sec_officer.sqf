@@ -14,6 +14,7 @@ __________________________________________________________________*/
 #define TASK_SECONDARY
 #define TASK_NAME 'Eliminate Officer'
 #define SAFE_DIST 4
+#define SAFE_GRAD 0.4
 #include "script_component.hpp"
 
 params [
@@ -30,8 +31,8 @@ if (_position isEqualTo [] && {!(EGVAR(main,locals) isEqualTo [])}) then {
     _position = (selectRandom EGVAR(main,locals)) select 1;
 };
 
-if !([_position,SAFE_DIST,0] call EFUNC(main,isPosSafe)) then {
-	_position = [_position,4,64,SAFE_DIST,0,0.5] call EFUNC(main,findPosSafe);
+if !([_position,SAFE_DIST,0,SAFE_GRAD] call EFUNC(main,isPosSafe)) then {
+	_position = [_position,4,64,SAFE_DIST,0,SAFE_GRAD] call EFUNC(main,findPosSafe);
 };
 
 if (_position isEqualTo []) exitWith {
@@ -68,11 +69,12 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
         _cleanup append (units _grp);
 
         // regroup patrols
-        for "_i" from 0 to (count units _grp) - 1 step TASK_PATROL_UNITCOUNT do {
-            _patrolGrp = createGroup EGVAR(main,enemySide);
-            ((units _grp) select [0,TASK_PATROL_UNITCOUNT]) joinSilent _patrolGrp;
-            [_patrolGrp, _patrolGrp, _bRadius max 40, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol;
-        };
+        [
+            _grp,
+            TASK_PATROL_UNITCOUNT,
+            {[_this select 0, _this select 0, (_this select 1) max 40, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol},
+            [_bRadius]
+        ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_bRadius,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
