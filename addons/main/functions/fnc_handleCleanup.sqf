@@ -14,9 +14,7 @@ __________________________________________________________________*/
 #define CLEAN_DIST 400
 
 {
-	if (local _x && {{alive _x} count (units _x) isEqualTo 0}) then { // only local groups can be deleted
-		deleteGroup _x;
-	};
+	deleteGroup _x; // will only delete local empty groups
 	false
 } count allGroups;
 
