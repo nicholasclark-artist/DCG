@@ -18,7 +18,7 @@ __________________________________________________________________*/
 
 	if (!(missionNamespace getVariable [LOCATION_ID(_name),false]) && {GVAR(blacklist) find _name isEqualTo -1}) then {
         _players = [ASLToAGL _position,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers);
-        
+
 		if !(_players isEqualTo []) then {
             private "_unitCount";
 
@@ -32,7 +32,7 @@ __________________________________________________________________*/
                 _unitCount = ceil(15*GVAR(multiplier));
 			};
 
-			[ASLToAGL _position,_unitCount,_name] call FUNC(spawnUnit);
+			[ASLToAGL _position,_unitCount,_name,_size] call FUNC(spawnUnit);
 		};
 	};
 

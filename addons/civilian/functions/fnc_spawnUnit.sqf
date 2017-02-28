@@ -8,50 +8,50 @@ spawn civilians
 Arguments:
 0: position to spawn civilians <ARRAY>
 1: number of units to spawn <NUMBER>
-3: name of location <STRING>
+2: name of location <STRING>
 
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_pos","_count","_name"];
+params ["_pos","_count","_name","_size"];
 
 missionNamespace setVariable [LOCATION_ID(_name),true];
 
 private _units = [];
-private _buildings = _pos nearObjects ["House", 75];
+private _buildings = _pos nearObjects ["House", _size min 200];
 
 _buildings = _buildings select {
     !((_x buildingPos -1) isEqualTo [])
 };
 
-[{
-    params ["_args","_idPFH"];
-    _args params ["_pos","_count","_units","_buildings"];
+private _grp = [[0,0,0],0,_count,CIVILIAN,false,1.25] call EFUNC(main,spawnGroup);
 
-    if (count _units >= _count) exitWith {
-        [_idPFH] call CBA_fnc_removePerFrameHandler;
-    };
+[
+	{count units (_this select 0) >= (_this select 2)},
+	{
+        params ["_grp","_pos","_count","_size","_buildings"];
 
-    if !(_buildings isEqualTo []) then {
-        _pos = selectRandom ((selectRandom _buildings) buildingPos -1);
-    };
+        {
+            if !(_buildings isEqualTo []) then {
+                _pos = selectRandom ((selectRandom _buildings) buildingPos -1);
+            };
 
-    _grp = createGroup CIVILIAN;
-    (selectRandom EGVAR(main,unitPoolCiv)) createUnit [[0,0,0], _grp];
-    (leader _grp) setPos _pos;
-    (leader _grp) addEventHandler ["firedNear",{
-        [group (_this select 0)] call CBA_fnc_clearWaypoints;
-        (_this select 0) removeEventHandler ["firedNear", _thisEventHandler];
-        (_this select 0) setUnitPos "DOWN";
-        doStop (_this select 0);
-    }];
+            _x setPos _pos;
 
-    [_grp, leader _grp, 75, 3, "MOVE", "CARELESS", "BLUE", "LIMITED", "STAG COLUMN", "", [8,10,20]] spawn CBA_fnc_taskPatrol;
+            _id = [_x,_pos,_size] call FUNC(setPatrol);
 
-    _units pushBack (leader _grp);
-}, 1.25, [_pos,_count,_units,_buildings]] call CBA_fnc_addPerFrameHandler;
+            _x addEventHandler ["firedNear",format ["
+                [%1] call CBA_fnc_removePerFrameHandler;
+                (_this select 0) removeEventHandler [""firedNear"", _thisEventHandler];
+                (_this select 0) setUnitPos ""DOWN"";
+                doStop (_this select 0);
+            ",_id]];
+        } forEach units _grp;
+	},
+	[_grp,_pos,_count,_size,_buildings]
+] call CBA_fnc_waitUntilAndExecute;
 
 [{
     params ["_args","_idPFH"];
@@ -62,4 +62,4 @@ _buildings = _buildings select {
         _units call EFUNC(main,cleanup);
         missionNamespace setVariable [LOCATION_ID(_name),false];
     };
-}, HANDLER_DELAY, [_pos,_name,_units]] call CBA_fnc_addPerFrameHandler;
+}, HANDLER_DELAY, [_pos,_name,units _grp]] call CBA_fnc_addPerFrameHandler;
