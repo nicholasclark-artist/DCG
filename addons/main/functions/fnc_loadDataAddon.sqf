@@ -19,10 +19,10 @@ private _ret = [];
 
 if (GVAR(loadData)) then {
 	{
-		if (_forEachIndex > 0 && {COMPARE_STR(_x select 0,_this)}) then {
-			_ret = _x select 1;
-			INFO_2("Loading data for %1: %2.",_this,_ret);
-		};
+        if (_forEachIndex > 0 && {COMPARE_STR(_x select 0,_this)}) exitWith {
+            _ret = _x select 1;
+        	INFO_2("Loading data for %1: %2.",_this,_ret);
+        };
 	} forEach GVAR(saveDataCurrent);
 };
 
