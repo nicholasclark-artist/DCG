@@ -21,9 +21,9 @@ publicVariable QFUNC(request);
 publicVariable QFUNC(handleRequest);
 publicVariable QFUNC(canCallTransport);
 publicVariable QFUNC(getChildren);
+publicVariable QFUNC(initSettings);
 
 publicVariable QGVAR(status);
 publicVariable QGVAR(count);
-publicVariable QGVAR(initSettings);
 
 INITSETTINGS;
