@@ -50,14 +50,14 @@ call {
         _pool = _pool arrayIntersect _pool; // remove duplicates
         _pool = _pool select {_x isEqualType ""}; // remove non string elements
 
-        for "_i" from (count _pool - 1) to 0 step -1 do { // remove bad classes
+        /*for "_i" from (count _pool - 1) to 0 step -1 do { // remove bad classes
             private _class = _pool select _i;
 
             if !(isClass (configfile >> "CfgVehicles" >> _class)) then {
                 WARNING_2("%1 does not exist on server, removing class from %2", _class,_name);
                 _pool deleteAt _i;
             };
-        };
+        };*/
 
         if (_pool isEqualTo []) then {
             WARNING_1("%1 is empty", _name);
