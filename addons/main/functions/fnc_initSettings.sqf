@@ -23,17 +23,39 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
+    QGVAR(playerSide),
+    "LIST",
+    ["Player Side","Must be the same side as editor placed playable units."],
+    COMPONENT_NAME,
+    [
+        [EAST,WEST,RESISTANCE],
+        ["EAST","WEST","RESISTANCE"],
+        1
+    ],
+    false,
+    {
+        if (isServer) then {
+            publicVariable QGVAR(playerSide);
+        };
+    }
+] call CBA_Settings_fnc_init;
+
+[
     QGVAR(enemySide),
     "LIST",
-    ["Enemy Side","Enemy side must not be the same as player side."],
+    ["Enemy Side","Cannot be the same as player side."],
     COMPONENT_NAME,
     [
         [EAST,WEST,RESISTANCE],
         ["EAST","WEST","RESISTANCE"],
         0
     ],
-    true,
-    {}
+    false,
+    {
+        if (isServer) then {
+            publicVariable QGVAR(enemySide);
+        };
+    }
 ] call CBA_Settings_fnc_init;
 
 [
@@ -42,12 +64,8 @@ __________________________________________________________________*/
     ["Load Mission Data","Load mission data saved to server profile."],
     COMPONENT_NAME,
     false,
-    true,
-    {
-        if (GVAR(loadData)) then {
-        	call FUNC(loadData);
-        };
-    }
+    false,
+    {}
 ] call CBA_Settings_fnc_init;
 
 [
@@ -56,7 +74,7 @@ __________________________________________________________________*/
     ["Autosave Mission Data","Autosave mission data to server profile."],
     COMPONENT_NAME,
     false,
-    true,
+    false,
     {}
 ] call CBA_Settings_fnc_init;
 
@@ -71,7 +89,7 @@ __________________________________________________________________*/
         (worldSize*0.05) min 2000,
         0
     ],
-    true,
+    false,
     {}
 ] call CBA_Settings_fnc_init;
 
@@ -81,6 +99,6 @@ __________________________________________________________________*/
     ["Main Operating Base Safezone","Deletes enemy units within base radius."],
     COMPONENT_NAME,
     true,
-    true,
+    false,
     {}
 ] call CBA_Settings_fnc_init;
