@@ -32,7 +32,7 @@ __________________________________________________________________*/
         ["Random","January","February","March","April","May","June","July","August","September","October","November","December"],
         0
     ],
-    true,
+    false,
     {}
 ] call CBA_Settings_fnc_init;
 
@@ -47,6 +47,6 @@ __________________________________________________________________*/
         -1,
         0
     ],
-    true,
+    false,
     {}
 ] call CBA_Settings_fnc_init;
