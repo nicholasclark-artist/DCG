@@ -15,6 +15,7 @@ PREP(handleAnimal);
 PREP(spawnUnit);
 PREP(spawnVehicle);
 PREP(spawnAnimal);
+PREP(setPatrol);
 
 GVAR(drivers) = [];
 GVAR(blacklist) = [];
