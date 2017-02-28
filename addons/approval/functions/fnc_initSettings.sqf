@@ -25,7 +25,7 @@ __________________________________________________________________*/
 [
     QGVAR(multiplier),
     "SLIDER",
-    ["Approval Multiplier",""],
+    ["Approval Multiplier","Multiplier for the rate of approval change."],
     COMPONENT_NAME,
     [
         0.1,
@@ -33,7 +33,7 @@ __________________________________________________________________*/
         1,
         1
     ],
-    true,
+    false,
     {}
 ] call CBA_Settings_fnc_init;
 
@@ -48,6 +48,6 @@ __________________________________________________________________*/
         900,
         0
     ],
-    true,
+    false,
     {}
 ] call CBA_Settings_fnc_init;
