@@ -7,13 +7,16 @@ __________________________________________________________________*/
 CHECK_POSTINIT;
 
 [
-	{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING} && {time > 0}},
+	{DOUBLES(PREFIX,main)},
 	{
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
 		[_data] call FUNC(handleLoadData);
 
-		setDate GVAR(date);
-		GVAR(overcast) call BIS_fnc_setOvercast;
+        [] spawn {
+            setDate GVAR(date);
+            0 setOvercast GVAR(overcast);
+            forceWeatherChange; // causes big bad lag
+        };
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 
