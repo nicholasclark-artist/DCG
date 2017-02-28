@@ -6,7 +6,7 @@ Description:
 checks if position is safe
 
 Arguments:
-0: positionAGL <ARRAY>
+0: position <ARRAY>
 1: min distance from object <NUMBER>
 2: allow water <NUMBER>
 3: max gradient <NUMBER>
@@ -24,6 +24,10 @@ params [
 	["_gradient",-1,[0]],
     ["_ignore",objNull,[objNull]]
 ];
+
+// always check position at ground level
+_pos =+ _pos;
+_pos resize 2;
 
 // does not find objects created with createVehicle
 private _objs = nearestTerrainObjects [_pos, [], _dist, false];

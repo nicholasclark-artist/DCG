@@ -34,10 +34,11 @@ if (_dir < 0) then {
 };
 
 private _pos = _center getPos [floor (random ((_max - _min) + 1)) + _min, _dir];
-_pos = AGLToASL _pos;
 
-if !([_pos,_dist,_water,_gradient] call FUNC(isPosSafe)) then {
-    _pos = _center;
+if !([_pos,_dist,_water,_gradient] call FUNC(isPosSafe)) exitWith {
+    _center
 };
+
+_pos = AGLToASL _pos;
 
 _pos
