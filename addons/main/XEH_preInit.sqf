@@ -71,11 +71,9 @@ GVAR(marines) = [];
 GVAR(baseLocation) = locationNull;
 GVAR(range) = worldSize*0.5;
 GVAR(center) = [GVAR(range),GVAR(range),0];
-GVAR(playerSide) = sideUnknown;
-GVAR(enemySide) = sideUnknown;
 GVAR(markerCleanup) = [];
 GVAR(objectCleanup) = [];
-GVAR(saveDataCurrent) = [DATA_MISSION_ID];
+GVAR(saveDataCurrent) = [];
 GVAR(debugMarkers) = [];
 
 publicVariable QUOTE(ADDON);
@@ -91,8 +89,9 @@ publicVariable QFUNC(armory);
 // variables required on all machines
 publicVariable QGVAR(range);
 publicVariable QGVAR(center);
-publicVariable QGVAR(enemySide);
-publicVariable QGVAR(playerSide);
+
+// load current mission data
+call FUNC(loadData);
 
 // init cba settings
 INITSETTINGS;
