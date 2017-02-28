@@ -11,8 +11,6 @@ ADDON = false;
 PREP(initSettings);
 PREP(handleLoadData);
 
-GVAR(overcast) = 0;
-GVAR(date) = [];
 GVAR(mapData) = [ // weatherspark.com
     ["ALTIS",0.67,0.65,0.56,0.52,0.44,0.34,0.26,0.27,0.33,0.47,0.54,0.62],
     ["STRATIS",0.67,0.65,0.56,0.52,0.44,0.34,0.26,0.27,0.33,0.47,0.54,0.62],
