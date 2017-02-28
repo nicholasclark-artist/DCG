@@ -51,7 +51,7 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 					[
 						{count units (_this select 0) > 0},
 						{
-                            [_this select 0, _this select 0, PATROL_RANGE, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] spawn CBA_fnc_taskPatrol;
+                            [_this select 0, _this select 0, PATROL_RANGE, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] call CBA_fnc_taskPatrol;
 						},
 						[_grp]
 					] call CBA_fnc_waitUntilAndExecute;
@@ -73,7 +73,7 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 							_wp setWaypointSpeed "LIMITED";
 							_wp setWaypointStatements [
                                 "!(behaviour this isEqualTo ""COMBAT"")",
-                                format ["[this, this, %1, 5, ""MOVE"", ""SAFE"", ""YELLOW"", ""LIMITED"", ""STAG COLUMN"", """", [0,0,0]] spawn CBA_fnc_taskPatrol;",PATROL_RANGE]
+                                format ["[this, this, %1, 5, ""MOVE"", ""SAFE"", ""YELLOW"", ""LIMITED"", ""STAG COLUMN"", """", [0,0,0]] call CBA_fnc_taskPatrol;",PATROL_RANGE]
                             ];
 						},
 						[_grp,_player,_count]
