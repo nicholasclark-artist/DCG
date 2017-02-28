@@ -86,7 +86,7 @@ _cleanup pushBack _vehicle;
 _vehicles pushBack _vehicle;
 
 // SET TASK
-_taskDescription = "A friendly patrol is in need of repairs. Gather the necessary tools and assist the unit.";
+_taskDescription = format ["A %1 patrol is in need of repairs. Gather the necessary tools and assist the unit.",[EGVAR(main,playerSide)] call BIS_fnc_sideName];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],ASLToAGL([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"repair"] call EFUNC(main,setTask);
 
 // PUBLISH TASK

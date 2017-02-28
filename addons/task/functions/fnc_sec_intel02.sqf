@@ -50,7 +50,7 @@ call {
 	};
 };
 
-_grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= UNITCOUNT},
@@ -76,7 +76,7 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
         [
             _grp,
             2,
-            {[_this select 0, _this select 0, 30, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol}
+            {[_this select 0, _this select 0, 30, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol}
         ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_cleanup]
@@ -85,7 +85,7 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
 TASK_DEBUG(_position);
 
 // SET TASK
-_taskDescription = "Aerial reconnaissance spotted an enemy fireteam patrolling a nearby settlement. Ambush the unit and search the enemy combatants for intel.";
+_taskDescription = format ["Aerial reconnaissance spotted a %1 fireteam patrolling a nearby settlement. Ambush the unit and search the enemy combatants for intel.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"search"] call EFUNC(main,setTask);
 
 // PUBLISH TASK

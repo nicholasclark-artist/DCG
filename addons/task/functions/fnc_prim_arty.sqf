@@ -27,7 +27,11 @@ _strength = TASK_STRENGTH + TASK_GARRISONCOUNT;
 _vehGrp = grpNull;
 _artyClass = "";
 _gunnerClass = "";
+_artyPool = [];
 _cleanup = [];
+_fnc_isArty = {
+    (getNumber (configFile >> "CfgVehicles" >> _this >> "artilleryScanner")) > 0
+};
 
 if (_position isEqualTo []) then {
 	_position = [EGVAR(main,center),EGVAR(main,range),"meadow",10] call EFUNC(main,findPosTerrain);
@@ -39,16 +43,26 @@ if (_position isEqualTo []) exitWith {
 
 call {
 	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
-		_artyClass = "O_MBT_02_arty_F";
-		_gunnerClass = "O_crew_F";
+		_artyPool = EGVAR(main,artyPoolEast);
+        _artyClass = "O_MBT_02_arty_F";
+		_gunnerClass = selectRandom (EGVAR(main,unitPoolEast));
 	};
 	if (EGVAR(main,enemySide) isEqualTo RESISTANCE) exitWith {
-		_artyClass = "B_MBT_01_arty_F";
-		_gunnerClass = "I_crew_F";
+		_artyPool = EGVAR(main,artyPoolInd);
+        _artyClass = "B_T_MBT_01_arty_F";
+        _gunnerClass = selectRandom (EGVAR(main,unitPoolInd));
 	};
     if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
+        _artyPool = EGVAR(main,artyPoolWest);
         _artyClass = "B_MBT_01_arty_F";
-    	_gunnerClass = "B_crew_F";
+    	_gunnerClass = selectRandom (EGVAR(main,unitPoolWest));
+    };
+};
+
+if !(_artyPool isEqualTo []) then {
+    _temp = selectRandom _artyPool;
+    if (_temp call _fnc_isArty) then {
+        _artyClass = _temp;
     };
 };
 
@@ -72,10 +86,9 @@ _arty = _artyClass createVehicle [0,0,0];
 _arty setDir random 360;
 [_arty,AGLtoASL _posArty] call EFUNC(main,setPosSafe);
 _arty lock 2;
-_arty allowCrewInImmobile true;
 _cleanup pushBack _arty;
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},
@@ -85,16 +98,22 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
 		_cleanup append (units _grp);
 
         // regroup garrison units
-        _garrisonGrp = createGroup EGVAR(main,enemySide);
-        ((units _grp) select [0,TASK_GARRISONCOUNT]) joinSilent _garrisonGrp;
-        [_garrisonGrp,_garrisonGrp,_bRadius,1,false] call CBA_fnc_taskDefend;
+        [
+            _grp,
+            TASK_GARRISONCOUNT,
+            {[_this select 0,_this select 0,_this select 1,1,false] call CBA_fnc_taskDefend},
+            [_bRadius],
+            (count units _grp) - TASK_GARRISONCOUNT
+        ] call EFUNC(main,splitGroup);
 
         // regroup patrols
         [
             _grp,
             TASK_PATROL_UNITCOUNT,
-            {[_this select 0, _this select 0, _this select 1, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol},
-            [_bRadius]
+            {[_this select 0, _this select 0, _this select 1, 4, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol},
+            [_bRadius],
+            0,
+            0.1
         ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_bRadius,_strength,_cleanup]
@@ -123,14 +142,13 @@ _vehGrp = if !(_vehPos isEqualTo _position) then {
             _waypoint setWaypointSpeed "NORMAL";
             _waypoint setWaypointBehaviour "AWARE";
         } else {
-            [_vehGrp, _position, _bRadius*2, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] spawn CBA_fnc_taskPatrol;
+            [_vehGrp, _position, _bRadius*2, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] call CBA_fnc_taskPatrol;
         };
     },
     [_position,_vehGrp,_bRadius,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 _tar = EGVAR(main,locations) select {!(CHECK_DIST2D(_x select 1,_posArty,(worldSize*0.04) max 1000))};
-
 _tar = if !(_tar isEqualTo []) then {
 	(selectRandom _tar) select 1;
 } else {
@@ -158,7 +176,7 @@ _timerID = [
 ] call EFUNC(main,setTimer);
 
 // SET TASK
-_taskDescription = "Enemy artillery forces are threatening to attack a local settlement that's sympathetic to our mission. We're tasked with eliminating the artillery before it fires.";
+_taskDescription = format ["%1 artillery forces are threatening to attack a local settlement that's sympathetic to our mission. We're tasked with eliminating the artillery before it fires.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
 [true,_taskID,[_taskDescription,TASK_TITLE,""], ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"destroy"] call EFUNC(main,setTask);
 
 TASK_DEBUG(_posArty);

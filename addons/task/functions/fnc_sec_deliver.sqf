@@ -13,7 +13,7 @@ none
 __________________________________________________________________*/
 #define TASK_SECONDARY
 #define TASK_NAME 'Deliver Supplies'
-#define UNITCOUNT 4
+#define UNITCOUNT 2
 #include "script_component.hpp"
 
 params [
@@ -55,29 +55,17 @@ if (count _positions < 2) exitWith {
 	TASK_EXIT_DELAY(0);
 };
 
-_positionStart = [_locationStart select 1,0,(_locationStart select 2) + 50,8,0,0.5] call EFUNC(main,findPosSafe);
-_positionEnd = [_locationEnd select 1,0,_locationEnd select 2] call EFUNC(main,findPosSafe);
+_positionStart = [_locationStart select 1,0,(_locationStart select 2) + 100,12,0,0.5] call EFUNC(main,findPosSafe);
+_positionEnd = ASLtoAGL ([_locationEnd select 1,0,(_locationEnd select 2)*0.5] call EFUNC(main,findPosSafe));
 
 if (_positionStart isEqualTo [] || {_positionEnd isEqualTo []}) exitWith {
 	TASK_EXIT_DELAY(0);
 };
 
-call {
-	if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
-		_type = "O_Truck_02_box_F";
-	};
-	if (EGVAR(main,playerSide) isEqualTo RESISTANCE) exitWith {
-		_type = "I_Truck_02_box_F";
-	};
-    if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
-		_type = "B_Truck_01_box_F";
-	};
-};
-
-_veh = _type createVehicle [0,0,0];
+_veh = "C_Van_01_box_F" createVehicle [0,0,0];
 _veh setDir random 360;
-_veh setPos _positionStart;
-_veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.27,0.27,0.27,1)"];
+[_veh,_positionStart] call EFUNC(main,setPosSafe);
+_veh setObjectTextureGlobal [1, "#(rgb,8,8,3)color(0.02,0.2,0.4,1)"];
 [_veh] call EFUNC(main,setVehDamaged);
 _cleanup pushBack _veh;
 
@@ -97,7 +85,7 @@ if (CHECK_ADDON_1("ace_cargo")) then {
 	_veh addItemCargoGlobal ["Medikit", 5];
 };
 
-_grp = [_positionStart,0,UNITCOUNT,EGVAR(main,playerSide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_positionStart,0,UNITCOUNT,CIVILIAN,false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) isEqualTo UNITCOUNT},
@@ -110,8 +98,8 @@ _grp = [_positionStart,0,UNITCOUNT,EGVAR(main,playerSide),false,TASK_SPAWN_DELAY
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
-_taskDescription = format["A convoy enroute to deliver medical supplies to %1 broke down somewhere near %2. Repair the convoy and complete the delivery to %1.",_locationEnd select 0, _locationStart select 0];
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_positionStart,false,true,"run"] call EFUNC(main,setTask);
+_taskDescription = format ["A civilian truck enroute to deliver medical supplies to %1 broke down somewhere near %2. Repair the truck and complete the delivery to %1. You'll be able to identify the truck by its blue colored trailer.",_locationEnd select 0, _locationStart select 0];
+[true,_taskID,[_taskDescription,TASK_TITLE,""],ASLtoAGL _positionStart,false,true,"run"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
 TASK_PUBLISH(_positions);
@@ -136,7 +124,7 @@ TASK_PUBLISH(_positions);
 		TASK_EXIT;
 	};
 
-    if (speed _veh > 1) then {
+    if (isEngineOn _veh) then {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         [_taskID,_positionEnd] call BIS_fnc_taskSetDestination;
 

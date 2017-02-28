@@ -27,7 +27,7 @@ _cleanup = [];
 
 if (!(EGVAR(main,hills) isEqualTo []) && {_position isEqualTo []}) then {
 	_hillPos = (selectRandom EGVAR(main,hills)) select 0;
-	_position = [_hillPos,0,100,6,0,1] call EFUNC(main,findPosSafe);
+	_position = [_hillPos,0,100,6,0,0.5] call EFUNC(main,findPosSafe);
 	if (_position isEqualTo _hillPos) then {
 		_position = [];
 	};
@@ -43,7 +43,7 @@ _tower setVectorUp [0,0,1];
 _cleanup pushBack _tower;
 [_tower] call FUNC(handleDamage);
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 1)},
@@ -56,14 +56,14 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
         [
             _grp,
             TASK_PATROL_UNITCOUNT,
-            {[_this select 0, _this select 0, 50 + random 50, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol}
+            {[_this select 0, _this select 0, 50 + random 50, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol}
         ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_strength,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
 // SET TASK
-_taskDescription = "Hinder enemy communications by destroying a nearby radio tower.";
+_taskDescription = format ["Hinder %1 communications by destroying the radio tower.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"destroy"] call EFUNC(main,setTask);
 
 // PUBLISH TASK

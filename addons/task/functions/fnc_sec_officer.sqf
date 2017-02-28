@@ -31,7 +31,7 @@ if (_position isEqualTo [] && {!(EGVAR(main,locals) isEqualTo [])}) then {
     _position = (selectRandom EGVAR(main,locals)) select 1;
 };
 
-if !([_position,SAFE_DIST,0,SAFE_GRAD] call EFUNC(main,isPosSafe)) then {
+if (!(_position isEqualTo []) && {!([_position,SAFE_DIST,0,SAFE_GRAD] call EFUNC(main,isPosSafe))}) then {
 	_position = [_position,4,64,SAFE_DIST,0,SAFE_GRAD] call EFUNC(main,findPosSafe);
 };
 
@@ -59,7 +59,7 @@ _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom _classes
 _cleanup pushBack _officer;
 [group _officer,_position,_bRadius,1,false] call CBA_fnc_taskDefend;
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},
@@ -72,8 +72,10 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
         [
             _grp,
             TASK_PATROL_UNITCOUNT,
-            {[_this select 0, _this select 0, (_this select 1) max 40, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol},
-            [_bRadius]
+            {[_this select 0, _this select 0, (_this select 1) max 40, 4, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol},
+            [_bRadius],
+            0,
+            0.1
         ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_bRadius,_strength,_cleanup]
@@ -81,7 +83,7 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call
 
 // SET TASK
 _taskPos = ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe));
-_taskDescription = "A low ranking enemy officer has been spotted nearby. Find and eliminate the officer.";
+_taskDescription = format ["A low ranking %1 officer has been spotted nearby. Find and eliminate the officer.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"kill"] call EFUNC(main,setTask);
 
 // PUBLISH TASK

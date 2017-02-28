@@ -78,7 +78,7 @@ _grp = [_position,0,FRIENDLY_COUNT,EGVAR(main,playerSide),false,TASK_SPAWN_DELAY
 _cleanup append (units _grp);
 
 // SET TASK
-_taskDescription = "A friendly unit is resupplying beyond the safezone. Move to the area and provide security while the vehicle is idle.";
+_taskDescription = format ["A %1 unit is resupplying beyond the safezone. Move to the area and provide security while the vehicle is idle.",[EGVAR(main,playerSide)] call BIS_fnc_sideName];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"defend"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
@@ -138,7 +138,7 @@ TASK_PUBLISH(_position);
 			GVAR(defend_enemies) = GVAR(defend_enemies) select {!(isNull _x)};
 
 			if (random 1 < 0.2 && {count GVAR(defend_enemies) < _enemyCount}) then {
-				_grp = [[getpos _truck,200,400] call EFUNC(main,findPosSafe),0,ENEMY_COUNT,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+				_grp = [[getpos _truck,200,400] call EFUNC(main,findPosSafe),0,ENEMY_COUNT,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 				[
 					{count units (_this select 0) >= ENEMY_COUNT},
 					{

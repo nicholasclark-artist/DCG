@@ -31,6 +31,7 @@ _town = [];
 _cleanup = [];
 _strength = TASK_STRENGTH + TASK_GARRISONCOUNT;
 _vehGrp = grpNull;
+_type = "";
 
 if (_position isEqualTo []) then {
 	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findPosTerrain);
@@ -50,7 +51,13 @@ if (_position isEqualTo [] || {_town isEqualTo []}) exitWith {
 	TASK_EXIT_DELAY(0);
 };
 
-_vip = (createGroup civilian) createUnit ["C_Nikos", [0,0,0], [], 0, "NONE"];
+if !(EGVAR(main,vipPoolCiv) isEqualTo []) then {
+    _type = selectRandom EGVAR(main,vipPoolCiv);
+} else {
+    _type = "C_Nikos_aged";
+};
+
+_vip = (createGroup civilian) createUnit [_type, [0,0,0], [], 0, "NONE"];
 _vip setDir random 360;
 _vip setPosASL _position;
 _vip disableAI "ALL";
@@ -61,7 +68,7 @@ SET_CAPTIVE(_vip);
 
 _action = [SECURE_ID,SECURE_NAME,{SECURE_STATEMENT},QUOTE(SECURE_COND),{},[],_vip,0,ACTIONPATH] call EFUNC(main,setAction);
 
-_grp = [[_position,5,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [[_position,5,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 1)},
@@ -71,16 +78,22 @@ _grp = [[_position,5,20] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,ene
         _cleanup append (units _grp);
 
         // regroup garrison units
-        _garrisonGrp = createGroup EGVAR(main,enemySide);
-        ((units _grp) select [0,TASK_GARRISONCOUNT]) joinSilent _garrisonGrp;
-        [_garrisonGrp,_garrisonGrp,_bRadius,1,true] call CBA_fnc_taskDefend;
+        [
+            _grp,
+            TASK_GARRISONCOUNT,
+            {[_this select 0,_this select 0,100,1,false] call CBA_fnc_taskDefend},
+            [],
+            (count units _grp) - TASK_GARRISONCOUNT
+        ] call EFUNC(main,splitGroup);
 
         // regroup patrols
         [
             _grp,
             TASK_PATROL_UNITCOUNT,
-            {[_this select 0, _this select 0, _this select 1, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] spawn CBA_fnc_taskPatrol},
-            [_bRadius]
+            {[_this select 0, _this select 0, 100, 4, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [0,5,8]] call CBA_fnc_taskPatrol},
+            [],
+            0,
+            0.1
         ] call EFUNC(main,splitGroup);
 	},
 	[_grp,_strength,_cleanup]
@@ -98,7 +111,7 @@ if !(_vehPos isEqualTo _position) then {
             _cleanup pushBack (objectParent leader _vehGrp);
             _cleanup pushBack (units _vehGrp);
 
-			[_vehGrp, _position, 200, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] spawn CBA_fnc_taskPatrol;
+			[_vehGrp, _position, 200, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] call CBA_fnc_taskPatrol;
 		},
 		[_position,_vehGrp,_cleanup]
 	] call CBA_fnc_waitUntilAndExecute;
@@ -106,7 +119,7 @@ if !(_vehPos isEqualTo _position) then {
 
 // SET TASK
 _taskPos = ASLToAGL ([_position,100,150] call EFUNC(main,findPosSafe));
-_taskDescription = format ["We have intel that the son of a local elder has been taken hostage by enemy forces. Locate the VIP, %1, and safely escort him to %2.", name _vip, _town select 0];
+_taskDescription = format ["We have intel that a local VIP has been taken hostage by %3 forces. Locate %1 and safely escort him to %2.", name _vip, _town select 0, [EGVAR(main,enemySide)] call BIS_fnc_sideName];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"meet"] call EFUNC(main,setTask);
 
 TASK_DEBUG(getpos _vip);
