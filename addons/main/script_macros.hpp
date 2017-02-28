@@ -96,10 +96,8 @@
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
 #define CHECK_POSTBRIEFING (getClientStateNumber > 9)
-#define CHECK_PREINIT \
-    if (!isServer || {!isMultiplayer}) exitWith {}
-#define CHECK_POSTINIT \
-    if (!(EGVAR(main,enable)) || {!(GVAR(enable))} || {!isServer} || {!isMultiplayer}) exitWith {}
+#define CHECK_PREINIT if (!isServer) exitWith {}
+#define CHECK_POSTINIT if (!(EGVAR(main,enable)) || {!(GVAR(enable))} || {!isServer} || {!isMultiplayer}) exitWith {}
 
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
