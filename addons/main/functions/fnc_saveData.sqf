@@ -130,8 +130,8 @@ if (CHECK_ADDON_2(approval)) then {
     private _data = [];
 
     {
-        _data pushBack (_x getVariable [QEGVAR(approval,regionValue),AV_DEFAULT]);
-    } forEach EGVAR(approval,region);
+        _data pushBack (_x getVariable QEGVAR(approval,regionValue));
+    } forEach EGVAR(approval,regions);
 
 	PUSHBACK_DATA(approval,_data);
 };
