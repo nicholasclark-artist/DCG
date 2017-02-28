@@ -28,7 +28,7 @@ __________________________________________________________________*/
     ["Spawn Snipers","Spawn sniper units near occupied locations."],
     COMPONENT_NAME,
     true,
-    true,
+    false,
     {}
 ] call CBA_Settings_fnc_init;
 
@@ -38,6 +38,6 @@ __________________________________________________________________*/
     ["Spawn Static Emplacements","Spawn static emplacements in occupied locations."],
     COMPONENT_NAME,
     true,
-    true,
+    false,
     {}
 ] call CBA_Settings_fnc_init;
