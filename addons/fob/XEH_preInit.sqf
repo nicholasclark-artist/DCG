@@ -26,8 +26,8 @@ GVAR(location) = locationNull;
 GVAR(respawnPos) = [];
 GVAR(anchor) = objNull;
 GVAR(curatorExternal) = objNull;
-GVAR(placeCoef) = -0.25;
-GVAR(deleteCoef) = 0.25;
+GVAR(placeCoef) = -0.025;
+GVAR(deleteCoef) = 0.025;
 
 publicVariable QFUNC(initSettings);
 publicVariable QFUNC(getKeybind);
