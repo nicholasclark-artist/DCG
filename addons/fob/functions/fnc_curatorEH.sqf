@@ -16,16 +16,12 @@ INFO_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curato
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
 GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
-	private ["_playerSide","_costs","_side","_vehClass","_cost"];
-
-	// _playerSide is the side of the player's class, not necessarily the player's side
-	_playerSide = getNumber (configFile >> "CfgVehicles" >> typeOf getAssignedCuratorUnit GVAR(curator) >> "side");
 	_costs = [];
 	{
 		_side = getNumber (configFile >> "CfgVehicles" >> _x >> "side");
 		_cost = [_x] call FUNC(getCuratorCost);
 
-		if (!(_cost isEqualTo 0) && {_side isEqualTo _playerSide || _side isEqualTo 3}) then {
+		if (!(_cost isEqualTo 0) && {_side isEqualTo ([EGVAR(main,playerSide)] call BIS_fnc_sideID) || _side isEqualTo 3}) then {
 			_cost = [true,_cost];
 		} else {
 			_cost = [false,_cost];
