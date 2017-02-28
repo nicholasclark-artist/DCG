@@ -16,7 +16,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(vehPoolEast) {
         typeName = "POOL";
         value[] = {
-    		{"ALL","O_MBT_02_cannon_F","O_LSV_02_armed_F","O_MRAP_02_hmg_F","O_APC_Wheeled_02_rcws_F","O_APC_Tracked_02_cannon_F","O_APC_Tracked_02_AA_F"}
+    		{"ALL","O_LSV_02_armed_F","O_MRAP_02_hmg_F","O_APC_Wheeled_02_rcws_F","O_APC_Tracked_02_cannon_F","O_APC_Tracked_02_AA_F"}
     	};
     };
     class GVAR(airPoolEast) {
@@ -37,6 +37,12 @@ class DOUBLES(PREFIX,settings) {
     		{"ALL","O_officer_F"}
     	};
     };
+    class GVAR(artyPoolEast) {
+        typeName = "POOL";
+        value[] = {
+    		{"ALL","O_T_MBT_02_arty_ghex_F","O_MBT_02_arty_F"}
+    	};
+    };
     class GVAR(unitPoolInd) {
         typeName = "POOL";
         value[] = {
@@ -46,7 +52,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(vehPoolInd) {
         typeName = "POOL";
         value[] = {
-    		{"ALL","I_MBT_03_cannon_F","I_MRAP_03_hmg_F","I_APC_tracked_03_cannon_F","I_APC_Wheeled_03_cannon_F"}
+    		{"ALL","I_MRAP_03_hmg_F","I_APC_tracked_03_cannon_F","I_APC_Wheeled_03_cannon_F"}
     	};
     };
     class GVAR(airPoolInd) {
@@ -67,6 +73,12 @@ class DOUBLES(PREFIX,settings) {
             {"ALL","I_officer_F"}
         };
     };
+    class GVAR(artyPoolInd) {
+        typeName = "POOL";
+        value[] = {
+
+        };
+    };
     class GVAR(unitPoolWest) {
         typeName = "POOL";
         value[] = {
@@ -76,7 +88,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(vehPoolWest) {
         typeName = "POOL";
         value[] = {
-    		{"ALL","B_MBT_01_TUSK_F","B_MBT_01_cannon_F","B_LSV_01_armed_F","B_MRAP_01_hmg_F","B_APC_Tracked_01_rcws_F","B_APC_Tracked_01_CRV_F","B_APC_Wheeled_01_cannon_F","B_APC_Tracked_01_AA_F"}
+    		{"ALL","B_LSV_01_armed_F","B_MRAP_01_hmg_F","B_APC_Tracked_01_rcws_F","B_APC_Tracked_01_CRV_F","B_APC_Wheeled_01_cannon_F","B_APC_Tracked_01_AA_F"}
     	};
     };
     class GVAR(airPoolWest) {
@@ -97,11 +109,17 @@ class DOUBLES(PREFIX,settings) {
             {"ALL","B_officer_F"}
         };
     };
+    class GVAR(artyPoolWest) {
+        typeName = "POOL";
+        value[] = {
+    		{"ALL","B_MBT_01_mlrs_F","B_MBT_01_arty_F"}
+    	};
+    };
     class GVAR(unitPoolCiv) {
         typeName = "POOL";
         value[] = {
-    		{"ALL","C_man_sport_3_F_afro","C_man_sport_1_F_afro","C_man_sport_2_F_afro","C_man_polo_3_F_euro","C_man_polo_5_F_euro","C_man_sport_2_F_euro","C_man_sport_3_F_euro","C_Man_casual_3_F_euro","C_Man_casual_2_F_euro","C_Man_casual_1_F_euro","C_man_polo_4_F_asia","C_man_polo_1_F_asia","C_Man_casual_6_F_asia","C_Man_casual_5_F_asia","C_Man_casual_4_F_asia","C_man_sport_3_F_asia","C_man_sport_1_F_asia","C_man_sport_2_F_asia","C_Man_casual_3_F_asia","C_Man_casual_2_F_asia","C_Man_casual_1_F_asia","C_man_shorts_3_F_afro","C_man_polo_4_F_afro","C_man_polo_2_F_afro","C_man_polo_1_F_afro","C_Man_casual_6_F_afro","C_Man_casual_5_F_afro","C_Man_casual_4_F_afro","C_Man_casual_3_F_afro","C_Man_casual_2_F_afro","C_Man_casual_1_F_afro","C_man_p_beggar_F_afro","C_man_polo_6_F","C_man_polo_5_F","C_man_polo_4_F","C_man_polo_2_F","C_man_polo_1_F","C_Man_casual_6_F","C_Man_casual_5_F","C_Man_casual_4_F","C_Man_casual_3_F","C_Man_casual_2_F","C_Man_casual_1_F","C_man_1"}
-    	};
+            {"ALL","C_man_hunter_1_F","C_Man_casual_3_F_euro","C_Man_casual_1_F_euro","C_man_p_beggar_F_euro","C_man_polo_4_F_euro","C_man_polo_6_F_euro","C_man_polo_3_F_asia","C_man_polo_2_F_asia","C_man_polo_1_F_asia","C_Man_casual_5_F_asia","C_man_sport_2_F_asia","C_Man_casual_3_F_asia","C_Man_casual_2_F_asia","C_Man_casual_1_F_asia","C_man_polo_3_F_afro","C_man_polo_2_F_afro","C_man_polo_1_F_afro","C_Man_casual_6_F_afro","C_Man_casual_4_F_afro","C_man_sport_1_F_afro","C_Man_casual_3_F_afro","C_Man_casual_2_F_afro","C_Man_casual_1_F_afro"}
+        };
     };
     class GVAR(vehPoolCiv) {
         typeName = "POOL";
@@ -114,5 +132,11 @@ class DOUBLES(PREFIX,settings) {
         value[] = {
     		{"ALL","C_Heli_Light_01_civil_F","C_Plane_Civil_01_F"}
     	};
+    };
+    class GVAR(vipPoolCiv) {
+        typeName = "POOL";
+        value[] = {
+            {"ALL","C_Nikos","C_Nikos_aged"}
+        };
     };
 };
