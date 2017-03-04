@@ -22,6 +22,7 @@ params [
 ];
 
 _unit forceSpeed (_unit getSpeed "SLOW");
+_unit setBehaviour "CARELESS";
 
 _idPFH = [{
     params ["_args","_idPFH"];

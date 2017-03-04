@@ -14,13 +14,16 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 {
-	if !(missionNamespace getVariable [LOCATION_ID(_x select 0),false]) then {
-		_x params ["_pos","_types"];
+    _x params ["_pos","_types"];
 
-		_players = [ASLtoAGL _pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers);
+    _pos =+ _pos;
+    _pos resize 2;
+
+	if !(missionNamespace getVariable [LOCATION_ID(_pos),false]) then {
+		_players = [_pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers);
 
 		if !(_players isEqualTo []) then {
-			[ASLtoAGL _pos,_types] call FUNC(spawnAnimal);
+			[_pos,_types] call FUNC(spawnAnimal);
 		};
 	};
 

@@ -26,12 +26,12 @@ _buildings = _buildings select {
     !((_x buildingPos -1) isEqualTo [])
 };
 
-private _grp = [[0,0,0],0,_count,CIVILIAN,false,1.25] call EFUNC(main,spawnGroup);
+private _grp = [[0,0,0],0,_count,CIVILIAN,true,1.25] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},
 	{
-        params ["_grp","_pos","_count","_size","_buildings"];
+        params ["_grp","_pos","_count","_size","_buildings","_name"];
 
         {
             if !(_buildings isEqualTo []) then {
@@ -49,17 +49,17 @@ private _grp = [[0,0,0],0,_count,CIVILIAN,false,1.25] call EFUNC(main,spawnGroup
                 doStop (_this select 0);
             ",_id]];
         } forEach units _grp;
+
+        [{
+            params ["_args","_idPFH"];
+            _args params ["_pos","_name","_units"];
+
+            if (([_pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
+                [_idPFH] call CBA_fnc_removePerFrameHandler;
+                _units call EFUNC(main,cleanup);
+                missionNamespace setVariable [LOCATION_ID(_name),false];
+            };
+        }, HANDLER_DELAY, [_pos,_name,units _grp]] call CBA_fnc_addPerFrameHandler;
 	},
-	[_grp,_pos,_count,_size,_buildings]
+	[_grp,_pos,_count,_size,_buildings,_name]
 ] call CBA_fnc_waitUntilAndExecute;
-
-[{
-    params ["_args","_idPFH"];
-    _args params ["_pos","_name","_units"];
-
-    if (([_pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
-        [_idPFH] call CBA_fnc_removePerFrameHandler;
-        _units call EFUNC(main,cleanup);
-        missionNamespace setVariable [LOCATION_ID(_name),false];
-    };
-}, HANDLER_DELAY, [_pos,_name,units _grp]] call CBA_fnc_addPerFrameHandler;
