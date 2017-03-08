@@ -15,7 +15,7 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define MAX_DMG 1
+#define HIT_DMG 0.9
 
 params [
 	"_veh",
@@ -32,7 +32,7 @@ params [
 
 if (!(local _veh) || {_allHitpoints isEqualTo []} || {!(_veh isKindOf "LandVehicle" || (_veh isKindOf "Ship") || (_veh isKindOf "Air"))}) exitWith {};
 
-private _hitIndex = [];
+private _hitList = [];
 private _hitSelect = [];
 private _lastHit = "";
 
@@ -40,23 +40,27 @@ private _lastHit = "";
 	_selection = _allHitpointsSelections select _forEachIndex;
 
 	if (!(_x isEqualTo "") && {((toLower _x) find "glass") isEqualTo -1} && {((toLower _x) find "fuel") isEqualTo -1} && {!isNil {_veh getHit _selection}}) then {
-		_hitIndex pushBack _forEachIndex;
+        if (((toLower _x) find "wheel") > -1 || {((toLower _x) find "track") > -1}) then {
+            _hitList pushBack [_forEachIndex,1];
+        } else {
+            _hitList pushBack [_forEachIndex,HIT_DMG];
+        }
 	};
 } forEach _allHitpoints;
 
-if (_hitIndex isEqualTo []) exitWith {
+if (_hitList isEqualTo []) exitWith {
 	WARNING_2("%1 %2: no suitable hitpoints.",typeOf _veh,getPos _veh);
 };
 
 for "_i" from 1 to _hitCount step 1 do {
-	_hit = selectRandom _hitIndex;
+	_hit = selectRandom _hitList;
 
 	if !(_hit isEqualTo _lastHit) then {
 		_lastHit = _hit;
-		_veh setHitIndex [_hit, MAX_DMG];
+		_veh setHitIndex _hit;
 		_hitSelect pushBack _hit;
 
-		LOG_5("%1 %2: hitpoint: %3 index: %4 damage: %5.",typeOf _veh,getPos _veh,_allHitpoints select _hit,_hit,MAX_DMG);
+		LOG_5("%1 %2: hitpoint: %3 index: %4 damage: %5.",typeOf _veh,getPos _veh,_allHitpoints select (_hit select 0),_hit select 0,_hit select 1);
 	};
 };
 
@@ -72,10 +76,10 @@ _fx attachTo [_veh,[0,0,0]];
 	{
 		isNull (_this select 0) ||
 		{!alive (_this select 0)} ||
-		{({(((getAllHitPointsDamage (_this select 0)) select 2) select _x) >= MAX_DMG} count (_this select 1)) isEqualTo 0}
+		{({(((getAllHitPointsDamage (_this select 0)) select 2) select (_x select 0)) >= (_x select 1)} count (_this select 1)) isEqualTo 0}
 	},
 	{
-		params ["_veh","_hitIndex","_onRepair","_params","_pos","_fx"];
+		params ["_veh","_hitList","_onRepair","_params","_pos","_fx"];
 
 		if (!isNull _veh && {alive _veh}) then {
 			_params = [_veh] + _params;
@@ -84,7 +88,7 @@ _fx attachTo [_veh,[0,0,0]];
 		};
 		[_fx] call FUNC(removeParticle);
 	},
-	[_veh,_hitIndex,_onRepair,_params,getPos _veh,[_fx]]
+	[_veh,_hitList,_onRepair,_params,getPos _veh,[_fx]]
 ] call CBA_fnc_waitUntilAndExecute;
 
-[_hitIndex,_hitSelect]
+[_hitList,_hitSelect]
