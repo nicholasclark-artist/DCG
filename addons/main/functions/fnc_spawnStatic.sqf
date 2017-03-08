@@ -12,16 +12,15 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_unit","_static1","_static2","_static3","_tower","_gunner","_roads","_roadConnectedTo","_staticPos","_check","_bunker","_dir","_static","_fort","_fortPos","_mrk","_type"];
 params [
-    ["_pos",[0,0,0],[]],
+    ["_pos",[],[[]]],
     ["_range",100,[0]],
     ["_count",1,[0]],
     ["_side",GVAR(enemySide),[sideUnknown]],
     ["_grid",[],[[]]]
 ];
 
-if (_pos isEqualTo [0,0,0]) exitWith {};
+if (_pos isEqualTo []) exitWith {};
 
 if (_grid isEqualTo []) then {
     _grid = [_pos,32,_range,0,10,0] call FUNC(findPosGrid);
@@ -29,6 +28,10 @@ if (_grid isEqualTo []) then {
 
 private _objArray = [];
 private _gunnerArray = [];
+private _unit = "";
+private _static1 = "";
+private _static2 = "";
+private _static3 = "";
 
 call {
 	if (_side isEqualTo EAST) exitWith {
@@ -58,11 +61,11 @@ call {
 		private _type = ceil random 3;
 
 		if (_type isEqualTo 1) exitWith { // tower
-			_tower = _static1 createVehicle [0,0,0];
+			private _tower = _static1 createVehicle [0,0,0];
 			_tower setdir ([_tower, _pos] call BIS_fnc_DirTo) + 180;
+            _tower setvectorup [0,0,1];
 			_tower setPosASL _x;
-			_tower setvectorup [0,0,1];
-			_gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
+			private _gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
 			_gunner setFormDir (getDir _tower);
 			_gunner setDir (getDir _tower);
 			_gunner setPosATL (_tower buildingpos 1);
@@ -74,35 +77,27 @@ call {
 		};
 
 		if (_type isEqualTo 2) exitWith { // bunkered static
-			_roads = _x nearRoads 150;
-
+			private _roads = _x nearRoads 150;
 			if (_roads isEqualTo []) exitWith {};
-
-			_road = selectRandom _roads;
-			_roadConnectedTo = (roadsConnectedTo _road);
-
+			private _road = selectRandom _roads;
+			private _roadConnectedTo = (roadsConnectedTo _road);
 			if (_roadConnectedTo isEqualTo [] || {!(_road inArea [_pos, _range, _range, 0, false, -1])}) exitWith {};
-
 			_roadConnectedTo = _roadConnectedTo select 0;
-			_staticPos = _road modelToWorld [-11,0,0];
+			private _staticPos = _road modelToWorld [-11,0,0];
 			_staticPos set [2,0];
-			_check = _staticPos isFlatEmpty [2, -1, 0.4, 3, -1];
-
-			if (_check isEqualTo [] || {isOnRoad _staticPos}) exitWith {};
-
+			if ((_staticPos isFlatEmpty [2, -1, 0.4, 3, -1]) isEqualTo [] || {isOnRoad _staticPos}) exitWith {};
 			_staticPos set [2,-0.02];
-			_bunker = "Land_BagBunker_Small_F" createVehicle _staticPos;
-			_dir = [_road, _roadConnectedTo] call BIS_fnc_DirTo;
-			_bunker setDir _dir + 180;
+			private _bunker = "Land_BagBunker_Small_F" createVehicle _staticPos;
+			_bunker setDir ([_road, _roadConnectedTo] call BIS_fnc_DirTo) + 180;
 			_bunker setVectorUp surfaceNormal position _bunker;
 
 			if (count (lineIntersectsObjs [[(getposasl _bunker) select 0,(getposasl _bunker) select 1,((getposasl _bunker) select 2) + 1], ATLToASL(_bunker modelToWorld [0,30,1])]) > 0) exitWith {
                 deleteVehicle _bunker
             };
 
-			_static = createVehicle [_static2,[0,0,0], [], 0, "CAN COLLIDE"];
+			private _static = createVehicle [_static2,[0,0,0], [], 0, "CAN COLLIDE"];
 			_static setPosATL (_bunker modelToWorld [0,0,-0.8]);
-			_gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
+			private _gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
 			_gunner moveInGunner _static;
 			_gunner doWatch (_bunker modelToWorld [0,-40,1]);
 			_gunnerArray pushBack _gunner;
@@ -111,13 +106,13 @@ call {
 		};
 
         if !(_x isFlatEmpty [2, -1, 0.4, 3, -1] isEqualTo []) then { // mortar
-            _static = _static3 createVehicle [0,0,0];
-            _static setPosASL _x;
+            private _static = _static3 createVehicle [0,0,0];
+            [_static,_x] call FUNC(setPosSafe);
             _objArray pushBack _static;
 
             {
-                _fort = "Land_BagFence_Round_F" createVehicle [0,0,0];
-                _fortPos = (_static modelToWorld _x);
+                private _fort = "Land_BagFence_Round_F" createVehicle [0,0,0];
+                private _fortPos = (_static modelToWorld _x);
                 _fortPos set [2,0];
                 _fort setPosATL _fortPos;
                 _fort setDir ([_fort, _static] call BIS_fnc_DirTo);
@@ -129,7 +124,7 @@ call {
                 [-2.3,0,0]
             ];
 
-            _gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
+            private _gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
             _gunner moveInGunner _static;
             _gunnerArray pushBack _gunner;
         };
