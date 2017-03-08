@@ -30,23 +30,25 @@ GVAR(curator) removeCuratorEditableObjects [curatorEditableObjects GVAR(curator)
 
 [FOB_POSITION,AV_FOB*-1] call EFUNC(approval,addValue);
 [false] call FUNC(handleRecon);
-deleteVehicle GVAR(anchor);
-unassignCurator GVAR(curator);
-
-// reassign previous curator
-if !(isNull GVAR(curatorExternal)) then {
-    [
-        {
-            (_this select 0) assignCurator GVAR(curatorExternal);
-            GVAR(curatorExternal) = objNull;
-        },
-        [_unit],
-        2
-    ] call CBA_fnc_waitAndExecute;
-};
-
 GVAR(respawnPos) call BIS_fnc_removeRespawnPosition;
+deleteVehicle GVAR(anchor);
 
 {
     deleteLocation GVAR(location);
 } remoteExecCall [QUOTE(BIS_fnc_call), 0, false];
+
+// reassign previous curator
+if !(isNull GVAR(curatorExternal)) then {
+    [GVAR(curatorExternal),_unit] call FUNC(handleAssign);
+
+    // reset external curator var after reassign
+    [
+        {getAssignedCuratorUnit GVAR(curatorExternal) isEqualTo (_this select 0)},
+        {
+            GVAR(curatorExternal) = objNull;
+        },
+        [_unit]
+    ] call CBA_fnc_waitUntilAndExecute;
+} else {
+    [objNull,_unit] call FUNC(handleAssign);
+}

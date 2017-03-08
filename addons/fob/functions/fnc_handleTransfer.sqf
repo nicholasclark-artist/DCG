@@ -21,16 +21,7 @@ params [
     ["_handleNew",false]
 ];
 
-unassignCurator GVAR(curator);
-
-// a delay between unassigning and assigning curator is required
-[
-    {
-        (_this select 0) assignCurator GVAR(curator);
-    },
-    [_new],
-    2
-] call CBA_fnc_waitAndExecute;
+[GVAR(curator),_new] call FUNC(handleAssign);
 
 [
     {getAssignedCuratorUnit GVAR(curator) isEqualTo (_this select 0)},

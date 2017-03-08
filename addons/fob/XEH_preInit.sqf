@@ -10,6 +10,7 @@ ADDON = false;
 
 PREP(initSettings);
 PREP(init);
+PREP(handleAssign);
 PREP(handleCreate);
 PREP(handleDelete);
 PREP(handleTransfer);

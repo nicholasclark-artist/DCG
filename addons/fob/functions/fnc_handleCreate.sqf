@@ -87,26 +87,18 @@ clearBackpackCargoGlobal GVAR(anchor);
         [GVAR(curator),"object",["UnitPos","Rank","Lock"]] call BIS_fnc_setCuratorAttributes;
 
         if !(isNull _unit) then {
-            // if unit is already assigned to a curator, save previous curator for later and unassign
+            // if unit is already assigned to a curator, save previous curator for later
             _previousCurator = getAssignedCuratorLogic _unit;
 
             if !(isNull _previousCurator) then {
                 if !(_previousCurator isEqualTo GVAR(curator)) then {
                     GVAR(curatorExternal) = _previousCurator;
                 };
-                unassignCurator _previousCurator;
             };
 
-            // a delay between unassigning and assigning curator is required
-            [
-                {
-                    (_this select 0) assignCurator GVAR(curator);
-                },
-                [_unit],
-                2
-            ] call CBA_fnc_waitAndExecute;
+            [GVAR(curator),_unit] call FUNC(handleAssign);
 
-        	// unit does not immediately become owner of curator, it takes a few seconds
+        	// unit does not immediately become owner of curator
         	[
         		{getAssignedCuratorUnit GVAR(curator) isEqualTo (_this select 0)},
         		{
