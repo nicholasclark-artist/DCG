@@ -68,6 +68,7 @@ _taskDescription = format ["Hinder %1 communications by destroying the radio tow
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
+TASK_DEBUG(_position);
 
 // TASK HANDLER
 [{

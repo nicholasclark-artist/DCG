@@ -148,20 +148,13 @@ _vehGrp = if !(_vehPos isEqualTo _position) then {
     [_position,_vehGrp,_bRadius,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
-_tar = EGVAR(main,locations) select {!(CHECK_DIST2D(_x select 1,_posArty,(worldSize*0.04) max 1000))};
-_tar = if !(_tar isEqualTo []) then {
-	(selectRandom _tar) select 1;
-} else {
-    [_posArty,2000,8000] call EFUNC(main,findPosSafe);
-};
-
 _timerID = [
 	3600,
 	60,
     format ["%1 Countdown", TASK_NAME],
 	{
 		if (isServer) then {
-            params ["time","_arty","_class","_tar"];
+            params ["_time","_arty","_class"];
 
             _arty lock 3;
             _gunner = (createGroup EGVAR(main,enemySide)) createUnit [_class, [0,0,0], [], 0, "NONE"];
@@ -169,25 +162,27 @@ _timerID = [
             _gunner moveInGunner  _arty;
             _gunner disableAI "FSM";
             _gunner setBehaviour "CARELESS";
-			_gunner doArtilleryFire [_tar, "32Rnd_155mm_Mo_shells", 4];
+
+            _arty addEventHandler ["Fired",{deleteVehicle (_this select 6)}];
+            _pos = [getpos _arty,2000,2000] call EFUNC(main,findPosSafe);
+            _gunner doArtilleryFire [_pos,(getArtilleryAmmo [_arty]) select 0,4];
 		};
 	},
-	[_arty,_gunnerClass,_tar]
+	[_arty,_gunnerClass]
 ] call EFUNC(main,setTimer);
 
 // SET TASK
 _taskDescription = format ["%1 artillery forces are threatening to attack a local settlement that's sympathetic to our mission. We're tasked with eliminating the artillery before it fires.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
 [true,_taskID,[_taskDescription,TASK_TITLE,""], ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"destroy"] call EFUNC(main,setTask);
 
-TASK_DEBUG(_posArty);
-
 // PUBLISH TASK
 TASK_PUBLISH(_position);
+TASK_DEBUG(_posArty);
 
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_arty","_position","_cleanup","_timerID","_tar"];
+	_args params ["_taskID","_arty","_position","_cleanup","_timerID"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -210,7 +205,7 @@ TASK_PUBLISH(_position);
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
 		_cleanup call EFUNC(main,cleanup);
-        TASK_APPROVAL(_tar,TASK_AV * -1);
+        TASK_APPROVAL(_position,TASK_AV * -1);
 		TASK_EXIT;
 	};
-}, TASK_SLEEP, [_taskID,_arty,_position,_cleanup,_timerID,_tar]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_arty,_position,_cleanup,_timerID]] call CBA_fnc_addPerFrameHandler;

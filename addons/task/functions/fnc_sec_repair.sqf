@@ -36,7 +36,7 @@ if (_position isEqualTo []) then {
 
 if !(_position isEqualTo []) then {
     if !([_position,12,0] call EFUNC(main,isPosSafe)) exitWith {
-        _position = [];;
+        _position = [];
     };
 
     if (CHECK_ADDON_2(occupy)) then {
@@ -91,6 +91,7 @@ _taskDescription = format ["A %1 patrol is in need of repairs. Gather the necess
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
+TASK_DEBUG(_position);
 
 // TASK HANDLER
 [{

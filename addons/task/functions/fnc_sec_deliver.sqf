@@ -103,6 +103,7 @@ _taskDescription = format ["A civilian truck enroute to deliver medical supplies
 
 // PUBLISH TASK
 TASK_PUBLISH(_positions);
+TASK_DEBUG(_positionStart);
 
 // TASK HANDLER
 [{
@@ -126,7 +127,7 @@ TASK_PUBLISH(_positions);
 
     if (isEngineOn _veh) then {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
-        [_taskID,_positionEnd] call BIS_fnc_taskSetDestination;
+        [_taskID,_positionEnd] remoteExecCall [QUOTE(BIS_fnc_taskSetDestination), 0, _veh];
 
         [{
             params ["_args","_idPFH"];

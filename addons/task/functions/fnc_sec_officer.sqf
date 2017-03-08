@@ -88,6 +88,7 @@ _taskDescription = format ["A low ranking %1 officer has been spotted nearby. Fi
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
+TASK_DEBUG(_position);
 
 // TASK HANDLER
 [{

@@ -113,10 +113,9 @@ _taskPos = ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,fin
 _taskDescription = format ["A %1 base, housing an ammunitions cache, has been located nearby. Destroy the cache and weaken the enemy supply lines.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"destroy"] call EFUNC(main,setTask);
 
-TASK_DEBUG(_posCache);
-
 // PUBLISH TASK
 TASK_PUBLISH(_position);
+TASK_DEBUG(_posCache);
 
 // TASK HANDLER
 [{

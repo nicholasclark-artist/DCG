@@ -82,8 +82,6 @@ _grp = [_position,0,UNITCOUNT,CIVILIAN,true,TASK_SPAWN_DELAY] call EFUNC(main,sp
 	[_position,_grp,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
-TASK_DEBUG(_position);
-
 // SET TASK
 _taskPos = ASLToAGL ([_position,120,150] call EFUNC(main,findPosSafe));
 _taskDescription = "Yesterday, an informant was suppose to hand off a GPS device with vital intel on the enemy's whereabouts. UAV reconnaissance spotted activity nearby that may be related to our contact. Search the area for the informant and retrieve the GPS.";
@@ -91,6 +89,7 @@ _taskDescription = "Yesterday, an informant was suppose to hand off a GPS device
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
+TASK_DEBUG(_position);
 
 // TASK HANDLER
 [{

@@ -83,6 +83,7 @@ _taskDescription = format ["A %1 unit is resupplying beyond the safezone. Move t
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
+TASK_DEBUG(_position);
 
 // TASK HANDLER
 [{

@@ -82,14 +82,13 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call 
 	[_grp,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
-TASK_DEBUG(_position);
-
 // SET TASK
 _taskDescription = format ["Aerial reconnaissance spotted a %1 fireteam patrolling a nearby settlement. Ambush the unit and search the enemy combatants for intel.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
 [true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"search"] call EFUNC(main,setTask);
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
+TASK_DEBUG(_position);
 
 // TASK HANDLER
 [{

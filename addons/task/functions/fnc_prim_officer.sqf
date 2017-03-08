@@ -114,8 +114,6 @@ _vehGrp = if !(_vehPos isEqualTo _position) then {
     [_position,_vehGrp,_bRadius,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
-TASK_DEBUG(getPos _officer);
-
 // SET TASK
 _taskPos = ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe));
 _taskDescription = format ["A high ranking %1 officer has been spotted nearby. Find and eliminate the officer.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
@@ -123,6 +121,7 @@ _taskDescription = format ["A high ranking %1 officer has been spotted nearby. F
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
+TASK_DEBUG(_position);
 
 // TASK HANDLER
 [{
