@@ -18,34 +18,37 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define HINT_GETIN "A player must be in the copilot position to signal take off."
 #define IDLE_TIME 300
-#define COOLDOWN \
+#define COOLDOWN(REQUESTOR) \
 	[ \
 		{ \
 			GVAR(status) = TR_READY; \
+            (owner (_this select 0)) publicVariableClient QGVAR(status); \
 			GVAR(count) = GVAR(count) - 1; \
 			publicVariable QGVAR(count); \
 		}, \
-		[], \
+		[REQUESTOR], \
 		GVAR(cooldown) \
 	] call CBA_fnc_waitAndExecute
 
 // @todo replace land code with new landAt command
 
-private _classname = _this select 0;
-private _exfil = _this select 1;
-GVAR(infil) = _this select 2;
-private _exfilMrk = _this select 3;
-private _infilMrk = _this select 4;
-
+private _requestor = _this select 0;
+private _classname = _this select 1;
+private _exfil = _this select 2;
+GVAR(infil) = _this select 3;
+private _exfilMrk = _this select 4;
+private _infilMrk = _this select 5;
 private _pilot = "";
 
+// send not ready status to requestor
 GVAR(status) = TR_NOTREADY;
+(owner _requestor) publicVariableClient QGVAR(status);
+
+// increase transport count for all players
 GVAR(count) = GVAR(count) + 1;
 publicVariable QGVAR(count);
 
-_spawnPos = [_exfil,4000,4000] call EFUNC(main,findPosSafe);
-_transport = createVehicle [_classname,_spawnPos,[],0,"FLY"];
-
+_transport = createVehicle [_classname,[_exfil,4000,4000] call EFUNC(main,findPosSafe),[],0,"FLY"];
 _transport addEventHandler ["GetIn",{
     params ["_veh","_pos","_unit","_tPath"];
 
@@ -113,14 +116,14 @@ _wp setWaypointStatements ["true", "(vehicle this) land ""GET IN"";"];
 
 [{
 	params ["_args","_idPFH"];
-	_args params ["_transport","_pilot","_exfilMrk","_infilMrk"];
+	_args params ["_requestor","_transport","_pilot","_exfilMrk","_infilMrk"];
 
 	if (COMPARE_STR(GVAR(status),TR_WAITING)) exitWith { // if transport route complete
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		deleteMarker _exfilMrk;
 		deleteMarker _infilMrk;
 		_transport call EFUNC(main,cleanup);
-		COOLDOWN;
+		COOLDOWN(_requestor);
 	};
 
 	if (!alive _pilot || {isTouchingGround _transport && (!(canMove _transport) || (fuel _transport isEqualTo 0))}) exitWith { // if transport destroyed enroute
@@ -129,9 +132,9 @@ _wp setWaypointStatements ["true", "(vehicle this) land ""GET IN"";"];
 		deleteMarker _exfilMrk;
 		deleteMarker _infilMrk;
 		_transport call EFUNC(main,cleanup);
-		COOLDOWN;
+		COOLDOWN(_requestor);
 	};
-}, 1, [_transport,_pilot,_exfilMrk,_infilMrk]] call CBA_fnc_addPerFrameHandler;
+}, 1, [_requestor,_transport,_pilot,_exfilMrk,_infilMrk]] call CBA_fnc_addPerFrameHandler;
 
 // handle transport timeout if player not in copilot
 [{
@@ -158,7 +161,7 @@ _wp setWaypointStatements ["true", "(vehicle this) land ""GET IN"";"];
 
 					_wp = group _pilot addWaypoint [[0,0,100], 0];
 					_transport call EFUNC(main,cleanup);
-					COOLDOWN;
+					COOLDOWN(_requestor);
 				};
 			},
 			[_pilot,_transport],

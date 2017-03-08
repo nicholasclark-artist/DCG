@@ -44,7 +44,7 @@ call {
 
 {
     if (count _actions isEqualTo TR_LISTSIZE) exitWith {
-        WARNING_1("Exceeded limit (%1) for transport list",TR_LISTSIZE);
+        LOG_1("Exceeded limit (%1) for transport list",TR_LISTSIZE);
     };
 
 	if (_x isKindOf "Helicopter" && {([_x] call _fnc_getCargo) >= GVAR(cargoThreshold)}) then {

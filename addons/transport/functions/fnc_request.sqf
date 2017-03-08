@@ -54,7 +54,8 @@ GVAR(status) = TR_WAITING;
 									_infilMrk setMarkerText format ["INSERTION LZ (%1)",name player];
 
 									[EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-                                    [_class,_exfil,_infil,_exfilMrk,_infilMrk] call FUNC(handleRequest);
+                                    missionNamespace setVariable [PVEH_REQUEST,[player,_class,_exfil,_infil,_exfilMrk,_infilMrk]];
+                            		publicVariableServer PVEH_REQUEST;
 								} else {
 									[STR_CLOSE,true] call EFUNC(main,displayText);
 								};
