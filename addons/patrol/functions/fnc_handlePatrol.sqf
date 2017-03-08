@@ -30,17 +30,18 @@ if !(GVAR(groups) isEqualTo []) then {
 };
 
 if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
-	_HCs = entities "HeadlessClient_F";
-	_players = allPlayers - _HCs;
+	_players = call CBA_fnc_players;
 
 	if !(_players isEqualTo []) then {
 		_player = selectRandom _players;
-		_players = [getPos _player,100] call EFUNC(main,getNearPlayers);
 
 		if ({_player inArea [_x select 0,_x select 1,_x select 1,0,false,-1]} count GVAR(blacklist) isEqualTo 0) then { // check if player is in a blacklist array
 			_posArray = [getpos _player,100,PATROL_RANGE,PATROL_MINRANGE,10,0,false] call EFUNC(main,findPosGrid);
 
+            if (_posArray isEqualTo []) exitWith {};
+
             _pos = selectRandom _posArray;
+            _players = [getPos _player,100] call EFUNC(main,getNearPlayers);
 
 			if ([_pos,100] call EFUNC(main,getNearPlayers) isEqualTo [] && {{[_pos,eyePos _x] call EFUNC(main,inLOS)} count _players isEqualTo 0}) then {
 				_grp = grpNull;
@@ -51,9 +52,20 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 					[
 						{count units (_this select 0) > 0},
 						{
-                            [_this select 0, _this select 0, PATROL_RANGE, 5, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "", [5,10,15]] call CBA_fnc_taskPatrol;
+                            params ["_grp","_player"];
+
+                            // set waypoint around target player
+                            _wp = _grp addWaypoint [getPosATL _player,0];
+                            _wp setWaypointCompletionRadius 100;
+                            _wp setWaypointBehaviour "SAFE";
+                            _wp setWaypointFormation "STAG COLUMN";
+                            _wp setWaypointSpeed "NORMAL";
+                            _wp setWaypointStatements [
+                                "!(behaviour this isEqualTo ""COMBAT"")",
+                                format ["[this, this, %1, 5, ""MOVE"", ""SAFE"", ""YELLOW"", ""NORMAL"", ""STAG COLUMN"", """", [5,10,15]] call CBA_fnc_taskPatrol;",PATROL_RANGE]
+                            ];
 						},
-						[_grp]
+						[_grp,_player]
 					] call CBA_fnc_waitUntilAndExecute;
 
 					INFO_1("Spawning vehicle patrol at %1",_pos);
@@ -63,11 +75,11 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 					[
 						{count units (_this select 0) isEqualTo (_this select 2)},
 						{
-							_this params ["_grp","_player","_count"];
+							params ["_grp","_player","_count"];
 
 							// set waypoint around target player
 							_wp = _grp addWaypoint [getPosATL _player,0];
-							_wp setWaypointCompletionRadius 100;
+							_wp setWaypointCompletionRadius 50;
 							_wp setWaypointBehaviour "SAFE";
 							_wp setWaypointFormation "STAG COLUMN";
 							_wp setWaypointSpeed "LIMITED";
