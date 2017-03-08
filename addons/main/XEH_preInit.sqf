@@ -81,6 +81,7 @@ publicVariable QUOTE(ADDON);
 // functions required on all machines
 publicVariable QFUNC(initSettings);
 publicVariable QFUNC(setAction);
+publicVariable QFUNC(setAnim);
 publicVariable QFUNC(removeAction);
 publicVariable QFUNC(displayText);
 publicVariable QFUNC(displayGUIMessage);
