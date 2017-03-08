@@ -156,5 +156,9 @@ _data = QUOTE(ADDON) call FUNC(loadDataAddon);
 	};
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 
+// sync sides on all machines
+publicVariable QGVAR(playerSide);
+publicVariable QGVAR(enemySide);
+
 ADDON = true;
 publicVariable QUOTE(ADDON);
