@@ -18,10 +18,14 @@ __________________________________________________________________*/
 #define VANILLA_TYPES ["IEDUrbanBig_F","IEDUrbanSmall_F"]
 #define CREATE_IED(POS) \
     if !(CHECK_ADDON_1("ace_explosives")) then { \
-        _ied = createSimpleObject [selectRandom VANILLA_TYPES, AGLtoASL (POS getPos [5, random 360])]; \
+        _pos = POS getPos [5, random 360]; \
+        _pos set [2,0]; \
+        _ied = createSimpleObject [selectRandom VANILLA_TYPES, AGLtoASL _pos]; \
         GVAR(list) pushBack _ied; \
     } else { \
-        _ied = [objNull, POS getPos [5, random 360], random 360, selectRandom ACE_TYPES, "PressurePlate", []] call ACE_Explosives_fnc_placeExplosive; \
+        _pos = POS getPos [5, random 360]; \
+        _pos set [2,0]; \
+        _ied = [objNull, _pos, random 360, selectRandom ACE_TYPES, "PressurePlate", []] call ACE_Explosives_fnc_placeExplosive; \
         GVAR(list) pushBack _ied; \
     };
 
@@ -29,11 +33,11 @@ params ["_data"];
 
 if (_data isEqualTo []) then {
 	{
-		_roads = _x nearRoads 200;
+		private _roads = _x nearRoads 200;
 
 		if !(_roads isEqualTo []) then {
-			_road = selectRandom _roads;
-			_pos = getPos _road;
+			private _road = selectRandom _roads;
+			private _pos = getPos _road;
 
 			if (!(_pos inArea EGVAR(main,baseLocation)) && {isOnRoad _road}) then {
                 CREATE_IED(_pos)
@@ -43,7 +47,7 @@ if (_data isEqualTo []) then {
 	} count EGVAR(main,grid);
 } else {
 	for "_index" from 0 to count _data - 1 do {
-        _pos = _data select _index;
+        private _pos = _data select _index;
         CREATE_IED(_pos)
 	};
 };
