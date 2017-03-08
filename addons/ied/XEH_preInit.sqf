@@ -10,6 +10,7 @@ ADDON = false;
 
 PREP(initSettings);
 PREP(handleLoadData);
+PREP(handleIED);
 
 GVAR(list) = [];
 

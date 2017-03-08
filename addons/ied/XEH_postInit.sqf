@@ -14,24 +14,7 @@ CHECK_POSTINIT;
 		[_data] call FUNC(handleLoadData);
 
         if !(CHECK_ADDON_1("ace_explosives")) then {
-    		[{
-    			if (GVAR(list) isEqualTo []) exitWith {
-    				[_this select 1] call CBA_fnc_removePerFrameHandler;
-    			};
-
-    			{
-    				_near = _x nearEntities [["Man", "LandVehicle"], 4];
-    				_near = _near select {isPlayer _x};
-
-    				if !(_near isEqualTo []) then {
-    					GVAR(list) deleteAt (GVAR(list) find _x);
-    					(selectRandom TYPE_EXP) createVehicle (getPosATL _x);
-    					deleteVehicle _x;
-    				};
-
-    				false
-    			} count GVAR(list);
-    		}, 1, []] call CBA_fnc_addPerFrameHandler;
+    		[FUNC(handleIED), 1, []] call CBA_fnc_addPerFrameHandler;
         };
 
         {
