@@ -46,12 +46,7 @@ private _typeName = "";
 private _infCount = 0;
 private _vehCount = 0;
 private _airCount = 0;
-private _grid = [_center,32,_size,0,SAFE_DIST,0] call EFUNC(main,findPosGrid);
-
-if (_grid isEqualTo []) exitWith {
-    WARNING("Cannot occupy location, grid is empty");
-    [] call FUNC(findLocation);
-};
+private _gridMinDist = 0;
 
 call {
 	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
@@ -69,28 +64,38 @@ if (_pool isEqualTo []) exitWith {
     WARNING("Cannot occupy location, unit pool empty")
 };
 
-GVAR(locations) pushBack [_name,_center,_size,_type]; // set as occupied location
-EGVAR(civilian,blacklist) pushBack _name; // stop civilians from spawning in location
-
 call {
     if (COMPARE_STR(_type,"NameCityCapital")) exitWith {
         _typeName = "Capital";
         _infCount = INF_COUNT_CAP;
         _vehCount = VEH_COUNT_CAP;
         _airCount = AIR_COUNT_CAP;
+        _gridMinDist = 8;
     };
     if (COMPARE_STR(_type,"NameCity")) exitWith {
         _typeName = "City";
         _infCount = INF_COUNT_CITY;
         _vehCount = VEH_COUNT_CITY;
         _airCount = AIR_COUNT_CITY;
+        _gridMinDist = 16;
     };
 
     _typeName = "Village";
     _infCount = INF_COUNT_VILL;
     _vehCount = VEH_COUNT_VILL;
     _airCount = AIR_COUNT_VILL;
+    _gridMinDist = 32;
 };
+
+private _grid = [_center,_gridMinDist,_size,0,SAFE_DIST,0] call EFUNC(main,findPosGrid);
+
+if (_grid isEqualTo []) exitWith {
+    WARNING("Cannot occupy location, grid is empty");
+    [] call FUNC(findLocation);
+};
+
+GVAR(locations) pushBack [_name,_center,_size,_type]; // set as occupied location
+EGVAR(civilian,blacklist) pushBack _name; // stop civilians from spawning in location
 
 if (isNil "_data") then {
     PREP_VEH(_center,_grid,_vehCount,_size*1.25);
