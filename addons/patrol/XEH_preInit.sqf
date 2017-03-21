@@ -16,4 +16,4 @@ GVAR(blacklist) = [];
 
 publicVariable QFUNC(initSettings);
 
-INITSETTINGS;
+SETTINGS_INIT;

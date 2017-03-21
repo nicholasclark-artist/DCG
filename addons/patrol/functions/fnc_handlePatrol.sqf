@@ -48,7 +48,7 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
                 _pos = ASLtoAGL _pos;
 
 				if (random 1 < GVAR(vehChance)) then {
-					_grp = [_pos,1,1,EGVAR(main,enemySide),false,1,true] call EFUNC(main,spawnGroup);
+					_grp = [_pos,1,1,EGVAR(main,enemySide),1,true] call EFUNC(main,spawnGroup);
 					[
 						{count units (_this select 0) > 0},
 						{
@@ -71,7 +71,7 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 					INFO_1("Spawning vehicle patrol at %1",_pos);
 				} else {
 					_count = 4;
-					_grp = [_pos,0,_count,EGVAR(main,enemySide),false,2] call EFUNC(main,spawnGroup);
+					_grp = [_pos,0,_count,EGVAR(main,enemySide),2] call EFUNC(main,spawnGroup);
 					[
 						{count units (_this select 0) isEqualTo (_this select 2)},
 						{
