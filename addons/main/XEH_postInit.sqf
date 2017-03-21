@@ -109,7 +109,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 } count GVAR(locations);
 
 // create world size position grid
-GVAR(grid) = [EGVAR(main,center),1024,worldSize,0,0,0] call FUNC(findPosGrid);
+GVAR(grid) = [EGVAR(main,center),1000,worldSize,0,0,0] call FUNC(findPosGrid);
 
 [FUNC(handleSafezone), 60, []] call CBA_fnc_addPerFrameHandler;
 [FUNC(handleCleanup), 120, []] call CBA_fnc_addPerFrameHandler;
@@ -155,10 +155,6 @@ _data = QUOTE(ADDON) call FUNC(loadDataAddon);
         ];
 	};
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
-
-// sync sides on all machines
-publicVariable QGVAR(playerSide);
-publicVariable QGVAR(enemySide);
 
 ADDON = true;
 publicVariable QUOTE(ADDON);

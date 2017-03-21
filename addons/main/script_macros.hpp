@@ -80,10 +80,10 @@
 
 ///////////////////
 
-#define ADDON_TITLE (toUpper QUOTE(ADDON)) splitString "_" joinString " "
 #define HEADLESSCLIENT DOUBLES(PREFIX,HC)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
-#define INITSETTINGS call FUNC(initSettings); remoteExecCall [QFUNC(initSettings), -2, true]
+#define SETTINGS_INIT remoteExecCall [QFUNC(initSettings), -2, true]; call FUNC(initSettings)
+#define SETTINGS_OVERWRITE(SETTING,VALUE) [{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},{missionNamespace setVariable [SETTING,_this]},VALUE] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute),-2,true]
 
 #define ISDRIVER QEGVAR(main,isDriver)
 #define ISONPATROL QEGVAR(main,isOnPatrol)
@@ -101,9 +101,6 @@
 
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
-
-#define CACHE_DISABLE_VAR QUOTE(TRIPLES(PREFIX,cache,disableCaching))
-#define CACHE_DISABLE(GRP,BOOL) GRP setVariable [CACHE_DISABLE_VAR,BOOL,true]
 
 #define COST_MAN 1.5
 #define COST_CAR 3
@@ -131,4 +128,5 @@
 #define AV_VILLAGE ((AV_MAX*0.05)*EGVAR(approval,multiplier))
 #define AV_CITY ((AV_MAX*0.1)*EGVAR(approval,multiplier))
 #define AV_CAPITAL ((AV_MAX*0.15)*EGVAR(approval,multiplier))
-#define AV_CHANCE(POS) ((1 - (linearConversion [AV_MIN, AV_MAX, [POS] call EFUNC(approval,getValue), 0, 1, true])) * 0.5)
+#define AV_CONVERT1(POS) (linearConversion [AV_MIN, AV_MAX, [POS] call EFUNC(approval,getValue), 0, 1, true])
+#define AV_CONVERT2(POS) (1 - ((1 - AV_CONVERT1(POS)) * 0.5))

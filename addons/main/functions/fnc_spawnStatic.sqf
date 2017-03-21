@@ -69,7 +69,7 @@ call {
 			_gunner setFormDir (getDir _tower);
 			_gunner setDir (getDir _tower);
 			_gunner setPosATL (_tower buildingpos 1);
-			_gunner setUnitPos "UP";
+			// _gunner setUnitPos "UP";
 			_gunner disableAI "PATH";
 			_gunner setSkill ["spotDistance",0.90];
 			_gunnerArray pushBack _gunner;

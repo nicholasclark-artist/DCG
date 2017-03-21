@@ -8,7 +8,7 @@ display message
 Arguments:
 
 Return:
-none
+bool
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -26,3 +26,5 @@ if (CHECK_ADDON_1("ace_common")) then {
 		hintSilent _msg;
 	};
 };
+
+false

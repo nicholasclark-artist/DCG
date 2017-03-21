@@ -1,4 +1,5 @@
 #define COMPONENT main
+#define COMPONENT_PRETTY Main
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 

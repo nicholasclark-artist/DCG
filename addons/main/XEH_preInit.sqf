@@ -41,8 +41,6 @@ PREP(setSettingsConfig);
 PREP(setSettingsParams);
 PREP(shuffle);
 PREP(setOwner);
-PREP(setTask);
-PREP(setTaskState);
 PREP(setSide);
 PREP(setAnim);
 PREP(getUnitCount);
@@ -95,7 +93,7 @@ publicVariable QGVAR(center);
 call FUNC(loadData);
 
 // init cba settings
-INITSETTINGS;
+SETTINGS_INIT;
 
 // set config and mission settings
 call FUNC(setSettings);
