@@ -16,4 +16,4 @@ GVAR(list) = [];
 
 publicVariable QFUNC(initSettings);
 
-INITSETTINGS;
+SETTINGS_INIT;

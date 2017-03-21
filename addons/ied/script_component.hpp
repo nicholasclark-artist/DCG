@@ -1,4 +1,5 @@
 #define COMPONENT ied
+#define COMPONENT_PRETTY IED
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 
