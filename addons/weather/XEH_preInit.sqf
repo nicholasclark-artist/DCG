@@ -24,4 +24,4 @@ GVAR(mapData) = [ // weatherspark.com
 
 publicVariable QFUNC(initSettings);
 
-INITSETTINGS;
+SETTINGS_INIT;

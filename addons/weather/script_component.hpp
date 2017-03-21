@@ -1,4 +1,5 @@
 #define COMPONENT weather
+#define COMPONENT_PRETTY Weather
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 
