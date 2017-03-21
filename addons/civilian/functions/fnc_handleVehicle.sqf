@@ -15,11 +15,10 @@ __________________________________________________________________*/
 #define BUFFER 100
 #define RANGE 1000
 
-private ["_HCs","_players","_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
+private ["_players","_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
 
 if (count GVAR(drivers) <= ceil GVAR(vehMaxCount)) then {
-	_HCs = entities "HeadlessClient_F";
-	_players = allPlayers - _HCs;
+	_players = call CBA_fnc_players;
 
 	if !(_players isEqualTo []) then {
 		_player = selectRandom _players;

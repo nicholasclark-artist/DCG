@@ -26,7 +26,7 @@ _buildings = _buildings select {
     !((_x buildingPos -1) isEqualTo [])
 };
 
-private _grp = [[0,0,0],0,_count,CIVILIAN,true,1.25] call EFUNC(main,spawnGroup);
+private _grp = [[0,0,0],0,_count,CIVILIAN,1.25] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},

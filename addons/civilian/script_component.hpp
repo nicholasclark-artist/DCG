@@ -1,4 +1,5 @@
 #define COMPONENT civilian
+#define COMPONENT_PRETTY Civilian
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 
