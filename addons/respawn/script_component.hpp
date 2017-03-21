@@ -1,4 +1,5 @@
 #define COMPONENT respawn
+#define COMPONENT_PRETTY Respawn
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 

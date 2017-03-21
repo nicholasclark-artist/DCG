@@ -14,4 +14,4 @@ PREP(restoreLoadout);
 publicVariable QFUNC(initSettings);
 publicVariable QFUNC(restoreLoadout);
 
-INITSETTINGS;
+SETTINGS_INIT;
