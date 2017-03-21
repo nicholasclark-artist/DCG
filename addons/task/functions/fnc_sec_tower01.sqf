@@ -43,7 +43,7 @@ _tower setVectorUp [0,0,1];
 _cleanup pushBack _tower;
 [_tower] call FUNC(handleDamage);
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 1)},
@@ -64,7 +64,7 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call 
 
 // SET TASK
 _taskDescription = format ["Hinder %1 communications by destroying the radio tower.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"destroy"] call EFUNC(main,setTask);
+[true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,0,true,"destroy"] call BIS_fnc_taskCreate;
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
@@ -77,14 +77,14 @@ TASK_DEBUG(_position);
 
 	if (GVAR(secondary) isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+		[_taskID, "CANCELED"] call BIS_fnc_taskSetState;
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
 
 	if !(alive _tower) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		TASK_APPROVAL(_position,TASK_AV);
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;

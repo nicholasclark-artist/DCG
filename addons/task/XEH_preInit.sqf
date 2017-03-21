@@ -37,4 +37,4 @@ GVAR(secondary) = [];
 publicVariable QFUNC(initSettings);
 publicVariable QFUNC(cancel);
 
-INITSETTINGS;
+SETTINGS_INIT;

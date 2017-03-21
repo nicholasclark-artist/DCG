@@ -15,7 +15,7 @@ __________________________________________________________________*/
 #define TASK_NAME 'Rescue VIP'
 #define SET_CAPTIVE(VIP) if (CHECK_ADDON_1("ace_captives")) then { [VIP, true] call ACE_captives_fnc_setHandcuffed; } else { [VIP,"Acts_AidlPsitMstpSsurWnonDnon02",2] call EFUNC(main,setAnim); }
 #define SECURE_NAME "Secure VIP"
-#define SECURE_STATEMENT _vip = _this select 0; _player = _this select 1; _vip switchMove ""; [_vip] joinSilent grpNull; [_vip] joinSilent (group _player); _vip setBehaviour "SAFE";
+#define SECURE_STATEMENT _vip = _this select 0; _player = _this select 1; _vip switchMove ""; [_vip] joinSilent grpNull; [_vip] joinSilent (group _player); _vip setBehaviour "CARELESS";
 #define SECURE_COND (alive _target) && {(leader group _target) isEqualTo _target}
 #include "script_component.hpp"
 
@@ -75,7 +75,7 @@ if !(CHECK_ADDON_1("ace_captives")) then {
     }] remoteExecCall [QUOTE(BIS_fnc_call),0,_vip];
 };
 
-_grp = [[_position,5,30,5] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [[_position,5,30,5] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,enemySide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 1)},
@@ -109,7 +109,7 @@ _grp = [[_position,5,30,5] call EFUNC(main,findPosSafe),0,_strength,EGVAR(main,e
 _vehPos = [_position,50,100,8,0] call EFUNC(main,findPosSafe);
 
 if !(_vehPos isEqualTo _position) then {
-	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 	[
 		{{_x getVariable [ISDRIVER,false]} count (units (_this select 1)) > 0},
 		{
@@ -127,7 +127,7 @@ if !(_vehPos isEqualTo _position) then {
 // SET TASK
 _taskPos = ASLToAGL ([_position,100,150] call EFUNC(main,findPosSafe));
 _taskDescription = format ["We have intel that a local VIP has been taken hostage by %3 forces. Locate %1 and safely escort him to %2.", name _vip, _town select 0, [EGVAR(main,enemySide)] call BIS_fnc_sideName];
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"meet"] call EFUNC(main,setTask);
+[true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,0,true,"meet"] call BIS_fnc_taskCreate;
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
@@ -136,27 +136,27 @@ TASK_DEBUG(_position);
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_vip","_town","_cleanup"];
+	_args params ["_taskID","_vip","_town","_cleanup","_position"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+		[_taskID, "CANCELED"] call BIS_fnc_taskSetState;
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
 
 	if !(alive _vip) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
+		[_taskID, "FAILED"] call BIS_fnc_taskSetState;
 		TASK_APPROVAL((getPos _vip),TASK_AV * -1);
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 	};
 
-    // if vip secured
-    if (isPlayer leader group _vip) then {
+    // if vip moves from position, consider him secured
+    if !(CHECK_DIST2D(_vip,_position,5)) then {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
-        [_taskID,_town select 1] remoteExecCall [QUOTE(BIS_fnc_taskSetDestination), 0, _vip];
+        [_taskID,_town select 1] call BIS_fnc_taskSetDestination;
 
         [{
         	params ["_args","_idPFH"];
@@ -164,14 +164,14 @@ TASK_DEBUG(_position);
 
             if (TASK_GVAR isEqualTo []) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
-                [_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+                [_taskID, "CANCELED"] call BIS_fnc_taskSetState;
                 _cleanup call EFUNC(main,cleanup);
                 TASK_EXIT_DELAY(30);
             };
 
             if !(alive _vip) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
-                [_taskID, "FAILED"] call EFUNC(main,setTaskState);
+                [_taskID, "FAILED"] call BIS_fnc_taskSetState;
                 TASK_APPROVAL((getPos _vip),TASK_AV * -1);
                 _cleanup call EFUNC(main,cleanup);
                 TASK_EXIT;
@@ -190,11 +190,11 @@ TASK_DEBUG(_position);
 
             if (_success) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
-                [_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+                [_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
                 TASK_APPROVAL((getPos _vip),TASK_AV);
                 _cleanup call EFUNC(main,cleanup);
                 TASK_EXIT;
             };
         }, TASK_SLEEP, [_taskID,_vip,_town,_cleanup]] call CBA_fnc_addPerFrameHandler;
     };
-}, TASK_SLEEP, [_taskID,_vip,_town,_cleanup]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_vip,_town,_cleanup,_position]] call CBA_fnc_addPerFrameHandler;

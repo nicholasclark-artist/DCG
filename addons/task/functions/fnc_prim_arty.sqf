@@ -7,6 +7,7 @@ primary task - destroy artillery
 
 Arguments:
 0: forced task position <ARRAY>
+1: forced base strength <NUMBER>
 
 Return:
 none
@@ -17,12 +18,12 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_position",[],[[]]]
+    ["_position",[],[[]]],
+    ["_baseStrength",0.65 + random 1,[0]]
 ];
 
 // CREATE TASK
 _taskID = str diag_tickTime;
-_base = [];
 _strength = TASK_STRENGTH + TASK_GARRISONCOUNT;
 _vehGrp = grpNull;
 _artyClass = "";
@@ -66,8 +67,10 @@ if !(_artyPool isEqualTo []) then {
     };
 };
 
+INFO_1("base strength %1",_baseStrength);
+
 // spawn base and find empty space for arty
-_base = [_position,0.65 + random 1] call EFUNC(main,spawnBase);
+_base = [_position,_baseStrength] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 _bNodes = _base select 3;
 _cleanup append (_base select 2);
@@ -88,7 +91,7 @@ _arty setDir random 360;
 _arty lock 2;
 _cleanup pushBack _arty;
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},
@@ -121,9 +124,9 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call 
 
 _vehPos = [_position,_bRadius + 20,_bRadius + 150,8,0] call EFUNC(main,findPosSafe);
 _vehGrp = if !(_vehPos isEqualTo _position) then {
-	[_vehPos,1,1,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY,true] call EFUNC(main,spawnGroup);
+	[_vehPos,1,1,EGVAR(main,enemySide),TASK_SPAWN_DELAY,true] call EFUNC(main,spawnGroup);
 } else {
-	[_vehPos,2,1,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+	[_vehPos,2,1,EGVAR(main,enemySide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 };
 
 [
@@ -173,10 +176,11 @@ _timerID = [
 
 // SET TASK
 _taskDescription = format ["%1 artillery forces are threatening to attack a local settlement that's sympathetic to our mission. We're tasked with eliminating the artillery before it fires.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
-[true,_taskID,[_taskDescription,TASK_TITLE,""], ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"destroy"] call EFUNC(main,setTask);
+[true,_taskID,[_taskDescription,TASK_TITLE,""],ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,0,true,"destroy"] call BIS_fnc_taskCreate;
 
 // PUBLISH TASK
-TASK_PUBLISH(_position);
+_data = [_position,_baseStrength];
+TASK_PUBLISH(_data);
 TASK_DEBUG(_posArty);
 
 // TASK HANDLER
@@ -187,7 +191,7 @@ TASK_DEBUG(_posArty);
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_timerID] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+		[_taskID, "CANCELED"] call BIS_fnc_taskSetState;
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
@@ -195,7 +199,7 @@ TASK_DEBUG(_posArty);
 	if !(alive _arty) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 		[_timerID] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		_cleanup call EFUNC(main,cleanup);
 		TASK_APPROVAL(_position,TASK_AV);
 		TASK_EXIT;
@@ -203,7 +207,7 @@ TASK_DEBUG(_posArty);
 
 	if (EGVAR(main,timer) < 1) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
+		[_taskID, "FAILED"] call BIS_fnc_taskSetState;
 		_cleanup call EFUNC(main,cleanup);
         TASK_APPROVAL(_position,TASK_AV * -1);
 		TASK_EXIT;

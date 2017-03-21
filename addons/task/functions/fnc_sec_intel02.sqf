@@ -30,13 +30,15 @@ INTEL_CONTAINER = objNull;
 
 if (_position isEqualTo []) then {
 	_position = [EGVAR(main,center),EGVAR(main,range),"house"] call EFUNC(main,findPosTerrain);
+
+    if !(_position isEqualTo []) then {
+        _position = _position select 1;
+    };
 };
 
 if (_position isEqualTo []) exitWith {
 	TASK_EXIT_DELAY(0);
 };
-
-_position = _position select 1;
 
 call {
 	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
@@ -50,7 +52,7 @@ call {
 	};
 };
 
-_grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= UNITCOUNT},
@@ -84,7 +86,7 @@ _grp = [_position,0,UNITCOUNT,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call 
 
 // SET TASK
 _taskDescription = format ["Aerial reconnaissance spotted a %1 fireteam patrolling a nearby settlement. Ambush the unit and search the enemy combatants for intel.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"search"] call EFUNC(main,setTask);
+[true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,0,true,"search"] call BIS_fnc_taskCreate;
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
@@ -97,14 +99,14 @@ TASK_DEBUG(_position);
 
     if (TASK_GVAR isEqualTo []) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
-        [_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+        [_taskID, "CANCELED"] call BIS_fnc_taskSetState;
         _cleanup call EFUNC(main,cleanup);
         TASK_EXIT_DELAY(30);
     };
 
     if (!isNull INTEL_CONTAINER && {{COMPARE_STR(INTEL_CLASS,_x)} count itemCargo INTEL_CONTAINER < 1}) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
-        [_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+        [_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
         TASK_APPROVAL(getPos (leader _grp),TASK_AV);
         _cleanup call EFUNC(main,cleanup);
         TASK_EXIT;

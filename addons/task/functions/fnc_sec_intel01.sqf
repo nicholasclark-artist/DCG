@@ -44,7 +44,7 @@ if (_position isEqualTo []) exitWith {
 	TASK_EXIT_DELAY(0);
 };
 
-_grp = [_position,0,UNITCOUNT,CIVILIAN,true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,UNITCOUNT,CIVILIAN,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 1) >= UNITCOUNT},
@@ -85,7 +85,7 @@ _grp = [_position,0,UNITCOUNT,CIVILIAN,true,TASK_SPAWN_DELAY] call EFUNC(main,sp
 // SET TASK
 _taskPos = ASLToAGL ([_position,120,150] call EFUNC(main,findPosSafe));
 _taskDescription = "Yesterday, an informant was suppose to hand off a GPS device with vital intel on the enemy's whereabouts. UAV reconnaissance spotted activity nearby that may be related to our contact. Search the area for the informant and retrieve the GPS.";
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"search"] call EFUNC(main,setTask);
+[true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,0,true,"search"] call BIS_fnc_taskCreate;
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
@@ -98,14 +98,14 @@ TASK_DEBUG(_position);
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+		[_taskID, "CANCELED"] call BIS_fnc_taskSetState;
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
 
 	if (!isNull INTEL_CONTAINER && {{COMPARE_STR(INTEL_CLASS,_x)} count itemCargo INTEL_CONTAINER < 1}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		TASK_APPROVAL(getPos (leader _grp),TASK_AV);
         _cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
@@ -115,7 +115,7 @@ TASK_DEBUG(_position);
             _posArray = _posArray select {[_x,100] call EFUNC(main,getNearPlayers) isEqualTo []};
 
 			if !(_posArray isEqualTo []) then {
-				_grp = [selectRandom _posArray,0,TASK_STRENGTH,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+				_grp = [selectRandom _posArray,0,TASK_STRENGTH,EGVAR(main,enemySide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 				_wp = _grp addWaypoint [getposATL (leader _grp),0];
                 _wp setWaypointType "SAD";
 				_cond = "!(behaviour this isEqualTo ""COMBAT"")";

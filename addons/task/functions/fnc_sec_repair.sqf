@@ -40,7 +40,7 @@ if !(_position isEqualTo []) then {
     };
 
     if (CHECK_ADDON_2(occupy)) then {
-        if ({CHECK_DIST2D(_x select 1,_position,1000)} count EGVAR(occupy,locations) > 0) then {
+        if (CHECK_DIST2D(EGVAR(occupy,location) select 1,_position,1000)) then {
             _position = [];
         };
     };
@@ -87,7 +87,7 @@ _vehicles pushBack _vehicle;
 
 // SET TASK
 _taskDescription = format ["A %1 patrol is in need of repairs. Gather the necessary tools and assist the unit.",[EGVAR(main,playerSide)] call BIS_fnc_sideName];
-[true,_taskID,[_taskDescription,TASK_TITLE,""],ASLToAGL([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,true,"repair"] call EFUNC(main,setTask);
+[true,_taskID,[_taskDescription,TASK_TITLE,""],ASLToAGL([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe)),false,0,true,"repair"] call BIS_fnc_taskCreate;
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
@@ -100,14 +100,14 @@ TASK_DEBUG(_position);
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+		[_taskID, "CANCELED"] call BIS_fnc_taskSetState;
 		_cleanup call EFUNC(main,cleanup);
         TASK_EXIT_DELAY(30);
 	};
 
 	if ({!alive _x} count _vehicles > 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "FAILED"] call EFUNC(main,setTaskState);
+		[_taskID, "FAILED"] call BIS_fnc_taskSetState;
 		TASK_APPROVAL(_position,TASK_AV * -1);
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
@@ -115,7 +115,7 @@ TASK_DEBUG(_position);
 
 	if ({_x getVariable [TASK_QFUNC,false]} count _vehicles isEqualTo VEHCOUNT) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		TASK_APPROVAL(_position,TASK_AV);
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;

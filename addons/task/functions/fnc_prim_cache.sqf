@@ -7,6 +7,7 @@ primary task - destroy cache
 
 Arguments:
 0: forced task position <ARRAY>
+1: forced base strength <NUMBER>
 
 Return:
 none
@@ -16,13 +17,13 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_position",[],[[]]]
+    ["_position",[],[[]]],
+    ["_baseStrength",0.47 + random 0.3,[0]]
 ];
 
 // CREATE TASK
 _taskID = str diag_tickTime;
 _caches = [];
-_base = [];
 _cleanup = [];
 _strength = TASK_STRENGTH + TASK_GARRISONCOUNT;
 _vehGrp = grpNull;
@@ -35,7 +36,7 @@ if (_position isEqualTo []) exitWith {
 	TASK_EXIT_DELAY(0);
 };
 
-_base = [_position,0.47 + random 0.3] call EFUNC(main,spawnBase);
+_base = [_position,_baseStrength] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 _bNodes = _base select 3;
 
@@ -58,7 +59,7 @@ for "_i" from 0 to 1 do {
 	_caches pushBack _cache;
 };
 
-_grp = [_position,0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,_strength,EGVAR(main,enemySide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 0) >= (_this select 2)},
@@ -92,7 +93,7 @@ _grp = [_position,0,_strength,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call 
 _vehPos = [_position,_bRadius,_bRadius + 100,8,0] call EFUNC(main,findPosSafe);
 
 if !(_vehPos isEqualTo _position) then {
-	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),false,TASK_SPAWN_DELAY,true] call EFUNC(main,spawnGroup);
+	_vehGrp = [_vehPos,1,1,EGVAR(main,enemySide),TASK_SPAWN_DELAY,true] call EFUNC(main,spawnGroup);
 
 	[
 		{{_x getVariable [ISDRIVER,false]} count (units (_this select 1)) > 0},
@@ -111,10 +112,11 @@ if !(_vehPos isEqualTo _position) then {
 // SET TASK
 _taskPos = ASLToAGL ([_position,TASK_DIST_MRK,TASK_DIST_MRK] call EFUNC(main,findPosSafe));
 _taskDescription = format ["A %1 base, housing an ammunitions cache, has been located nearby. Destroy the cache and weaken the enemy supply lines.",[EGVAR(main,enemySide)] call BIS_fnc_sideName];
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"destroy"] call EFUNC(main,setTask);
+[true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,0,true,"destroy"] call BIS_fnc_taskCreate;
 
 // PUBLISH TASK
-TASK_PUBLISH(_position);
+_data = [_position,_baseStrength];
+TASK_PUBLISH(_data);
 TASK_DEBUG(_posCache);
 
 // TASK HANDLER
@@ -124,14 +126,14 @@ TASK_DEBUG(_posCache);
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+		[_taskID, "CANCELED"] call BIS_fnc_taskSetState;
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
 
 	if ({alive _x} count _caches isEqualTo 0) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		_cleanup call EFUNC(main,cleanup);
 		TASK_APPROVAL(_posCache,TASK_AV);
 		TASK_EXIT;

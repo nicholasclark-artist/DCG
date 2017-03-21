@@ -74,12 +74,12 @@ _driver setBehaviour "CARELESS";
 _driver setCombatMode "BLUE";
 _driver disableAI "FSM";
 
-_grp = [_position,0,FRIENDLY_COUNT,EGVAR(main,playerSide),false,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+_grp = [_position,0,FRIENDLY_COUNT,EGVAR(main,playerSide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 _cleanup append (units _grp);
 
 // SET TASK
 _taskDescription = format ["A %1 unit is resupplying beyond the safezone. Move to the area and provide security while the vehicle is idle.",[EGVAR(main,playerSide)] call BIS_fnc_sideName];
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,true,"defend"] call EFUNC(main,setTask);
+[true,_taskID,[_taskDescription,TASK_TITLE,""],_position,false,0,true,"defend"] call BIS_fnc_taskCreate;
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
@@ -92,7 +92,7 @@ TASK_DEBUG(_position);
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+		[_taskID, "CANCELED"] call BIS_fnc_taskSetState;
 		_cleanup call EFUNC(main,cleanup);
 		TASK_EXIT_DELAY(30);
 	};
@@ -108,7 +108,7 @@ TASK_DEBUG(_position);
 			if (TASK_GVAR isEqualTo []) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 				[_timerID] call CBA_fnc_removePerFrameHandler;
-				[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
+				[_taskID, "CANCELED"] call BIS_fnc_taskSetState;
 				(_cleanup + GVAR(defend_enemies)) call EFUNC(main,cleanup);
 				TASK_EXIT_DELAY(30);
 			};
@@ -116,7 +116,7 @@ TASK_DEBUG(_position);
 			if (([getPos _truck,TASK_DIST_FAIL] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 				[_timerID] call CBA_fnc_removePerFrameHandler;
-				[_taskID, "FAILED"] call EFUNC(main,setTaskState);
+				[_taskID, "FAILED"] call BIS_fnc_taskSetState;
 				(_cleanup + GVAR(defend_enemies)) call EFUNC(main,cleanup);
 				TASK_APPROVAL(getPos _truck,TASK_AV * -1);
 				TASK_EXIT;
@@ -124,7 +124,7 @@ TASK_DEBUG(_position);
 
 			if (EGVAR(main,timer) < 1) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
-				[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
+				[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
 				(_cleanup + GVAR(defend_enemies)) call EFUNC(main,cleanup);
 				TASK_APPROVAL(getPos _truck,TASK_AV);
 				TASK_EXIT;
@@ -139,7 +139,7 @@ TASK_DEBUG(_position);
 			GVAR(defend_enemies) = GVAR(defend_enemies) select {!(isNull _x)};
 
 			if (random 1 < 0.2 && {count GVAR(defend_enemies) < _enemyCount}) then {
-				_grp = [[getpos _truck,200,400] call EFUNC(main,findPosSafe),0,ENEMY_COUNT,EGVAR(main,enemySide),true,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+				_grp = [[getpos _truck,200,400] call EFUNC(main,findPosSafe),0,ENEMY_COUNT,EGVAR(main,enemySide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 				[
 					{count units (_this select 0) >= ENEMY_COUNT},
 					{

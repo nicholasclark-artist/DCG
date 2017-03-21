@@ -17,7 +17,7 @@ CHECK_POSTINIT;
                 {
                     _x call EFUNC(main,setAction);
                 } forEach [
-                    [QUOTE(ADDON),"Tasks",{}],
+                    [QUOTE(ADDON),QUOTE(COMPONENT_PRETTY),{}],
                     [QUOTE(DOUBLES(ADDON,primary)),"Cancel Primary Task",{PRIM_STATEMENT},QUOTE(PRIM_COND),{},[],player,1,ACTIONPATH],
                     [QUOTE(DOUBLES(ADDON,secondary)),"Cancel Secondary Task",{SEC_STATEMENT},QUOTE(SEC_COND),{},[],player,1,ACTIONPATH]
                 ];
