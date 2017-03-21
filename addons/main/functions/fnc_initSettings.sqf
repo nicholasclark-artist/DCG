@@ -35,7 +35,7 @@ __________________________________________________________________*/
     false,
     {
         if (isServer) then {
-            publicVariable QGVAR(playerSide);
+            SETTINGS_OVERWRITE(QGVAR(playerSide),GVAR(playerSide));
         };
     }
 ] call CBA_Settings_fnc_init;
@@ -53,7 +53,7 @@ __________________________________________________________________*/
     false,
     {
         if (isServer) then {
-            publicVariable QGVAR(enemySide);
+            SETTINGS_OVERWRITE(QGVAR(enemySide),GVAR(enemySide));
         };
     }
 ] call CBA_Settings_fnc_init;
