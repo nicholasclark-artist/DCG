@@ -40,4 +40,4 @@ publicVariable QFUNC(handleClient);
 
 publicVariable QGVAR(location);
 
-INITSETTINGS;
+SETTINGS_INIT;

@@ -1,9 +1,10 @@
 #define COMPONENT fob
+#define COMPONENT_PRETTY FOB
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 
 // #define DEBUG_MODE_FULL
-#define DISABLE_COMPILE_CACHE
+// #define DISABLE_COMPILE_CACHE
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
@@ -39,24 +40,18 @@
 #define TRANSFER_ID QUOTE(DOUBLES(ADDON,transfer))
 #define TRANSFER_NAME "Transfer FOB Control"
 #define TRANSFER_STATEMENT \
-    missionNamespace setVariable [PVEH_TRANSFER,[player,cursorObject]]; \
+    missionNamespace setVariable [PVEH_TRANSFER,[player,cursorTarget]]; \
     publicVariableServer PVEH_TRANSFER; \
-    [format ["FOB control transferred to %1", name cursorObject],true] call EFUNC(main,displayText)
+    [format ["FOB control transferred to %1", name cursorTarget],true] call EFUNC(main,displayText)
 #define TRANSFER_STATEMENT_ACE \
     missionNamespace setVariable [PVEH_TRANSFER,[player,_target]]; \
     publicVariableServer PVEH_TRANSFER; \
     [format ["FOB control transferred to %1", name _target],true] call EFUNC(main,displayText)
-#define TRANSFER_COND FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer cursorObject} && {cursorObject isKindOf 'CAManBase'} && {[cursorObject] call FUNC(isAllowedOwner)}
+#define TRANSFER_COND FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer cursorTarget} && {cursorTarget isKindOf 'CAManBase'} && {[cursorTarget] call FUNC(isAllowedOwner)}
 #define TRANSFER_COND_ACE FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer _target} && {_target isKindOf 'CAManBase'} && {[_target] call FUNC(isAllowedOwner)}
 #define TRANSFER_KEYCODE \
-    if (CHECK_ADDON_1('ace_interact_menu')) then { \
-        if (TRANSFER_COND_ACE) then { \
-            TRANSFER_STATEMENT_ACE \
-        } \
-    } else { \
-        if (TRANSFER_COND) then { \
-    		TRANSFER_STATEMENT \
-    	} \
+    if (TRANSFER_COND) then { \
+        TRANSFER_STATEMENT \
     }
 
 #define CONTROL_ID QUOTE(DOUBLES(ADDON,control))
