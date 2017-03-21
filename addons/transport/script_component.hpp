@@ -1,4 +1,5 @@
 #define COMPONENT transport
+#define COMPONENT_PRETTY Transport
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 
@@ -14,6 +15,9 @@
 #define STR_NOTLAND "LZ must be on land."
 #define STR_BADTERRAIN "Unsuitable terrain. Select another LZ."
 #define STR_CANCEL "Transport request canceled."
+#define STR_GETIN "A player must be in the copilot position to signal take off."
+#define STR_KILLED "Transport destroyed enroute to LZ!"
+#define STR_ENROUTE "Transport enroute."
 #define MRK_INFIL(VAR) ([VAR,"infil"] joinString "_")
 #define MRK_EXFIL(VAR) ([VAR,"exfil"] joinString "_")
 #define EH_INFIL ([QUOTE(ADDON),"infilLZ"] joinString "_")

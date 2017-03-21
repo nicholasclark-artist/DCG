@@ -26,4 +26,4 @@ publicVariable QFUNC(initSettings);
 publicVariable QGVAR(status);
 publicVariable QGVAR(count);
 
-INITSETTINGS;
+SETTINGS_INIT;

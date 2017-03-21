@@ -16,75 +16,121 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define HINT_GETIN "A player must be in the copilot position to signal take off."
+#define VAR_HELIPAD_EXFIL QUOTE(DOUBLES(ADDON,exfil))
+#define VAR_HELIPAD_INFIL QUOTE(DOUBLES(ADDON,infil))
+#define VAR_REQUESTOR QUOTE(DOUBLES(ADDON,requestor))
+#define VAR_MARKER_EXFIL QUOTE(DOUBLES(ADDON,exfilMrk))
+#define VAR_MARKER_INFIL QUOTE(DOUBLES(ADDON,infilMrk))
 #define IDLE_TIME 300
 #define COOLDOWN(REQUESTOR) \
 	[ \
 		{ \
-			GVAR(status) = TR_READY; \
-            (owner (_this select 0)) publicVariableClient QGVAR(status); \
+            {GVAR(status) = TR_READY} remoteExecCall [QUOTE(BIS_fnc_call),_this,false]; \
 			GVAR(count) = GVAR(count) - 1; \
 			publicVariable QGVAR(count); \
 		}, \
-		[REQUESTOR], \
+		(REQUESTOR), \
 		GVAR(cooldown) \
 	] call CBA_fnc_waitAndExecute
-
-// @todo replace land code with new landAt command
 
 private _requestor = _this select 0;
 private _classname = _this select 1;
 private _exfil = _this select 2;
-GVAR(infil) = _this select 3;
+private _infil = _this select 3;
 private _exfilMrk = _this select 4;
 private _infilMrk = _this select 5;
 private _pilot = "";
 
-// send not ready status to requestor
-GVAR(status) = TR_NOTREADY;
-(owner _requestor) publicVariableClient QGVAR(status);
+// refer to requestor by client ID so PVs work if requestor dies
+_requestor = owner _requestor;
 
 // increase transport count for all players
 GVAR(count) = GVAR(count) + 1;
 publicVariable QGVAR(count);
 
+// create transport and helipads
 _transport = createVehicle [_classname,[_exfil,4000,4000] call EFUNC(main,findPosSafe),[],0,"FLY"];
+
+private _helipadExfil = "Land_HelipadEmpty_F" createVehicle [0,0,0];
+private _helipadInfil = "Land_HelipadEmpty_F" createVehicle [0,0,0];
+
+_helipadExfil setPos _exfil;
+_helipadInfil setPos _infil;
+
+// set variables in transport namespace
+_transport setVariable [QEGVAR(main,forceCleanup),true];
+_transport setVariable [QGVAR(status),TR_NOTREADY,false];
+_transport setVariable [VAR_HELIPAD_EXFIL,_helipadExfil,false];
+_transport setVariable [VAR_HELIPAD_INFIL,_helipadInfil,false];
+_transport setVariable [VAR_REQUESTOR,_requestor,false];
+_transport setVariable [VAR_MARKER_EXFIL,_exfilMrk,false];
+_transport setVariable [VAR_MARKER_INFIL,_infilMrk,false];
+
+// triggers when transport deleted, after adding to cleanup loop
+_transport addEventHandler ["Deleted",{
+    _transport = _this select 0;
+
+    deleteMarker (_transport getVariable VAR_MARKER_EXFIL);
+    deleteMarker (_transport getVariable VAR_MARKER_INFIL);
+    deleteVehicle (_transport getVariable VAR_HELIPAD_EXFIL);
+    deleteVehicle (_transport getVariable VAR_HELIPAD_INFIL);
+
+    // set status to waiting to exit handlers
+    _transport setVariable [QGVAR(status),TR_WAITING,false];
+
+    COOLDOWN(_transport getVariable VAR_REQUESTOR);
+}];
+
 _transport addEventHandler ["GetIn",{
-    params ["_veh","_pos","_unit","_tPath"];
+    params ["_transport","_pos","_unit"];
 
-    _copilot = _veh turretUnit [0];
+    // get copilot position
+    _copilot = _transport turretUnit [0];
 
+    // if player is not in copilot, send reminder
 	if (isPlayer _unit && {!(_unit isEqualTo _copilot)}) then {
-		[HINT_GETIN,false] remoteExecCall [QEFUNC(main,displayText),_unit,false];
+		[STR_GETIN,false] remoteExecCall [QEFUNC(main,displayText),_unit,false];
 	};
-	if (isPlayer _unit && {_unit isEqualTo _copilot} && {alive (driver _veh)} && {canMove _veh}) then {
-		_veh removeEventHandler ["GetIn",_thisEventHandler];
-		_wp = group driver _veh addWaypoint [GVAR(infil), 0];
-        _wp setWaypointCompletionRadius 100;
-		_wp setWaypointStatements ["true", format ["
-			(vehicle this) land ""GET OUT"";
 
-            [
-                {isTouchingGround (vehicle (_this select 0)) || {(missionNamespace getVariable '%1') == '%2'}},
-                {
-                    if ((missionNamespace getVariable '%1') == '%2') exitWith {};
+	if (isPlayer _unit && {_unit isEqualTo _copilot} && {alive (driver _transport)} && {canMove _transport}) then {
+        _transport removeEventHandler ["GetIn",_thisEventHandler];
 
-                    [
-                        {
+        // move to drop off position
+        _transport move (getPos (_transport getVariable VAR_HELIPAD_INFIL));
+
+        [
+            {unitReady _this},
+            {
+                _this land "GET OUT";
+                _this landAt (_transport getVariable VAR_HELIPAD_INFIL);
+
+                // if transport touching ground or status is set to ready enroute
+                [
+                    {isTouchingGround _this || {COMPARE_STR(_this getVariable QGVAR(status),TR_READY)}},
+                    {
+                        // exit if status is ready
+                        if (COMPARE_STR(_this getVariable QGVAR(status),TR_READY)) exitWith {};
+
+                        // transport complete, remove units and wave off
+                        [
                             {
-                                if (isPlayer _x) then {moveOut _x};
-                            } forEach (crew (vehicle (_this select 0)));
+                                {
+                                    if !(_x isEqualTo (driver _this)) then {moveOut _x};
+                                } forEach (crew _this);
 
-                            missionNameSpace setVariable ['%1', '%3'];
-                            _wp = group (_this select 0) addWaypoint [[0,0,100], 0];
-                        },
-                        [_this select 0],
-                        10
-                    ] call CBA_fnc_waitAndExecute;
-                },
-                [this]
-            ] call CBA_fnc_waitUntilAndExecute;
-		",QGVAR(status),TR_READY,TR_WAITING]];
+                                // will trigger deleted EH
+                                _this call EFUNC(main,cleanup);
+                                _this move [0,0,100];
+                            },
+                            _this,
+                            10
+                        ] call CBA_fnc_waitAndExecute;
+                    },
+                    _this
+                ] call CBA_fnc_waitUntilAndExecute;
+            },
+            _transport
+        ] call CBA_fnc_waitUntilAndExecute;
 	};
 }];
 
@@ -102,46 +148,53 @@ call {
 };
 
 _pilot = createGroup EGVAR(main,playerSide) createUnit [_pilot,[0,0,0], [], 0, "NONE"];
+_pilot assignAsDriver _transport;
 _pilot moveInDriver _transport;
 _pilot disableAI "FSM";
 _pilot setBehaviour "CARELESS";
+_pilot addEventHandler ["GetOutMan",{
+    deleteVehicle (_this select 0)
+}];
 
-_transport allowCrewInImmobile true;
 _transport enableCopilot false;
 _transport lockDriver true;
 
-_wp = group _pilot addWaypoint [_exfil, 0];
-_wp setWaypointCompletionRadius 100;
-_wp setWaypointStatements ["true", "(vehicle this) land ""GET IN"";"];
+// move to pick up position
+_transport move (getPos (_transport getVariable VAR_HELIPAD_EXFIL));
 
+[
+    {unitReady _this},
+    {
+        _this land "GET IN";
+        _this landAt (_transport getVariable VAR_HELIPAD_EXFIL);
+    },
+    _transport
+] call CBA_fnc_waitUntilAndExecute;
+
+[STR_ENROUTE,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
+
+// handles transport dying enroute
 [{
 	params ["_args","_idPFH"];
-	_args params ["_requestor","_transport","_pilot","_exfilMrk","_infilMrk"];
+	_args params ["_requestor","_transport","_pilot"];
 
-	if (COMPARE_STR(GVAR(status),TR_WAITING)) exitWith { // if transport route complete
+    if (COMPARE_STR(_transport getVariable QGVAR(status),TR_WAITING)) exitWith {
+        [_idPFH] call CBA_fnc_removePerFrameHandler;
+    };
+
+	if (!alive _pilot || {isTouchingGround _transport && (!(canMove _transport) || (fuel _transport isEqualTo 0))}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		deleteMarker _exfilMrk;
-		deleteMarker _infilMrk;
-		_transport call EFUNC(main,cleanup);
-		COOLDOWN(_requestor);
+        [STR_KILLED,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
+        _transport call EFUNC(main,cleanup);
 	};
+}, 1, [_requestor,_transport,_pilot]] call CBA_fnc_addPerFrameHandler;
 
-	if (!alive _pilot || {isTouchingGround _transport && (!(canMove _transport) || (fuel _transport isEqualTo 0))}) exitWith { // if transport destroyed enroute
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		GVAR(status) = TR_WAITING;
-		deleteMarker _exfilMrk;
-		deleteMarker _infilMrk;
-		_transport call EFUNC(main,cleanup);
-		COOLDOWN(_requestor);
-	};
-}, 1, [_requestor,_transport,_pilot,_exfilMrk,_infilMrk]] call CBA_fnc_addPerFrameHandler;
-
-// handle transport timeout if player not in copilot
+// handles transport timeout if player not in copilot
 [{
 	params ["_args","_idPFH"];
-	_args params ["_transport","_pilot"];
+	_args params ["_requestor","_transport","_pilot"];
 
-	if (COMPARE_STR(GVAR(status),TR_READY) || {COMPARE_STR(GVAR(status),TR_WAITING)}) exitWith {
+	if (COMPARE_STR(_transport getVariable QGVAR(status),TR_READY) || {COMPARE_STR(_transport getVariable QGVAR(status),TR_WAITING)}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
 	};
 
@@ -150,22 +203,20 @@ _wp setWaypointStatements ["true", "(vehicle this) land ""GET IN"";"];
 
 		[
 			{
-				params ["_pilot","_transport"];
+				params ["_requestor","_pilot","_transport"];
 
 				if (isTouchingGround _transport) then {
-					GVAR(status) = TR_WAITING;
-
 					{
-						if (isPlayer _x) then {moveOut _x};
+						if !(_x isEqualTo _pilot) then {moveOut _x};
 					} forEach (crew _transport);
 
-					_wp = group _pilot addWaypoint [[0,0,100], 0];
-					_transport call EFUNC(main,cleanup);
-					COOLDOWN(_requestor);
+                    // will trigger deleted EH
+                    _transport call EFUNC(main,cleanup);
+                    _transport move [0,0,100];
 				};
 			},
-			[_pilot,_transport],
+			[_requestor,_pilot,_transport],
 			IDLE_TIME
 		] call CBA_fnc_waitAndExecute;
 	};
-}, 1, [_transport,_pilot]] call CBA_fnc_addPerFrameHandler;
+}, 1, [_requestor,_transport,_pilot]] call CBA_fnc_addPerFrameHandler;

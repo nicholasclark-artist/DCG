@@ -56,6 +56,8 @@ GVAR(status) = TR_WAITING;
 									[EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
                                     missionNamespace setVariable [PVEH_REQUEST,[player,_class,_exfil,_infil,_exfilMrk,_infilMrk]];
                             		publicVariableServer PVEH_REQUEST;
+
+                                    GVAR(status) = TR_NOTREADY;
 								} else {
 									[STR_CLOSE,true] call EFUNC(main,displayText);
 								};
