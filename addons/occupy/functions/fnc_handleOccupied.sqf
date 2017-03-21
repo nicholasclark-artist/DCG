@@ -111,25 +111,22 @@ private _maxCount = 0;
 					[_center,AV_VILLAGE] call EFUNC(approval,addValue);
 				};
 
-				GVAR(locations) deleteAt (GVAR(locations) find [_name,_center,_size,_type]);
-				EGVAR(patrol,blacklist) deleteAt (EGVAR(patrol,blacklist) find [_center,_size]);
-				[{
-					EGVAR(civilian,blacklist) deleteAt (EGVAR(civilian,blacklist) find (_this select 0));
-				}, [_name], 300] call CBA_fnc_waitAndExecute;
-
-				{
+                {
                     if (_x getVariable [QUOTE(DOUBLES(ADDON,wreck)),false]) then {
                         [getPos _x] call EFUNC(main,removeParticle);
                     };
 					deleteVehicle _x;
 				} forEach _objArray;
-
                 _mrkArray call CBA_fnc_deleteEntity;
 
-				// setup next round of occupied locations
-				if (GVAR(locations) isEqualTo []) then {
-					[FUNC(findLocation), [], GVAR(cooldown)] call CBA_fnc_waitAndExecute;
-				};
+				GVAR(location) = [];
+				EGVAR(patrol,blacklist) deleteAt (EGVAR(patrol,blacklist) find [_center,_size]);
+				[{
+					EGVAR(civilian,blacklist) deleteAt (EGVAR(civilian,blacklist) find _this);
+				}, _name, 300] call CBA_fnc_waitAndExecute;
+
+				// setup next occupied location
+				[FUNC(findLocation), [], GVAR(cooldown)] call CBA_fnc_waitAndExecute;
 			};
 		}, INTERVAL, _args] call CBA_fnc_addPerFrameHandler;
 	};

@@ -18,33 +18,15 @@ params [
 ];
 
 if !(_data isEqualTo []) exitWith {
-	{
-		if !((_x select 1) inArea EGVAR(main,baseLocation)) then {
-			_x spawn FUNC(setOccupied);
-		};
-	} forEach _data;
+    if !((_data select 1) inArea EGVAR(main,baseLocation)) then {
+        _data spawn FUNC(setOccupied);
+    };
 };
 
-private _occupied = [];
 private _locations = EGVAR(main,locations) select {!((_x select 1) inArea EGVAR(main,baseLocation))};
 
-if (count _locations < GVAR(locationCount)) exitWith {
-    WARNING_1("%1 exceeds terrain location count",QGVAR(locationCount));
+if (_locations isEqualTo []) exitWith {
+    WARNING("No suitable locations to occupy");
 };
 
-[{
-	params ["_args","_idPFH"];
-	_args params ["_locations","_occupied"];
-
-	if (count _occupied >= GVAR(locationCount)) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-	};
-
-    _selected = selectRandom _locations;
-    _name = _selected select 0;
-
-    if !(_name in _occupied) then {
-        _selected spawn FUNC(setOccupied);
-        _occupied pushBack _name;
-    };
-}, 5, [_locations,_occupied]] call CBA_fnc_addPerFrameHandler;
+(selectRandom _locations) spawn FUNC(setOccupied);

@@ -1,9 +1,10 @@
 #define COMPONENT occupy
+#define COMPONENT_PRETTY Occupy
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 
 // #define DEBUG_MODE_FULL
-#define DISABLE_COMPILE_CACHE
+// #define DISABLE_COMPILE_CACHE
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
@@ -14,8 +15,8 @@
 #define PATROL_UNITCOUNT 2
 #define VEH_SPAWN_CHANCE 0.5
 
-#define PREP_INF(POS,GRID,COUNT,SIZE) \
-    private _grp = [ASLtoAGL (selectRandom GRID),0,COUNT,EGVAR(main,enemySide),true,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
+#define PREP_INF(POS,COUNT,SIZE) \
+    private _grp = [ASLtoAGL (selectRandom GVAR(grid)),0,COUNT,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup); \
     [ \
     	{count units (_this select 1) >= (_this select 3)}, \
     	{ \
@@ -36,17 +37,17 @@
     	[POS,_grp,SIZE,COUNT] \
     ] call CBA_fnc_waitUntilAndExecute
 
-#define PREP_VEH(POS,GRID,COUNT,SIZE) \
+#define PREP_VEH(POS,COUNT,SIZE) \
     private _check = []; \
     [{ \
         params ["_args","_idPFH"]; \
-        _args params ["_pos","_grid","_count","_size","_check"]; \
-        if (_grid isEqualTo [] || {count _check >= _count}) exitWith { \
+        _args params ["_pos","_count","_size","_check"]; \
+        if (GVAR(grid) isEqualTo [] || {count _check >= _count}) exitWith { \
             [_idPFH] call CBA_fnc_removePerFrameHandler; \
         }; \
-        private _gridPos = ASLtoAGL (selectRandom _grid); \
-        private _grp = [_gridPos,1,1,EGVAR(main,enemySide),false,SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
-        _grid deleteAt (_grid find _gridPos); \
+        private _gridPos = selectRandom GVAR(grid); \
+        GVAR(grid) deleteAt (GVAR(grid) find _gridPos); \
+        private _grp = [ASLtoAGL _gridPos,1,1,EGVAR(main,enemySide),SPAWN_DELAY,true] call EFUNC(main,spawnGroup); \
         [ \
             {{_x getVariable [ISDRIVER,false]} count units (_this select 0) >= 1}, \
             { \
@@ -58,7 +59,7 @@
             [_grp,_size,_pos] \
         ] call CBA_fnc_waitUntilAndExecute; \
         _check pushBack 0; \
-    }, SPAWN_DELAY, [POS,GRID,COUNT,SIZE,_check]] call CBA_fnc_addPerFrameHandler
+    }, SPAWN_DELAY, [POS,COUNT,SIZE,_check]] call CBA_fnc_addPerFrameHandler
 
 #define PREP_AIR(POS,COUNT) \
     private _check = []; \
@@ -68,7 +69,7 @@
         if (count _check >= _count) exitWith { \
             [_idPFH] call CBA_fnc_removePerFrameHandler; \
         }; \
-        private _grp = [_pos,2,1,EGVAR(main,enemySide),false,SPAWN_DELAY] call EFUNC(main,spawnGroup); \
+        private _grp = [_pos,2,1,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup); \
         [ \
             {{_x getVariable [ISDRIVER,false]} count units (_this select 0) >= 1}, \
             { \
@@ -81,9 +82,9 @@
         _check pushBack 0; \
     }, SPAWN_DELAY, [POS,COUNT,_check]] call CBA_fnc_addPerFrameHandler
 
-#define PREP_STATIC(POS,COUNT,SIZE,GRID,ARRAY) \
-    if (GVAR(static) && {!(GRID isEqualTo [])}) then { \
-    	private _static = [POS, SIZE, ceil random COUNT, EGVAR(main,enemySide), GRID] call EFUNC(main,spawnStatic); \
+#define PREP_STATIC(POS,COUNT,SIZE,ARRAY) \
+    if (GVAR(static) && {!(GVAR(grid) isEqualTo [])}) then { \
+    	private _static = [POS, SIZE, ceil random COUNT, EGVAR(main,enemySide), GVAR(grid)] call EFUNC(main,spawnStatic); \
     	ARRAY append (_static select 1); \
     }
 
