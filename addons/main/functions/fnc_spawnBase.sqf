@@ -80,6 +80,7 @@ for "_i" from 0 to count _objData - 1 do {
     _relPos = call compile _relPos;
 
     _obj = _type createVehicle [0,0,0];
+    _obj enableDynamicSimulation true;
     _obj setDir (getDir _anchor + _relDir);
     _pos = _anchor modelToWorld _relPos;
 
@@ -112,6 +113,8 @@ for "_i" from 0 to count _nodeData - 1 do {
 
     _nodes pushBack [_pos,_range];
 };
+
+deleteVehicle _anchor;
 
 private _ret = [
     getNumber (_base >> "radius"),
