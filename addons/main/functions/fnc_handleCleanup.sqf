@@ -30,7 +30,7 @@ if !(GVAR(objectCleanup) isEqualTo []) then {
 
 	for "_i" from (count GVAR(objectCleanup) - 1) to 0 step -1 do {
 		_obj = GVAR(objectCleanup) select _i;
-        if ([getPosATL _obj,CLEAN_DIST] call EFUNC(main,getNearPlayers) isEqualTo []) then {
+        if (_obj getVariable [QGVAR(forceCleanup),false] || {[getPos _obj,CLEAN_DIST] call EFUNC(main,getNearPlayers) isEqualTo []}) then {
             if (_obj isKindOf "LandVehicle" || {_obj isKindOf "Air"} || {_obj isKindOf "Ship"}) then {
                 {deleteVehicle _x} forEach (crew _obj);
                 deleteVehicle _obj;
