@@ -23,16 +23,86 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(dist),
+    QGVAR(distCoef),
     "SLIDER",
-    "Cache Distance",
+    ["Activation Distance Multiplier",""],
     COMPONENT_NAME,
     [
-        100,
+        1,
+        4,
+        1.5,
+        1
+    ],
+    true,
+    {
+        "IsMoving" setDynamicSimulationDistanceCoef GVAR(distCoef);
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(distGroup),
+    "SLIDER",
+    ["Group Activation Distance",""],
+    COMPONENT_NAME,
+    [
+        50,
         5000,
-        2000,
+        1000,
         0
     ],
-    false,
-    {}
+    true,
+    {
+        "Group" setDynamicSimulationDistance GVAR(distGroup);
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(distVehicle),
+    "SLIDER",
+    ["Vehicle Activation Distance",""],
+    COMPONENT_NAME,
+    [
+        50,
+        5000,
+        1000,
+        0
+    ],
+    true,
+    {
+        "Vehicle" setDynamicSimulationDistance GVAR(distVehicle);
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(distEmpty),
+    "SLIDER",
+    ["Empty Vehicle Activation Distance",""],
+    COMPONENT_NAME,
+    [
+        50,
+        5000,
+        500,
+        0
+    ],
+    true,
+    {
+        "EmptyVehicle" setDynamicSimulationDistance GVAR(distEmpty);
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(distProp),
+    "SLIDER",
+    ["Prop Activation Distance",""],
+    COMPONENT_NAME,
+    [
+        50,
+        5000,
+        250,
+        0
+    ],
+    true,
+    {
+        "Prop" setDynamicSimulationDistance GVAR(distProp);
+    }
 ] call CBA_Settings_fnc_init;
