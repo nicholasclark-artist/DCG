@@ -1,4 +1,5 @@
 #define COMPONENT radio
+#define COMPONENT_PRETTY Radio
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 

@@ -22,4 +22,4 @@ publicVariable QFUNC(setRadioACRE);
 publicVariable QFUNC(setRadioTFAR);
 publicVariable QFUNC(initSettings);
 
-INITSETTINGS;
+SETTINGS_INIT;
