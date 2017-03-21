@@ -11,7 +11,7 @@ Arguments:
 2: max distance from center <NUMBER>
 3: min distance from center <NUMBER>
 4: min distance from object <NUMBER>
-5: allow water <BOOL>
+5: over land or water <NUMBER>
 6: shuffle position array <BOOL>
 
 Return:
@@ -48,9 +48,10 @@ for "_y" from 0 to _count do {
     };
 };
 
-_ret = _ret select {
-    !(_x inArea [_anchor, _rangeMin, _rangeMin, 0, false, -1]) &&
-    {[_x,_distObj,_water] call FUNC(isPosSafe)}
+_ret = _ret select {!(_x inArea [_anchor, _rangeMin, _rangeMin, 0, false, -1])};
+
+if (_distObj > 0 || {_water > -1}) then {
+    _ret = _ret select {[_x,_distObj,_water] call FUNC(isPosSafe)};
 };
 
 {
