@@ -15,13 +15,13 @@ boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define MAX_CARGO(VEH) ((VEH) emptyPositions "cargo") min 6
-#define DIST_MIN 350
+#define DIST_MIN 250
 #define DIST_MAX DIST_MIN*2
 #define DIST_SPAWN DIST_MAX*4
 #define TR_SIZE 15
 
 params [
-	"_center",
+	["_center",[],[[]]],
 	["_side",GVAR(enemySide),[sideUnknown]]
 ];
 
@@ -29,7 +29,6 @@ private _lz = [];
 private _unitPool = [];
 private _vehPool = [];
 private _backup = "";
-private _distSpawn = 2500;
 private _fnc_getCargo = {
 	params ["_class"];
 
@@ -68,9 +67,10 @@ if (_grid isEqualTo []) exitWith {
     false
 };
 
-_lz = selectRandom _grid;
+_lz = ASLtoAGL (selectRandom _grid);
+_lz = "Land_HelipadEmpty_F" createVehicle _lz;
 
-private _spawnPos = [_center,DIST_SPAWN,DIST_SPAWN + 500] call FUNC(findPosSafe);
+private _spawnPos = [_center,DIST_SPAWN,DIST_SPAWN] call FUNC(findPosSafe);
 private _type = selectRandom _vehPool;
 
 if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
@@ -79,17 +79,18 @@ if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
 
 private _heli = createVehicle [_type,_spawnPos,[],0,"FLY"];
 _heli lock 3;
-_heli flyInHeight 100;
-_heli allowCrewInImmobile true;
 
 private _grp = createGroup _side;
 private _pilot = _grp createUnit [selectRandom _unitPool,[0,0,0], [], 0, "NONE"];
 _pilot assignAsDriver _heli;
 _pilot moveInDriver _heli;
-_pilot setBehaviour "CARELESS";
 _pilot disableAI "FSM";
+_pilot setBehaviour "CARELESS";
+_pilot addEventHandler ["GetOutMan",{
+    deleteVehicle (_this select 0)
+}];
 
-private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side,false,0.3] call FUNC(spawnGroup);
+private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
 
 // place patrol group in cargo
 [
@@ -105,40 +106,40 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side,false,0.3] call FUNC(spaw
 	[_heli,_grpPatrol]
 ] call CBA_fnc_waitUntilAndExecute;
 
-// add waypoint to pilot
-_wp = _grp addWaypoint [_lz, 0];
-_wp setWaypointType "MOVE";
-_wp setWaypointSpeed "NORMAL";
-_wp setWaypointStatements ["true", "(vehicle this) land ""GET OUT"";"];
+_heli move (getPos _lz);
 
-_wp = _grp addWaypoint [_spawnPos, 0];
-_wp setWaypointType "MOVE";
-_wp setWaypointSpeed "FULL";
-_wp setWaypointStatements ["true", "deleteVehicle (vehicle this); deleteVehicle this;"];
-
-// patrol group dismount
 [
-	{((getPosATL (vehicle leader (_this select 1))) select 2) <= 5},
-	{
-		params ["_heli","_grpPatrol","_center"];
+    {unitReady (_this select 0)},
+    {
+        params ["_heli","_lz","_grpPatrol","_center"];
 
-		_grpPatrol leaveVehicle _heli;
-        _onComplete = format ["
-            if ([%1,1000] call %2 isEqualTo []) then {
-                thisList call %3;
-            };
-        ",_center,QFUNC(getPlayers),QFUNC(cleanup)];
+        _heli land "GET OUT";
+        _heli landAt _lz;
+
+        _grpPatrol leaveVehicle _heli;
+        _onComplete = format ["if ([%1,500] call %2 isEqualTo []) then {thisList call %3};",_center,QFUNC(getPlayers),QFUNC(cleanup)];
         [_grpPatrol, [_center, 50, 50, 0, false],"AWARE","NO CHANGE","UNCHANGED","NO CHANGE",_onComplete] call CBA_fnc_taskSearchArea;
 
         INFO_2("Reinforcement dismount at %1, target is %2",getPos leader _grpPatrol,_center);
-	},
-	[_heli,_grpPatrol,_center]
+
+        [
+            {{alive (_x select 0)} count (fullCrew [_this select 0,"cargo",false]) isEqualTo 0},
+            {
+                params ["_heli","_lz"];
+
+                _heli move [0,0,100];
+                [_heli,_lz] call FUNC(cleanup);
+            },
+            [_heli,_lz]
+        ] call CBA_fnc_waitUntilAndExecute;
+    },
+    [_heli,_lz,_grpPatrol,_center]
 ] call CBA_fnc_waitUntilAndExecute;
 
 // watch if heli is destroyed
 [{
     params ["_args","_idPFH"];
-    _args params ["_heli","_pilot","_spawnPos","_lz"];
+    _args params ["_heli","_pilot"];
 
     if (!alive _pilot || {isNull objectParent _pilot} || {isTouchingGround _heli && (!(canMove _heli) || (fuel _heli isEqualTo 0))}) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -146,6 +147,6 @@ _wp setWaypointStatements ["true", "deleteVehicle (vehicle this); deleteVehicle 
 
         INFO("Reinforcement vehicle destroyed");
     };
-}, 1, [_heli,_pilot,_spawnPos,_lz]] call CBA_fnc_addPerFrameHandler;
+}, 1, [_heli,_pilot]] call CBA_fnc_addPerFrameHandler;
 
 true
