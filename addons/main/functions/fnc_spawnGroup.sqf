@@ -10,8 +10,7 @@ Arguments:
 1: type of group <NUMBER>
 2: number of units in group <NUMBER>
 3: side of group <SIDE>
-4: disable group caching <BOOL>
-5: delay between unit spawns <NUMBER>
+4: delay between unit spawns <NUMBER>
 5: fill vehicle cargo <BOOL>
 
 Return:
@@ -26,7 +25,6 @@ params [
 	["_type",0,[0]],
 	["_count",1,[0]],
 	["_side",GVAR(enemySide),[sideUnknown]],
-	["_uncache",false,[false]],
 	["_delay",1,[0]],
 	["_cargo",false,[false]]
 ];
@@ -34,6 +32,8 @@ params [
 private _grp = createGroup _side;
 private _drivers = [];
 private _check = [];
+
+_grp deleteGroupWhenEmpty true;
 
 _pos =+ _pos;
 _pos resize 2;
@@ -59,10 +59,6 @@ call {
     	_vehPool = GVAR(vehPoolInd);
     	_airPool = GVAR(airPoolInd);
 	};
-};
-
-if (_uncache) then {
-	CACHE_DISABLE(_grp,true);
 };
 
 if (_type isEqualTo 0) exitWith {
@@ -109,6 +105,8 @@ if (_type isEqualTo 0) exitWith {
 	};
 
 	if (_cargo) then {
+        _veh setUnloadInCombat [true,false];
+
 		[{
 			params ["_args","_idPFH"];
 			_args params ["_grp","_unitPool","_veh","_count"];
