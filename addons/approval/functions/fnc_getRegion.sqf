@@ -9,7 +9,7 @@ Arguments:
 0: center position <ARRAY>
 
 Return:
-array
+location
 __________________________________________________________________*/
 #include "script_component.hpp"
 

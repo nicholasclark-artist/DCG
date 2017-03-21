@@ -23,6 +23,16 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
+    QGVAR(notify),
+    "CHECKBOX",
+    ["Enable Hostile Notification","Notify players when hostile entity spawns."],
+    COMPONENT_NAME,
+    true,
+    false,
+    {}
+] call CBA_Settings_fnc_init;
+
+[
     QGVAR(multiplier),
     "SLIDER",
     ["Approval Multiplier","Multiplier for the rate of approval change."],

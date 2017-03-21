@@ -24,7 +24,7 @@ if (isNull _killer || {_unit isEqualTo _killer}) then {
     _killer = _unit getVariable ["ace_medical_lastDamageSource", _killer];
 };
 
-if (isNull _unit || {isNull _killer} || {_killer isEqualTo _unit}) exitWith {
+if (isNull _unit || {isNull _killer} || {_killer isEqualTo _unit} || {side _killer isEqualTo CIVILIAN}) exitWith {
 	INFO_2("Exit handleKilled with killer: %1, victim: %2",_killer,_unit);
     false
 };

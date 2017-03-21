@@ -8,7 +8,11 @@ CHECK_POSTINIT;
 
 PVEH_QUESTION addPublicVariableEventHandler {(_this select 1) call FUNC(handleQuestion)};
 PVEH_HINT addPublicVariableEventHandler {[_this select 1,0] call FUNC(handleHint)};
-PVEH_AVADD addPublicVariableEventHandler {(_this select 1) call FUNC(addValue)};
+PVEH_HALT addPublicVariableEventHandler {[_this select 1] spawn FUNC(handleHalt)};
+PVEH_AVADD addPublicVariableEventHandler {
+    (_this select 1) call FUNC(addValue);
+    LOG_1("Client add AV: %1",_this);
+};
 
 [
 	{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},

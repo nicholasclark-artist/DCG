@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-question nearby unit
+question unit
 
 Arguments:
 0: player <OBJECT>
@@ -40,7 +40,7 @@ private _text = [
 	format ["%1 isn't interested in talking right now.",name _unit]
 ];
 
-if (random 1 < AV_CHANCE(getpos _player)) then {
+if (random 1 < AV_CONVERT1(getpos _player)) then {
 	private _type = floor random 2;
 
 	if (_type isEqualTo 0) exitWith {

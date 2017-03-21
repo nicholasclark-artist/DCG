@@ -22,4 +22,6 @@ private _ret = _region getVariable QGVAR(regionValue);
 
 ISNILS(_ret,AV_DEFAULT);
 
+_ret = (_ret min AV_MAX) max AV_MIN;
+
 _ret
