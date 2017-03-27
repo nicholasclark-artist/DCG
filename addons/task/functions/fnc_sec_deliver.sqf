@@ -54,7 +54,7 @@ if (count _positions < 2) exitWith {
 };
 
 _positionStart = [_locationStart select 1,0,(_locationStart select 2) + 100,12,0,0.5] call EFUNC(main,findPosSafe);
-_positionEnd = ASLtoAGL ([_locationEnd select 1,0,(_locationEnd select 2)*0.5] call EFUNC(main,findPosSafe));
+_positionEnd = ASLtoAGL ([_locationEnd select 1,0,(_locationEnd select 2)*0.3] call EFUNC(main,findPosSafe));
 
 if (_positionStart isEqualTo [] || {_positionEnd isEqualTo []}) exitWith {
 	TASK_EXIT_DELAY(0);

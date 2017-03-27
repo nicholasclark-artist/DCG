@@ -34,7 +34,13 @@ if (_position isEqualTo [] && {!(EGVAR(main,locals) isEqualTo [])}) then {
 };
 
 if (!(_position isEqualTo []) && {!([_position,SAFE_DIST,0,SAFE_GRAD] call EFUNC(main,isPosSafe))}) then {
-	_position = [_position,4,64,SAFE_DIST,0,SAFE_GRAD] call EFUNC(main,findPosSafe);
+	_posSafe = [_position,4,64,SAFE_DIST,0,SAFE_GRAD] call EFUNC(main,findPosSafe);
+
+    if !(_posSafe isEqualTo _position) then {
+        _position = _posSafe;
+    } else {
+        _position = [];
+    };
 };
 
 if (_position isEqualTo []) exitWith {
@@ -53,7 +59,7 @@ call {
 	};
 };
 
-_base = [_position,_baseStrength] call EFUNC(main,spawnBase);
+_base = [ASLtoAGL _position,_baseStrength] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
 _cleanup append (_base select 2);
 
