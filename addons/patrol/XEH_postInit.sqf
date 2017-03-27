@@ -7,7 +7,7 @@ __________________________________________________________________*/
 CHECK_POSTINIT;
 
 [
-	{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},
+	{DOUBLES(PREFIX,main)},
 	{
 		GVAR(blacklist) pushBack [locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)]; // add main base to blacklist
 
