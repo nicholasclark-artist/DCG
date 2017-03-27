@@ -1,6 +1,6 @@
 **Arma 3 Version:** `x.xx` (stable / rc / dev)
 **CBA Version:** `x.x.x`
-**DCG Version:** `x.x.x.x`
+**DCG Version:** `x.x.x`
 
 **Server Mods:**
 - `@CBA_A3`
