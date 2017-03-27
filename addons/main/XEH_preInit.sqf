@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(isServer) exitWith {};
+CHECK_PREINIT;
 
 ADDON = false;
 
@@ -60,6 +60,7 @@ PREP(exportPool);
 PREP(exportBase);
 PREP(splitGroup);
 PREP(exportNetworkTraffic);
+PREP(landAt);
 // PREP(exportConfigList);
 
 GVAR(locations) = [];
