@@ -7,8 +7,7 @@ send reinforcements to position
 
 Arguments:
 0: center position <ARRAY>
-1: reinforcements side <SIDE>
-2: distance from center to land reinforcements <NUMBER>
+1: reinforcement side <SIDE>
 
 Return:
 boolean
@@ -25,7 +24,6 @@ params [
 	["_side",GVAR(enemySide),[sideUnknown]]
 ];
 
-private _lz = [];
 private _unitPool = [];
 private _vehPool = [];
 private _backup = "";
@@ -68,7 +66,6 @@ if (_grid isEqualTo []) exitWith {
 };
 
 _lz = ASLtoAGL (selectRandom _grid);
-_lz = "Land_HelipadEmpty_F" createVehicle _lz;
 
 private _spawnPos = [_center,DIST_SPAWN,DIST_SPAWN] call FUNC(findPosSafe);
 private _type = selectRandom _vehPool;
@@ -86,9 +83,7 @@ _pilot assignAsDriver _heli;
 _pilot moveInDriver _heli;
 _pilot disableAI "FSM";
 _pilot setBehaviour "CARELESS";
-_pilot addEventHandler ["GetOutMan",{
-    deleteVehicle (_this select 0)
-}];
+_pilot addEventHandler ["GetOutMan",{deleteVehicle (_this select 0)}];
 
 private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
 
@@ -106,15 +101,13 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
 	[_heli,_grpPatrol]
 ] call CBA_fnc_waitUntilAndExecute;
 
-_heli move (getPos _lz);
-
+// move to drop off position
 [
-    {unitReady (_this select 0)},
+    _heli,
+    _lz,
+    "GET OUT"
     {
-        params ["_heli","_lz","_grpPatrol","_center"];
-
-        _heli land "GET OUT";
-        _heli landAt _lz;
+        params ["_heli","_grpPatrol","_center"];
 
         _grpPatrol leaveVehicle _heli;
         _onComplete = format ["if ([%1,500] call %2 isEqualTo []) then {thisList call %3};",_center,QFUNC(getPlayers),QFUNC(cleanup)];
@@ -123,30 +116,27 @@ _heli move (getPos _lz);
         INFO_2("Reinforcement dismount at %1, target is %2",getPos leader _grpPatrol,_center);
 
         [
-            {{alive (_x select 0)} count (fullCrew [_this select 0,"cargo",false]) isEqualTo 0},
+            {{alive (_x select 0)} count (fullCrew [_this,"cargo",false]) isEqualTo 0},
             {
-                params ["_heli","_lz"];
-
-                _heli move [0,0,100];
-                [_heli,_lz] call FUNC(cleanup);
+                _this doMove [0,0,0];
+                _this call FUNC(cleanup);
             },
-            [_heli,_lz]
+            _heli
         ] call CBA_fnc_waitUntilAndExecute;
     },
-    [_heli,_lz,_grpPatrol,_center]
-] call CBA_fnc_waitUntilAndExecute;
+    [_grpPatrol,_center]
+] call EFUNC(main,landAt);
 
 // watch if heli is destroyed
 [{
     params ["_args","_idPFH"];
-    _args params ["_heli","_pilot"];
+    _args params ["_heli"];
 
-    if (!alive _pilot || {isNull objectParent _pilot} || {isTouchingGround _heli && (!(canMove _heli) || (fuel _heli isEqualTo 0))}) exitWith {
+    if (isTouchingGround _heli && {!alive _heli || !canMove _heli || fuel _heli isEqualTo 0}) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         _heli call FUNC(cleanup);
-
         INFO("Reinforcement vehicle destroyed");
     };
-}, 1, [_heli,_pilot]] call CBA_fnc_addPerFrameHandler;
+}, 1, [_heli]] call CBA_fnc_addPerFrameHandler;
 
 true
