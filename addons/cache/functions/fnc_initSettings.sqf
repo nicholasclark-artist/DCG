@@ -25,7 +25,7 @@ __________________________________________________________________*/
 [
     QGVAR(distCoef),
     "SLIDER",
-    ["Activation Distance Multiplier",""],
+    ["Activation Distance Multiplier","Multiplies the entity activation distance by set value if the entity is moving."],
     COMPONENT_NAME,
     [
         1,

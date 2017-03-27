@@ -10,6 +10,7 @@ ADDON = false;
 
 PREP(initSettings);
 PREP(handleCache);
+PREP(disableCache);
 
 publicVariable QFUNC(initSettings);
 
