@@ -22,7 +22,7 @@ class DOUBLES(PREFIX,settings) {
     class GVAR(airPoolEast) {
         typeName = "POOL";
         value[] = {
-    		{"ALL","O_Plane_CAS_02_F","O_Heli_Light_02_v2_F","O_Heli_Light_02_F","O_Heli_Attack_02_black_F","O_Heli_Attack_02_F"}
+    		{"ALL","O_Plane_CAS_02_F","O_Heli_Light_02_v2_F","O_Heli_Light_02_F","O_Heli_Attack_02_F"}
     	};
     };
     class GVAR(sniperPoolEast) {
