@@ -32,7 +32,7 @@
             ["Data saved.",true] call EFUNC(main,displayText); \
         }; \
     }
-#define SAVEDATA_COND time > 60 && {isServer || serverCommandAvailable QUOTE(QUOTE(#logout))}
+#define SAVEDATA_COND time > 60 && {isServer || IS_ADMIN_LOGGED}
 
 #define DELETEDATA_ID QUOTE(DOUBLES(ADDON,deleteSaveData))
 #define DELETEDATA_NAME "Delete All Saved Mission Data"
@@ -50,4 +50,4 @@
     		["Data deleted from server.",true] call EFUNC(main,displayText); \
     	}; \
     }
-#define DELETEDATA_COND isServer || {serverCommandAvailable QUOTE(QUOTE(#logout))}
+#define DELETEDATA_COND isServer || {IS_ADMIN_LOGGED}
