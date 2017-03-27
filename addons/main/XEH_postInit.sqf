@@ -148,10 +148,10 @@ _data = QUOTE(ADDON) call FUNC(loadDataAddon);
         {
             _x call EFUNC(main,setAction);
         } forEach [
-            [QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],{},QUOTE(true),{},[],player,1,["ACE_SelfActions"]],
+            [QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],{},{true},{},[],player,1,["ACE_SelfActions"]],
             [QUOTE(DOUBLES(PREFIX,data)),"Mission Data"],
-            [SAVEDATA_ID,SAVEDATA_NAME,{SAVEDATA_STATEMENT},QUOTE(SAVEDATA_COND),{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
-            [DELETEDATA_ID,DELETEDATA_NAME,{DELETEDATA_STATEMENT},QUOTE(DELETEDATA_COND),{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
+            [SAVEDATA_ID,SAVEDATA_NAME,{SAVEDATA_STATEMENT},{SAVEDATA_COND},{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
+            [DELETEDATA_ID,DELETEDATA_NAME,{DELETEDATA_STATEMENT},{DELETEDATA_COND},{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
         ];
 	};
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
