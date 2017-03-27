@@ -7,7 +7,7 @@ __________________________________________________________________*/
 CHECK_POSTINIT;
 
 [
-	{DOUBLES(PREFIX,main)},
+	{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},
 	{
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
 		[_data] call FUNC(handleLoadData);
