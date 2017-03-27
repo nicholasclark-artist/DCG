@@ -11,7 +11,7 @@ __________________________________________________________________*/
 CHECK_POSTINIT;
 
 [
-	{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},
+	{DOUBLES(PREFIX,main)},
 	{
         [FUNC(handleUnit), HANDLER_DELAY, EGVAR(main,locations)] call CBA_fnc_addPerFrameHandler;
         [FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
