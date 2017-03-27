@@ -67,8 +67,6 @@ if !(_artyPool isEqualTo []) then {
     };
 };
 
-INFO_1("base strength %1",_baseStrength);
-
 // spawn base and find empty space for arty
 _base = [_position,_baseStrength] call EFUNC(main,spawnBase);
 _bRadius = _base select 0;
