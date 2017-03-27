@@ -13,7 +13,11 @@ PVEH_REQUEST addPublicVariableEventHandler {
 [
 	{DOUBLES(PREFIX,main)},
 	{
-		[QUOTE(ADDON),QUOTE(COMPONENT_PRETTY),{},QUOTE(call FUNC(canCallTransport)),{call FUNC(getChildren)}] remoteExecCall [QEFUNC(main,setAction), 0, true];
+        [[],{
+        	if (hasInterface) then {
+                call FUNC(handleClient);
+        	};
+        }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 

@@ -9,6 +9,7 @@ CHECK_PREINIT;
 ADDON = false;
 
 PREP(initSettings);
+PREP(handleClient);
 PREP(handleRequest);
 PREP(request);
 PREP(getChildren);
@@ -18,7 +19,7 @@ GVAR(status) = TR_READY;
 GVAR(count) = 0;
 
 publicVariable QFUNC(request);
-publicVariable QFUNC(handleRequest);
+publicVariable QFUNC(handleClient);
 publicVariable QFUNC(canCallTransport);
 publicVariable QFUNC(getChildren);
 publicVariable QFUNC(initSettings);

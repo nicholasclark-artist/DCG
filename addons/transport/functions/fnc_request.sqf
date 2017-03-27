@@ -86,5 +86,5 @@ GVAR(status) = TR_WAITING;
 		};
 	},
 	[],
-	90
+	30
 ] call CBA_fnc_waitAndExecute;
