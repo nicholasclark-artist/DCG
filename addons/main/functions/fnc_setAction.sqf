@@ -29,7 +29,7 @@ params [
 	["_id","",[""]],
 	["_name","",[""]],
 	["_statement",{},[{}]],
-	["_condition","true",[""]],
+	["_condition",{true},[{}]],
 	["_child",{},[{}]],
     ["_params",[],[[]]],
 	["_obj",player,[objNull]],
@@ -41,13 +41,17 @@ params [
 private _actions = [];
 
 if (CHECK_ADDON_1("ace_interact_menu")) then {
-	private _addAction = [_id,_name,"",_statement,compile _condition,_child,_params,_pos] call ace_interact_menu_fnc_createAction;
+	private _addAction = [_id,_name,"",_statement,_condition,_child,_params,_pos] call ace_interact_menu_fnc_createAction;
 	_path = [_obj, _type, _path, _addAction] call ace_interact_menu_fnc_addActionToObject;
 	_actions append _path;
 } else {
 	if (_name isEqualTo "") exitWith {
 		_actions = [-1,[-1],-1];
 	};
+
+    // convert cond code to string
+    _condition = str _condition;
+    _condition = _condition select [1,(count _condition) - 2];
 
 	if !(_statement isEqualTo {}) then {
 		private _addAction = _obj addAction [_name,_statement,_params,0,false,true,"",_condition];
@@ -67,13 +71,13 @@ if (CHECK_ADDON_1("ace_interact_menu")) then {
 	private _EHStr = format [
 		"
 			if !(%2 isEqualTo {}) then {
-				(_this select 0) addAction [%1,%2,%3,0,false,true,'',%4];
+				(_this select 0) addAction ['%1',%2,%3,0,false,true,'','%4'];
 			};
 
 			if !(%5 isEqualTo {}) then {
 				%3 call %5;
 			};
-		",str _name,_statement,_params,str _condition,_child
+		",_name,_statement,_params,_condition,_child
 	];
 
     if (local _obj) then {
