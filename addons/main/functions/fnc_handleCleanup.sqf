@@ -11,7 +11,7 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CLEAN_DIST 400
+#define CLEAN_DIST 500
 
 {
 	deleteGroup _x; // will only delete local empty groups
