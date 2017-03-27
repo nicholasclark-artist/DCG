@@ -28,6 +28,8 @@ _buildings = _buildings select {
 
 private _grp = [[0,0,0],0,_count,CIVILIAN,1.25] call EFUNC(main,spawnGroup);
 
+[_grp] call EFUNC(cache,disableCache);
+
 [
 	{count units (_this select 0) >= (_this select 2)},
 	{

@@ -8,5 +8,5 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define PATROL_MINRANGE 300
+#define PATROL_MINRANGE 500
 #define PATROL_RANGE 700

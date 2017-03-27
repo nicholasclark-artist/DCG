@@ -78,6 +78,8 @@ call {
 
 				_grp = [units _grp] call EFUNC(main,setSide);
 
+                [_grp] call EFUNC(cache,disableCache);
+
 				{
 					_y = _x;
 					_y addVest _vest;
@@ -132,6 +134,8 @@ call {
 
 					_grp = [[_driver]] call EFUNC(main,setSide);
 
+                    [_grp] call EFUNC(cache,disableCache);
+
 					_unit = leader _grp;
 					_unit removeAllEventHandlers "firedNear";
 					_unit addEventHandler ["Hit", {
@@ -179,6 +183,8 @@ call {
 
 		_grp = [[leader _grp]] call EFUNC(main,setSide);
 
+        [_grp] call EFUNC(cache,disableCache);
+        
 		private _unit = leader _grp;
 		_unit removeAllEventHandlers "firedNear";
 		_unit addEventHandler ["Hit", {

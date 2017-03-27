@@ -49,6 +49,8 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 
 				if (random 1 < GVAR(vehChance)) then {
 					_grp = [_pos,1,1,EGVAR(main,enemySide),1,true] call EFUNC(main,spawnGroup);
+                    [_grp] call EFUNC(cache,disableCache);
+
 					[
 						{count units (_this select 0) > 0},
 						{
@@ -56,7 +58,7 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 
                             // set waypoint around target player
                             _wp = _grp addWaypoint [getPosATL _player,0];
-                            _wp setWaypointCompletionRadius 100;
+                            _wp setWaypointCompletionRadius 200;
                             _wp setWaypointBehaviour "SAFE";
                             _wp setWaypointFormation "STAG COLUMN";
                             _wp setWaypointSpeed "NORMAL";
@@ -72,6 +74,8 @@ if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
 				} else {
 					_count = 4;
 					_grp = [_pos,0,_count,EGVAR(main,enemySide),2] call EFUNC(main,spawnGroup);
+                    [_grp] call EFUNC(cache,disableCache);
+                    
 					[
 						{count units (_this select 0) isEqualTo (_this select 2)},
 						{

@@ -20,6 +20,8 @@ params ["_start","_mid","_end","_player"];
 
 private _grp = [_start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 
+[_grp] call EFUNC(cache,disableCache);
+
 [
 	{{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) > 0},
 	{
