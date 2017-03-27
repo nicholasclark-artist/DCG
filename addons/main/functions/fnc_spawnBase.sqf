@@ -6,7 +6,7 @@ Description:
 spawn base
 
 Arguments:
-0: center position AGL <ARRAY>
+0: center positionAGL <ARRAY>
 1: base strength, number between 0 and 1 that defines how fortified the base will be <NUMBER>
 
 Return:
