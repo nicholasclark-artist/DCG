@@ -7,7 +7,7 @@ __________________________________________________________________*/
 CHECK_POSTINIT;
 
 [
-	{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},
+	{DOUBLES(PREFIX,main)},
 	{
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
 		[_data] call FUNC(handleLoadData);
@@ -18,8 +18,8 @@ CHECK_POSTINIT;
                     _x call EFUNC(main,setAction);
                 } forEach [
                     [QUOTE(ADDON),QUOTE(COMPONENT_PRETTY),{}],
-                    [QUOTE(DOUBLES(ADDON,primary)),"Cancel Primary Task",{PRIM_STATEMENT},QUOTE(PRIM_COND),{},[],player,1,ACTIONPATH],
-                    [QUOTE(DOUBLES(ADDON,secondary)),"Cancel Secondary Task",{SEC_STATEMENT},QUOTE(SEC_COND),{},[],player,1,ACTIONPATH]
+                    [QUOTE(DOUBLES(ADDON,primary)),"Cancel Primary Task",{PRIM_STATEMENT},{PRIM_COND},{},[],player,1,ACTIONPATH],
+                    [QUOTE(DOUBLES(ADDON,secondary)),"Cancel Secondary Task",{SEC_STATEMENT},{SEC_COND},{},[],player,1,ACTIONPATH]
                 ];
 			};
 		}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
