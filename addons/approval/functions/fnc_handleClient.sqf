@@ -15,8 +15,8 @@ __________________________________________________________________*/
 {
     _x call EFUNC(main,setAction);
 } forEach [
-    [QUOTE(ADDON),QUOTE(COMPONENT_PRETTY),{},QUOTE(true)],
-    [HINT_ID,HINT_NAME,{HINT_STATEMENT},QUOTE(HINT_COND),{},[],player,1,ACTIONPATH]
+    [QUOTE(ADDON),QUOTE(COMPONENT_PRETTY),{},{true}],
+    [HINT_ID,HINT_NAME,{HINT_STATEMENT},{HINT_COND},{},[],player,1,ACTIONPATH]
 ];
 
 if (CHECK_ADDON_1("ace_interact_menu")) then {
@@ -25,8 +25,8 @@ if (CHECK_ADDON_1("ace_interact_menu")) then {
     private _action = [QUESTION_ID, QUESTION_NAME, "", {QUESTION_STATEMENT_ACE}, {QUESTION_COND_ACE}, {}, []] call ace_interact_menu_fnc_createAction;
     ["CAManBase", 0, ["ACE_MainActions"],_action,true] call ace_interact_menu_fnc_addActionToClass;
 } else {
-    [HALT_ID,HALT_NAME,{HALT_STATEMENT},QUOTE(HALT_COND),{},[],player,1,ACTIONPATH] call EFUNC(main,setAction);
-    [QUESTION_ID,QUESTION_NAME,{QUESTION_STATEMENT},QUOTE(QUESTION_COND),{},[],player,1,ACTIONPATH] call EFUNC(main,setAction);
+    [HALT_ID,HALT_NAME,{HALT_STATEMENT},{HALT_COND},{},[],player,1,ACTIONPATH] call EFUNC(main,setAction);
+    [QUESTION_ID,QUESTION_NAME,{QUESTION_STATEMENT},{QUESTION_COND},{},[],player,1,ACTIONPATH] call EFUNC(main,setAction);
 };
 
 [COMPONENT_NAME, HINT_ID, HINT_NAME, {HINT_KEYCODE}, ""] call CBA_fnc_addKeybind;
