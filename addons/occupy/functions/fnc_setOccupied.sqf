@@ -18,8 +18,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define WRECKS \
     ["a3\structures_f\wrecks\Wreck_Car2_F.p3d","a3\structures_f\wrecks\Wreck_Car3_F.p3d","a3\structures_f\wrecks\Wreck_Car_F.p3d","a3\structures_f\wrecks\Wreck_Offroad2_F.p3d","a3\structures_f\wrecks\Wreck_Offroad_F.p3d","a3\structures_f\wrecks\Wreck_Truck_dropside_F.p3d","a3\structures_f\wrecks\Wreck_Truck_F.p3d","a3\structures_f\wrecks\Wreck_UAZ_F.p3d","a3\structures_f\wrecks\Wreck_Van_F.p3d","a3\structures_f\wrecks\Wreck_Ural_F.p3d"]
-#define SAFE_DIST 10
-#define GRID_DIST 10
+#define SAFE_DIST 12
 #define INF_COUNT_VILL ([15,30] call EFUNC(main,getUnitCount))
 #define INF_COUNT_CITY ([25,40] call EFUNC(main,getUnitCount))
 #define INF_COUNT_CAP ([30,50] call EFUNC(main,getUnitCount))
@@ -40,7 +39,6 @@ params [
 
 INFO_1("%1",_this);
 
-private _time = diag_tickTime;
 private _objArray = [];
 private _mrkArray = [];
 private _pool = [];
@@ -73,13 +71,6 @@ call {
         _typeName = "City";
     };
     _typeName = "Village";
-};
-
-GVAR(grid) = [_center,GRID_DIST,_size,0,SAFE_DIST,0] call EFUNC(main,findPosGrid);
-
-if (GVAR(grid) isEqualTo []) exitWith {
-    WARNING("Cannot occupy location, grid is empty");
-    [] call FUNC(findLocation);
 };
 
 if (isNil "_data") then {
@@ -144,6 +135,3 @@ EGVAR(civilian,blacklist) pushBack _name; // stop civilians from spawning in loc
     },
     [_name,_center,_size,_type,_objArray,_mrkArray]
 ] call CBA_fnc_waitUntilAndExecute;
-
-_time = diag_tickTime - _time;
-LOG_1("Function time - %1ms",_time);

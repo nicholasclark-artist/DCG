@@ -14,7 +14,6 @@ PREP(handleLoadData);
 PREP(handleOccupied);
 PREP(setOccupied);
 
-GVAR(grid) = [];
 GVAR(location) = [];
 
 publicVariable QFUNC(initSettings);
