@@ -57,19 +57,20 @@ call {
 {
 	if (count _gunnerArray isEqualTo _count) exitWith {};
 
-	if !(isOnRoad (ASLToAGL _x)) then {
+    private _posGrid = ASLToAGL _x;
+
+	if !(isOnRoad _posGrid) then {
 		private _type = ceil random 3;
 
 		if (_type isEqualTo 1) exitWith { // tower
 			private _tower = _static1 createVehicle [0,0,0];
 			_tower setdir ([_tower, _pos] call BIS_fnc_DirTo) + 180;
             _tower setvectorup [0,0,1];
-			_tower setPosASL _x;
+			_tower setPos _posGrid;
 			private _gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
 			_gunner setFormDir (getDir _tower);
 			_gunner setDir (getDir _tower);
 			_gunner setPosATL (_tower buildingpos 1);
-			// _gunner setUnitPos "UP";
 			_gunner disableAI "PATH";
 			_gunner setSkill ["spotDistance",0.90];
 			_gunnerArray pushBack _gunner;
@@ -77,14 +78,14 @@ call {
 		};
 
 		if (_type isEqualTo 2) exitWith { // bunkered static
-			private _roads = _x nearRoads 150;
+			private _roads = _posGrid nearRoads 150;
 			if (_roads isEqualTo []) exitWith {};
 			private _road = selectRandom _roads;
 			private _roadConnectedTo = (roadsConnectedTo _road);
 			if (_roadConnectedTo isEqualTo [] || {!(_road inArea [_pos, _range, _range, 0, false, -1])}) exitWith {};
 			_roadConnectedTo = _roadConnectedTo select 0;
 			private _staticPos = _road modelToWorld [-11,0,0];
-			_staticPos set [2,0];
+			_staticPos resize 2;
 			if ((_staticPos isFlatEmpty [2, -1, 0.4, 3, -1]) isEqualTo [] || {isOnRoad _staticPos}) exitWith {};
 			_staticPos set [2,-0.02];
 			private _bunker = "Land_BagBunker_Small_F" createVehicle _staticPos;
@@ -96,7 +97,7 @@ call {
             };
 
 			private _static = createVehicle [_static2,[0,0,0], [], 0, "CAN COLLIDE"];
-			_static setPosATL (_bunker modelToWorld [0,0,-0.8]);
+			_static setPos (_bunker modelToWorld [0,0,-0.8]);
 			private _gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
 			_gunner moveInGunner _static;
 			_gunner doWatch (_bunker modelToWorld [0,-40,1]);
@@ -105,18 +106,19 @@ call {
 			_objArray pushBack _static;
 		};
 
-        if !(_x isFlatEmpty [2, -1, 0.4, 3, -1] isEqualTo []) then { // mortar
+        if !(_posGrid isFlatEmpty [2, -1, 0.4, 3, -1] isEqualTo []) then { // mortar
             private _static = _static3 createVehicle [0,0,0];
-            [_static,_x] call FUNC(setPosSafe);
+            _static setVectorUp surfaceNormal _posGrid;
+            _static setPos _posGrid;
             _objArray pushBack _static;
 
             {
                 private _fort = "Land_BagFence_Round_F" createVehicle [0,0,0];
                 private _fortPos = (_static modelToWorld _x);
-                _fortPos set [2,0];
-                _fort setPosATL _fortPos;
+                _fortPos resize 2;
+                _fort setPos _fortPos;
                 _fort setDir ([_fort, _static] call BIS_fnc_DirTo);
-                _fort setVectorUp surfaceNormal position _fort;
+                _fort setVectorUp surfaceNormal (getPos _fort);
                 _objArray pushBack _fort;
             } forEach [
                 [0,2.3,0],
@@ -132,7 +134,7 @@ call {
 } forEach _grid;
 
 {
-    _mrk = createMarker [[QUOTE(PREFIX),_x] joinString "_",getposATL _x];
+    _mrk = createMarker [[QUOTE(PREFIX),_x] joinString "_",getpos _x];
     _mrk setMarkerType "o_installation";
     _mrk setMarkerColor ([side _x,true] call BIS_fnc_sideColor);
     _mrk setMarkerSize [0.7,0.7];
