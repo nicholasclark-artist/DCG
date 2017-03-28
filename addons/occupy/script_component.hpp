@@ -3,8 +3,8 @@
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 
-#define DEBUG_MODE_FULL
-#define DISABLE_COMPILE_CACHE
+// #define DEBUG_MODE_FULL
+// #define DISABLE_COMPILE_CACHE
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
@@ -19,19 +19,19 @@
     [CENTER,COUNT,SIZE] spawn { \
         params ["_center","_count","_size"]; \
         _pos = []; \
-        _time = diag_tickTime + ((SPAWN_DELAY * _count) * 2); \
+        _time = diag_tickTime; \
         if !([_center,4,0] call EFUNC(main,isPosSafe)) then { \
             for "_i" from 0 to ITERATIONS do { \
                 _pos = [_center,0,_size,4,0] call EFUNC(main,findPosSafe); \
-                if !(_pos isEqualTo _center) exitWith {}; \
+                if !(_pos isEqualTo _center) exitWith {INFO("Safe infantry position found")}; \
                 sleep 0.1; \
             }; \
         } else { \
             _pos = _center; \
         }; \
         private _grp = [ASLtoAGL _pos,0,_count,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup); \
-        waitUntil {count units _grp >= _count || diag_tickTime > _time}; \
-        if (count units _grp < _count) then { WARNING("Infantry count is low") }; \
+        waitUntil {count units _grp >= _count || diag_tickTime > _time + ((SPAWN_DELAY * _count) * 2)}; \
+        if (count units _grp < _count) then { WARNING_2("Infantry count is low (%1 - %2)",_count,count units _grp) }; \
         { SET_UNITVAR(_x); false } count units _grp; \
         [ \
             _grp, \
