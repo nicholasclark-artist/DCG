@@ -23,7 +23,7 @@ params [
 if (_pos isEqualTo []) exitWith {};
 
 if (_grid isEqualTo []) then {
-    _grid = [_pos,32,_range,0,10,0] call FUNC(findPosGrid);
+    _grid = [_pos,32,_range,0,12,0] call FUNC(findPosGrid);
 };
 
 private _objArray = [];
@@ -78,7 +78,7 @@ call {
 		};
 
 		if (_type isEqualTo 2) exitWith { // bunkered static
-			private _roads = _posGrid nearRoads 150;
+			private _roads = _posGrid nearRoads 100;
 			if (_roads isEqualTo []) exitWith {};
 			private _road = selectRandom _roads;
 			private _roadConnectedTo = (roadsConnectedTo _road);
