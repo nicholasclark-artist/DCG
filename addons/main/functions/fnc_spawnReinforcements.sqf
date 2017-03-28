@@ -105,7 +105,7 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
 [
     _heli,
     _lz,
-    "GET OUT"
+    "GET OUT",
     {
         params ["_heli","_grpPatrol","_center"];
 
