@@ -15,8 +15,8 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define MAX_CARGO(VEH) ((VEH) emptyPositions "cargo") min 6
 #define DIST_MIN 250
-#define DIST_MAX DIST_MIN*2
-#define DIST_SPAWN DIST_MAX*4
+#define DIST_MAX 400
+#define DIST_SPAWN 3000
 #define TR_SIZE 15
 
 params [
@@ -65,20 +65,19 @@ if (_grid isEqualTo []) exitWith {
     false
 };
 
-_lz = ASLtoAGL (selectRandom _grid);
-
-private _spawnPos = [_center,DIST_SPAWN,DIST_SPAWN] call FUNC(findPosSafe);
+private _lz = ASLtoAGL (selectRandom _grid);
 private _type = selectRandom _vehPool;
 
 if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
 	_type = _backup;
 };
 
-private _heli = createVehicle [_type,_spawnPos,[],0,"FLY"];
+private _heli = createVehicle [_type,_center getPos [DIST_SPAWN,random 360],[],0,"FLY"];
 _heli lock 3;
 
 private _grp = createGroup _side;
 private _pilot = _grp createUnit [selectRandom _unitPool,[0,0,0], [], 0, "NONE"];
+[_grp] call EFUNC(cache,disableCache);
 _pilot assignAsDriver _heli;
 _pilot moveInDriver _heli;
 _pilot disableAI "FSM";
@@ -86,6 +85,7 @@ _pilot setBehaviour "CARELESS";
 _pilot addEventHandler ["GetOutMan",{deleteVehicle (_this select 0)}];
 
 private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
+[_grpPatrol] call EFUNC(cache,disableCache);
 
 // place patrol group in cargo
 [
@@ -105,7 +105,7 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
 [
     _heli,
     _lz,
-    "GET OUT",
+    "LAND",
     {
         params ["_heli","_grpPatrol","_center"];
 
