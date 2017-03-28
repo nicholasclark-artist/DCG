@@ -4,52 +4,46 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+CHECK_PREINIT;
+
 ADDON = false;
 
-PREP(init); // do not change
-call FUNC(init); // do not change
-
-if ((GVAR(enable) isEqualTo 0) || {!isServer}) exitWith {};
-
+PREP(initSettings);
+PREP(debug);
+PREP(handleLoadData);
+PREP(handleCleanup);
+PREP(handleSafezone);
+PREP(setDebugMarker);
+PREP(removeDebugMarker);
 PREP(armory);
-PREP(arsenal);
-PREP(createLocation);
 PREP(cleanup);
 PREP(findPosHouse);
 PREP(replaceString);
 PREP(findPosOverwatch);
 PREP(findPosGrid);
 PREP(findPosSafe);
-PREP(findPos);
+PREP(findPosTerrain);
 PREP(getNearPlayers);
 PREP(saveData);
-PREP(saveDataClient);
-PREP(deleteDataClient);
 PREP(loadData);
 PREP(loadDataAddon);
-PREP(loadInventory);
-PREP(log);
 PREP(inBuilding);
 PREP(inLOS);
 PREP(isPosSafe);
 PREP(displayText);
+PREP(displayGUIMessage);
 PREP(removeAction);
 PREP(removeParticle);
-PREP(saveInventory);
 PREP(setAction);
+PREP(setSettingsValue);
 PREP(setSettings);
-PREP(setSettingsFromConfig);
-PREP(exportSettings);
-PREP(exportBase);
+PREP(setSettingsConfig);
+PREP(setSettingsParams);
 PREP(shuffle);
 PREP(setOwner);
-PREP(setTask);
-PREP(setTaskState);
-PREP(setParams);
-PREP(setPatrol);
 PREP(setSide);
 PREP(setAnim);
-PREP(setStrength);
+PREP(getUnitCount);
 PREP(setTimer);
 PREP(setUnitDamaged);
 PREP(setSurrender);
@@ -61,8 +55,14 @@ PREP(spawnGroup);
 PREP(spawnReinforcements);
 PREP(spawnSniper);
 PREP(spawnStatic);
+PREP(exportSettings);
+PREP(exportPool);
+PREP(exportBase);
+PREP(splitGroup);
+PREP(exportNetworkTraffic);
+PREP(landAt);
+// PREP(exportConfigList);
 
-GVAR(settings) = [];
 GVAR(locations) = [];
 GVAR(locals) = [];
 GVAR(hills) = [];
@@ -70,61 +70,31 @@ GVAR(marines) = [];
 GVAR(baseLocation) = locationNull;
 GVAR(range) = worldSize*0.5;
 GVAR(center) = [GVAR(range),GVAR(range),0];
-GVAR(playerSide) = WEST;
-GVAR(enemySide) = EAST;
 GVAR(markerCleanup) = [];
 GVAR(objectCleanup) = [];
-GVAR(saveDataCurrent) = [DATA_MISSION_ID];
-GVAR(actions) = [];
+GVAR(saveDataCurrent) = [];
+GVAR(debugMarkers) = [];
 
 publicVariable QUOTE(ADDON);
-publicVariable QFUNC(armory);
-publicVariable QFUNC(arsenal);
-publicVariable QFUNC(createLocation);
-publicVariable QFUNC(cleanup);
-publicVariable QFUNC(findPosHouse);
-publicVariable QFUNC(replaceString);
-publicVariable QFUNC(findPosOverwatch);
-publicVariable QFUNC(findPosGrid);
-publicVariable QFUNC(findPosSafe);
-publicVariable QFUNC(findPos);
-publicVariable QFUNC(getNearPlayers);
-publicVariable QFUNC(loadInventory);
-publicVariable QFUNC(log);
-publicVariable QFUNC(saveDataClient);
-publicVariable QFUNC(deleteDataClient);
-publicVariable QFUNC(displayText);
-publicVariable QFUNC(removeAction);
-publicVariable QFUNC(removeParticle);
-publicVariable QFUNC(saveInventory);
-publicVariable QFUNC(shuffle);
-publicVariable QFUNC(setAction);
-publicVariable QFUNC(setPatrol);
-publicVariable QFUNC(setSide);
-publicVariable QFUNC(setAnim);
-publicVariable QFUNC(setStrength);
-publicVariable QFUNC(setTimer);
-publicVariable QFUNC(setUnitDamaged);
-publicVariable QFUNC(setSurrender);
-publicVariable QFUNC(setVehDamaged);
-publicVariable QFUNC(setWaypointPos);
-publicVariable QFUNC(spawnBase);
-publicVariable QFUNC(spawnGroup);
-publicVariable QFUNC(spawnReinforcements);
-publicVariable QFUNC(spawnSniper);
-publicVariable QFUNC(spawnStatic);
-publicVariable QFUNC(inBuilding);
-publicVariable QFUNC(inLOS);
-publicVariable QFUNC(isPosSafe);
-publicVariable QFUNC(setPosSafe);
 
+// functions required on all machines
+publicVariable QFUNC(initSettings);
+publicVariable QFUNC(setAction);
+publicVariable QFUNC(setAnim);
+publicVariable QFUNC(removeAction);
+publicVariable QFUNC(displayText);
+publicVariable QFUNC(displayGUIMessage);
+publicVariable QFUNC(armory);
+
+// variables required on all machines
 publicVariable QGVAR(range);
 publicVariable QGVAR(center);
-publicVariable QGVAR(enemySide);
-publicVariable QGVAR(playerSide);
-publicVariable QGVAR(markerCleanup);
-publicVariable QGVAR(objectCleanup);
-publicVariable QGVAR(actions);
 
-call FUNC(setSettings);
+// load current mission data
 call FUNC(loadData);
+
+// init cba settings
+SETTINGS_INIT;
+
+// set config and mission settings
+call FUNC(setSettings);

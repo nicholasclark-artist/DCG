@@ -3,13 +3,14 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-checks if position is safe, function assumes model direction is 0
+checks if position is safe
 
 Arguments:
 0: position <ARRAY>
-1: model to check <OBJECT,ARRAY,NUMBER>
+1: min distance from object <NUMBER>
 2: allow water <NUMBER>
 3: max gradient <NUMBER>
+4: object to ignore <OBJECT>
 
 Return:
 boolean
@@ -17,60 +18,29 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-	"_pos",
-	["_model",objNull],
-	["_water",-1],
-	["_gradient",-1]
+	["_pos",[0,0,0],[[]]],
+	["_dist",5,[0]],
+	["_water",-1,[0]],
+	["_gradient",-1,[0]],
+    ["_ignore",objNull,[objNull]]
 ];
 
-_pos = [_pos select 0,_pos select 1,0.3];
+// always check position at ground level
+_pos =+ _pos;
+_pos resize 2;
 
-if (_pos isFlatEmpty [-1, -1, _gradient, 30, _water] isEqualTo []) exitWith {false};
+// does not find objects created with createVehicle
+private _objs = nearestTerrainObjects [_pos, [], _dist, false];
 
-if !(_model isEqualTo objNull) exitWith {
-	private ["_w","_l","_h"];
+if !(_objs isEqualTo []) exitWith {false};
 
-	private _empty = true;
-	_pos = AGLToASL _pos;
-
-	call {
-		if (_model isEqualType objNull) exitWith {
-			private _bbr = boundingBoxReal _model;
-			private _p1 = _bbr select 0;
-			private _p2 = _bbr select 1;
-
-			_w = abs ((_p2 select 0) - (_p1 select 0)) * 0.85;
-			_l = abs ((_p2 select 1) - (_p1 select 1)) * 0.85;
-			_h = abs ((_p2 select 2) - (_p1 select 2)) * 0.85;
-		};
-
-		if (_model isEqualType 0) exitWith {
-			_w = _model;
-			_l = _model;
-			_h = _model;
-
-			_model = objNull;
-		};
-
-		if (_model isEqualType []) exitWith {
-			_w = _model select 0;
-			_l = _model select 1;
-			_h = _model select 2;
-
-			_model = objNull;
-		};
-		_model = objNull;
-	};
-
-	if (lineIntersects [_pos, _pos vectorAdd [0, 0, _h],_model] ||
-		{lineIntersects [_pos, _pos vectorAdd [_w, 0, 0],_model]} ||
-		{lineIntersects [_pos, _pos vectorAdd [- _w, 0, 0],_model]} ||
-		{lineIntersects [_pos, _pos vectorAdd [0, _l, 0],_model]} ||
-		{lineIntersects [_pos, _pos vectorAdd [0, - _l, 0],_model]}) then {
-			_empty = false;
-	};
-
-	_empty
+_objs = _pos nearObjects ["All",_dist];
+_objs = _objs select {
+    !(_x isEqualTo _ignore) &&
+    {!(_x isKindOf "Logic")} &&
+    {getNumber (configFile >> "CfgVehicles" >> typeOf _x >> "scope") > 1}
 };
+
+if (!(_objs isEqualTo []) || {_pos isFlatEmpty [-1, -1, _gradient, 30, _water] isEqualTo []}) exitWith {false};
 
 true

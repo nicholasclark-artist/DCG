@@ -3,69 +3,33 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define DEBUG_VAR(LOC) format ["%1_%2_debug",ADDON,LOC]
 
-if !(CHECK_INIT) exitWith {};
+CHECK_POSTINIT;
 
-if (GVAR(enable) isEqualTo 0) exitWith {
-	LOG_DEBUG("Addon is disabled.");
+PVEH_QUESTION addPublicVariableEventHandler {(_this select 1) call FUNC(handleQuestion)};
+PVEH_HINT addPublicVariableEventHandler {[_this select 1,0] call FUNC(handleHint)};
+PVEH_HALT addPublicVariableEventHandler {[_this select 1] spawn FUNC(handleHalt)};
+PVEH_AVADD addPublicVariableEventHandler {
+    (_this select 1) call FUNC(addValue);
+    LOG_1("Client add AV: %1",_this);
 };
 
-PVEH_QUESTION addPublicVariableEventHandler {[_this select 1] call FUNC(question)};
-PVEH_HINT addPublicVariableEventHandler {[_this select 1] call FUNC(hint)};
-PVEH_AVADD addPublicVariableEventHandler {(_this select 1) call EFUNC(approval,addValue);};
-
-[{
-	if (DOUBLES(PREFIX,main)) exitWith {
-		[_this select 1] call CBA_fnc_removePerFrameHandler;
-
+[
+	{DOUBLES(PREFIX,main)},
+	{
 		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
-		if !(_data isEqualTo []) then {
-			{
-				missionNamespace setVariable [AV_VAR(_x select 0),_x select 1,false];
-				false
-			} count _data;
-		} else {
-			{
-				missionNamespace setVariable [AV_VAR(_x select 0),AV_MAX*0.1,false];
-				false
-			} count EGVAR(main,locations);
-		};
+		[_data] call FUNC(handleLoadData);
 
-		{
-			[
-				{!isNull player && {alive player}},
-				{
-					{
-						_x call EFUNC(main,setAction);
-					} forEach [
-						[QUOTE(ADDON),"Approval","",QUOTE(true),""],
-						[QUOTE(DOUBLES(ADDON,hint)),HINT_NAME,HINT_CODE,QUOTE(true),"",player,1,ACTIONPATH],
-						[QUOTE(DOUBLES(ADDON,question)),QUESTION_NAME,QUESTION_CODE,QUOTE(true),"",player,1,ACTIONPATH]
-					];
-				}
-			] call CBA_fnc_waitUntilAndExecute;
+		[{
+			[FUNC(handleHostile), GVAR(hostileCooldown), []] call CBA_fnc_addPerFrameHandler;
+		}, [], GVAR(hostileCooldown)] call CBA_fnc_waitAndExecute;
 
-			[ADDON_TITLE, HINT_KEYID, HINT_NAME, compile HINT_CODE, ""] call CBA_fnc_addKeybind;
-			[ADDON_TITLE, QUESTION_KEYID, QUESTION_NAME, compile QUESTION_CODE, ""] call CBA_fnc_addKeybind;
-		} remoteExecCall [QUOTE(BIS_fnc_call),0,true];
-
-		[FUNC(handleHostile), [], GVAR(hostileCooldown)] call CBA_fnc_waitAndExecute;
-
-		if (CHECK_DEBUG) then {
-			[{
-				{
-					if (CHECK_MARKER(DEBUG_VAR(_x select 0))) then {
-						DEBUG_VAR(_x select 0) setMarkerText (format ["AV: %1", missionNamespace getVariable [AV_VAR(_x select 0),0]]);
-					} else {
-						_mrk = createMarker [DEBUG_VAR(_x select 0),_x select 1];
-						_mrk setMarkerType "mil_dot";
-						_mrk setMarkerText (format ["AV: %1", missionNamespace getVariable [AV_VAR(_x select 0),0]]);
-					};
-				} count EGVAR(main,locations);
-			}, 5, []] call CBA_fnc_addPerFrameHandler;
-		};
-	};
-}, 0, []] call CBA_fnc_addPerFrameHandler;
+		[[],{
+			if (hasInterface) then {
+                call FUNC(handleClient);
+			};
+ 		}] remoteExecCall [QUOTE(BIS_fnc_call),0,true];
+	}
+] call CBA_fnc_waitUntilAndExecute;
 
 ADDON = true;

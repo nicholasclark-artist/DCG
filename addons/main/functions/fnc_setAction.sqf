@@ -8,80 +8,86 @@ set action
 Arguments:
 0: action id <STRING>
 1: action display name <STRING>
-2: code to run on action use <STRING>
+2: action statement <CODE>
 3: action condition <STRING>
-4: child action <STRING>
-5: object to add action to <OBJECT>
-6: ACE action type <NUMBER>
-7: ACE action path <ARRAY>
-8: ACE action position <ARRAY>
-9: ACE action parameters <ARRAY>
-10: action arguments <ANY>
+4: child action <CODE>
+5: action parameters <ARRAY>
+6: object to add action to <OBJECT>
+7: ACE action type <NUMBER>
+8: ACE action path <ARRAY>
+9: ACE action position <ARRAY>
 
 Return:
 array
+
+VANILLA: [Action Index, Child Action Indices, EH Index]
+ACE: [Action]
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_actions","_addAction","_EHStr","_EH","_childAction","_entryPath"];
 params [
-	["_id",""],
-	["_name",""],
-	["_statement",""],
-	["_condition","true"],
-	["_child",""],
-	["_obj",player],
-	["_type",1],
-	["_path",["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))]],
-	["_pos",[0,0,0]],
-	["_params",[]],
-	["_args",[]]
+	["_id","",[""]],
+	["_name","",[""]],
+	["_statement",{},[{}]],
+	["_condition",{true},[{}]],
+	["_child",{},[{}]],
+    ["_params",[],[[]]],
+	["_obj",player,[objNull]],
+	["_type",1,[0]],
+	["_path",["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))],[[]]],
+	["_pos",[0,0,0],[[]]]
 ];
 
-/*
-	VANILLA: [Action Index, EH Index, Child Action Indices, Child EH Index]
-	ACE: [Action]
-*/
-_actions = [];
+private _actions = [];
 
 if (CHECK_ADDON_1("ace_interact_menu")) then {
-	_addAction = [_id,_name,"",compile _statement,compile _condition,compile _child,_params,_pos] call ace_interact_menu_fnc_createAction;
-	[_obj, _type, _path, _addAction] call ace_interact_menu_fnc_addActionToObject;
-	_path pushBack _id;
+	private _addAction = [_id,_name,"",_statement,_condition,_child,_params,_pos] call ace_interact_menu_fnc_createAction;
+	_path = [_obj, _type, _path, _addAction] call ace_interact_menu_fnc_addActionToObject;
 	_actions append _path;
 } else {
 	if (_name isEqualTo "") exitWith {
-		_actions = [-1,-1,[-1],-1];
+		_actions = [-1,[-1],-1];
 	};
 
-	{
-		if ((_x select 0) isEqualTo _obj && {toLower (_x select 1) isEqualTo toLower _name}) exitWith {
-			[_obj,1,_x select 2] call FUNC(removeAction);
-			GVAR(actions) deleteAt _forEachIndex;
-		};
-	} forEach GVAR(actions);
+    // convert cond code to string
+    _condition = str _condition;
+    _condition = _condition select [1,(count _condition) - 2];
 
-	if !(_statement isEqualTo "") then {
-		_addAction = _obj addAction [_name,compile _statement,_args,0,false,true,"",_condition];
+	if !(_statement isEqualTo {}) then {
+		private _addAction = _obj addAction [_name,_statement,_params,0,false,true,"",_condition];
 		_actions pushBack _addAction;
-		_EHStr = format ["%1 addAction [%2,compile %3,%4,0,false,true,'',%5];",_obj,str _name,str _statement,_args,str _condition];
-		_EH = _obj addEventHandler ["Respawn", _EHStr];
-		_actions pushBack _EH;
 	} else {
-		_actions append [-1,-1];
+		_actions pushBack -1;
 	};
 
-	if !(_child isEqualTo "") then {
-		_childAction = call compile _child;
-		_actions pushBack _childAction;
-		_EHStr = format ["call compile %1;", str _child];
-		_EH = _obj addEventHandler ["Respawn", _EHStr];
-		_actions pushBack _EH;
+	if !(_child isEqualTo {}) then {
+		private _childActions = _params call _child;
+		_actions pushBack _childActions;
 	} else {
-		_actions append [[-1],-1];
+		_actions pushBack [-1];
 	};
 
-	GVAR(actions) pushBack [_obj,_name,_actions];
+    private _EH = -1;
+	private _EHStr = format [
+		"
+			if !(%2 isEqualTo {}) then {
+				(_this select 0) addAction ['%1',%2,%3,0,false,true,'','%4'];
+			};
+
+			if !(%5 isEqualTo {}) then {
+				%3 call %5;
+			};
+		",_name,_statement,_params,_condition,_child
+	];
+
+    if (local _obj) then {
+        _EH = _obj addEventHandler ["Respawn", _EHStr];
+    } else {
+        [_obj, "Respawn", _EHStr] remoteExecCall [QUOTE(addEventHandler), _obj, false];
+        WARNING_1("Adding respawn eventhandler to %1 over network.",_obj);
+    };
+
+	_actions pushBack _EH;
 };
 
 _actions

@@ -11,22 +11,17 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-// #define FOB_NAME format ["%1 (+ %2 Approval)", GVAR(name), GVAR(AVBonus)]
 
-LOG_DEBUG_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
+INFO_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
 GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
-	private ["_playerSide","_costs","_side","_vehClass","_cost"];
-
-	// _playerSide is the side of the player's class, not necessarily the player's side
-	_playerSide = getNumber (configFile >> "CfgVehicles" >> typeOf getAssignedCuratorUnit GVAR(curator) >> "side");
 	_costs = [];
 	{
 		_side = getNumber (configFile >> "CfgVehicles" >> _x >> "side");
 		_cost = [_x] call FUNC(getCuratorCost);
 
-		if (!(_cost isEqualTo 0) && {_side isEqualTo _playerSide || _side isEqualTo 3}) then {
+		if (!(_cost isEqualTo 0) && {_side isEqualTo ([EGVAR(main,playerSide)] call BIS_fnc_sideID) || _side isEqualTo 3}) then {
 			_cost = [true,_cost];
 		} else {
 			_cost = [false,_cost];
@@ -50,10 +45,6 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
 
 		missionNamespace setVariable [PVEH_AVADD,[getPosASL (_this select 1),_cost]];
 		publicVariableServer PVEH_AVADD;
-		/*GVAR(AVBonus) = round(GVAR(AVBonus) + _cost);
-		publicVariable QGVAR(AVBonus);
-
-		{GVAR(location) setText FOB_NAME} remoteExecCall [QUOTE(BIS_fnc_call),0,false];*/
 	};
 }];
 
@@ -65,8 +56,5 @@ GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
 
 		missionNamespace setVariable [PVEH_AVADD,[getPosASL (_this select 1),_cost * -1]];
 		publicVariableServer PVEH_AVADD;
-		/*GVAR(AVBonus) = round(GVAR(AVBonus) - _cost);
-		publicVariable QGVAR(AVBonus);
-		{GVAR(location) setText FOB_NAME} remoteExecCall [QUOTE(BIS_fnc_call),0,false];*/
 	};
 }];

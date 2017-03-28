@@ -19,7 +19,7 @@ if (CHECK_ADDON_1("acre_main")) exitWith {
 };
 
 if (CHECK_ADDON_1("task_force_radio")) exitWith {
-	[] spawn FUNC(setRadioTFAR);
+	call FUNC(setRadioTFAR);
 };
 
 ["Cannot issue radio. You do not have ACRE2 or TFAR enabled.",true] call EFUNC(main,displayText);

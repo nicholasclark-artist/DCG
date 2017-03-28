@@ -10,30 +10,33 @@ Arguments:
 1: type of group <NUMBER>
 2: number of units in group <NUMBER>
 3: side of group <SIDE>
-4: disable group caching <BOOL>
-5: delay between unit spawns <NUMBER>
+4: delay between unit spawns <NUMBER>
 5: fill vehicle cargo <BOOL>
 
 Return:
 group
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define MAX_CARGO 6
+#define MAX_CARGO 4
 
 private ["_unitPool","_vehPool","_airPool"];
 params [
-	"_pos",
-	["_type",0],
-	["_count",1],
-	["_side",GVAR(enemySide)],
-	["_uncache",false],
-	["_delay",1],
-	["_cargo",false]
+	["_pos",[0,0,0],[[]]],
+	["_type",0,[0]],
+	["_count",1,[0]],
+	["_side",GVAR(enemySide),[sideUnknown]],
+	["_delay",1,[0]],
+	["_cargo",false,[false]]
 ];
 
 private _grp = createGroup _side;
 private _drivers = [];
 private _check = [];
+
+_grp deleteGroupWhenEmpty true;
+
+_pos =+ _pos;
+_pos resize 2;
 
 call {
 	if (_side isEqualTo EAST) exitWith {
@@ -51,13 +54,11 @@ call {
 		_vehPool = GVAR(vehPoolCiv);
 		_airPool = GVAR(airPoolCiv)
 	};
-	_unitPool = GVAR(unitPoolInd);
-	_vehPool = GVAR(vehPoolInd);
-	_airPool = GVAR(airPoolInd);
-};
-
-if (_uncache) then {
-	CACHE_DISABLE(_grp,true);
+    if (_side isEqualTo RESISTANCE) exitWith {
+        _unitPool = GVAR(unitPoolInd);
+    	_vehPool = GVAR(vehPoolInd);
+    	_airPool = GVAR(airPoolInd);
+	};
 };
 
 if (_type isEqualTo 0) exitWith {
@@ -79,7 +80,7 @@ if (_type isEqualTo 0) exitWith {
 
 [{
 	params ["_args","_idPFH"];
-	_args params ["_pos","_grp","_type","_count","_unitPool","_vehPool","_airPool","_check","_cargo"];
+	_args params ["_pos","_grp","_type","_count","_unitPool","_vehPool","_airPool","_check","_cargo","_delay"];
 
 	if (count _check isEqualTo _count) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
@@ -88,14 +89,14 @@ if (_type isEqualTo 0) exitWith {
 	private "_veh";
 
 	if (_type isEqualTo 1) then {
-		_veh = createVehicle [selectRandom _vehPool, _pos, [], 16, "NONE"];
+		_veh = createVehicle [selectRandom _vehPool, _pos, [], 0, "NONE"];
 		_veh setVectorUp surfaceNormal getPos _veh;
 	} else {
-		_veh = createVehicle [selectRandom _airPool, _pos, [], 0, "FLY"];
+		_veh = createVehicle [selectRandom _airPool, _pos, [], 100, "FLY"];
 	};
 
 	_unit = _grp createUnit [selectRandom _unitPool, [0,0,0], [], 0, "NONE"];
-	_unit setVariable [QUOTE(GVAR(spawnDriver)),true];
+	_unit setVariable [ISDRIVER,true];
 	_unit moveInDriver _veh;
 
 	if ((_veh emptyPositions "gunner") > 0) then {
@@ -104,11 +105,13 @@ if (_type isEqualTo 0) exitWith {
 	};
 
 	if (_cargo) then {
+        _veh setUnloadInCombat [true,false];
+
 		[{
 			params ["_args","_idPFH"];
 			_args params ["_grp","_unitPool","_veh","_count"];
 
-			if (count crew _veh >= _count) exitWith {
+			if (!(alive _veh) || {count crew _veh >= _count}) exitWith {
 				[_idPFH] call CBA_fnc_removePerFrameHandler;
 			};
 
@@ -118,6 +121,6 @@ if (_type isEqualTo 0) exitWith {
 	};
 
 	_check pushBack 0;
-}, _delay, [_pos,_grp,_type,_count,_unitPool,_vehPool,_airPool,_check,_cargo]] call CBA_fnc_addPerFrameHandler;
+}, _delay, [_pos,_grp,_type,_count,_unitPool,_vehPool,_airPool,_check,_cargo,_delay]] call CBA_fnc_addPerFrameHandler;
 
 _grp

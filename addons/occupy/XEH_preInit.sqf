@@ -4,12 +4,18 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(CHECK_INIT) exitWith {};
+CHECK_PREINIT;
 
 ADDON = false;
 
+PREP(initSettings);
 PREP(findLocation);
+PREP(handleLoadData);
 PREP(handleOccupied);
 PREP(setOccupied);
 
-GVAR(locations) = [];
+GVAR(location) = [];
+
+publicVariable QFUNC(initSettings);
+
+SETTINGS_INIT;

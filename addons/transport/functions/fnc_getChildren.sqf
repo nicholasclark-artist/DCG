@@ -11,13 +11,11 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define TR_LISTSIZE 3
 
-private ["_actions","_pool","_fnc_getCargo","_displayName","_action"];
-
-_actions = [];
-_pool = [];
-
-_fnc_getCargo = {
+private _actions = [];
+private _pool = [];
+private _fnc_getCargo = {
 	private ["_baseCfg","_numCargo"];
 	params ["_vehType"];
 
@@ -27,7 +25,7 @@ _fnc_getCargo = {
 		if (isText(_x >> 'proxyType') && {getText(_x >> 'proxyType') isEqualTo 'CPCargo'}) then {
 			true
 		};
-	"configClasses ( _baseCfg >> "Turrets" )) + getNumber ( _baseCfg >> "transportSoldier" );
+	"configClasses (_baseCfg >> "Turrets")) + getNumber (_baseCfg >> "transportSoldier");
 
 	_numCargo
 };
@@ -45,7 +43,11 @@ call {
 };
 
 {
-	if (_x isKindOf "Helicopter" && {([_x] call _fnc_getCargo) > 0}) then {
+    if (count _actions isEqualTo TR_LISTSIZE) exitWith {
+        LOG_1("Exceeded limit (%1) for transport list",TR_LISTSIZE);
+    };
+
+	if (_x isKindOf "Helicopter" && {([_x] call _fnc_getCargo) >= GVAR(cargoThreshold)}) then {
 		_displayName = format ["Call in %1",getText (configfile >> "CfgVehicles" >> _x >> "displayName")];
 		if (CHECK_ADDON_1("ace_interact_menu")) then {
 			_action = [_x, _displayName, "", {[_this select 2] call FUNC(request)}, {true}, {}, _x] call ace_interact_menu_fnc_createAction;

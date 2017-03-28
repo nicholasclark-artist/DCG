@@ -4,25 +4,21 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(CHECK_INIT) exitWith {};
+CHECK_POSTINIT;
 
-if (GVAR(enable) isEqualTo 0) exitWith {
-	LOG_DEBUG("Addon is disabled.");
+PVEH_REQUEST addPublicVariableEventHandler {
+	(_this select 1) call FUNC(handleRequest);
 };
 
-QUOTE(DOUBLES(ADDON,getLocations)) addPublicVariableEventHandler {
-	_requestor = _this select 1;
-	if (CHECK_ADDON_2(occupy)) then {
-		(owner _requestor) publicVariableClient QEGVAR(occupy,occupiedLocations);
-	};
-};
-
-[{
-	if (DOUBLES(PREFIX,main)) exitWith {
-		[_this select 1] call CBA_fnc_removePerFrameHandler;
-
-		[QUOTE(ADDON),"Transport","",QUOTE(call FUNC(canCallTransport)),QUOTE(call FUNC(getChildren))] remoteExecCall [QEFUNC(main,setAction), 0, true];
-	};
-}, 0, []] call CBA_fnc_addPerFrameHandler;
+[
+	{DOUBLES(PREFIX,main)},
+	{
+        [[],{
+        	if (hasInterface) then {
+                call FUNC(handleClient);
+        	};
+        }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
+	}
+] call CBA_fnc_waitUntilAndExecute;
 
 ADDON = true;

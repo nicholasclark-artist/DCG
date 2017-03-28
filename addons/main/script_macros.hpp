@@ -50,7 +50,6 @@
 
 #define ARR_SELECT(ARRAY,INDEX,DEFAULT) if (count ARRAY > INDEX) then {ARRAY select INDEX} else {DEFAULT}
 
-
 #define MACRO_ADDWEAPON(WEAPON,COUNT) class _xx_##WEAPON { \
   weapon = #WEAPON; \
   count = COUNT; \
@@ -72,59 +71,53 @@
 }
 
 #ifdef DISABLE_COMPILE_CACHE
-    #define PREP(fncName) DFUNC(fncName) = compile preprocessFileLineNumbers QUOTE(PATHTOF(functions\DOUBLES(fnc,fncName).sqf))
+    #undef PREP
+    #define PREP(fncName) DFUNC(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,fncName).sqf)
 #else
-    #define PREP(fncName) DFUNC(fncName) = QUOTE(PATHTOF(functions\DOUBLES(fnc,fncName).sqf)) call SLX_XEH_COMPILE
+    #undef PREP
+    #define PREP(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
 #endif
 
-#define ADDON_TITLE (toUpper QUOTE(ADDON)) splitString "_" joinString " "
-#define DATA_SAVEVAR QUOTE(DOUBLES(MAIN_ADDON,saveData))
-#define DATA_SAVEPVEH QUOTE(DOUBLES(MAIN_ADDON,saveDataPVEH))
-#define DATA_DELETEPVEH QUOTE(DOUBLES(MAIN_ADDON,deleteDataPVEH))
-#define DATA_OBJVAR QUOTE(DOUBLES(MAIN_ADDON,saveObject))
-#define DATA_SETVAR(VAR1) profileNamespace setVariable [DATA_SAVEVAR,VAR1]
-#define DATA_GETVAR profileNamespace getVariable [DATA_SAVEVAR,[]]
-#define DATA_MISSION_ID ([toUpper worldName, toUpper missionName] joinString "_")
-
-#define LOG_DEBUG(MSG) [QUOTE(ADDON),[MSG]] call EFUNC(main,log)
-#define LOG_DEBUG_1(MSG,ARG1) [QUOTE(ADDON),[MSG,ARG1]] call EFUNC(main,log)
-#define LOG_DEBUG_2(MSG,ARG1,ARG2) [QUOTE(ADDON),[MSG,ARG1,ARG2]] call EFUNC(main,log)
-#define LOG_DEBUG_3(MSG,ARG1,ARG2,ARG3) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3]] call EFUNC(main,log)
-#define LOG_DEBUG_4(MSG,ARG1,ARG2,ARG3,ARG4) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4]] call EFUNC(main,log)
-#define LOG_DEBUG_5(MSG,ARG1,ARG2,ARG3,ARG4,ARG5) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4,ARG5]] call EFUNC(main,log)
-#define LOG_DEBUG_6(MSG,ARG1,ARG2,ARG3,ARG4,ARG5,ARG6) [QUOTE(ADDON),[MSG,ARG1,ARG2,ARG3,ARG4,ARG5,ARG6]] call EFUNC(main,log)
+///////////////////
 
 #define HEADLESSCLIENT DOUBLES(PREFIX,HC)
+#define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
+#define SETTINGS_INIT remoteExecCall [QFUNC(initSettings), -2, true]; call FUNC(initSettings)
+#define SETTINGS_OVERWRITE(SETTING,VALUE) [{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},{missionNamespace setVariable [SETTING,_this]},VALUE] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute),-2,true]
 
-#define ACTIONPATH ['ACE_SelfActions',QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
+#define ISDRIVER QEGVAR(main,isDriver)
+#define ISONPATROL QEGVAR(main,isOnPatrol)
 
-#define CHECK_INIT ((EGVAR(main,enable) isEqualTo 1) && {isServer} && {isMultiplayer})
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> 'CfgPatches' >> PATCH))
-#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {EGVAR(VAR,enable) isEqualTo 1})
+#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {EGVAR(VAR,enable)})
 #define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= (DIST)
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
+#define CHECK_POSTBRIEFING (getClientStateNumber > 9)
+#define CHECK_PREINIT if (!isServer) exitWith {}
+#define CHECK_POSTINIT if (!(EGVAR(main,enable)) || {!(GVAR(enable))} || {!isServer} || {!isMultiplayer}) exitWith {}
 
-#define CACHE_DISABLE_VAR QUOTE(TRIPLES(PREFIX,cache,disableCaching))
-#define CACHE_DISABLE(GRP,BOOL) GRP setVariable [CACHE_DISABLE_VAR,BOOL,true]
+#define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
+#define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
 
 #define COST_MAN 1.5
 #define COST_CAR 3
-#define COST_TANK 5
-#define COST_AIR 7
-#define COST_SHIP 2.5
+#define COST_TANK 6
+#define COST_AIR 8
+#define COST_SHIP 3
 #define COST_AMMO 0.1
 #define COST_STRUCT 2
 #define COST_ITEM 0.1
-#define COST_FORT 0.075
+#define COST_FORT 0.2
 #define COST_SIGN 0.1
 
 #define PVEH_AVADD QEGVAR(approval,pveh_add)
-#define AV_VAR(LOC) ([QUOTE(PREFIX),"approval",LOC] joinString "_")
+#define AV_LOCATION_ID(LOCATION) ([QUOTE(PREFIX),"approval",LOCATION] joinString "_")
 #define AV_MIN 0
 #define AV_MAX 100
+#define AV_DEFAULT AV_MAX*0.1
 #define AV_CAR ((AV_MAX*0.005)*EGVAR(approval,multiplier))
 #define AV_TANK ((AV_MAX*0.0075)*EGVAR(approval,multiplier))
 #define AV_AIR ((AV_MAX*0.01)*EGVAR(approval,multiplier))
@@ -135,4 +128,5 @@
 #define AV_VILLAGE ((AV_MAX*0.05)*EGVAR(approval,multiplier))
 #define AV_CITY ((AV_MAX*0.1)*EGVAR(approval,multiplier))
 #define AV_CAPITAL ((AV_MAX*0.15)*EGVAR(approval,multiplier))
-#define AV_CHANCE(POS) ((1 - (linearConversion [AV_MIN, AV_MAX, [POS] call EFUNC(approval,getValue), 0, 1, true])) * 0.5)
+#define AV_CONVERT1(POS) (linearConversion [AV_MIN, AV_MAX, [POS] call EFUNC(approval,getValue), 0, 1, true])
+#define AV_CONVERT2(POS) (1 - ((1 - AV_CONVERT1(POS)) * 0.5))

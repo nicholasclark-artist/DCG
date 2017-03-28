@@ -4,27 +4,27 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(CHECK_INIT) exitWith {};
+CHECK_PREINIT;
 
 ADDON = false;
 
+PREP(initSettings);
+PREP(handleClient);
 PREP(handleRequest);
 PREP(request);
 PREP(getChildren);
 PREP(canCallTransport);
 
-GVAR(ready) = 1;
+GVAR(status) = TR_READY;
 GVAR(count) = 0;
-GVAR(wait) = false;
-GVAR(exfil) = [];
-GVAR(infil) = [];
 
-publicVariable QFUNC(handleRequest);
 publicVariable QFUNC(request);
+publicVariable QFUNC(handleClient);
 publicVariable QFUNC(canCallTransport);
 publicVariable QFUNC(getChildren);
-publicVariable QGVAR(ready);
+publicVariable QFUNC(initSettings);
+
+publicVariable QGVAR(status);
 publicVariable QGVAR(count);
-publicVariable QGVAR(wait);
-publicVariable QGVAR(exfil);
-publicVariable QGVAR(infil);
+
+SETTINGS_INIT;

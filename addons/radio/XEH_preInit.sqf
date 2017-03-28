@@ -4,18 +4,22 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(CHECK_INIT) exitWith {};
+CHECK_PREINIT;
 
 ADDON = false;
 
-PREP(checkLoadout);
+PREP(initSettings);
+PREP(handleLoadout);
 PREP(setRadio);
 PREP(setRadioSettings);
 PREP(setRadioACRE);
 PREP(setRadioTFAR);
 
-publicVariable QFUNC(checkLoadout);
+publicVariable QFUNC(handleLoadout);
 publicVariable QFUNC(setRadio);
 publicVariable QFUNC(setRadioSettings);
 publicVariable QFUNC(setRadioACRE);
 publicVariable QFUNC(setRadioTFAR);
+publicVariable QFUNC(initSettings);
+
+SETTINGS_INIT;

@@ -7,13 +7,17 @@ set object at safe position
 
 Arguments:
 0: object <OBJEECT>
-1: position <ARRAY>
+1: positionASL <ARRAY>
 
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-(_this select 0) setDir 0;
-(_this select 0) setVectorUp surfaceNormal (_this select 1);
-(_this select 0) setPosASL (_this select 1);
+params [
+    ["_obj",objNull,[objNull]],
+    ["_pos",[0,0,0],[[]]]
+];
+
+_obj setVectorUp surfaceNormal _pos;
+_obj setPosASL _pos;

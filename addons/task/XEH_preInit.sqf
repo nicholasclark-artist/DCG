@@ -4,39 +4,37 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(CHECK_INIT) exitWith {};
+CHECK_PREINIT;
 
 ADDON = false;
 
+GVAR(primaryList) = [];
+GVAR(secondaryList) = [];
+
+PREP(initSettings);
 PREP(select);
 PREP(cancel);
+PREP(handleDamage);
+PREP(handleLoadData);
+PREP(addItem);
 
-PREP(prim_vip);
-PREP(prim_cache);
-PREP(prim_officer);
-PREP(prim_defend);
-PREP(prim_arty);
-PREP(sec_deliver);
-PREP(sec_repair);
-PREP(sec_officer);
-PREP(sec_intel01);
-PREP(sec_intel02);
+PREP_PRIM(prim_vip);
+PREP_PRIM(prim_cache);
+PREP_PRIM(prim_officer);
+PREP_PRIM(prim_defend);
+PREP_PRIM(prim_arty);
 
-GVAR(primaryList) = [
-	QFUNC(prim_vip),
-	QFUNC(prim_cache),
-	QFUNC(prim_officer),
-	QFUNC(prim_arty),
-	QFUNC(prim_defend)
-];
-GVAR(secondaryList) = [
-    QFUNC(sec_deliver),
-    QFUNC(sec_repair),
-    QFUNC(sec_officer),
-    QFUNC(sec_intel01),
-    QFUNC(sec_intel02)
-];
+PREP_SEC(sec_deliver);
+PREP_SEC(sec_repair);
+PREP_SEC(sec_officer);
+PREP_SEC(sec_intel01);
+PREP_SEC(sec_intel02);
+PREP_SEC(sec_tower01);
+
 GVAR(primary) = [];
 GVAR(secondary) = [];
 
+publicVariable QFUNC(initSettings);
 publicVariable QFUNC(cancel);
+
+SETTINGS_INIT;

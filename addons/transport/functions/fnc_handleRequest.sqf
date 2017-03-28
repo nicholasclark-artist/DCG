@@ -3,125 +3,68 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-handles transport requests on client
+handles transport requests on server
 
 Arguments:
-0: transport classname <STRING>
-1: exfil position <ARRAY>
-2: infil position <ARRAY>
-3: exfil marker <STRING>
-4: infil marker <STRING>
+0: transport requestor <OBJECT>
+1: transport classname <STRING>
+2: exfil position <ARRAY>
+3: infil position <ARRAY>
+4: exfil marker <STRING>
+5: infil marker <STRING>
 
 Return:
-none
+nil
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define HINT_GETIN "A player must be in the copilot position to signal take off."
-#define COOLDOWN \
-	[ \
-		{ \
-			GVAR(ready) = 1; \
-			GVAR(count) = GVAR(count) - 1; \
-			publicVariable QGVAR(count); \
-		}, \
-		[], \
-		GVAR(cooldown) \
-	] call CBA_fnc_waitAndExecute
 
-private ["_classname","_exfilMrk","_infilMrk","_helipad1","_helipad2","_helipadPos","_dir","_spawnPos","_transport","_wp","_pilot","_time"];
+params [
+    ["_requestor",objNull,[objNull]],
+    ["_classname","",[""]],
+    ["_exfil",[0,0,0],[[]]],
+    ["_infil",[0,0,0],[[]]],
+    ["_exfilMrk","",[""]],
+    ["_infilMrk","",[""]]
+];
 
-LOG_DEBUG_1("Transport request: %1.",_this);
+// refer to requestor by client ID so PVs work if requestor dies
+_requestor = owner _requestor;
 
-_classname = _this select 0;
-GVAR(exfil) = _this select 1;
-GVAR(infil) = _this select 2;
-_exfilMrk = _this select 3;
-_infilMrk = _this select 4;
-_helipad1 = objNull;
-_helipad2 = objNull;
-_dir = 0;
-GVAR(ready) = 0;
+// increase transport count for all players
 GVAR(count) = GVAR(count) + 1;
 publicVariable QGVAR(count);
 
-// check for helipad around both lz's
-_fnc_getNearHelipad = {
-	params ["_pos",["_range",100],["_size",8]];
+// create transport
+_transport = createVehicle [_classname,_exfil getPos [TR_SPAWN_DIST,random 360],[],0,"FLY"];
 
-	private _helipad = (nearestObjects [_pos, ["Land_HelipadCircle_F","Land_HelipadCivil_F","Land_HelipadEmpty_F","Land_HelipadRescue_F","Land_HelipadSquare_F","Land_JumpTarget_F"], _range]) select 0;
+// set variables in transport namespace
+_transport setVariable [QGVAR(status),TR_NOTREADY,false];
+_transport setVariable [VAR_HELIPAD_EXFIL,_exfil,false];
+_transport setVariable [VAR_HELIPAD_INFIL,_infil,false];
+_transport setVariable [VAR_REQUESTOR,_requestor,false];
+_transport setVariable [VAR_MARKER_EXFIL,_exfilMrk,false];
+_transport setVariable [VAR_MARKER_INFIL,_infilMrk,false];
+_transport setVariable [VAR_STUCKPOS,[0,0,0],false];
+_transport setVariable [VAR_SIGNAL,0,true]; // cast to all players so signal action is available
 
-	if !(isNil "_helipad") then {
-		if ([getPos _helipad,_size,0,0.35] call FUNC(isPosSafe)) then {
-			_pos = getPosASL _helipad;
-		};
-	};
+// start cooldown when transport is deleted
+_transport addEventHandler ["Deleted",{
+    _transport = _this select 0;
 
-	_pos
-};
+    deleteMarker (_transport getVariable VAR_MARKER_EXFIL);
+    deleteMarker (_transport getVariable VAR_MARKER_INFIL);
 
-_helipadPos = [GVAR(exfil),100,12] call _fnc_getNearHelipad;
-if !(_helipadPos isEqualTo GVAR(exfil)) then {
-	GVAR(exfil) = _helipadPos;
-} else {
-	_helipad1 = createVehicle ["Land_HelipadEmpty_F", GVAR(exfil), [], 0, "CAN_COLLIDE"];
-};
-_helipadPos = [GVAR(infil),100,12] call _fnc_getNearHelipad;
-if !(_helipadPos isEqualTo GVAR(infil)) then {
-	GVAR(infil) = _helipadPos;
-} else {
-	_helipad2 = createVehicle ["Land_HelipadEmpty_F", GVAR(infil), [], 0, "CAN_COLLIDE"];
-};
-
-// find position away from an occupied location
-missionNamespace setVariable [QGVAR(getLocations), player];
-publicVariableServer QGVAR(getLocations);
-
-if !(isNil QEGVAR(occupy,occupiedLocations)) then {
-	{
-		_dir = _dir + ([GVAR(exfil), ((EGVAR(occupy,occupiedLocations) select _forEachIndex) select 1)] call BIS_fnc_dirTo);
-	} forEach EGVAR(occupy,occupiedLocations);
-	_dir = (_dir/(count EGVAR(occupy,occupiedLocations))) + 180;
-} else {
-	_dir = random 360;
-};
-
-_spawnPos = [GVAR(exfil),5000,6000,objNull,-1,-1,_dir] call EFUNC(main,findPosSafe);
-_transport = createVehicle [_classname,_spawnPos,[],0,"FLY"];
-
-_transport addEventHandler ["GetIn",{
-	if (isPlayer (_this select 2) && {!((_this select 2) isEqualTo ((_this select 0) turretUnit [0]))}) then {
-		[HINT_GETIN,false] remoteExecCall [QEFUNC(main,displayText),(_this select 2),false];
-	};
-	if (isPlayer (_this select 2) && {(_this select 2) isEqualTo ((_this select 0) turretUnit [0])} && {alive (driver (_this select 0))} && {canMove (_this select 0)}) then {
-		(_this select 0) removeAllEventHandlers "GetIn";
-		playSound3D ["A3\dubbing_F\modules\supports\transport_welcome.ogg", driver (_this select 0), false, getPosASL (_this select 0), 2, 1, 100];
-		_wp = group driver (_this select 0) addWaypoint [GVAR(infil), 0];
-		_wp setWaypointStatements ["true", format ["
-			(vehicle this) land ""GET OUT"";
-			[{
-				params [""_args"",""_id""];
-				_args params [""_pilot""];
-
-				if (isTouchingGround (vehicle _pilot)) exitWith {
-					[_id] call CBA_fnc_removePerFrameHandler;
-					playSound3D [""A3\dubbing_F\modules\supports\transport_accomplished.ogg"", _pilot, false, getPosASL _pilot, 2, 1, 100];
-
-					[
-						{
-							{
-								if (isPlayer _x) then {moveOut _x};
-							} forEach (crew (vehicle (_this select 0)));
-							missionNameSpace setVariable ['%1', -1];
-							_wp = group (_this select 0) addWaypoint [[0,0,100], 0];
-						},
-						[_pilot],
-						7
-					] call CBA_fnc_waitAndExecute;
-				};
-			}, 1, [this]] call CBA_fnc_addPerFrameHandler;
-		",QGVAR(ready)]];
-	};
+    TR_COOLDOWN(_transport getVariable VAR_REQUESTOR);
 }];
+
+// send hint to players who get in transport
+_transport addEventHandler ["GetIn",{
+    if (isPlayer (_this select 2)) then {
+        [STR_GETIN,false] remoteExecCall [QEFUNC(main,displayText),_this select 2,false];
+    };
+}];
+
+private _pilot = "";
 
 call {
 	if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
@@ -130,77 +73,73 @@ call {
 	if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
 		_pilot = "B_Helipilot_F";
 	};
-	_pilot = "I_Helipilot_F";
+    if (EGVAR(main,playerSide) isEqualTo RESISTANCE) exitWith {
+		_pilot = "I_Helipilot_F";
+	};
+	_pilot = "C_man_w_worker_F";
 };
 
-_pilot = createGroup (side player) createUnit [_pilot,[0,0,0], [], 0, "NONE"];
+_pilot = createGroup EGVAR(main,playerSide) createUnit [_pilot,[0,0,0], [], 0, "NONE"];
 _pilot moveInDriver _transport;
-_pilot allowfleeing 0;
-_pilot setBehaviour "CARELESS";
 _pilot disableAI "FSM";
-_transport allowCrewInImmobile true;
-_transport enableCopilot false;
+_pilot setBehaviour "CARELESS";
+_pilot addEventHandler ["GetOutMan",{deleteVehicle (_this select 0)}];
+
+// lock cockpit
+_transport lockTurret [[0],true];
 _transport lockDriver true;
-_transport flyInHeight 180;
-_wp = group _pilot addWaypoint [GVAR(exfil), 0];
-_wp setWaypointPosition [GVAR(exfil), 0];
-_wp setWaypointStatements ["true", "(vehicle this) land ""GET IN"";"];
-playSound3D ["A3\dubbing_F\modules\supports\transport_acknowledged.ogg", player, false, getPosASL player, 1, 1, 100];
 
+// disable caching on transport, can cause waypoint issues
+[group _transport] call EFUNC(cache,disableCache);
+
+// move to pick up position
+TR_EXFIL(_transport);
+[STR_ENROUTE,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
+
+// move to drop off position
+TR_INFIL(_transport);
+
+// handles transport dying enroute
 [{
 	params ["_args","_idPFH"];
-	_args params ["_transport","_pilot","_exfilMrk","_infilMrk","_helipad1","_helipad2"];
+	_args params ["_requestor","_transport"];
 
-	if (GVAR(ready) isEqualTo -1) exitWith { // if transport route complete
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		deleteMarker _exfilMrk;
-		deleteMarker _infilMrk;
-		deleteVehicle _helipad1;
-		deleteVehicle _helipad2;
-		_transport call EFUNC(main,cleanup);
-		COOLDOWN;
-	};
-	if (!alive _pilot || {isNull (objectParent _pilot)} || {isTouchingGround _transport && (!(canMove _transport) || (fuel _transport isEqualTo 0))}) exitWith { // if transport destroyed enroute
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		GVAR(ready) = -1;
-		deleteMarker _exfilMrk;
-		deleteMarker _infilMrk;
-		deleteVehicle _helipad1;
-		deleteVehicle _helipad2;
-		_transport call EFUNC(main,cleanup);
-		playSound3D ["A3\dubbing_F\modules\supports\transport_destroyed.ogg", player, false, getPosASL player, 1, 1, 100];
-		COOLDOWN;
-	};
-}, 1, [_transport,_pilot,_exfilMrk,_infilMrk,_helipad1,_helipad2]] call CBA_fnc_addPerFrameHandler;
+    if (COMPARE_STR(_transport getVariable QGVAR(status),TR_WAITING)) exitWith {
+        [_idPFH] call CBA_fnc_removePerFrameHandler;
+    };
 
-// handles transport timeout if player not in copilot
+	if (isTouchingGround _transport && {!alive _transport || !canMove _transport || fuel _transport isEqualTo 0}) exitWith {
+		[_idPFH] call CBA_fnc_removePerFrameHandler;
+        [STR_KILLED,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
+        _transport setVariable [QEGVAR(main,forceCleanup),true];
+        _transport call EFUNC(main,cleanup);
+	};
+}, 1, [_requestor,_transport]] call CBA_fnc_addPerFrameHandler;
+
+// handles transport getting stuck in a hover
 [{
 	params ["_args","_idPFH"];
-	_args params ["_transport","_pilot"];
+	_args params ["_transport"];
 
-	if (GVAR(ready) isEqualTo 1 || {GVAR(ready) isEqualTo -1}) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
+    if (!alive _transport || {COMPARE_STR(_transport getVariable QGVAR(status),TR_WAITING)}) exitWith {
+        [_idPFH] call CBA_fnc_removePerFrameHandler;
+    };
+
+    _stuckPos = _transport getVariable [VAR_STUCKPOS,[0,0,0]];
+
+	if (!isTouchingGround _transport && {unitReady _transport} && {CHECK_DIST2D(getPosWorld _transport,_stuckPos,3)}) then {
+        _transport setVariable [QUOTE(DOUBLES(MAIN_ADDON,cancelLandAt)),true];
+
+        if !(_transport getVariable [VAR_SIGNAL,-1] isEqualTo 1) then {
+            TR_EXFIL(_transport);
+            INFO_1("Handle hover bug: send transport to exfil: %1",(getPos _transport) select 2);
+        } else {
+            TR_INFIL(_transport);
+            INFO_1("Handle hover bug: send transport to infil: %1",(getPos _transport) select 2);
+        };
 	};
 
-	if (isTouchingGround _transport && {alive _pilot} && {objectParent _pilot isEqualTo _transport} && {canMove _transport}) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
+    _transport setVariable [VAR_STUCKPOS,getPosWorld _transport];
+}, 10, [_transport]] call CBA_fnc_addPerFrameHandler;
 
-		[
-			{
-				params ["_pilot","_transport"];
-
-				if (isTouchingGround _transport) then {
-					GVAR(ready) = -1;
-					{
-						if (isPlayer _x) then {moveOut _x};
-					} forEach (crew _transport);
-					_wp = group _pilot addWaypoint [[0,0,100], 0];
-					(vehicle _pilot) call EFUNC(main,cleanup);
-					COOLDOWN;
-				};
-			},
-			[_pilot,_transport],
-			120
-		] call CBA_fnc_waitAndExecute;
-	};
-}, 1, [_transport,_pilot]] call CBA_fnc_addPerFrameHandler;
+nil

@@ -1,43 +1,36 @@
 /*
 Author:
 Nicholas Clark (SENSEI)
-Description:
-handles player transport request
+
+Description: player transport request
+
 Arguments:
+0: transport vehicle classname <STRING>
+
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define STR_EXFIL "Open your map and select a LZ for extraction."
-#define STR_INFIL "Select a LZ for insertion."
-#define STR_CLOSE "Insertion LZ is too close to extraction LZ."
-#define STR_NOTLAND "LZ must be on land."
-#define STR_BADTERRAIN "Unsuitable terrain. Select another LZ."
-#define STR_CANCEL "Transport request canceled."
-#define MRK_INFIL format["%1_infil",name player]
-#define MRK_EXFIL format["%1_exfil",name player]
-#define EH_INFIL format["%1_infilLZ",QUOTE(ADDON)]
-#define EH_EXFIL format["%1_exfilLZ",QUOTE(ADDON)]
-#define CHECKDIST 15
+
+GVAR(status) = TR_WAITING;
 
 [STR_EXFIL,true] call EFUNC(main,displayText);
 
 [EH_EXFIL, "onMapSingleClick", {
 	_class = _this select 0;
-	if !(GVAR(wait)) then {
-		GVAR(wait) = true;
+	if (COMPARE_STR(GVAR(status),TR_WAITING)) then {
 		if (surfaceIsWater _pos) then {
 			[STR_NOTLAND,true] call EFUNC(main,displayText);
-			GVAR(wait) = false;
 		} else {
-			_exfil = _pos isFlatEmpty [CHECKDIST, 50, 0.45, 10, -1, false, player];
+			_exfil = _pos isFlatEmpty [TR_CHECKDIST, 50, 0.45, 10, -1, false, player];
+
 			if !(_exfil isEqualTo []) then {
-				_exfil set [2,0];
-				_exfilMrk = createMarker [MRK_EXFIL,_exfil];
+				_exfil deleteAt 2;
+				_exfilMrk = createMarker [MRK_EXFIL(name player),_exfil];
 				_exfilMrk setMarkerType "mil_pickup";
-				_exfilMrk setMarkerColor format ["Color%1", side player];
+				_exfilMrk setMarkerColor ([EGVAR(main,playerSide),true] call BIS_fnc_sideColor);
 				_exfilMrk setMarkerText format ["EXTRACTION LZ (%1)",name player];
-				GVAR(wait) = false;
+
 				[EH_EXFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
 				[STR_INFIL,true] call EFUNC(main,displayText);
 
@@ -46,53 +39,52 @@ __________________________________________________________________*/
 					_exfil = _this select 1;
 					_exfilMrk = _this select 2;
 
-					if !(GVAR(wait)) then {
-						GVAR(wait) = true;
+					if (COMPARE_STR(GVAR(status),TR_WAITING)) then {
 						if (surfaceIsWater _pos) then {
 							[STR_NOTLAND,true] call EFUNC(main,displayText);
-							GVAR(wait) = false;
 						} else {
-							_infil = _pos isFlatEmpty [CHECKDIST, 50, 0.45, 10, -1, false, player];
+							_infil = _pos isFlatEmpty [TR_CHECKDIST, 50, 0.45, 10, -1, false, player];
+
 							if !(_infil isEqualTo []) then {
-								if (_exfil distance2D _infil >= 1000) then {
-									_infil set [2,0];
-									_infilMrk = createMarker [MRK_INFIL,_infil];
+								if !(_infil inArea [_exfil, 1000, 1000, 0, false, -1]) then {
+									_infil deleteAt 2;
+									_infilMrk = createMarker [MRK_INFIL(name player),_infil];
 									_infilMrk setMarkerType "mil_end";
-									_infilMrk setMarkerColor format ["Color%1", side player];
+									_infilMrk setMarkerColor ([EGVAR(main,playerSide),true] call BIS_fnc_sideColor);
 									_infilMrk setMarkerText format ["INSERTION LZ (%1)",name player];
-									GVAR(wait) = false;
+
 									[EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-									[_class,_exfil,_infil,_exfilMrk,_infilMrk] call FUNC(handleRequest);
+                                    missionNamespace setVariable [PVEH_REQUEST,[player,_class,_exfil,_infil,_exfilMrk,_infilMrk]];
+                            		publicVariableServer PVEH_REQUEST;
+
+                                    GVAR(status) = TR_NOTREADY;
 								} else {
 									[STR_CLOSE,true] call EFUNC(main,displayText);
-									GVAR(wait) = false;
 								};
 							} else {
 								[STR_BADTERRAIN,true] call EFUNC(main,displayText);
-								GVAR(wait) = false;
 							};
 						};
 					};
 				},[_class,_exfil,_exfilMrk]] call BIS_fnc_addStackedEventHandler;
 			} else {
 				[STR_BADTERRAIN,true] call EFUNC(main,displayText);
-				GVAR(wait) = false;
 			};
 		};
 	};
-},[(_this select 0)]] call BIS_fnc_addStackedEventHandler;
+},[_this select 0]] call BIS_fnc_addStackedEventHandler;
 
 [
 	{
-		if (GVAR(ready) isEqualTo 1) then {
+		if !(COMPARE_STR(GVAR(status),TR_NOTREADY)) then {
+            GVAR(status) = TR_READY;
 			[STR_CANCEL,true] call EFUNC(main,displayText);
-			GVAR(wait) = false;
 			[EH_EXFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
 			[EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-			deleteMarker MRK_INFIL;
-			deleteMarker MRK_EXFIL;
+			deleteMarker MRK_INFIL(name player);
+			deleteMarker MRK_EXFIL(name player);
 		};
 	},
 	[],
-	90
+	30
 ] call CBA_fnc_waitAndExecute;

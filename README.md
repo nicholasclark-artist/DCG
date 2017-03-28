@@ -4,9 +4,9 @@
 
 <p align="center">
     <a href="https://github.com/nicholasclark-artist/DCG/releases">
-        <img src="https://img.shields.io/badge/Version-3.1.0.6-blue.svg?style=flat-square" alt="DCG Version">
+        <img src="https://img.shields.io/badge/Version-3.2.0-blue.svg?style=flat-square" alt="DCG Version">
     </a>
-    <a href="https://github.com/nicholasclark-artist/DCG/releases/download/v3.1.0.6/dcg_3_1_0_6.zip">
+    <a href="https://github.com/nicholasclark-artist/DCG/releases/download/v3.2.0/dcg_3_2_0.zip">
         <img src="https://img.shields.io/badge/Download-DCG-blue.svg?style=flat-square" alt="DCG Download">
     </a>
     <a href="https://github.com/nicholasclark-artist/DCG/issues">
@@ -26,10 +26,11 @@
     </a>
 </p>
 
-Please, use the [Issue Tracker](https://github.com/nicholasclark-artist/DCG/issues) to report a bug or propose a feature.
+
+*Please, use the [Issue Tracker](https://github.com/nicholasclark-artist/DCG/issues) to report a bug or propose a feature.*
 
 ### What is DCG?
-Dynamic Combat Generator is an Arma 3 mod designed to help mission makers quickly enhance their cooperative scenarios by supplying a collection of easy to use, modular addons.
+Dynamic Combat Generator is an Arma 3 server mod designed to help mission makers quickly enhance their cooperative scenarios by supplying a collection of easy to use, modular addons. DCG's addons are highly customizable and allow creators to populate their missions with ease.
 
 ### What's Included in DCG?
 - Modularity
@@ -40,28 +41,29 @@ Dynamic Combat Generator is an Arma 3 mod designed to help mission makers quickl
 - Enemy static emplacements and sniper teams
 - Populated cities
 - Civilian interaction
+- Roadside IEDs
 - Dynamically spawned civilian traffic
 - Hostile civilians
 - Terrain based animal spawns
 - Approval system
-- FOB construction system
-- Transportation system
+- FOB system
+- Transport system
 - Dynamic weather
-- Unit caching
+- Dynamic simulation support
 - Headless client support
 - ACE3 support
 - ACRE2 support
 - TFAR support
-- Coop mission
+- Coop mission templates
 
 ### How Do I Use DCG?
-The latest version of [Community Based Addons](https://forums.bistudio.com/topic/168277-cba-community-base-addons-arma-3/) is required on the server and client.
+The latest version of [Community Based Addons](https://forums.bistudio.com/topic/168277-cba-community-base-addons-arma-3/) is required on the **server and client**.
 
 **Server Setup**
 - Extract the DCG and CBA zip files to the server's Arma 3 folder
 - After extracting the files, @dcg and @cba_a3 should exist in the server's Arma 3 directory
-- If you wish to customize DCG's settings, check out [Customizing DCG settings](https://github.com/nicholasclark-artist/DCG/wiki/Customizing-DCG-Settings)
-- If you would like to set up a mission for DCG, take a quick look at [Setting up a DCG compatible mission](https://github.com/nicholasclark-artist/DCG/wiki/Setting-up-a-DCG-compatible-mission)
+- To configure a mission for DCG, take a quick look at [Setting up a DCG compatible mission](https://github.com/nicholasclark-artist/DCG/wiki/Setting-up-a-DCG-compatible-mission)
+- If you wish to customize DCG's settings, check out the [Settings Framework](https://github.com/nicholasclark-artist/DCG/wiki/Settings-Framework)
 
 ### Can I Contribute to DCG?
 Dynamic Combat Generator is **open source**. Feel free to fork this repository and submit a pull request. Teamwork makes the dream work!

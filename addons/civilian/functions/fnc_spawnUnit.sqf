@@ -8,50 +8,60 @@ spawn civilians
 Arguments:
 0: position to spawn civilians <ARRAY>
 1: number of units to spawn <NUMBER>
-3: name of location <STRING>
+2: name of location <STRING>
 
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define EMPTYDIST 0.5
-#define RANGE 200
 
-params ["_pos","_unitCount","_townName"];
+params ["_pos","_count","_name","_size"];
 
-SET_LOCVAR(_townName,true);
+missionNamespace setVariable [LOCATION_ID(_name),true];
 
-_grp = [_pos,0,_unitCount,CIVILIAN,false,1] call EFUNC(main,spawnGroup);
+private _units = [];
+private _buildings = _pos nearObjects ["House", _size min 200];
+
+_buildings = _buildings select {
+    !((_x buildingPos -1) isEqualTo [])
+};
+
+private _grp = [[0,0,0],0,_count,CIVILIAN,1.25] call EFUNC(main,spawnGroup);
+
+[_grp] call EFUNC(cache,disableCache);
 
 [
-	{count units (_this select 0) isEqualTo (_this select 2)},
+	{count units (_this select 0) >= (_this select 2)},
 	{
-		params ["_grp","_pos","_unitCount","_townName"];
+        params ["_grp","_pos","_count","_size","_buildings","_name"];
 
-		{
-			_x allowfleeing 0;
-			_x addEventHandler ["firedNear",{
-				if !((_this select 0) getVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),-1] isEqualTo 0) then {
-					(_this select 0) setVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),0];
-					(_this select 0) forceSpeed ((_this select 0) getSpeed "FAST");
-					(_this select 0) setUnitPos "MIDDLE";
-					(_this select 0) doMove ([getposASL (_this select 0),1000,2000] call EFUNC(main,findPosSafe));
-				};
-			}];
-		} forEach (units _grp);
+        {
+            if !(_buildings isEqualTo []) then {
+                _pos = selectRandom ((selectRandom _buildings) buildingPos -1);
+            };
 
-		[units _grp,100,true,"CARELESS"] call EFUNC(main,setPatrol);
+            _x setPos _pos;
 
-		[{
-			params ["_args","_idPFH"];
-			_args params ["_pos","_townName","_grp"];
+            _id = [_x,_pos,_size] call FUNC(setPatrol);
 
-			if ({CHECK_DIST(_x,_pos,GVAR(spawnDist))} count allPlayers isEqualTo 0) exitWith {
-				[_idPFH] call CBA_fnc_removePerFrameHandler;
-				SET_LOCVAR(_townName,false);
-				(units _grp) call EFUNC(main,cleanup);
-			};
-		}, 30, [_pos,_townName,_grp]] call CBA_fnc_addPerFrameHandler;
+            _x addEventHandler ["firedNear",format ["
+                [%1] call CBA_fnc_removePerFrameHandler;
+                (_this select 0) removeEventHandler [""firedNear"", _thisEventHandler];
+                (_this select 0) setUnitPos ""DOWN"";
+                doStop (_this select 0);
+            ",_id]];
+        } forEach units _grp;
+
+        [{
+            params ["_args","_idPFH"];
+            _args params ["_pos","_name","_units"];
+
+            if (([_pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
+                [_idPFH] call CBA_fnc_removePerFrameHandler;
+                _units call EFUNC(main,cleanup);
+                missionNamespace setVariable [LOCATION_ID(_name),false];
+            };
+        }, HANDLER_DELAY, [_pos,_name,units _grp]] call CBA_fnc_addPerFrameHandler;
 	},
-	[_grp,_pos,_unitCount,_townName]
+	[_grp,_pos,_count,_size,_buildings,_name]
 ] call CBA_fnc_waitUntilAndExecute;

@@ -6,7 +6,7 @@ Description:
 spawn base
 
 Arguments:
-0: center position AGL <ARRAY>
+0: center positionAGL <ARRAY>
 1: base strength, number between 0 and 1 that defines how fortified the base will be <NUMBER>
 
 Return:
@@ -46,7 +46,7 @@ for "_index" from 0 to (count (CONFIG)) - 1 do {
     _bases pushBack [_index,_normalized];
 };
 
-private _bases = [_bases,1] call FUNC(shuffle);
+private _bases = [_bases] call FUNC(shuffle);
 
 // find base with strength close to passed strength
 {
@@ -80,6 +80,7 @@ for "_i" from 0 to count _objData - 1 do {
     _relPos = call compile _relPos;
 
     _obj = _type createVehicle [0,0,0];
+    _obj enableDynamicSimulation true;
     _obj setDir (getDir _anchor + _relDir);
     _pos = _anchor modelToWorld _relPos;
 
@@ -112,6 +113,8 @@ for "_i" from 0 to count _nodeData - 1 do {
 
     _nodes pushBack [_pos,_range];
 };
+
+deleteVehicle _anchor;
 
 private _ret = [
     getNumber (_base >> "radius"),

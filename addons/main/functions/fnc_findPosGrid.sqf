@@ -3,91 +3,72 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-create grid of positions
+find grid of positions (positionASL)
 
 Arguments:
 0: center position <ARRAY>
 1: distance between positions <NUMBER>
 2: max distance from center <NUMBER>
 3: min distance from center <NUMBER>
-4: min distance from objects <NUMBER>
-5: allow water <BOOL>
+4: min distance from object <NUMBER>
+5: over land or water <NUMBER>
 6: shuffle position array <BOOL>
 
 Return:
-array (positionASL)
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define POS_COUNT floor (_range/_dist)
-#define ANCHOR_OFFSET [(_anchor select 0) - (_range/2),(_anchor select 1) - (_range/2)]
-#define SHOW_DEBUG false
+#ifdef DEBUG_MODE_FULL
+  #define GRID_DEBUG true
+#else
+  #define GRID_DEBUG false
+#endif
 
-private ["_ret","_retTemp","_fnc_createRow"];
 params [
-	"_anchor",
-	["_dist",25,[0]],
-	["_range",100,[0]],
+	["_anchor",[0,0,0],[[]]],
+	["_dist",64,[0]],
+	["_range",256,[0]],
 	["_rangeMin",0,[0]],
-	["_distObj",-1,[0]],
-	["_water",false],
-	["_shuffle",true]
+	["_distObj",0,[0]],
+	["_water",-1,[0]],
+	["_shuffle",false,[false]]
 ];
 
-_retTemp = [];
-_ret = [];
+private _ret = [];
+private _origin = [(_anchor select 0) - (_range/2),(_anchor select 1) - (_range/2)];
+private _count = floor (_range/_dist);
 
-_fnc_createRow = {
-	private ["_ret"];
-	params ["_anchor","_range"];
+for "_y" from 0 to _count do {
+    private _column = [_origin select 0,(_origin select 1) + (_dist*_y)];
+	_ret pushBack _column;
 
-	_ret = [];
-	for "_i" from 0 to POS_COUNT do {
-		_ret pushBack [(_anchor select 0) + (_range*(_i/POS_COUNT)), _anchor select 1];
-	};
-
-	_ret
+    for "_x" from 1 to _count do {
+        private _row = [(_column select 0) + (_dist*_x), _column select 1];
+        _ret pushBack _row;
+    };
 };
 
-for "_i" from 0 to POS_COUNT do {
-	_retTemp append ([[ANCHOR_OFFSET select 0,(ANCHOR_OFFSET select 1) + (_range*(_i/POS_COUNT))],_range] call _fnc_createRow);
+_ret = _ret select {!(_x inArea [_anchor, _rangeMin, _rangeMin, 0, false, -1])};
+
+if (_distObj > 0 || {_water > -1}) then {
+    _ret = _ret select {[_x,_distObj,_water] call FUNC(isPosSafe)};
 };
 
 {
-	private ["_posASL","_check","_pos"];
-	_check = true;
-	_pos = _x;
-
-	if !(_water) then {
-		if (surfaceIsWater _pos) then {
-			_check = false;
-		};
-	};
-
-	if (_pos distance2D _anchor < _rangeMin) then {
-		_check = false;
-	};
-
-	if (_check) then {
-		_posASL = _pos isFlatEmpty [_distObj,-1,-1,1,-1];
-		if !(_posASL isEqualTo []) then {
-			if (floor (_posASL select 2) < 0) then {
-				_posASL set [2,0];
-			};
-			_ret pushBack _posASL;
-		};
-	};
-} forEach _retTemp;
-
-if (SHOW_DEBUG) then {
-	{
-		_mrk = createMarker [format ["%1", _x], _x];
-		_mrk setMarkerType "mil_dot";
-		_mrk setMarkerText str (_x select 2);
-	} forEach _ret;
-};
+    _x set [2,(getTerrainHeightASL _x) max 0]
+} forEach _ret;
 
 if (_shuffle) then {
-	[_ret,(count _ret)*3] call FUNC(shuffle);
+	[_ret] call FUNC(shuffle);
+};
+
+if (GRID_DEBUG) then {
+    {
+        _mrk = createMarker [format ["debug_%1", _x], _x];
+        _mrk setMarkerType "mil_dot";
+        _mrk setMarkerColor "ColorUNKNOWN";
+        _mrk setMarkerText str (_x select 2);
+    } forEach _ret;
 };
 
 _ret

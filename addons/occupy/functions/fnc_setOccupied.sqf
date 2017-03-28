@@ -16,146 +16,122 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CHANCE_VEH_CAP 1
-#define CHANCE_AIR_CAP 0.5
-#define SNIPER_CAP 3
-#define STATIC_CAP 2
-#define CHANCE_VEH_CITY 0.5
-#define CHANCE_AIR_CITY 0.25
-#define SNIPER_CITY 2
-#define STATIC_CITY 2
-#define CHANCE_VEH_VILL 0.15
-#define CHANCE_AIR_VILL 0.10
-#define SNIPER_VILL 1
-#define STATIC_VILL 1
-#define WRECKS ["a3\structures_f\wrecks\Wreck_Car2_F.p3d","a3\structures_f\wrecks\Wreck_Car3_F.p3d","a3\structures_f\wrecks\Wreck_Car_F.p3d","a3\structures_f\wrecks\Wreck_Offroad2_F.p3d","a3\structures_f\wrecks\Wreck_Offroad_F.p3d","a3\structures_f\wrecks\Wreck_Truck_dropside_F.p3d","a3\structures_f\wrecks\Wreck_Truck_F.p3d","a3\structures_f\wrecks\Wreck_UAZ_F.p3d","a3\structures_f\wrecks\Wreck_Van_F.p3d","a3\structures_f\wrecks\Wreck_Ural_F.p3d"]
+#define WRECKS \
+    ["a3\structures_f\wrecks\Wreck_Car2_F.p3d","a3\structures_f\wrecks\Wreck_Car3_F.p3d","a3\structures_f\wrecks\Wreck_Car_F.p3d","a3\structures_f\wrecks\Wreck_Offroad2_F.p3d","a3\structures_f\wrecks\Wreck_Offroad_F.p3d","a3\structures_f\wrecks\Wreck_Truck_dropside_F.p3d","a3\structures_f\wrecks\Wreck_Truck_F.p3d","a3\structures_f\wrecks\Wreck_UAZ_F.p3d","a3\structures_f\wrecks\Wreck_Van_F.p3d","a3\structures_f\wrecks\Wreck_Ural_F.p3d"]
+#define SAFE_DIST 12
+#define INF_COUNT_VILL ([15,30] call EFUNC(main,getUnitCount))
+#define INF_COUNT_CITY ([25,40] call EFUNC(main,getUnitCount))
+#define INF_COUNT_CAP ([30,50] call EFUNC(main,getUnitCount))
+#define VEH_COUNT_VILL 1
+#define VEH_COUNT_CITY 1
+#define VEH_COUNT_CAP 2
+#define AIR_COUNT_VILL 0
+#define AIR_COUNT_CITY 1
+#define AIR_COUNT_CAP 2
 
-_this params ["_name","_center","_size","_type",["_data",nil]];
+params [
+    ["_name","",[""]],
+    ["_center",[0,0,0],[[]]],
+    ["_size",0,[0]],
+    ["_type","",[""]],
+    ["_data",nil,[[]]]
+];
 
-// find new position in case original is on water or not empty
-private _position = [];
-private _town = [_name,_center,_size,_type];
+INFO_1("%1",_this);
+
 private _objArray = [];
-private _officerPool = [];
-private _unitPool = [];
-private _taskType = "";
-private _taskID = format ["L_%1", diag_tickTime];
-
-if !([_center,1,0] call EFUNC(main,isPosSafe)) then {
-	for "_i" from 1 to _size step 2 do {
-		_position = [_center,0,_i,1,0] call EFUNC(main,findPosSafe);
-		if !(_position isEqualTo _center) exitWith {};
-	};
-} else {
-	_position = _center;
-};
-
-_position = ASLtoAGL _position;
+private _mrkArray = [];
+private _pool = [];
+private _typeName = "";
+private _infCount = 0;
+private _vehCount = 0;
+private _airCount = 0;
 
 call {
 	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
-		_officerPool = EGVAR(main,officerPoolEast);
-		_unitPool = EGVAR(main,unitPoolEast);
+		_pool = EGVAR(main,unitPoolEast);
 	};
 	if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
-		_officerPool = EGVAR(main,officerPoolWest);
-		_unitPool = EGVAR(main,unitPoolWest);
+		_pool = EGVAR(main,unitPoolWest);
 	};
-	_officerPool = EGVAR(main,officerPoolInd);
-	_unitPool = EGVAR(main,unitPoolInd);
+    if (EGVAR(main,enemySide) isEqualTo RESISTANCE) exitWith {
+    	_pool = EGVAR(main,unitPoolInd);
+    };
 };
 
-private _grp = createGroup EGVAR(main,enemySide);
-private _officer = _grp createUnit [selectRandom _officerPool, _position, [], 0, "NONE"];
-_officer setVariable [QUOTE(DOUBLES(ADDON,officer)),true,true];
-SET_UNITVAR(_officer);
-[[_officer],_size*0.5] call EFUNC(main,setPatrol);
-removeFromRemainsCollector [_officer];
-
-// spawn vehicle wrecks
-for "_i" from 0 to (ceil random 3) do {
-	_vehPos = [_position,0,_size,8,0] call EFUNC(main,findPosSafe);
-	if (!(_vehPos isEqualTo _position) && {!isOnRoad _vehPos}) then {
-		private _veh = createSimpleObject [selectRandom WRECKS,[0,0,0]];
-		_veh setDir random 360;
-		_veh setPosASL _vehPos;
-		_veh setVectorUp surfaceNormal _vehPos;
-		private _fx = "test_EmptyObjectForSmoke" createVehicle [0,0,0];
-		_fx setPosASL (getPosWorld _veh);
-		_objArray pushBack _veh;
-	};
+if (_pool isEqualTo []) exitWith {
+    WARNING("Cannot occupy location, unit pool empty")
 };
 
 call {
-	if (_type isEqualTo "NameCityCapital") exitWith {
-		_taskType = "Capital";
-		if (isNil "_data") then {
-			PREP_INF(_position,ceil GVAR(infCountCapital),_size);
-			PREP_VEH(_position,ceil GVAR(vehCountCapital),_size,CHANCE_VEH_CAP);
-			PREP_AIR(_position,ceil GVAR(airCountCapital),CHANCE_AIR_CAP);
-		} else {
-			PREP_INF(_position,ceil (_data select 0),_size);
-			PREP_VEH(_position,ceil (_data select 1),_size,1);
-			PREP_AIR(_position,ceil (_data select 2),1);
-		};
-		PREP_GARRISON(_position,15,_size,_unitPool);
-		PREP_STATIC(_position,STATIC_CAP,_size,_objArray);
-		PREP_SNIPER(_position,SNIPER_CAP,_size);
-	};
-
-	if (_type isEqualTo "NameCity") exitWith {
-		_taskType = "City";
-		if (isNil "_data") then {
-			PREP_INF(_position,ceil GVAR(infCountCity),_size);
-			PREP_VEH(_position,ceil GVAR(vehCountCity),_size,CHANCE_VEH_CITY);
-			PREP_AIR(_position,ceil GVAR(airCountCity),CHANCE_AIR_CITY);
-		} else {
-			PREP_INF(_position,ceil (_data select 0),_size);
-			PREP_VEH(_position,ceil (_data select 1),_size,1);
-			PREP_AIR(_position,ceil (_data select 2),1);
-		};
-		PREP_GARRISON(_position,10,_size,_unitPool);
-		PREP_STATIC(_position,STATIC_CITY,_size,_objArray);
-		PREP_SNIPER(_position,SNIPER_CITY,_size);
-	};
-
-	_taskType = "Village";
-	if (isNil "_data") then {
-		PREP_INF(_position,ceil GVAR(infCountVillage),_size);
-		PREP_VEH(_position,ceil GVAR(vehCountVillage),_size,CHANCE_VEH_VILL);
-		PREP_AIR(_position,ceil GVAR(airCountVillage),CHANCE_AIR_VILL);
-	} else {
-		PREP_INF(_position,ceil (_data select 0),_size);
-		PREP_VEH(_position,ceil (_data select 1),_size,1);
-		PREP_AIR(_position,ceil (_data select 2),1);
-	};
-	PREP_GARRISON(_position,5,_size,_unitPool);
-	PREP_STATIC(_position,STATIC_VILL,_size,_objArray);
-	PREP_SNIPER(_position,SNIPER_VILL,_size);
+    if (COMPARE_STR(_type,"NameCityCapital")) exitWith {
+        _typeName = "Capital";
+    };
+    if (COMPARE_STR(_type,"NameCity")) exitWith {
+        _typeName = "City";
+    };
+    _typeName = "Village";
 };
 
-GVAR(locations) pushBack _town;
-
-[true,_taskID,[format ["Enemy forces have occupied %1! Liberate the settlement!",_name],format ["Liberate %1", _taskType],""],_position,false,true,"rifle"] call EFUNC(main,setTask);
-
-[{
-	params ["_args","_idPFH"];
-	_args params ["_town","_objArray","_officer","_taskID"];
-
-	if !(([ASLToAGL(_town select 1),_town select 2] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
-		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		_args call FUNC(handleOccupied);
-	};
-}, 10, [_town,_objArray,_officer,_taskID]] call CBA_fnc_addPerFrameHandler;
-
-EGVAR(civilian,blacklist) pushBack _name; // stop civilians from spawning in town
-
-if (CHECK_DEBUG) then {
-	private _mrk = createMarker [format["%1_%2_debug",QUOTE(ADDON),_name],_position];
-	_mrk setMarkerShape "ELLIPSE";
-	_mrk setMarkerSize [_size,_size];
-	_mrk setMarkerColor format ["Color%1", EGVAR(main,enemySide)];
-	_mrk setMarkerBrush "SolidBorder";
+if (isNil "_data") then {
+    if (COMPARE_STR(_type,"NameCityCapital")) exitWith {
+        _infCount = INF_COUNT_CAP;
+        _vehCount = VEH_COUNT_CAP;
+        _airCount = AIR_COUNT_CAP;
+    };
+    if (COMPARE_STR(_type,"NameCity")) exitWith {
+        _infCount = INF_COUNT_CITY;
+        _vehCount = VEH_COUNT_CITY;
+        _airCount = AIR_COUNT_CITY;
+    };
+    _infCount = INF_COUNT_VILL;
+    _vehCount = VEH_COUNT_VILL;
+    _airCount = AIR_COUNT_VILL;
+} else {
+    _infCount = _data select 0;
+    _vehCount = _data select 1;
+    _airCount = _data select 2;
 };
 
-LOG_DEBUG_2("%1, %2",_town,count _objArray);
+PREP_STATIC(_center,2,_size,_objArray);
+PREP_VEH(_center,_vehCount,_size*1.25);
+PREP_AIR(_center,_airCount);
+PREP_INF(_center,_infCount,_size*0.68);
+PREP_SNIPER(_center,2,_size);
+
+// destroy buildings
+private _buildings = _center nearObjects ["House", _size];
+
+if !(_buildings isEqualTo []) then {
+    private _count = ceil random 4;
+
+    for "_i" from 1 to (_count min (count _buildings)) do {
+        private _house = selectRandom _buildings;
+        _buildings deleteAt (_buildings find _house);
+        if !((_house buildingPos -1) isEqualTo []) then {
+            _house setDamage [1, false];
+            private _fx = "test_EmptyObjectForSmoke" createVehicle [0,0,0];
+            _fx setPosWorld (getPosWorld _house);
+        };
+    };
+};
+
+private _iconPos =+ _center;
+_iconPos set [1,(_iconPos select 1) - 40];
+_icon = createMarker [[QUOTE(ADDON),_name] joinString "_", _iconPos];
+_icon setMarkerShape "ICON";
+_icon setMarkerColor ([EGVAR(main,enemySide),true] call BIS_fnc_sideColor);
+_icon setMarkerText (["Liberate",_typeName] joinString " ");
+_icon setMarkerType "o_installation";
+_mrkArray pushBack _icon;
+
+GVAR(location) = [_name,_center,_size,_type]; // set as occupied location
+EGVAR(civilian,blacklist) pushBack _name; // stop civilians from spawning in location
+
+[
+    {!([_this select 1,_this select 2] call EFUNC(main,getNearPlayers) isEqualTo [])},
+    {
+        _this call FUNC(handleOccupied);
+    },
+    [_name,_center,_size,_type,_objArray,_mrkArray]
+] call CBA_fnc_waitUntilAndExecute;

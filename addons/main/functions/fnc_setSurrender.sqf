@@ -8,34 +8,51 @@ set unit in surrender stance
 Arguments:
 
 Return:
-none
+bool
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SURRENDER(UNIT,ANIM) \
-	if (CHECK_ADDON_1("ace_captives")) then { \
-		[UNIT,true] call ace_captives_fnc_setSurrendered; \
-	} else { \
-		[UNIT,ANIM] call FUNC(setAnim); \
-	};
 
-params ["_obj"];
+params [
+    ["_obj",objNull,[objNull]]
+];
 
-if (!local _obj || {typeOf _obj isKindOf "Air"}) exitWith {};
+if (!local _obj || {typeOf _obj isKindOf "Air"}) exitWith {false};
 
-if (typeOf _obj isKindOf "LandVehicle" || {typeOf _obj isKindOf "Ship"}) exitWith {
+if (typeOf _obj isKindOf "LandVehicle") exitWith {
 	_obj limitSpeed 0;
 	crew _obj allowGetIn false;
 	{
-		_x setVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),0];
 		moveOut _x;
 		_x setVelocity [0, 0, 0];
 		_x setBehaviour "CARELESS";
-		SURRENDER(_x,"AmovPercMstpSsurWnonDnon")
+        if (CHECK_ADDON_1("ace_captives")) then {
+            [_x,true] call ace_captives_fnc_setSurrendered;
+        } else {
+            [_x,"AmovPercMstpSsurWnonDnon"] call FUNC(setAnim);
+        };
 		false
 	} count (crew _obj);
+
+    true
 };
 
-_obj setVariable [QUOTE(DOUBLES(PREFIX,isOnPatrol)),0];
+if (typeOf _obj isKindOf "Ship") exitWith {
+	_obj limitSpeed 0;
+	{
+		_x setBehaviour "CARELESS";
+		false
+	} count (crew _obj);
+
+    true
+};
+
 doStop _obj;
 _obj setBehaviour "CARELESS";
-SURRENDER(_obj,"AmovPercMstpSsurWnonDnon")
+
+if (CHECK_ADDON_1("ace_captives")) then {
+    [_obj,true] call ace_captives_fnc_setSurrendered;
+} else {
+    [_obj,"AmovPercMstpSsurWnonDnon"] call FUNC(setAnim);
+};
+
+true

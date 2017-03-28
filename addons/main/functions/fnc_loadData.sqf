@@ -14,12 +14,8 @@ __________________________________________________________________*/
 
 if (!isServer) exitWith {};
 
-private ["_dataProfile"];
-
-_dataProfile = DATA_GETVAR;
-
 {
 	if (toUpper (_x select 0) isEqualTo DATA_MISSION_ID) exitWith {
 		GVAR(saveDataCurrent) = _x;
 	};
-} forEach _dataProfile;
+} forEach (DATA_GETVAR);

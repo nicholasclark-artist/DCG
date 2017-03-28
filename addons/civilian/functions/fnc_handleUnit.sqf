@@ -6,36 +6,38 @@ Description:
 handles civilian unit spawns
 
 Arguments:
-0: positions to watch for civ spawns <ARRAY>
+0: location array <ARRAY>
 
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-[{
-	params ["_args","_idPFH"];
-	_args params ["_locations"];
-	{
-		if (!(GET_LOCVAR(_x select 0)) && {GVAR(blacklist) find (_x select 0) isEqualTo -1}) then {
-			private ["_unitCount"];
-			private _position = _x select 1;
+{
+    _x params ["_name","_position","_size","_type"];
 
-			private _near = _position nearEntities [["Man", "LandVehicle"], GVAR(spawnDist)];
-			_near = _near select {isPlayer _x && {(getPosATL _x select 2) < ZDIST}};
+	if (!(missionNamespace getVariable [LOCATION_ID(_name),false]) && {GVAR(blacklist) find _name isEqualTo -1}) then {
+        _position =+ _position;
+        _position resize 2;
 
-			if !(_near isEqualTo []) then {
-				call {
-					if ((_x select 3) isEqualTo "NameCityCapital") exitWith {
-						_unitCount = ceil(GVAR(countCapital));
-					};
-					if ((_x select 3) isEqualTo "NameCity") exitWith {
-						_unitCount = ceil(GVAR(countCity));
-					};
-					_unitCount = ceil(GVAR(countVillage));
+        _players = [_position,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers);
+
+		if !(_players isEqualTo []) then {
+            private "_unitCount";
+
+			call {
+				if (_type isEqualTo "NameVillage") exitWith {
+					_unitCount = ceil(5*GVAR(multiplier));
 				};
-				[ASLToAGL _position,_unitCount,_x select 0] call FUNC(spawnUnit);
+				if (_type isEqualTo "NameCity") exitWith {
+					_unitCount = ceil(10*GVAR(multiplier));
+				};
+                _unitCount = ceil(15*GVAR(multiplier));
 			};
+
+			[_position,_unitCount,_name,_size] call FUNC(spawnUnit);
 		};
-	} forEach _locations;
-}, 15, [_this select 0]] call CBA_fnc_addPerFrameHandler;
+	};
+
+	false
+} count (_this select 0);

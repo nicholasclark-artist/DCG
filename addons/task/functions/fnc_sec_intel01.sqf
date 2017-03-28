@@ -14,115 +14,115 @@ __________________________________________________________________*/
 #define TASK_SECONDARY
 #define TASK_NAME 'Find GPS Intel'
 #define INTEL_CLASS QUOTE(ItemGPS)
-#define UNITCOUNT 5
+#define INTEL_CONTAINER GVAR(DOUBLES(intel01,container))
+#define MOUND_PATH "a3\structures_f\walls\mound02_8m_f.p3d"
+#define UNITCOUNT 6
 #include "script_component.hpp"
 
-params [["_position",[]]];
+params [
+    ["_position",[],[[]]]
+];
 
 // CREATE TASK
 _taskID = str diag_tickTime;
-GVAR(intel01Unit) = objNull;
+_cleanup = [];
 
-if (_position isEqualTo []) then {
-	if !(EGVAR(main,locals) isEqualTo []) then {
-		_position = (selectRandom EGVAR(main,locals)) select 1;
-		if !([_position,0.5,0] call EFUNC(main,isPosSafe)) then {
-			_position = [];
-		};
-	} else {
-		_position = [EGVAR(main,center),EGVAR(main,range),"forest",0,true] call EFUNC(main,findPos);
-	};
+if (_position isEqualTo [] && {!(EGVAR(main,locals) isEqualTo [])}) then {
+	_position = (selectRandom EGVAR(main,locals)) select 1;
+
+    if !([_position,5,0] call EFUNC(main,isPosSafe)) then {
+        _startPos = _position;
+        _position = [_startPos,0,50,5,0] call EFUNC(main,findPosSafe);
+
+        if (_position isEqualTo _startPos) then {
+            _position = [];
+        };
+    };
 };
 
 if (_position isEqualTo []) exitWith {
-	[TASK_TYPE,0] call FUNC(select);
+	TASK_EXIT_DELAY(0);
 };
 
-if !([_position,5,0] call EFUNC(main,isPosSafe)) then {
-	_position = [_position,5,50,1,0] call EFUNC(main,findPosSafe);
-};
-
-createVehicle ["Chemlight_green", ASLToAGL _position, [], 5, "NONE"];
-createVehicle ["Chemlight_green", ASLToAGL _position, [], 5, "NONE"];
-
-_grp = [_position,0,UNITCOUNT,CIVILIAN,true,0.5] call EFUNC(main,spawnGroup);
+_grp = [_position,0,UNITCOUNT,CIVILIAN,TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
 [
 	{count units (_this select 1) >= UNITCOUNT},
 	{
-		params ["_position","_grp"];
+		params ["_position","_grp","_cleanup"];
 
-		_units = units _grp - [leader _grp];
-		(leader _grp) allowDamage false;
-		(leader _grp) disableAI "MOVE";
-		(leader _grp) setPosATL [_position select 0,_position select 1,30];
-		(leader _grp) enableSimulation false;
-		hideObjectGlobal (leader _grp);
+        _units = units _grp;
+		removeFromRemainsCollector _units;
+        _cleanup append _units;
 
-		removeFromRemainsCollector units _grp;
 		{
-			_x setDir random 360;
-			_x setDamage 1;
 			removeAllItems _x;
 			removeAllAssignedItems _x;
-			false
-		} count _units;
+            _x setDir random 360;
+			_x setDamage 1;
+		} forEach _units;
 
-		_unit = selectRandom _units;
-		_unit linkItem INTEL_CLASS;
-		GVAR(intel01Unit) = _unit;
+        INTEL_CONTAINER = [leader _grp,INTEL_CLASS] call FUNC(addItem);
+
+        _unit = selectRandom _units;
+        _unit setDir 0;
+
+        for "_dir" from 0 to 360 step 90 do {
+            if (_dir > 270) exitWith {};
+
+            _relPos = _unit getRelPos [5.5, _dir];
+            _relPos set [2,getTerrainHeightASL _relPos];
+
+            _mound = createSimpleObject [MOUND_PATH, [0,0,0]];
+            _mound setDir _dir;
+            _mound setPosASL _relPos;
+            _mound setVectorUp surfaceNormal getPos _mound;
+        };
 	},
-	[_position,_grp]
+	[_position,_grp,_cleanup]
 ] call CBA_fnc_waitUntilAndExecute;
 
-TASK_DEBUG(_position);
-
 // SET TASK
-_taskPos = ASLToAGL ([_position,40,80] call EFUNC(main,findPosSafe));
-_taskDescription = format["A few days ago an informant didn't show for a meeting. He was suppose to hand off a GPS device with vital intel on the enemy's whereabouts. Recently, UAV reconnaissance spotted activity near %1. Search the site for the informant and retrieve the GPS.", mapGridPosition _position];
-
-[true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,true,"search"] call EFUNC(main,setTask);
+_taskPos = ASLToAGL ([_position,120,150] call EFUNC(main,findPosSafe));
+_taskDescription = "Yesterday, an informant was suppose to hand off a GPS device with vital intel on the enemy's whereabouts. UAV reconnaissance spotted activity nearby that may be related to our contact. Search the area for the informant and retrieve the GPS.";
+[true,_taskID,[_taskDescription,TASK_TITLE,""],_taskPos,false,0,true,"search"] call BIS_fnc_taskCreate;
 
 // PUBLISH TASK
 TASK_PUBLISH(_position);
+TASK_DEBUG(_position);
 
 // TASK HANDLER
 [{
 	params ["_args","_idPFH"];
-	_args params ["_taskID","_grp"];
+	_args params ["_taskID","_grp","_cleanup"];
 
 	if (TASK_GVAR isEqualTo []) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "CANCELED"] call EFUNC(main,setTaskState);
-		(units _grp) call EFUNC(main,cleanup);
-		[TASK_TYPE,30] call FUNC(select);
+		[_taskID, "CANCELED"] call BIS_fnc_taskSetState;
+		_cleanup call EFUNC(main,cleanup);
+		TASK_EXIT_DELAY(30);
 	};
 
-	if !(INTEL_CLASS in (assignedItems GVAR(intel01Unit))) exitWith {
+	if (!isNull INTEL_CONTAINER && {{COMPARE_STR(INTEL_CLASS,_x)} count itemCargo INTEL_CONTAINER < 1}) exitWith {
 		[_idPFH] call CBA_fnc_removePerFrameHandler;
-		[_taskID, "SUCCEEDED"] call EFUNC(main,setTaskState);
-		TASK_APPROVAL(getPos GVAR(intel01Unit),TASK_AV);
-		(units _grp) call EFUNC(main,cleanup);
+		[_taskID, "SUCCEEDED"] call BIS_fnc_taskSetState;
+		TASK_APPROVAL(getPos (leader _grp),TASK_AV);
+        _cleanup call EFUNC(main,cleanup);
 		TASK_EXIT;
 
 		if (random 1 < 0.5) then {
-			_posArray = [getpos GVAR(intel01Unit),50,300,200] call EFUNC(main,findPosGrid);
-			{
-				if !([_x,150] call EFUNC(main,getNearPlayers) isEqualTo []) then {
-					_posArray deleteAt _forEachIndex;
-				};
-			} forEach _posArray;
+			_posArray = [getpos (leader _grp),64,256,96] call EFUNC(main,findPosGrid);
+            _posArray = _posArray select {[_x,100] call EFUNC(main,getNearPlayers) isEqualTo []};
 
 			if !(_posArray isEqualTo []) then {
-				_grp = [selectRandom _posArray,0,[TASK_UNIT_MIN,TASK_UNIT_MAX] call EFUNC(main,setStrength),EGVAR(main,enemySide)] call EFUNC(main,spawnGroup);
-				_wp = _grp addWaypoint [getposATL GVAR(intel01Unit),0];
-				_wp setWaypointBehaviour "AWARE";
-				_wp setWaypointFormation "STAG COLUMN";
+				_grp = [selectRandom _posArray,0,TASK_STRENGTH,EGVAR(main,enemySide),TASK_SPAWN_DELAY] call EFUNC(main,spawnGroup);
+				_wp = _grp addWaypoint [getposATL (leader _grp),0];
+                _wp setWaypointType "SAD";
 				_cond = "!(behaviour this isEqualTo ""COMBAT"")";
 				_wp setWaypointStatements [_cond, format ["thisList call %1;",QEFUNC(main,cleanup)]];
 			};
 		} else {
-			[getpos GVAR(intel01Unit),EGVAR(main,enemySide),250] spawn EFUNC(main,spawnReinforcements);
+			[getpos (leader _grp),EGVAR(main,enemySide)] spawn EFUNC(main,spawnReinforcements);
 		};
 	};
-}, TASK_SLEEP, [_taskID,_grp]] call CBA_fnc_addPerFrameHandler;
+}, TASK_SLEEP, [_taskID,_grp,_cleanup]] call CBA_fnc_addPerFrameHandler;

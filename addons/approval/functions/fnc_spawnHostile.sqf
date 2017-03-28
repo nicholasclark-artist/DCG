@@ -9,43 +9,44 @@ Arguments:
 0: target player <OBJECT>
 
 Return:
-none
+bool
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define BOMBS ["R_TBG32V_F","HelicopterExploSmall"]
 #define BOMB_RANGE 15
 #define SOUNDPATH "A3\Sounds_F\sfx\Beep_Target.wss"
 #define TYPEMAX 2
-#define REBEL_COUNT 8
-
-private ["_grp","_unit","_wp","_driver","_unitPool","_tempGrp","_vest","_weapon","_mags","_y","_cond"];
+#define SAFE_DIST 50
+#define REBEL_COUNT 6
+#define REBEL_UNIFORMS ["U_I_C_Soldier_Bandit_3_F","U_I_C_Soldier_Bandit_5_F","U_I_C_Soldier_Bandit_2_F"]
 
 private _player = _this select 0;
+private _ret = false;
+private _hostilePos = [];
 private _pos = getPos _player;
 private _type = floor random (TYPEMAX + 1);
-private _nearPlayers = [_pos,50] call EFUNC(main,getNearPlayers);
-private _posArray = [_pos,50,500,200] call EFUNC(main,findPosGrid);
+private _nearPlayers = [_pos,SAFE_DIST] call EFUNC(main,getNearPlayers);
 
 {
-	if !([_x,100] call EFUNC(main,getNearPlayers) isEqualTo []) then {
-		_posArray deleteAt _forEachIndex;
-	};
-} forEach _posArray;
+    if ([_x,SAFE_DIST] call EFUNC(main,getNearPlayers) isEqualTo []) exitWith {
+        _hostilePos = _x;
+    };
+} forEach ([_pos,64,512,256,4,0] call EFUNC(main,findPosGrid));
 
-if (_posArray isEqualTo []) exitWith {
-	LOG_DEBUG("Hostile has nowhere to spawn.");
+if (_hostilePos isEqualTo []) exitWith {
+	WARNING("Hostile spawn position empty");
+    _ret
 };
 
-private _hostilePos = selectRandom _posArray;
-
-if ({[_hostilePos,_x] call EFUNC(main,inLOS)} count _nearPlayers > 0) exitWith {
-	LOG_DEBUG("Hostile position in line of sight.");
+if ({[_hostilePos,eyePos _x] call EFUNC(main,inLOS)} count _nearPlayers > 0) exitWith {
+	WARNING("Hostile position in line of sight");
+    _ret
 };
 
 call {
 	if (_type isEqualTo 0) exitWith {
-		_unitPool = [];
-		_tempGrp = createGroup EGVAR(main,enemySide);
+		private _unitPool = [];
+		private _tempGrp = createGroup EGVAR(main,enemySide);
 
 		call {
 			if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
@@ -58,20 +59,26 @@ call {
 		};
 
 		(selectRandom _unitPool) createUnit [[0,0,0], _tempGrp];
-		_vest = vest (leader _tempGrp);
-		_weapon = currentWeapon (leader _tempGrp);
-		_mags = magazines (leader _tempGrp);
+		private _vest = vest (leader _tempGrp);
+		private _weapon = currentWeapon (leader _tempGrp);
+		private _mags = magazines (leader _tempGrp);
 
 		deleteVehicle (leader _tempGrp);
 
-		_grp = [_hostilePos,0,REBEL_COUNT,CIVILIAN,false,0.5] call EFUNC(main,spawnGroup);
+		private _grp = [_hostilePos,0,REBEL_COUNT,CIVILIAN,1] call EFUNC(main,spawnGroup);
 
 		[
 			{count units (_this select 0) >= REBEL_COUNT},
 			{
 				params ["_grp","_pos","_vest","_weapon","_mags"];
 
+                {
+                    _x addUniform (selectRandom REBEL_UNIFORMS);
+                } forEach units _grp;
+
 				_grp = [units _grp] call EFUNC(main,setSide);
+
+                [_grp] call EFUNC(cache,disableCache);
 
 				{
 					_y = _x;
@@ -86,18 +93,20 @@ call {
 				_cond = "!(behaviour this isEqualTo ""COMBAT"")";
 				_wp setWaypointStatements [_cond, format ["thisList call %1;",QEFUNC(main,cleanup)]];
 
-				LOG_DEBUG("Rebels spawned.");
+				INFO_1("Rebels spawned at %1",getPos leader _grp);
 			},
 			[_grp,_pos,_vest,_weapon,_mags]
 		] call CBA_fnc_waitUntilAndExecute;
+
+        _ret = true;
 	};
 
 	if (_type isEqualTo 1) exitWith {
 		if (EGVAR(civilian,drivers) isEqualTo []) exitWith {
-			LOG_DEBUG("No drivers available to turn hostile.");
+			WARNING("No drivers available to turn hostile");
 		};
 
-		_driver = objNull;
+		private _driver = objNull;
 
 		{
 			if (CHECK_DIST2D(getPos _x,_pos,2000)) exitWith {
@@ -112,8 +121,8 @@ call {
 				};
 			} forEach crew (vehicle _driver);
 
-			_wp = [group _driver, currentWaypoint group _driver];
-			_wp setWaypointPosition [(getpos _driver),0];
+			private _wp = [group _driver, currentWaypoint group _driver];
+			_wp setWaypointPosition [getpos _driver,0];
 
 			[
 				{
@@ -121,10 +130,13 @@ call {
 
 					deleteWaypoint _wp;
 
+                    _driver addUniform (selectRandom REBEL_UNIFORMS);
+
 					_grp = [[_driver]] call EFUNC(main,setSide);
 
-					_unit = leader _grp;
+                    [_grp] call EFUNC(cache,disableCache);
 
+					_unit = leader _grp;
 					_unit removeAllEventHandlers "firedNear";
 					_unit addEventHandler ["Hit", {
 						"HelicopterExploSmall" createVehicle ((_this select 0) modeltoworld [0,0,0]);
@@ -153,21 +165,27 @@ call {
 						};
 					}, 0.1, [_unit,_player]] call CBA_fnc_addPerFrameHandler;
 
-					LOG_DEBUG("Suicide vehicle spawned.");
+					INFO_1("Suicide vehicle spawned at %1", getPos _unit);
 				},
 				[_player,_driver,_wp],
 				5
 			] call CBA_fnc_waitAndExecute;
+
+            _ret = true;
 		};
 	};
 
 	if (_type isEqualTo 2) exitWith {
-		_grp = createGroup CIVILIAN;
+		private _grp = createGroup CIVILIAN;
 		(selectRandom EGVAR(main,unitPoolCiv)) createUnit [_hostilePos, _grp];
+
+        (leader _grp) addUniform (selectRandom REBEL_UNIFORMS);
 
 		_grp = [[leader _grp]] call EFUNC(main,setSide);
 
-		_unit = leader _grp;
+        [_grp] call EFUNC(cache,disableCache);
+        
+		private _unit = leader _grp;
 		_unit removeAllEventHandlers "firedNear";
 		_unit addEventHandler ["Hit", {
 			"HelicopterExploSmall" createVehicle ((_this select 0) modeltoworld [0,0,0]);
@@ -197,6 +215,10 @@ call {
 			};
 		}, 0.1, [_unit,_player]] call CBA_fnc_addPerFrameHandler;
 
-		LOG_DEBUG("Suicide bomber spawned.");
+		INFO_1("Suicide bomber spawned at %1", getPos _unit);
+
+        _ret = true;
 	};
 };
+
+_ret

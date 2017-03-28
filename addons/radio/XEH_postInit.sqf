@@ -4,30 +4,13 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(CHECK_INIT) exitWith {};
+CHECK_POSTINIT;
 
-if (GVAR(enable) isEqualTo 0) exitWith {
-	LOG_DEBUG("Addon is disabled.");
-};
+[[],{
+	INFO("Init radio settings");
 
-[{
-	if (DOUBLES(PREFIX,main)) exitWith {
-		[_this select 1] call CBA_fnc_removePerFrameHandler;
-
-		// ACRE2 workaround, remove items from communications tab
-		_data = missionnamespace getVariable "bis_fnc_arsenal_data";
-		_data set [12,[]];
-		missionnamespace setVariable ["bis_fnc_arsenal_data",_data,true];
-
-		[
-			{!isNull player && {alive player}},
-			{
-				call FUNC(checkLoadout);
-				call FUNC(setRadioSettings);
-			},
-			[]
-		] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute), 0, true];
-	};
-}, 0, []] call CBA_fnc_addPerFrameHandler;
+	call FUNC(handleLoadout);
+	call FUNC(setRadioSettings);
+}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 
 ADDON = true;

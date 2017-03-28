@@ -6,41 +6,36 @@ Description:
 add armory to object
 
 Arguments:
+0: armory object <OBJECT>
 
 Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define PACK QUOTE(ACRE_PRC117F)
 #define STATE_PACK \
-	if !([player, EGVAR(radio,acre_support)] call acre_api_fnc_hasKindOfRadio) then { \
-		if (player canAddItemToBackpack EGVAR(radio,acre_support)) then { \
-			player addItemToBackpack EGVAR(radio,acre_support); \
-			[format ['Added %1 to backpack.', [configFile >> 'cfgWeapons' >> EGVAR(radio,acre_support)] call BIS_fnc_displayName],true] call FUNC(displayText); \
-			} else { \
-				if ((backpack player) isEqualTo '') then { \
-					player addBackpack 'B_Kitbag_cbr'; \
-					player addItemToBackpack EGVAR(radio,acre_support); \
-					[format ['Added %1 to backpack.', [configFile >> 'cfgWeapons' >> EGVAR(radio,acre_support)] call BIS_fnc_displayName],true] call FUNC(displayText); \
-				} else { \
-					['Your backpack is full.',true] call FUNC(displayText); \
-				}; \
-			}; \
-	} else { \
-		['You already have a pack radio.',true] call FUNC(displayText); \
-	};
+  if (player canAddItemToBackpack PACK) then { \
+    player addItemToBackpack PACK; \
+  } else { \
+    [format ["Cannot add %1 to your inventory.", [configFile >> "cfgWeapons" >> PACK] call BIS_fnc_displayName], true] call EFUNC(main,displayText); \
+  };
 #define STATE_RADIO call EFUNC(radio,setRadio);
-#define STATE_ARMORY \
-	if (CHECK_ADDON_1('acre_main')) then { \
-		{player removeItem _x} forEach (call acre_api_fnc_getCurrentRadioList); \
-	}; \
-	['Open',true] spawn FUNC(arsenal);
+#define STATE_ARMORY ["Open",true] spawn bis_fnc_arsenal;
 
-private _obj = _this select 0;
+params [
+    ["_obj",objNull,[objNull]]
+];
 
-[format ["%1_%2_armory", QUOTE(ADDON),_obj],"Open Armory",QUOTE(STATE_ARMORY),QUOTE(true),"",_obj,0,["ACE_MainActions"]] call FUNC(setAction);
+if (isNull _obj) exitWith {
+    WARNING("Object does not exist");
+};
 
-[format ["%1_%2_armoryRadio", QUOTE(ADDON),_obj],"Take Radio",QUOTE(STATE_RADIO),QUOTE(true),"",_obj,0,["ACE_MainActions"]] call FUNC(setAction);
+[[QUOTE(PREFIX),_obj,"armory"] joinString "_","Open Armory",{STATE_ARMORY},{true},{},[],_obj,0,["ACE_MainActions"]] call FUNC(setAction);
+
+if (CHECK_ADDON_1("acre_main") || {CHECK_ADDON_1("task_force_radio")}) then {
+  [[QUOTE(PREFIX),_obj,"armoryRadio"] joinString "_","Take Radio",{STATE_RADIO},{true},{},[],_obj,0,["ACE_MainActions"]] call FUNC(setAction);
+};
 
 if (CHECK_ADDON_1("acre_main")) then {
-	[format ["%1_%2_armoryPack", QUOTE(ADDON),_obj],"Take Pack Radio",QUOTE(STATE_PACK),QUOTE(true),"",_obj,0,["ACE_MainActions"]] call FUNC(setAction);
+	[[QUOTE(PREFIX),_obj,"armoryPack"] joinString "_","Take Pack Radio",{STATE_PACK},{true},{},[],_obj,0,["ACE_MainActions"]] call FUNC(setAction);
 };
