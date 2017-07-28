@@ -42,7 +42,7 @@ __________________________________________________________________*/
     ["Network 01 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
-        ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
+        ["tf_anprc152","tf_rf7800str","tf_rt1523g","tf_anprc148jem","tf_anprc154","tf_anprc155","tf_fadak","tf_pnr1000a","tf_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         0
     ],
@@ -70,7 +70,7 @@ __________________________________________________________________*/
     ["Network 02 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
-        ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
+        ["tf_anprc152","tf_rf7800str","tf_rt1523g","tf_anprc148jem","tf_anprc154","tf_anprc155","tf_fadak","tf_pnr1000a","tf_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         2
     ],
@@ -98,7 +98,7 @@ __________________________________________________________________*/
     ["Network 03 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
-        ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
+        ["tf_anprc152","tf_rf7800str","tf_rt1523g","tf_anprc148jem","tf_anprc154","tf_anprc155","tf_fadak","tf_pnr1000a","tf_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         1
     ],
@@ -126,7 +126,7 @@ __________________________________________________________________*/
     ["Network 04 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
-        ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
+        ["tf_anprc152","tf_rf7800str","tf_rt1523g","tf_anprc148jem","tf_anprc154","tf_anprc155","tf_fadak","tf_pnr1000a","tf_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         1
     ],
@@ -154,7 +154,7 @@ __________________________________________________________________*/
     ["Network 05 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
-        ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
+        ["tf_anprc152","tf_rf7800str","tf_rt1523g","tf_anprc148jem","tf_anprc154","tf_anprc155","tf_fadak","tf_pnr1000a","tf_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         1
     ],
@@ -182,7 +182,7 @@ __________________________________________________________________*/
     ["Network 06 TFAR Radio", "TFAR radio for players assigned to network."],
     COMPONENT_NAME,
     [
-        ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
+        ["tf_anprc152","tf_rf7800str","tf_rt1523g","tf_anprc148jem","tf_anprc154","tf_anprc155","tf_fadak","tf_pnr1000a","tf_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         1
     ],
