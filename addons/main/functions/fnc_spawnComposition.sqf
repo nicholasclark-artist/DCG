@@ -6,20 +6,22 @@ Description:
 spawn base
 
 Arguments:
-0: center positionAGL <ARRAY>
+0: center position <ARRAY>
 1: base strength, number between 0 and 1 that defines how fortified the base will be <NUMBER>
 
 Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CONFIG configfile >> QUOTE(DOUBLES(PREFIX,bases))
-#define ANCHOR "Land_HelipadEmpty_F"
+#define CONFIG configfile >> QUOTE(DOUBLES(PREFIX,compositions))
 
-params ["_position",["_strength",0.5]];
+params [
+    ["_position",[],[[]]],
+    ["_strength",0.5,[0]]
+];
 
-private _base = [];
-private _bases = [];
+private _composition = [];
+private _compList = [];
 private _objects = [];
 private _nodes = [];
 private _strength = (_strength max 0) min 1;
@@ -43,73 +45,73 @@ for "_index" from 0 to (count (CONFIG)) - 1 do {
 for "_index" from 0 to (count (CONFIG)) - 1 do {
     private _cfg = (CONFIG) select _index;
     _normalized = linearConversion [_min, _max, getNumber (_cfg >> "strength"), 0, 1, true];
-    _bases pushBack [_index,_normalized];
+    _compList pushBack [_index,_normalized];
 };
 
-private _bases = [_bases] call FUNC(shuffle);
+_compList = [_compList] call FUNC(shuffle);
 
 // find base with strength close to passed strength
 {
     if (abs ((_x select 1) - _strength) < _diff) then {
         _diff = abs ((_x select 1) - _strength);
-        _base = (CONFIG) select (_x select 0);
+        _composition = (CONFIG) select (_x select 0);
         _normalized = (_x select 1);
     };
     false
-} count _bases;
+} count _compList;
 
-if (_base isEqualTo []) then {
-    _base = (CONFIG) select ((_bases select 0) select 0);
-    _normalized = (CONFIG) select ((_bases select 0) select 1);
+if (_composition isEqualTo []) then {
+    _composition = (CONFIG) select ((_compList select 0) select 0);
+    _normalized = (CONFIG) select ((_compList select 0) select 1);
 };
 
-private _anchor = ANCHOR createVehicle [0,0,0];
-_anchor setPos _position;
-_anchor setDir random 360;
-_anchor setPos [(getpos _anchor) select 0,(getpos _anchor) select 1,0];
-_anchor setVectorUp surfaceNormal getPos _anchor;
+private _anchor = "Land_HelipadEmpty_F" createVehicle [0,0,0];
+_anchor setVectorUp [0,0,1];
+_anchor setPosATL [_position select 0,_position select 1,0];
 
-private _objData = call compile (getText (_base >> "objects"));
+private _objData = call compile (getText (_composition >> "objects"));
 
 for "_i" from 0 to count _objData - 1 do {
     private ["_obj","_pos"];
 
-    (_objData select _i) params ["_type","_relPos","_relDir","_vector","_snap"];
+    (_objData select _i) params ["_type","_relPos","_relDir","_vectorUp","_snap","_simple"];
 
     _relDir = call compile _relDir;
     _relPos = call compile _relPos;
 
-    _obj = _type createVehicle [0,0,0];
-    _obj enableDynamicSimulation true;
-    _obj setDir (getDir _anchor + _relDir);
-    _pos = _anchor modelToWorld _relPos;
+    _obj = if !(_simple) then {
+        _type createVehicle [0,0,0];
+    } else {
+        createSimpleObject [_type, [0,0,0]];
+    };
 
-    if (_snap > 0) then {
+    _obj setDir _relDir;
+    _obj setVectorUp [0,0,1];
+    _pos = getPosATL _anchor vectorAdd _relPos;
+
+    if (_snap) then {
         _pos set [2,0];
     };
 
-    _obj setpos _pos;
+    _obj setPosATL _pos;
 
-    if (_vector > 0) then {
-        _obj setVectorUp [0,0,1];
-    } else {
-        _obj setVectorUp surfaceNormal getPos _obj;
+    if !(_vectorUp) then {
+        _obj setVectorUp surfaceNormal getPosATL _obj;
     };
 
     _objects pushBack _obj;
+    _obj enableDynamicSimulation true;
 };
 
-private _nodeData = call compile (getText (_base >> "nodes"));
+private _nodeData = call compile (getText (_composition >> "nodes"));
 
 for "_i" from 0 to count _nodeData - 1 do {
-    private ["_pos"];
-
     (_nodeData select _i) params ["_relPos","_range"];
 
     _relPos = call compile _relPos;
     _range = call compile _range;
 
-    _pos = _anchor modelToWorld _relPos;
+    private _pos = getPosATL _anchor vectorAdd _relPos;
 
     _nodes pushBack [_pos,_range];
 };
@@ -117,7 +119,7 @@ for "_i" from 0 to count _nodeData - 1 do {
 deleteVehicle _anchor;
 
 private _ret = [
-    getNumber (_base >> "radius"),
+    getNumber (_composition >> "radius"),
     _normalized,
     _objects,
     _nodes

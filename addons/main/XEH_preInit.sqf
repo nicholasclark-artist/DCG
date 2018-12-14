@@ -12,7 +12,6 @@ PREP(initSettings);
 PREP(debug);
 PREP(handleLoadData);
 PREP(handleCleanup);
-PREP(handleSafezone);
 PREP(setDebugMarker);
 PREP(removeDebugMarker);
 PREP(armory);
@@ -24,6 +23,7 @@ PREP(findPosGrid);
 PREP(findPosSafe);
 PREP(findPosTerrain);
 PREP(getNearPlayers);
+PREP(getPool);
 PREP(saveData);
 PREP(loadData);
 PREP(loadDataAddon);
@@ -35,10 +35,6 @@ PREP(displayGUIMessage);
 PREP(removeAction);
 PREP(removeParticle);
 PREP(setAction);
-PREP(setSettingsValue);
-PREP(setSettings);
-PREP(setSettingsConfig);
-PREP(setSettingsParams);
 PREP(shuffle);
 PREP(setOwner);
 PREP(setSide);
@@ -50,30 +46,42 @@ PREP(setSurrender);
 PREP(setVehDamaged);
 PREP(setWaypointPos);
 PREP(setPosSafe);
-PREP(spawnBase);
+PREP(spawnComposition);
 PREP(spawnGroup);
 PREP(spawnReinforcements);
 PREP(spawnSniper);
 PREP(spawnStatic);
-PREP(exportSettings);
 PREP(exportPool);
-PREP(exportBase);
+PREP(exportComposition);
 PREP(splitGroup);
 PREP(exportNetworkTraffic);
+PREP(exportVehicleClasses);
+PREP(exportFactionClasses);
 PREP(landAt);
-// PREP(exportConfigList);
+PREP(parseFactions);
 
+GVAR(playerSide) = sideUnknown;
 GVAR(locations) = [];
 GVAR(locals) = [];
 GVAR(hills) = [];
 GVAR(marines) = [];
-GVAR(baseLocation) = locationNull;
 GVAR(range) = worldSize*0.5;
 GVAR(center) = [GVAR(range),GVAR(range),0];
-GVAR(markerCleanup) = [];
-GVAR(objectCleanup) = [];
+GVAR(cleanup) = [];
 GVAR(saveDataCurrent) = [];
 GVAR(debugMarkers) = [];
+GVAR(unitPoolWest) = [];
+GVAR(vehPoolWest) = [];
+GVAR(airPoolWest) = [];
+GVAR(unitPoolEast) = [];
+GVAR(vehPoolEast) = [];
+GVAR(airPoolEast) = [];
+GVAR(unitPoolInd) = [];
+GVAR(vehPoolInd) = [];
+GVAR(airPoolInd) = [];
+GVAR(unitPoolCiv) = [];
+GVAR(vehPoolCiv) = [];
+GVAR(airPoolCiv) = [];
 
 publicVariable QUOTE(ADDON);
 
@@ -96,5 +104,6 @@ call FUNC(loadData);
 // init cba settings
 SETTINGS_INIT;
 
-// set config and mission settings
-call FUNC(setSettings);
+// parse faction settings
+// must run after cba settings init 
+call FUNC(parseFactions);

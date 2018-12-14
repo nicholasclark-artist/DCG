@@ -1,10 +1,10 @@
 #define MAINPREFIX d
 #define PREFIX dcg
 
-#define MAJOR 3
-#define MINOR 2
+#define MAJOR 4
+#define MINOR 0
 #define PATCHLVL 0
-#define BUILD 9
+#define BUILD 1
 
 #define VERSION MAJOR.MINOR.PATCHLVL.BUILD
 #define VERSION_AR MAJOR,MINOR,PATCHLVL,BUILD

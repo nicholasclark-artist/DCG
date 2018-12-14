@@ -19,7 +19,6 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define MAX_CARGO 4
 
-private ["_unitPool","_vehPool","_airPool"];
 params [
 	["_pos",[0,0,0],[[]]],
 	["_type",0,[0]],
@@ -32,34 +31,16 @@ params [
 private _grp = createGroup _side;
 private _drivers = [];
 private _check = [];
+private _unitPool = [_side,0] call FUNC(getPool);
+private _vehPool = [_side,1] call FUNC(getPool);
+private _airPool = [_side,2] call FUNC(getPool);
 
 _grp deleteGroupWhenEmpty true;
 
 _pos =+ _pos;
 _pos resize 2;
 
-call {
-	if (_side isEqualTo EAST) exitWith {
-		_unitPool = GVAR(unitPoolEast);
-		_vehPool = GVAR(vehPoolEast);
-		_airPool = GVAR(airPoolEast);
-	};
-	if (_side isEqualTo WEST) exitWith {
-		_unitPool = GVAR(unitPoolWest);
-		_vehPool = GVAR(vehPoolWest);
-		_airPool = GVAR(airPoolWest);
-	};
-	if (_side isEqualTo CIVILIAN) exitWith {
-		_unitPool = GVAR(unitPoolCiv);
-		_vehPool = GVAR(vehPoolCiv);
-		_airPool = GVAR(airPoolCiv)
-	};
-    if (_side isEqualTo RESISTANCE) exitWith {
-        _unitPool = GVAR(unitPoolInd);
-    	_vehPool = GVAR(vehPoolInd);
-    	_airPool = GVAR(airPoolInd);
-	};
-};
+
 
 if (_type isEqualTo 0) exitWith {
 	[{

@@ -17,7 +17,14 @@ GVAR(status) = TR_WAITING;
 [STR_EXFIL,true] call EFUNC(main,displayText);
 
 [EH_EXFIL, "onMapSingleClick", {
-	_class = _this select 0;
+    params [
+        ["_units",[],[[]]],
+        ["_pos",[],[[0,0,0]]],
+        ["_alt",false,[false]],
+        ["_shift",false,[false]],
+        ["_class","C_Heli_Light_01_civil_F",[""]]
+    ];
+
 	if (COMPARE_STR(GVAR(status),TR_WAITING)) then {
 		if (surfaceIsWater _pos) then {
 			[STR_NOTLAND,true] call EFUNC(main,displayText);
@@ -35,9 +42,9 @@ GVAR(status) = TR_WAITING;
 				[STR_INFIL,true] call EFUNC(main,displayText);
 
 				[EH_INFIL, "onMapSingleClick", {
-					_class = _this select 0;
-					_exfil = _this select 1;
-					_exfilMrk = _this select 2;
+					_class = _this select 4;
+					_exfil = _this select 5;
+					_exfilMrk = _this select 6;
 
 					if (COMPARE_STR(GVAR(status),TR_WAITING)) then {
 						if (surfaceIsWater _pos) then {

@@ -14,7 +14,6 @@ __________________________________________________________________*/
 #define TR_LISTSIZE 3
 
 private _actions = [];
-private _pool = [];
 private _fnc_getCargo = {
 	private ["_baseCfg","_numCargo"];
 	params ["_vehType"];
@@ -30,17 +29,7 @@ private _fnc_getCargo = {
 	_numCargo
 };
 
-call {
-	if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
-		_pool = EGVAR(main,airPoolWest);
-	};
-	if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
-		_pool = EGVAR(main,airPoolEast);
-	};
-	if (EGVAR(main,playerSide) isEqualTo RESISTANCE) exitWith {
-		_pool = EGVAR(main,airPoolInd);
-	};
-};
+_pool = [EGVAR(main,playerSide),2] call EFUNC(main,getPool);
 
 {
     if (count _actions isEqualTo TR_LISTSIZE) exitWith {

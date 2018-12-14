@@ -26,7 +26,7 @@ private _pairs = [];
     if !(_class isKindOf "Bag_Base") then {
       if (player canAdd _class) then {
   			player addItem _class;
-        // channels are zero based
+            // channels are zero based
   			_pairs pushBack [_class,_forEachIndex]; // pushBack classname and channel pair
   		} else {
   			_missing pushBack _class;

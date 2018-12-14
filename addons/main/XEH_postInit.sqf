@@ -3,39 +3,8 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define BASE DOUBLES(PREFIX,base)
-#define DEFAULTPOS [-5000,-5000]
-#define CREATE_BASE \
-	GVAR(baseLocation) = createLocation ["NameCity", getPos BASE, GVAR(baseRadius), GVAR(baseRadius)]; \
-	GVAR(baseLocation) setText "Main Operating Base"; \
-	GVAR(baseLocation) attachObject BASE
-#define CREATE_DEFAULTBASE GVAR(baseLocation) = createLocation ["NameCity", DEFAULTPOS, 10, 10]
 
 CHECK_POSTINIT;
-
-// if marker exist, create base object on marker position
-if (CHECK_MARKER(QUOTE(BASE))) then {
-	BASE = "Land_HelipadEmpty_F" createVehicle [0,0,0];
-	BASE setPos (getMarkerPos QUOTE(BASE));
-	publicVariable QUOTE(BASE);
-};
-
-// if base object created from marker or created in editor, create base location
-if !(isNil QUOTE(BASE)) then {
-	CREATE_BASE;
-	{
-		CREATE_BASE;
-	} remoteExecCall [QUOTE(BIS_fnc_call),-2,true];
-};
-
-if (isNull GVAR(baseLocation)) then {
-	CREATE_DEFAULTBASE;
-	{
-		CREATE_DEFAULTBASE;
-	} remoteExecCall [QUOTE(BIS_fnc_call),-2,true];
-
-	WARNING_1("Base object does not exist. Base location created at %1",DEFAULTPOS);
-};
 
 // get map locations from config
 _cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";
@@ -54,22 +23,20 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 
 	call {
 		if (toLower _type in _typeLocations) exitWith {
-			if (!(_position inArea GVAR(baseLocation)) && {{COMPARE_STR(_x,_name)} count GVAR(blacklistLocations) isEqualTo 0} && {!(_name isEqualTo "")}) then {
+			if ({COMPARE_STR(_x,_name)} count GVAR(blacklistLocations) isEqualTo 0 && {!(_name isEqualTo "")}) then {
 				GVAR(locations) pushBack [_name,_position,_size,_type];
 			};
 		};
 		if (toLower _type in _typeLocals) exitWith {
-			if (!(_position inArea GVAR(baseLocation)) && {!(_name isEqualTo "")}) then {
+			if !(_name isEqualTo "") then {
 				GVAR(locals) pushBack [_name,_position,_size];
 			};
 		};
 		if (toLower _type in _typeHills) exitWith {
-			if !(_position inArea GVAR(baseLocation)) then {
-				GVAR(hills) pushBack [_position,_size];
-			};
+			GVAR(hills) pushBack [_position,_size];
 		};
 		if (toLower _type in _typeMarines) exitWith {
-			if (!(_position inArea GVAR(baseLocation)) && {!(_name isEqualTo "")}) then {
+			if !(_name isEqualTo "") then {
 				GVAR(marines) pushBack [_name,_position,_size];
 			};
 		};
@@ -111,7 +78,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 // create world size position grid
 GVAR(grid) = [EGVAR(main,center),1000,worldSize,0,0,0] call FUNC(findPosGrid);
 
-[FUNC(handleSafezone), 60, []] call CBA_fnc_addPerFrameHandler;
+//[FUNC(handleSafezone), 60, []] call CBA_fnc_addPerFrameHandler;
 [FUNC(handleCleanup), 120, []] call CBA_fnc_addPerFrameHandler;
 
 if !(isNil {HEADLESSCLIENT}) then {

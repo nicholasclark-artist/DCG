@@ -23,42 +23,6 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(playerSide),
-    "LIST",
-    ["Player Side","Must be the same side as editor placed playable units."],
-    COMPONENT_NAME,
-    [
-        [EAST,WEST,RESISTANCE],
-        ["EAST","WEST","RESISTANCE"],
-        1
-    ],
-    false,
-    {
-        if (isServer) then {
-            SETTINGS_OVERWRITE(QGVAR(playerSide),GVAR(playerSide));
-        };
-    }
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(enemySide),
-    "LIST",
-    ["Enemy Side","Cannot be the same as player side."],
-    COMPONENT_NAME,
-    [
-        [EAST,WEST,RESISTANCE],
-        ["EAST","WEST","RESISTANCE"],
-        0
-    ],
-    false,
-    {
-        if (isServer) then {
-            SETTINGS_OVERWRITE(QGVAR(enemySide),GVAR(enemySide));
-        };
-    }
-] call CBA_Settings_fnc_init;
-
-[
     QGVAR(loadData),
     "CHECKBOX",
     ["Load Mission Data","Load mission data saved to server profile."],
@@ -79,26 +43,85 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(baseRadius),
-    "SLIDER",
-    ["Main Operating Base Radius","Base radius."],
+    QGVAR(playerSide),
+    "LIST",
+    ["Player Side","Cannot be the same as enemy side."],
     COMPONENT_NAME,
     [
-        100,
-        2000,
-        (worldSize*0.05) min 2000,
+        [EAST,WEST,INDEPENDENT],
+        ["EAST","WEST","INDEPENDENT"],
+        1
+    ],
+    false,
+    {
+        if (isServer) then {
+            SETTINGS_OVERWRITE(QGVAR(playerSide),GVAR(playerSide));
+
+            if (GVAR(playerSide) isEqualTo GVAR(enemySide)) then {
+                ERROR("Player side cannot be equal to enemy side")
+            };
+        };
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(enemySide),
+    "LIST",
+    ["Enemy Side","Cannot be the same as player side."],
+    COMPONENT_NAME,
+    [
+        [EAST,WEST,INDEPENDENT],
+        ["EAST","WEST","INDEPENDENT"],
         0
     ],
+    false,
+    {
+        if (isServer) then {
+            SETTINGS_OVERWRITE(QGVAR(enemySide),GVAR(enemySide));
+
+            if (GVAR(playerSide) isEqualTo GVAR(enemySide)) then {
+                ERROR("Enemy side cannot be equal to player side")
+            };
+        };
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(factionWest),
+    "EDITBOX",
+    ["West Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
+    COMPONENT_NAME,
+    "BLU_F",
     false,
     {}
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(baseSafezone),
-    "CHECKBOX",
-    ["Main Operating Base Safezone","Deletes enemy units within base radius."],
+    QGVAR(factionEast),
+    "EDITBOX",
+    ["East Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
     COMPONENT_NAME,
-    true,
+    "OPF_F",
+    false,
+    {}
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(factionInd),
+    "EDITBOX",
+    ["Independent Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
+    COMPONENT_NAME,
+    "IND_F",
+    false,
+    {}
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(factionCiv),
+    "EDITBOX",
+    ["Civilian Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
+    COMPONENT_NAME,
+    "CIV_F",
     false,
     {}
 ] call CBA_Settings_fnc_init;

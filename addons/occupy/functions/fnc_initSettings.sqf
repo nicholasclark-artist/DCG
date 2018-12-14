@@ -23,6 +23,21 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
+    QGVAR(multiplier),
+    "SLIDER",
+    ["Enemy Count Multiplier",""],
+    COMPONENT_NAME,
+    [
+        0.5,
+        2,
+        1,
+        0
+    ],
+    false,
+    {}
+] call CBA_Settings_fnc_init;
+
+[
     QGVAR(sniper),
     "CHECKBOX",
     ["Spawn Snipers","Spawn sniper units near occupied locations."],

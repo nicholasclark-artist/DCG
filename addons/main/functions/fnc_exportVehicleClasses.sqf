@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-export list of class names from config
+export list of class names from CfgVehicles
 
 Arguments:
 0: side to export <SIDE>
@@ -12,7 +12,7 @@ Arguments:
 3: string used to filter display name <STRING>
 
 Return:
-text
+nil
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define CFGEXPORT(CFGARR,CFGNAME) CFGARR pushBack str CFGNAME
@@ -62,5 +62,10 @@ for "_index" from 0 to (count _cfg - 1) do {
 	};
 };
 
-titleText [format ["Exporting %1 classes",count _classArr], "PLAIN"];
-copyToClipboard (_classArr joinString ",");
+_classArr = _classArr joinString ",";
+
+copyToClipboard _classArr;
+
+titleText [format ["Exporting %1 classes to clipboard.",count _classArr], "PLAIN"];
+
+nil

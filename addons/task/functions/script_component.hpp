@@ -1,1 +1,0 @@
-#include "\d\dcg\addons\task\script_component.hpp"

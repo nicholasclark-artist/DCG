@@ -3,7 +3,6 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-add armory to object
 
 Arguments:
 0: log path <STRING>
