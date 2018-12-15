@@ -87,23 +87,31 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(factionWest),
-    "EDITBOX",
-    ["West Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
-    COMPONENT_NAME,
-    "BLU_F",
-    false,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
     QGVAR(factionEast),
     "EDITBOX",
     ["East Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
     COMPONENT_NAME,
     "OPF_F",
     false,
-    {}
+    {
+        if (isServer) then {
+            [0] call FUNC(parseFactions);
+        };
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(factionWest),
+    "EDITBOX",
+    ["West Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
+    COMPONENT_NAME,
+    "BLU_F",
+    false,
+    {
+        if (isServer) then {
+            [1] call FUNC(parseFactions);
+        };
+    }
 ] call CBA_Settings_fnc_init;
 
 [
@@ -113,7 +121,11 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "IND_F",
     false,
-    {}
+    {
+        if (isServer) then {
+            [2] call FUNC(parseFactions);
+        };
+    }
 ] call CBA_Settings_fnc_init;
 
 [
@@ -123,5 +135,9 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "CIV_F",
     false,
-    {}
+    {
+        if (isServer) then {
+            [3] call FUNC(parseFactions);
+        };
+    }
 ] call CBA_Settings_fnc_init;

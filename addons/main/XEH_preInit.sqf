@@ -103,7 +103,3 @@ call FUNC(loadData);
 
 // init cba settings
 SETTINGS_INIT;
-
-// parse faction settings
-// must run after cba settings init 
-call FUNC(parseFactions);
