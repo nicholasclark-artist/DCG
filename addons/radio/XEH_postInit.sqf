@@ -13,4 +13,4 @@ CHECK_POSTINIT;
 	call FUNC(setRadioSettings);
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 
-ADDON = true;
+// ADDON = true;

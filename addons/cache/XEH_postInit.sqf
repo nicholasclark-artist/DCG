@@ -8,4 +8,4 @@ CHECK_POSTINIT;
 
 [FUNC(handleCache), 30, []] call CBA_fnc_addPerFrameHandler;
 
-ADDON = true;
+// ADDON = true;

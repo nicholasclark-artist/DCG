@@ -34,4 +34,4 @@ addMissionEventHandler ["HandleDisconnect",{
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 
-ADDON = true;
+// ADDON = true;

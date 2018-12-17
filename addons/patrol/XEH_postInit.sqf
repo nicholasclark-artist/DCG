@@ -23,4 +23,4 @@ CHECK_POSTINIT;
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 
-ADDON = true;
+// ADDON = true;

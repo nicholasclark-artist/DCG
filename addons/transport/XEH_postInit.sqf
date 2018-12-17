@@ -21,4 +21,4 @@ PVEH_REQUEST addPublicVariableEventHandler {
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 
-ADDON = true;
+// ADDON = true;
