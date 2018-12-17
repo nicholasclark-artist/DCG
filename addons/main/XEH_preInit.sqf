@@ -6,7 +6,8 @@ __________________________________________________________________*/
 
 CHECK_PREINIT;
 
-ADDON = false;
+// ADDON = false;
+LOG(MSG_INIT);
 
 PREP(initSettings);
 PREP(debug);
