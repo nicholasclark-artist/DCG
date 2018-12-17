@@ -13,9 +13,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_data"];
-
-if !(_data isEqualTo []) then {
+if !(_this isEqualTo []) then {
 	{
 		_x params ["_type","_pos","_dir","_vector"];
 
@@ -25,5 +23,5 @@ if !(_data isEqualTo []) then {
 		_veh setVectorUp _vector;
 
 		false
-	} count _data;
+	} count _this;
 };

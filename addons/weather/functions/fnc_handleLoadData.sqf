@@ -13,11 +13,7 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params [
-    ["_data",[],[[]]]
-];
-
-if (_data isEqualTo []) then {
+if (_this isEqualTo []) then {
 	private "_mapdata";
 
     if (GVAR(month) isEqualTo -1) then {
@@ -43,6 +39,6 @@ if (_data isEqualTo []) then {
 		GVAR(overcast) = random [0,0.5,1];
 	};
 } else {
-	GVAR(overcast) = _data select 0;
-	GVAR(date) = _data select 1;
+	GVAR(overcast) = _this select 0;
+	GVAR(date) = _this select 1;
 };

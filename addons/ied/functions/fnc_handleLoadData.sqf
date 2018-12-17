@@ -29,9 +29,7 @@ __________________________________________________________________*/
         GVAR(list) pushBack _ied; \
     };
 
-params ["_data"];
-
-if (_data isEqualTo []) then {
+if (_this isEqualTo []) then {
 	{
 		private _roads = _x nearRoads 200;
 

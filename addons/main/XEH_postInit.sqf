@@ -107,7 +107,7 @@ SAVE_PVEH_DELETE addPublicVariableEventHandler {
 };
 
 // load data
-_data = QUOTE(ADDON) call FUNC(loadDataAddon);
+_data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
 [_data] call FUNC(handleLoadData);
 
 // set client actions

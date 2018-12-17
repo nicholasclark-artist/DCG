@@ -17,7 +17,7 @@ PVEH_AVADD addPublicVariableEventHandler {
 [
 	{DOUBLES(PREFIX,main)},
 	{
-		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
+		_data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
 		[_data] call FUNC(handleLoadData);
 
 		[{

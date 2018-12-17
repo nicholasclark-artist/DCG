@@ -10,7 +10,7 @@ CHECK_POSTINIT;
 [
 	{DOUBLES(PREFIX,main)},
 	{
-		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
+		_data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
 		[_data] call FUNC(handleLoadData);
 
         if !(CHECK_ADDON_1("ace_explosives")) then {

@@ -9,7 +9,7 @@ CHECK_POSTINIT;
 [
 	{DOUBLES(PREFIX,main) && {time > 0}},
 	{
-		_data = QUOTE(ADDON) call EFUNC(main,loadDataAddon);
+		_data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
 		[_data] call FUNC(handleLoadData);
 
         [] spawn {
