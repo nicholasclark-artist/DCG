@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-load data from server profile
+check server profile for saved data and assign it for current scenario
 
 Arguments:
 
@@ -15,7 +15,7 @@ __________________________________________________________________*/
 if (!isServer) exitWith {};
 
 {
-	if (toUpper (_x select 0) isEqualTo DATA_MISSION_ID) exitWith {
+	if (toUpper (_x select 0) isEqualTo SAVE_SCENARIO_ID) exitWith {
 		GVAR(saveDataCurrent) = _x;
 	};
-} forEach (DATA_GETVAR);
+} forEach (SAVE_GET_VAR);

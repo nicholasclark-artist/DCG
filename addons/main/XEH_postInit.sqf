@@ -90,18 +90,19 @@ if !(isNil {HEADLESSCLIENT}) then {
 };
 
 // save functionality
-if (GVAR(autoSave)) then {
-    [{
-        call FUNC(saveData);
-    }, 1800, []] call CBA_fnc_addPerFrameHandler;
-};
 
-DATA_SAVEPVEH addPublicVariableEventHandler {
+[{
+	if (GVAR(autoSave)) then {
+		call FUNC(saveData);
+	};
+}, 1800, []] call CBA_fnc_addPerFrameHandler;
+
+SAVE_PVEH addPublicVariableEventHandler {
 	call FUNC(saveData);
 };
 
-DATA_DELETEPVEH addPublicVariableEventHandler {
-	profileNamespace setVariable [DATA_SAVEVAR,nil];
+SAVE_PVEH_DELETE addPublicVariableEventHandler {
+	profileNamespace setVariable [SAVE_ID,nil];
 	saveProfileNamespace;
 };
 
@@ -117,11 +118,11 @@ _data = QUOTE(ADDON) call FUNC(loadDataAddon);
         } forEach [
             [QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],{},{true},{},[],player,1,["ACE_SelfActions"]],
             [QUOTE(DOUBLES(PREFIX,data)),"Mission Data"],
-            [SAVEDATA_ID,SAVEDATA_NAME,{SAVEDATA_STATEMENT},{SAVEDATA_COND},{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
-            [DELETEDATA_ID,DELETEDATA_NAME,{DELETEDATA_STATEMENT},{DELETEDATA_COND},{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
+            [SAVE_ACTION_ID,SAVE_ACTION_NAME,{SAVE_ACTION_STATEMENT},{SAVE_ACTION_COND},{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
+            [SAVE_ACTION_ID_DELETE,SAVE_ACTION_NAME_DELETE,{SAVE_ACTION_STATEMENT_DELETE},{SAVE_ACTION_COND_DELETE},{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
         ];
 	};
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 
-ADDON = true;
-publicVariable QUOTE(ADDON);
+// ADDON = true;
+// publicVariable QUOTE(ADDON);

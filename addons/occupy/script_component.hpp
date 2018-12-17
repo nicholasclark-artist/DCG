@@ -4,13 +4,12 @@
 #include "\d\dcg\addons\main\script_mod.hpp"
 
 // #define DEBUG_MODE_FULL
-// #define DISABLE_COMPILE_CACHE
+#define DISABLE_COMPILE_CACHE
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define UNITVAR QUOTE(DOUBLES(ADDON,unit))
-#define SET_UNITVAR(OBJ) (OBJ) setVariable [UNITVAR,true]
-#define GET_UNITVAR(OBJ) (OBJ) getVariable [UNITVAR,false]
+#define SET_UNITVAR(OBJ) (OBJ) setVariable [SAVE_ID_ENTITY(COMPONENT),true]
+#define GET_UNITVAR(OBJ) (OBJ) getVariable [SAVE_ID_ENTITY(COMPONENT),false]
 #define SPAWN_DELAY 1
 #define PATROL_UNITCOUNT 2
 #define ITERATIONS 3000
