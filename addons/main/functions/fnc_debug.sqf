@@ -6,9 +6,10 @@ Description:
 enable/disable debug markers
 
 Arguments:
+0: enable debug <BOOL>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -21,3 +22,5 @@ if (_debug) then {
 } else {
 	GVAR(debugMarkers) apply {_x setMarkerAlpha 0};
 };
+
+nil

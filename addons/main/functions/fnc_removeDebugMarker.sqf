@@ -9,7 +9,7 @@ Arguments:
 0: marker <STRING>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -17,3 +17,5 @@ private _marker = _this select 0;
 
 GVAR(debugMarkers) deleteAt (GVAR(debugMarkers) find _marker);
 deleteMarker _marker;
+
+nil
