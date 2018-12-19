@@ -7,7 +7,7 @@ __________________________________________________________________*/
 CHECK_POSTINIT;
 
 [
-	{DOUBLES(PREFIX,main)},
+	{MAIN_ADDON},
 	{
 		[[],{
             if (hasInterface) then {

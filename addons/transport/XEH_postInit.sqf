@@ -11,7 +11,7 @@ PVEH_REQUEST addPublicVariableEventHandler {
 };
 
 [
-	{DOUBLES(PREFIX,main)},
+	{MAIN_ADDON},
 	{
         [[],{
         	if (hasInterface) then {
