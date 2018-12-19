@@ -14,7 +14,7 @@
 #define HEADLESSCLIENT DOUBLES(PREFIX,HC)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
 #define SETTINGS_INIT remoteExecCall [QFUNC(initSettings), -2, true]; call FUNC(initSettings)
-#define SETTINGS_OVERWRITE(SETTING,VALUE) [{DOUBLES(PREFIX,main) && {CHECK_POSTBRIEFING}},{missionNamespace setVariable [SETTING,_this]},VALUE] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute),-2,true]
+#define SETTINGS_OVERWRITE(SETTING,VALUE) [{MAIN_ADDON && {CHECK_POSTBRIEFING}},{missionNamespace setVariable [SETTING,_this]},VALUE] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute),-2,true]
 
 #define ISDRIVER QEGVAR(main,isDriver)
 #define ISONPATROL QEGVAR(main,isOnPatrol)
@@ -33,7 +33,17 @@
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
 
-// fob cost values
+// save macros 
+#define SAVE_ID QUOTE(DOUBLES(MAIN_ADDON,saveData))
+#define SAVE_ID_ENTITY(COMPONENT1) QUOTE(DOUBLES(DOUBLES(PREFIX,COMPONENT1),saveEntity))
+#define SAVE_ID_ENTITY_MAIN QUOTE(DOUBLES(MAIN_ADDON,saveEntity))
+#define SAVE_PVEH QUOTE(DOUBLES(MAIN_ADDON,saveDataPVEH))
+#define SAVE_PVEH_DELETE QUOTE(DOUBLES(MAIN_ADDON,deleteDataPVEH))
+#define SAVE_SET_VAR(VAR1) profileNamespace setVariable [SAVE_ID,VAR1]
+#define SAVE_GET_VAR profileNamespace getVariable [SAVE_ID,[]]
+#define SAVE_SCENARIO_ID ([QUOTE(VERSION), toUpper worldName, toUpper missionName] joinString " - ")
+
+// fob macros
 #define COST_MAN 1.5
 #define COST_CAR 3
 #define COST_TANK 6
@@ -45,6 +55,7 @@
 #define COST_FORT 0.2
 #define COST_SIGN 0.1
 
+// approval macros
 #define PVEH_AVADD QEGVAR(approval,pveh_add)
 #define AV_LOCATION_ID(LOCATION) ([QUOTE(PREFIX),"approval",LOCATION] joinString "_")
 #define AV_MIN 0

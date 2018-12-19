@@ -90,7 +90,6 @@ if !(isNil {HEADLESSCLIENT}) then {
 };
 
 // save functionality
-
 [{
 	if (GVAR(autoSave)) then {
 		call FUNC(saveData);
@@ -106,7 +105,7 @@ SAVE_PVEH_DELETE addPublicVariableEventHandler {
 	saveProfileNamespace;
 };
 
-// load data
+// load saved data
 _data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
 [_data] call FUNC(handleLoadData);
 
@@ -124,5 +123,5 @@ _data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
 	};
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 
-// ADDON = true;
-// publicVariable QUOTE(ADDON);
+MAIN_ADDON = true;
+publicVariable QUOTE(MAIN_ADDON);
