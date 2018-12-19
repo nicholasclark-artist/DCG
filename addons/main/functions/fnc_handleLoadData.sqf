@@ -6,14 +6,16 @@ Description:
 handle loading data
 
 Arguments:
-0: data <ARRAY>
+0: saved data <ARRAY>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(_this isEqualTo []) then {
+params ["_data"];
+
+if !(_data isEqualTo []) then {
 	{
 		_x params ["_type","_pos","_dir","_vector"];
 
@@ -23,5 +25,7 @@ if !(_this isEqualTo []) then {
 		_veh setVectorUp _vector;
 
 		false
-	} count _this;
+	} count _data;
 };
+
+nil

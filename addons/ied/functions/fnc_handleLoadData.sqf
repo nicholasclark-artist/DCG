@@ -6,10 +6,10 @@ Description:
 handle loading data
 
 Arguments:
-0: data <ARRAY>
+0: saved data <ARRAY>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define DIST_MIN 512
@@ -29,7 +29,9 @@ __________________________________________________________________*/
         GVAR(list) pushBack _ied; \
     };
 
-if (_this isEqualTo []) then {
+params ["_data"];
+
+if (_data isEqualTo []) then {
 	{
 		private _roads = _x nearRoads 200;
 
@@ -49,3 +51,5 @@ if (_this isEqualTo []) then {
         CREATE_IED(_pos)
 	};
 };
+
+nil

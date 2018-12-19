@@ -6,17 +6,21 @@ Description:
 handle loading addon data
 
 Arguments:
-0: loaded data <ARRAY>
+0: saved data <ARRAY>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define REGION_SIZE 2000
 
+params [
+    ["_data",[],[[]]]
+];
+
 {
-    private _value = if (count _this > _forEachIndex + 1) then {
-        _this select _forEachIndex
+    private _value = if (count _data > _forEachIndex + 1) then {
+        _data select _forEachIndex
     } else {
         AV_DEFAULT
     };
@@ -26,3 +30,5 @@ __________________________________________________________________*/
     _location setVariable [QGVAR(regionValue),_value];
     GVAR(regions) pushBack _location;
 } forEach ([EGVAR(main,center),REGION_SIZE*2,worldSize] call EFUNC(main,findPosGrid));
+
+nil

@@ -6,14 +6,18 @@ Description:
 handle loading data
 
 Arguments:
-0: data <ARRAY>
+0: saved data <ARRAY>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (_this isEqualTo []) then {
+params [
+    ["_data",[],[[]]]
+];
+
+if (_data isEqualTo []) then {
 	private "_mapdata";
 
     if (GVAR(month) isEqualTo -1) then {
@@ -39,6 +43,8 @@ if (_this isEqualTo []) then {
 		GVAR(overcast) = random [0,0.5,1];
 	};
 } else {
-	GVAR(overcast) = _this select 0;
-	GVAR(date) = _this select 1;
+	GVAR(overcast) = _data select 0;
+	GVAR(date) = _data select 1;
 };
+
+nil
