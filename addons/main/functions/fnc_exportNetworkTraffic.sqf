@@ -12,7 +12,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define LOG_FILENAME QUOTE(TRIPLES(PREFIX,network,log.txt))
+#define LOG_FILENAME QUOTE(DOUBLES(GVARMAIN(network),log.txt))
 
 _this spawn {
     params [

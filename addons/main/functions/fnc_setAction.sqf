@@ -34,7 +34,7 @@ params [
     ["_params",[],[[]]],
 	["_obj",player,[objNull]],
 	["_type",1,[0]],
-	["_path",["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions))],[[]]],
+	["_path",["ACE_SelfActions",QGVARMAIN(actions)],[[]]],
 	["_pos",[0,0,0],[[]]]
 ];
 

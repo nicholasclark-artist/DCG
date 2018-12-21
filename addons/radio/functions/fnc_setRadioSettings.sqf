@@ -11,7 +11,7 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define PRESET QUOTE(DOUBLES(PREFIX,preset))
+#define PRESET QGVARMAIN(preset)
 #define NETWORK_COUNT 6
 #define ACRE_BASERADIOS ["ACRE_PRC343","ACRE_PRC148","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_SEM52SL"]
 

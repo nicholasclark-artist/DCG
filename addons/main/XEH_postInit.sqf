@@ -115,10 +115,10 @@ _data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
         {
             _x call EFUNC(main,setAction);
         } forEach [
-            [QUOTE(DOUBLES(PREFIX,actions)),format["%1 Actions",toUpper QUOTE(PREFIX)],{},{true},{},[],player,1,["ACE_SelfActions"]],
-            [QUOTE(DOUBLES(PREFIX,data)),"Mission Data"],
-            [SAVE_ACTION_ID,SAVE_ACTION_NAME,{SAVE_ACTION_STATEMENT},{SAVE_ACTION_COND},{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]],
-            [SAVE_ACTION_ID_DELETE,SAVE_ACTION_NAME_DELETE,{SAVE_ACTION_STATEMENT_DELETE},{SAVE_ACTION_COND_DELETE},{},[],player,1,["ACE_SelfActions",QUOTE(DOUBLES(PREFIX,actions)),QUOTE(DOUBLES(PREFIX,data))]]
+            [QGVARMAIN(actions),format["%1 Actions",toUpper QUOTE(PREFIX)],{},{true},{},[],player,1,["ACE_SelfActions"]],
+            [QGVARMAIN(data),"Mission Data"],
+            [SAVE_ACTION_ID,SAVE_ACTION_NAME,{SAVE_ACTION_STATEMENT},{SAVE_ACTION_COND},{},[],player,1,["ACE_SelfActions",QGVARMAIN(actions),QGVARMAIN(data)]],
+            [SAVE_ACTION_ID_DELETE,SAVE_ACTION_NAME_DELETE,{SAVE_ACTION_STATEMENT_DELETE},{SAVE_ACTION_COND_DELETE},{},[],player,1,["ACE_SelfActions",QGVARMAIN(actions),QGVARMAIN(data)]]
         ];
 	};
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];

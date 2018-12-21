@@ -10,10 +10,10 @@ Arguments:
 Return:
 string
 __________________________________________________________________*/
-#include "script_component.hpp"
-#define ATTRIBUTE_ANCHOR(ENTITY) ((ENTITY get3DENAttribute QUOTE(DOUBLES(PREFIX,Anchor))) select 0)
-#define ATTRIBUTE_SNAP(ENTITY) ((ENTITY get3DENAttribute QUOTE(DOUBLES(PREFIX,Snap))) select 0)
-#define ATTRIBUTE_VECTORUP(ENTITY) ((ENTITY get3DENAttribute QUOTE(DOUBLES(PREFIX,VectorUp))) select 0)
+#include "script_component.hpp" 
+#define ATTRIBUTE_ANCHOR(ENTITY) ((ENTITY get3DENAttribute QGVARMAIN(anchor)) select 0)
+#define ATTRIBUTE_SNAP(ENTITY) ((ENTITY get3DENAttribute QGVARMAIN(snap)) select 0)
+#define ATTRIBUTE_VECTORUP(ENTITY) ((ENTITY get3DENAttribute QGVARMAIN(vectorUp)) select 0)
 #define ATTRIBUTE_SIMPLE(ENTITY) ((ENTITY get3DENAttribute "objectIsSimple") select 0)
 #define NODE_CHECK(ENTITY) ENTITY isKindOf "Land_HelipadEmpty_F"
 #define PRINT_MSG(MSG) titleText [MSG, "PLAIN"]
@@ -65,7 +65,7 @@ _strength = round (_r + (_count * 0.5));
 
 // format command has a character limit
 // compiled entry uses string addition as workaround for long arrays
-private _className = format ["DOUBLES(PREFIX,%1%2)",round random 1000,round diag_tickTime];
+private _className = format ["GVARMAIN(%1%2)",round random 1000,round diag_tickTime];
 private _compiledEntry = format ["class %3 {%1%2radius = %4;%1%2strength = %5;%1%2objects = ",_br,_tab,_className,_r,_strength];
 _compiledEntry = _compiledEntry + str (str _composition) + format [";%1%2nodes = ", _br,_tab];
 _compiledEntry = _compiledEntry + str (str _nodes) + format [";%2%1};", _br,_tab];

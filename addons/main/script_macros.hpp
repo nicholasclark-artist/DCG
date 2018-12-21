@@ -11,8 +11,8 @@
 
 #define PREP_MODULE(folder) [] call compile preprocessFileLineNumbers QPATHTOF(folder\__PREP__.sqf)
 
-#define HEADLESSCLIENT DOUBLES(PREFIX,HC)
-#define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QUOTE(DOUBLES(PREFIX,actions)),QUOTE(ADDON)]
+#define HEADLESSCLIENT GVARMAIN(HC)
+#define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
 #define SETTINGS_INIT remoteExecCall [QFUNC(initSettings), -2, true]; call FUNC(initSettings)
 #define SETTINGS_OVERWRITE(SETTING,VALUE) [{MAIN_ADDON && {CHECK_POSTBRIEFING}},{missionNamespace setVariable [SETTING,_this]},VALUE] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute),-2,true]
 
@@ -22,7 +22,7 @@
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> 'CfgPatches' >> PATCH))
-#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QUOTE(DOUBLES(PREFIX,VAR))) && {EGVAR(VAR,enable)})
+#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QGVARMAIN(VAR)) && {EGVAR(VAR,enable)})
 #define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= (DIST)
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
@@ -35,7 +35,7 @@
 
 // save macros 
 #define SAVE_ID QUOTE(DOUBLES(MAIN_ADDON,saveData))
-#define SAVE_ID_ENTITY(COMPONENT1) QUOTE(DOUBLES(DOUBLES(PREFIX,COMPONENT1),saveEntity))
+#define SAVE_ID_ENTITY(COMPONENT1) QUOTE(DOUBLES(GVARMAIN(COMPONENT1),saveEntity))
 #define SAVE_ID_ENTITY_MAIN QUOTE(DOUBLES(MAIN_ADDON,saveEntity))
 #define SAVE_PVEH QUOTE(DOUBLES(MAIN_ADDON,saveDataPVEH))
 #define SAVE_PVEH_DELETE QUOTE(DOUBLES(MAIN_ADDON,deleteDataPVEH))

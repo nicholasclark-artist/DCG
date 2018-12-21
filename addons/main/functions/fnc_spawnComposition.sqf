@@ -13,7 +13,7 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CONFIG configfile >> QUOTE(DOUBLES(PREFIX,compositions))
+#define CONFIG configfile >> QGVARMAIN(compositions)
 
 params [
     ["_position",[],[[]]],

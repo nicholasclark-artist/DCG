@@ -12,8 +12,8 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define PUSHBACK_DATA(ADDONTOSAVE,DATATOSAVE) \
-	LOG_2("Saving %1: %2.",QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE); \
-	GVAR(saveDataCurrent) pushBack [QUOTE(DOUBLES(PREFIX,ADDONTOSAVE)),DATATOSAVE]
+	LOG_2("Saving %1: %2.",QGVARMAIN(ADDONTOSAVE),DATATOSAVE); \
+	GVAR(saveDataCurrent) pushBack [QGVARMAIN(ADDONTOSAVE),DATATOSAVE]
 
 if !(isServer) exitWith {};
 

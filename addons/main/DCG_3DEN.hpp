@@ -1,18 +1,18 @@
-#define MAIN_FOLDER DOUBLES(PREFIX,Folder)
-#define EXPORTFACTION_ITEM DOUBLES(PREFIX,ExportFaction)
+#define MAIN_FOLDER GVARMAIN(folder)
+#define EXPORTFACTION_ITEM GVARMAIN(exportFaction)
 #define EXPORTFACTION_TEXT "Export Faction List"
-#define EXPORTCOMP_ITEM DOUBLES(PREFIX,ExportComp)
+#define EXPORTCOMP_ITEM GVARMAIN(exportComp)
 #define EXPORTCOMP_TEXT "Export Composition from Selection"
 
-#define COMP_ITEM DOUBLES(PREFIX,Comp)
+#define COMP_ITEM GVARMAIN(comp)
 #define COMP_TEXT "DCG - Composition"
-#define COMP_ANCHOR DOUBLES(PREFIX,Anchor)
+#define COMP_ANCHOR GVARMAIN(anchor)
 #define COMP_ANCHOR_TEXT "Composition Anchor"
 #define COMP_ANCHOR_TIP "Enable to set object as composition anchor. Only one object in a composition should be the anchor."
-#define COMP_VECTORUP DOUBLES(PREFIX,VectorUp)
+#define COMP_VECTORUP GVARMAIN(vectorUp)
 #define COMP_VECTORUP_TEXT "Ignore Terrain Vector"
 #define COMP_VECTORUP_TIP ""
-#define COMP_SNAP DOUBLES(PREFIX,Snap)
+#define COMP_SNAP GVARMAIN(snap)
 #define COMP_SNAP_TEXT "Snap Object to Terrain"
 #define COMP_SNAP_TIP ""
 
