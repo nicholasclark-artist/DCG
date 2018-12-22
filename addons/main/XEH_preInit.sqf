@@ -61,7 +61,6 @@ PREP(exportFactionClasses);
 PREP(landAt);
 PREP(parseFactions);
 
-GVAR(playerSide) = sideUnknown;
 GVAR(locations) = [];
 GVAR(locals) = [];
 GVAR(hills) = [];
