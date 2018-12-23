@@ -15,46 +15,22 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-	["_side",GVAR(enemySide),[sideUnknown]],
+	"_side",
     ["_type",0,[0]]
 ];
 
-private _pool = [];
-
 if (_side isEqualTo EAST) exitWith {
-    if (_type isEqualTo 0) exitWith {
-        _pool = GVAR(unitPoolEast)
-    };
-    if (_type isEqualTo 1) exitWith {
-        _pool = GVAR(vehPoolEast)
-    };
-    if (_type isEqualTo 2) exitWith {
-        _pool = GVAR(airPoolEast)
-    };
+    [GVAR(unitPoolEast),GVAR(vehPoolEast),GVAR(airPoolEast)] select _type;
 };
 
 if (_side isEqualTo WEST) exitWith {
-    if (_type isEqualTo 0) exitWith {
-        _pool = GVAR(unitPoolWest)
-    };
-    if (_type isEqualTo 1) exitWith {
-        _pool = GVAR(vehPoolWest)
-    };
-    if (_type isEqualTo 2) exitWith {
-        _pool = GVAR(airPoolWest)
-    };
-};
+    [GVAR(unitPoolWest),GVAR(vehPoolWest),GVAR(airPoolWest)] select _type;
+}; 
 
 if (_side isEqualTo INDEPENDENT) exitWith {
-    if (_type isEqualTo 0) exitWith {
-        _pool = GVAR(unitPoolInd)
-    };
-    if (_type isEqualTo 1) exitWith {
-        _pool = GVAR(vehPoolInd)
-    };
-    if (_type isEqualTo 2) exitWith {
-        _pool = GVAR(airPoolInd)
-    };
-};
+    [GVAR(unitPoolInd),GVAR(vehPoolInd),GVAR(airPoolInd)] select _type;
+}; 
 
-_pool
+if (_side isEqualTo CIVILIAN) exitWith {
+    [GVAR(unitPoolCiv),GVAR(vehPoolCiv),GVAR(airPoolCiv)] select _type;
+}; 
