@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-add to cleanup loop, does not support nested arrays
+add to cleanup loop
 
 Arguments:
 0: entity <ARRAY, STRING, OBJECT, LOCATION, GROUP>

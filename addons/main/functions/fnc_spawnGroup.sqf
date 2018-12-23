@@ -40,8 +40,6 @@ _grp deleteGroupWhenEmpty true;
 _pos =+ _pos;
 _pos resize 2;
 
-
-
 if (_type isEqualTo 0) exitWith {
 	[{
 		params ["_args","_idPFH"];
