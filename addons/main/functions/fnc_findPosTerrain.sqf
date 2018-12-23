@@ -53,9 +53,9 @@ if (_terrain isEqualTo "" || {_expression isEqualTo ""}) exitWith {
 private _places = selectBestPlaces [_anchor,_range,_expression,100,20];
 
 _places = if !(_rural) then {
-	_places select {(_x select 1) > 0 && {!((_x select 0) inArea EGVAR(main,baseLocation))}};
+	_places select {(_x select 1) > 0 && {!([_x select 0] call EFUNC(safezone,inAreaAll))}};
 } else {
-	_places select {(_x select 1) > 0 && {((nearestLocations [(_x select 0), ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo [])} && {!((_x select 0) inArea EGVAR(main,baseLocation))}};
+	_places select {(_x select 1) > 0 && {((nearestLocations [(_x select 0), ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo [])} && {!([_x select 0] call EFUNC(safezone,inAreaAll))}};
 };
 
 {

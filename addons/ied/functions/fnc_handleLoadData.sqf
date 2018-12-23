@@ -39,7 +39,7 @@ if (_data isEqualTo []) then {
 			private _road = selectRandom _roads;
 			private _pos = getPos _road;
 
-			if (!(_pos inArea EGVAR(main,baseLocation)) && {isOnRoad _road}) then {
+			if (!([_pos] call EFUNC(safezone,inAreaAll)) && {isOnRoad _road}) then {
                 CREATE_IED(_pos)
 			};
 		};

@@ -78,9 +78,9 @@ if (count GVAR(drivers) <= ceil GVAR(vehMaxCount)) then {
 			    {!([getPosASL _roadStart,eyePos _player] call EFUNC(main,inLOS))} &&
 			    {([getPos _roadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
 			    {([getPos _roadEnd,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
-				{([_roadStart,_roadEnd] inAreaArray EGVAR(main,baseLocation)) isEqualTo []}) then {
+				{!([_roadStart,_roadEnd] call EFUNC(safezone,inAreaAll))}) then {
 					[getPos _roadStart,getPos _roadMid,getPos _roadEnd,_player] call FUNC(spawnVehicle);
 			};
 		};
 	};
-};
+}; 

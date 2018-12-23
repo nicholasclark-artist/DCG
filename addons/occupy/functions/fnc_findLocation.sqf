@@ -23,7 +23,7 @@ if !(_data isEqualTo []) exitWith {
     };
 };
 
-private _locations = EGVAR(main,locations) select {!((_x select 1) inArea EGVAR(main,baseLocation))};
+private _locations = EGVAR(main,locations) select {!([_x select 1] call EFUNC(safezone,inAreaAll))};
 
 if (_locations isEqualTo []) exitWith {
     WARNING("No suitable locations to occupy");
