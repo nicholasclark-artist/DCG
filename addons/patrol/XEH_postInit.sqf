@@ -9,7 +9,9 @@ CHECK_POSTINIT;
 [
 	{MAIN_ADDON},
 	{
-		GVAR(blacklist) pushBack [locationPosition EGVAR(main,baseLocation),EGVAR(main,baseRadius)]; // add main base to blacklist
+		{
+			GVAR(blacklist) pushBack [getpos _x, (triggerArea _x) select 0];
+		} forEach EGVAR(safezone,list);
 
 		if (!isNil {HEADLESSCLIENT} && {!(CHECK_ADDON_1("acex_headless"))}) then { // let ace handle transfer if enabled
 			(owner HEADLESSCLIENT) publicVariableClient QFUNC(handlePatrol);
