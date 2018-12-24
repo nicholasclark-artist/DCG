@@ -18,7 +18,7 @@ params [
 ];
 
 if !(_data isEqualTo []) exitWith {
-    if !([_data select 1] call EFUNC(safezone,inAreaAll) then { 
+    if !([_data select 1] call EFUNC(safezone,inAreaAll)) then { 
         _data spawn FUNC(setOccupied);
     };
 };
