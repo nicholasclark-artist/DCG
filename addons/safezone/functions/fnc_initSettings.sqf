@@ -24,16 +24,33 @@ __________________________________________________________________*/
 
 [
     QGVAR(displayMarkers),
-    "CHECKBOX",
-    ["Show Safezones","Show safezones on map."],
+    "LIST",
+    ["Safezone Markers", "Safezone map marker display settings."],
     COMPONENT_NAME,
-    false,
+    [
+        [0,1,2],
+        ["Off", "Solid", "Border"],
+        0
+    ],
     false,
     {
-        if (GVAR(displayMarkers)) then {
-            GVAR(markers) apply {_x setMarkerAlpha 1};
-        } else {
-            GVAR(markers) apply {_x setMarkerAlpha 0};
-        };
+        switch (GVAR(displayMarkers)) do {
+            case (0): {
+                GVAR(markers) apply {_x setMarkerAlpha 0};
+            };
+            case (1): {
+                GVAR(markers) apply {
+                    _x setMarkerAlpha 0.4;
+                    _x setMarkerBrush "SolidBorder";
+                };
+            };
+            case (2) : {
+                GVAR(markers) apply {
+                    _x setMarkerAlpha 1;
+                    _x setMarkerBrush "Border";
+                };
+            };
+            default {};
+        };	
     }
 ] call CBA_Settings_fnc_init;
