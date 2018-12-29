@@ -14,11 +14,11 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define PACK QUOTE(ACRE_PRC117F)
 #define STATE_PACK \
-  if (player canAddItemToBackpack PACK) then { \
+if (player canAddItemToBackpack PACK) then { \
     player addItemToBackpack PACK; \
-  } else { \
+} else { \
     [format ["Cannot add %1 to your inventory.", [configFile >> "cfgWeapons" >> PACK] call BIS_fnc_displayName], true] call EFUNC(main,displayText); \
-  };
+};
 #define STATE_RADIO call EFUNC(radio,setRadio);
 #define STATE_ARMORY ["Open",true] spawn bis_fnc_arsenal;
 
@@ -33,9 +33,9 @@ if (isNull _obj) exitWith {
 [[QUOTE(PREFIX),_obj,"armory"] joinString "_","Open Armory",{STATE_ARMORY},{true},{},[],_obj,0,["ACE_MainActions"]] call FUNC(setAction);
 
 if (CHECK_ADDON_1("acre_main") || {CHECK_ADDON_1("task_force_radio")}) then {
-  [[QUOTE(PREFIX),_obj,"armoryRadio"] joinString "_","Take Radio",{STATE_RADIO},{true},{},[],_obj,0,["ACE_MainActions"]] call FUNC(setAction);
+    [[QUOTE(PREFIX),_obj,"armoryRadio"] joinString "_","Take Radio",{STATE_RADIO},{true},{},[],_obj,0,["ACE_MainActions"]] call FUNC(setAction);
 };
 
 if (CHECK_ADDON_1("acre_main")) then {
-	[[QUOTE(PREFIX),_obj,"armoryPack"] joinString "_","Take Pack Radio",{STATE_PACK},{true},{},[],_obj,0,["ACE_MainActions"]] call FUNC(setAction);
+    [[QUOTE(PREFIX),_obj,"armoryPack"] joinString "_","Take Pack Radio",{STATE_PACK},{true},{},[],_obj,0,["ACE_MainActions"]] call FUNC(setAction);
 };
