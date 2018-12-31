@@ -28,7 +28,7 @@ __________________________________________________________________*/
     ["Load Mission Data","Load mission data saved to server profile."],
     COMPONENT_NAME,
     false,
-    false,
+    true,
     {}
 ] call CBA_Settings_fnc_init;
 
@@ -38,7 +38,7 @@ __________________________________________________________________*/
     ["Autosave Mission Data","Autosave mission data to server profile."],
     COMPONENT_NAME,
     false,
-    false,
+    true,
     {}
 ] call CBA_Settings_fnc_init;
 
@@ -52,14 +52,10 @@ __________________________________________________________________*/
         ["EAST","WEST","INDEPENDENT"],
         1
     ],
-    false,
+    true,
     {
-        if (isServer) then {
-            SETTINGS_OVERWRITE(QGVAR(playerSide),GVAR(playerSide));
-
-            if (GVAR(playerSide) isEqualTo GVAR(enemySide)) then {
-                ERROR("Player side cannot be equal to enemy side")
-            };
+        if (GVAR(playerSide) isEqualTo GVAR(enemySide)) then {
+            ERROR("Player side cannot be equal to enemy side");
         };
     }
 ] call CBA_Settings_fnc_init;
@@ -74,14 +70,10 @@ __________________________________________________________________*/
         ["EAST","WEST","INDEPENDENT"],
         0
     ],
-    false,
+    true,
     {
-        if (isServer) then {
-            SETTINGS_OVERWRITE(QGVAR(enemySide),GVAR(enemySide));
-
-            if (GVAR(playerSide) isEqualTo GVAR(enemySide)) then {
-                ERROR("Enemy side cannot be equal to player side")
-            };
+        if (GVAR(playerSide) isEqualTo GVAR(enemySide)) then {
+            ERROR("Enemy side cannot be equal to player side");
         };
     }
 ] call CBA_Settings_fnc_init;
@@ -92,7 +84,7 @@ __________________________________________________________________*/
     ["East Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
     COMPONENT_NAME,
     "OPF_F",
-    false,
+    true,
     {
         if (isServer) then {
             [0] call FUNC(parseFactions);
@@ -106,7 +98,7 @@ __________________________________________________________________*/
     ["West Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
     COMPONENT_NAME,
     "BLU_F",
-    false,
+    true,
     {
         if (isServer) then {
             [1] call FUNC(parseFactions);
@@ -120,7 +112,7 @@ __________________________________________________________________*/
     ["Independent Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
     COMPONENT_NAME,
     "IND_F",
-    false,
+    true,
     {
         if (isServer) then {
             [2] call FUNC(parseFactions);
@@ -134,7 +126,7 @@ __________________________________________________________________*/
     ["Civilian Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
     COMPONENT_NAME,
     "CIV_F",
-    false,
+    true,
     {
         if (isServer) then {
             [3] call FUNC(parseFactions);

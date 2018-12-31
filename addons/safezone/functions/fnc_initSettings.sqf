@@ -32,25 +32,27 @@ __________________________________________________________________*/
         ["Off", "Solid", "Border"],
         0
     ],
-    false,
+    true,
     {
-        switch (GVAR(displayMarkers)) do {
-            case (0): {
-                GVAR(markers) apply {_x setMarkerAlpha 0};
-            };
-            case (1): {
-                GVAR(markers) apply {
-                    _x setMarkerAlpha 0.4;
-                    _x setMarkerBrush "SolidBorder";
+        if (isServer) then {
+            switch (GVAR(displayMarkers)) do {
+                case (0): {
+                    GVAR(markers) apply {_x setMarkerAlpha 0};
                 };
-            };
-            case (2) : {
-                GVAR(markers) apply {
-                    _x setMarkerAlpha 1;
-                    _x setMarkerBrush "Border";
+                case (1): {
+                    GVAR(markers) apply {
+                        _x setMarkerAlpha 0.4;
+                        _x setMarkerBrush "SolidBorder";
+                    };
                 };
-            };
-            default {};
-        };	
+                case (2) : {
+                    GVAR(markers) apply {
+                        _x setMarkerAlpha 1;
+                        _x setMarkerBrush "Border";
+                    };
+                };
+                default {};
+            };	
+        };
     }
 ] call CBA_Settings_fnc_init;

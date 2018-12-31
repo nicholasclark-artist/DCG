@@ -32,14 +32,14 @@ __________________________________________________________________*/
         ["Random","January","February","March","April","May","June","July","August","September","October","November","December"],
         0
     ],
-    false,
+    true,
     {}
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(time),
     "SLIDER",
-    ["Time of Day","Hour of the day in 24hr format."],
+    ["Time of Day","Hour of the day in 24hr format. A random hour will be set if -1 is selected."],
     COMPONENT_NAME,
     [
         -1,
@@ -47,6 +47,6 @@ __________________________________________________________________*/
         -1,
         0
     ],
-    false,
+    true,
     {}
 ] call CBA_Settings_fnc_init;

@@ -28,7 +28,7 @@ __________________________________________________________________*/
     ["Enable Hostile Notification","Notify players when hostile entity spawns."],
     COMPONENT_NAME,
     true,
-    false,
+    true,
     {}
 ] call CBA_Settings_fnc_init;
 
@@ -43,7 +43,7 @@ __________________________________________________________________*/
         1,
         1
     ],
-    false,
+    true,
     {}
 ] call CBA_Settings_fnc_init;
 
@@ -58,6 +58,6 @@ __________________________________________________________________*/
         900,
         0
     ],
-    false,
+    true,
     {}
 ] call CBA_Settings_fnc_init;
