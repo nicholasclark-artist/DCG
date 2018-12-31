@@ -8,11 +8,13 @@ __________________________________________________________________*/
 #define HILLS_TYPE ["Sheep_random_F","Goat_random_F"]
 #define LIMIT 8
 
-CHECK_POSTINIT;
+if !(isMultiplayer) exitWith {};
 
 [
-	{MAIN_ADDON},
-	{
+    {MAIN_ADDON && {CHECK_POSTBRIEFING}},
+    {
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
+
         [FUNC(handleUnit), HANDLER_DELAY, EGVAR(main,locations)] call CBA_fnc_addPerFrameHandler;
         [FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
 
@@ -23,9 +25,7 @@ CHECK_POSTINIT;
             _mrk setMarkerBrush "Solid";
             _mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
             [_mrk] call EFUNC(main,setDebugMarker);
-
-            false
-        } count EGVAR(main,locations);
+        } forEach EGVAR(main,locations);
 
         _animalList = [];
 
@@ -62,10 +62,8 @@ CHECK_POSTINIT;
 			_mrk setMarkerBrush "Solid";
 			_mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
 			[_mrk] call EFUNC(main,setDebugMarker);
-
-			false
-		} count _animalList;
+		} forEach _animalList;
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 
-// ADDON = true;
+

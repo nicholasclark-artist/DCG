@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_POSTINIT;
+if !(isMultiplayer) exitWith {};
 
 // get map locations from config
 _cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";
@@ -119,5 +119,5 @@ _data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
     };
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 
-ADDON = true;
-publicVariable QUOTE(ADDON);
+MAIN_ADDON = true;
+publicVariable QUOTE(MAIN_ADDON);

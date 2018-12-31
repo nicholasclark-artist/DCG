@@ -5,11 +5,13 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define TYPE_EXP ["R_TBG32V_F","HelicopterExploSmall"]
 
-CHECK_POSTINIT;
+if !(isMultiplayer) exitWith {};
 
 [
-	{MAIN_ADDON},
-	{
+    {MAIN_ADDON && {CHECK_POSTBRIEFING}},
+    {
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
+       
 		_data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
 		[_data] call FUNC(handleLoadData);
 
@@ -23,9 +25,8 @@ CHECK_POSTINIT;
         	_mrk setMarkerSize [0.5,0.5];
         	_mrk setMarkerColor "ColorRed";
         	[_mrk] call EFUNC(main,setDebugMarker);
-            false
-        } count GVAR(list);
+        } forEach GVAR(list);
 	}
 ] call CBA_fnc_waitUntilAndExecute;
 
-// ADDON = true;
+

@@ -4,13 +4,18 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_POSTINIT;
+if !(isMultiplayer) exitWith {};
 
-[[],{
-	INFO("Init radio settings");
+[
+    {MAIN_ADDON && {CHECK_POSTBRIEFING}},
+    {
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
 
-	call FUNC(handleLoadout);
-	call FUNC(setRadioSettings);
-}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
+        [[],{
+            INFO("Init radio settings");
 
-// ADDON = true;
+            call FUNC(handleLoadout);
+            call FUNC(setRadioSettings);
+        }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
+    }
+] call CBA_fnc_waitUntilAndExecute;

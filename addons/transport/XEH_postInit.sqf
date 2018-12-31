@@ -4,21 +4,21 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_POSTINIT;
+if !(isMultiplayer) exitWith {};
 
-PVEH_REQUEST addPublicVariableEventHandler {
-	(_this select 1) call FUNC(handleRequest);
-};
+
 
 [
-	{MAIN_ADDON},
-	{
+    {MAIN_ADDON && {CHECK_POSTBRIEFING}},
+    {
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
+        
+        PVEH_REQUEST addPublicVariableEventHandler {
+            (_this select 1) call FUNC(handleRequest);
+        };
+        
         [[],{
-        	if (hasInterface) then {
-                call FUNC(handleClient);
-        	};
+            if (hasInterface) then {call FUNC(handleClient)};
         }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
-	}
+    }
 ] call CBA_fnc_waitUntilAndExecute;
-
-// ADDON = true;

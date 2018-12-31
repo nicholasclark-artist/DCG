@@ -4,10 +4,9 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_PREINIT;
-
-ADDON = false;
 LOG(MSG_INIT);
+
+MAIN_ADDON = false;
 
 PREP(initSettings);
 PREP(debug);
@@ -94,8 +93,7 @@ publicVariable QFUNC(armory);
 // variables required on all machines
 publicVariable QGVAR(range);
 publicVariable QGVAR(center);
-
-publicVariable QUOTE(ADDON);
+publicVariable QUOTE(MAIN_ADDON);
 
 // load current mission data
 call FUNC(loadData);

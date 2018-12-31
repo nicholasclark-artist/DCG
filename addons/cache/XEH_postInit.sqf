@@ -4,8 +4,13 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-CHECK_POSTINIT;
+if !(isMultiplayer) exitWith {};
 
-[FUNC(handleCache), 30, []] call CBA_fnc_addPerFrameHandler;
-
-// ADDON = true;
+[
+    {MAIN_ADDON && {CHECK_POSTBRIEFING}},
+    {
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
+        
+		[FUNC(handleCache), 30, []] call CBA_fnc_addPerFrameHandler;
+    }
+] call CBA_fnc_waitUntilAndExecute;
