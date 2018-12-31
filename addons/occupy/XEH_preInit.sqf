@@ -17,6 +17,4 @@ PREP(setOccupied);
 
 GVAR(location) = [];
 
-publicVariable QFUNC(initSettings);
-
 SETTINGS_INIT;

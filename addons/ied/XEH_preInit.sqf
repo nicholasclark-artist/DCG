@@ -15,6 +15,4 @@ PREP(handleIED);
 
 GVAR(list) = [];
 
-publicVariable QFUNC(initSettings);
-
 SETTINGS_INIT;

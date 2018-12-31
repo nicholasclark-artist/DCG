@@ -6,7 +6,7 @@ __________________________________________________________________*/
 
 CHECK_PREINIT;
 
-MAIN_ADDON = false;
+ADDON = false;
 LOG(MSG_INIT);
 
 PREP(initSettings);
@@ -83,10 +83,7 @@ GVAR(unitPoolCiv) = [];
 GVAR(vehPoolCiv) = [];
 GVAR(airPoolCiv) = [];
 
-publicVariable QUOTE(ADDON);
-
 // functions required on all machines
-publicVariable QFUNC(initSettings);
 publicVariable QFUNC(setAction);
 publicVariable QFUNC(setAnim);
 publicVariable QFUNC(removeAction);
@@ -97,6 +94,8 @@ publicVariable QFUNC(armory);
 // variables required on all machines
 publicVariable QGVAR(range);
 publicVariable QGVAR(center);
+
+publicVariable QUOTE(ADDON);
 
 // load current mission data
 call FUNC(loadData);

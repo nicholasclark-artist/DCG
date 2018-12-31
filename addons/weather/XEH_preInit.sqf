@@ -12,6 +12,8 @@ LOG(MSG_INIT);
 PREP(initSettings);
 PREP(handleLoadData);
 
+GVAR(date) = [];
+GVAR(overcast) = 0;
 GVAR(mapData) = [ // weatherspark.com
     ["ALTIS",0.67,0.65,0.56,0.52,0.44,0.34,0.26,0.27,0.33,0.47,0.54,0.62],
     ["STRATIS",0.67,0.65,0.56,0.52,0.44,0.34,0.26,0.27,0.33,0.47,0.54,0.62],
@@ -22,7 +24,5 @@ GVAR(mapData) = [ // weatherspark.com
     ["CHERNARUS_SUMMER",0.73,0.72,0.70,0.72,0.74,0.70,0.68,0.65,0.64,0.69,0.70,0.75],
     ["TANOA",0.80,0.78,0.70,0.63,0.57,0.55,0.48,0.49,0.57,0.64,0.71,0.79]
 ];
-
-publicVariable QFUNC(initSettings);
 
 SETTINGS_INIT;

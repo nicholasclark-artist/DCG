@@ -21,6 +21,4 @@ PREP(setPatrol);
 GVAR(drivers) = [];
 GVAR(blacklist) = [];
 
-publicVariable QFUNC(initSettings);
-
 SETTINGS_INIT;

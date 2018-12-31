@@ -16,6 +16,4 @@ PREP(inAreaAll);
 GVAR(list) = [];
 GVAR(markers) = [];
 
-publicVariable QFUNC(initSettings);
-
 SETTINGS_INIT;

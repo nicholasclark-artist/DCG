@@ -21,6 +21,5 @@ publicVariable QFUNC(setRadio);
 publicVariable QFUNC(setRadioSettings);
 publicVariable QFUNC(setRadioACRE);
 publicVariable QFUNC(setRadioTFAR);
-publicVariable QFUNC(initSettings);
 
 SETTINGS_INIT;

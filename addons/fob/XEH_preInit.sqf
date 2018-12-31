@@ -31,7 +31,6 @@ GVAR(curatorExternal) = objNull;
 GVAR(placeCoef) = -0.025;
 GVAR(deleteCoef) = 0.025;
 
-publicVariable QFUNC(initSettings);
 publicVariable QFUNC(getKeybind);
 publicVariable QFUNC(getChildren);
 publicVariable QFUNC(getCuratorCost);

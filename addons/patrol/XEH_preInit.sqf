@@ -15,6 +15,4 @@ PREP(handlePatrol);
 GVAR(groups) = [];
 GVAR(blacklist) = [];
 
-publicVariable QFUNC(initSettings);
-
 SETTINGS_INIT;
