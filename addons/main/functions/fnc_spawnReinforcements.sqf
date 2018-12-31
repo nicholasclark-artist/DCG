@@ -24,9 +24,8 @@ params [
 	["_side",GVAR(enemySide),[sideUnknown]]
 ];
 
-private _unitPool = [];
-private _vehPool = [];
-private _backup = "";
+private _unitPool = [_side,0] call FUNC(getPool);
+private _vehPool = [_side,1] call FUNC(getPool);
 private _fnc_getCargo = {
 	params ["_class"];
 
@@ -40,24 +39,6 @@ private _fnc_getCargo = {
 	_numCargo
 };
 
-call {
-	if (_side isEqualTo EAST) exitWith {
-		_unitPool = GVAR(unitPoolEast);
-		_vehPool = GVAR(airPoolEast);
-		_backup = "O_Heli_Light_02_unarmed_F";
-	};
-	if (_side isEqualTo WEST) exitWith {
-		_unitPool = GVAR(unitPoolWest);
-		_vehPool = GVAR(airPoolWest);
-		_backup = "B_Heli_Light_01_F";
-	};
-    if (_side isEqualTo RESISTANCE) exitWith {
-        _unitPool = GVAR(unitPoolInd);
-    	_vehPool = GVAR(airPoolInd);
-    	_backup = "I_Heli_light_03_unarmed_F";
-	};
-};
-
 _grid = [_center,30,DIST_MAX,DIST_MIN,TR_SIZE,0] call EFUNC(main,findPosGrid);
 
 if (_grid isEqualTo []) exitWith {
@@ -69,7 +50,9 @@ private _lz = ASLtoAGL (selectRandom _grid);
 private _type = selectRandom _vehPool;
 
 if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
-	_type = _backup;
+	if (_side isEqualTo EAST) exitWith {_type = "O_Heli_Light_02_unarmed_F"};
+	if (_side isEqualTo WEST) exitWith {_type = "B_Heli_Light_01_F"};
+	if (_side isEqualTo RESISTANCE) exitWith {_type = "I_Heli_light_03_unarmed_F"};
 };
 
 private _heli = createVehicle [_type,_center getPos [DIST_SPAWN,random 360],[],0,"FLY"];

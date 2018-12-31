@@ -28,26 +28,23 @@ if (_grid isEqualTo []) then {
 
 private _objArray = [];
 private _gunnerArray = [];
-private _unit = "";
+private _unit = selectRandom([_side,0] call FUNC(getPool));
 private _static1 = "";
 private _static2 = "";
 private _static3 = "";
 
 call {
 	if (_side isEqualTo EAST) exitWith {
-		_unit = selectRandom GVAR(unitPoolEast);
 		_static1 = "Land_Cargo_Patrol_V1_F";
 		_static2 = "O_HMG_01_high_F";
 		_static3 = "O_Mortar_01_F";
 	};
 	if (_side isEqualTo WEST) exitWith {
-		_unit = selectRandom GVAR(unitPoolWest);
 		_static1 = "Land_Cargo_Patrol_V1_F";
 		_static2 = "B_HMG_01_high_F";
 		_static3 = "B_Mortar_01_F";
 	};
     if (_side isEqualTo RESISTANCE) exitWith {
-        _unit = selectRandom GVAR(unitPoolInd);
     	_static1 = "Land_Cargo_Patrol_V1_F";
     	_static2 = "I_HMG_01_high_F";
     	_static3 = "I_Mortar_01_F";
