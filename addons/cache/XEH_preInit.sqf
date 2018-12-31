@@ -13,6 +13,4 @@ PREP(initSettings);
 PREP(handleCache);
 PREP(disableCache);
 
-publicVariable QFUNC(initSettings);
-
 SETTINGS_INIT;
