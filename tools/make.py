@@ -72,8 +72,8 @@ dssignfile = ""
 prefix = "dcg"
 pbo_name_prefix = "dcg_"
 signature_blacklist = []
-importantFiles = ["mod.cpp", "README.md", "LICENSE","AUTHORS.txt", "dcg_logo_L.paa", "meta.cpp"]
-versionFiles = ["README.md", "mod.cpp"]
+importantFiles = ["mod.cpp", "README.md", "LICENSE","AUTHORS.txt", "meta.cpp"]
+versionFiles = ["mod.cpp", "README.md"]
 
 ciBuild = False # Used for CI builds
 
@@ -599,7 +599,7 @@ def set_version_in_files():
     # Change versions in files containing version
     for i in versionFiles:
         filePath = os.path.join(module_root_parent, i)
-
+        
         try:
             # Save the file contents to a variable if the file exists
             if os.path.isfile(filePath):
@@ -613,7 +613,7 @@ def set_version_in_files():
                     versionsFound = re.findall(pattern, fileText) + re.findall(patternShort, fileText)
                     # Filter out sub-versions of other versions
                     versionsFound = [j for i, j in enumerate(versionsFound) if all(j not in k for k in versionsFound[i + 1:])]
-
+                    
                     # Replace version stamp if any of the new version parts is higher than the one found
                     for versionFound in versionsFound:
                         if versionFound:
@@ -1507,4 +1507,5 @@ if __name__ == "__main__":
     if ciBuild:
         sys.exit(0)
 
-    input("Press Enter to continue...")
+    # input("Press Enter to continue...")
+    
