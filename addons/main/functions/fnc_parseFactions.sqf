@@ -53,7 +53,7 @@ call {
         GVAR(vehPoolEast) = _ret select 2;
         GVAR(airPoolEast) = _ret select 3;
 
-        INFO_1("Parsing %1",QGVAR(factionEast));
+        INFO_2("Parsing %1: %2",QGVAR(factionEast),GVAR(factionEast));
     };
 
     if (_side isEqualTo 1) exitWith {
@@ -64,7 +64,7 @@ call {
         GVAR(vehPoolWest) = _ret select 2;
         GVAR(airPoolWest) = _ret select 3;
 
-        INFO_1("Parsing %1",QGVAR(factionWest));
+        INFO_2("Parsing %1: %2",QGVAR(factionWest),GVAR(factionWest));
     };
 
     if (_side isEqualTo 2) exitWith {
@@ -75,7 +75,7 @@ call {
         GVAR(vehPoolInd) = _ret select 2;
         GVAR(airPoolInd) = _ret select 3;
 
-        INFO_1("Parsing %1",QGVAR(factionInd));
+        INFO_2("Parsing %1: %2",QGVAR(factionInd),GVAR(factionInd));
     };
 
     if (_side isEqualTo 3) exitWith {
@@ -86,7 +86,7 @@ call {
         GVAR(vehPoolCiv) = _ret select 2;
         GVAR(airPoolCiv) = _ret select 3;
 
-        INFO_1("Parsing %1",QGVAR(factionCiv));
+        INFO_2("Parsing %1: %2",QGVAR(factionCiv),GVAR(factionCiv));
     };
 };
 

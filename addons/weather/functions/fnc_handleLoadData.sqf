@@ -28,7 +28,7 @@ if (_data isEqualTo []) then {
         GVAR(time) = round random 23;
     };
 
-	GVAR(date) = [missionStart select 0, GVAR(month), ceil random 27, GVAR(time), round random 59];
+	GVAR(date) = [missionStart select 0, GVAR(month), ceil random 27, GVAR(time), round random 30];
 
     {
         if (COMPARE_STR(_x select 0,worldName)) exitWith {
