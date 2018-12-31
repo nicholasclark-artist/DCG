@@ -12,10 +12,10 @@ if !(isMultiplayer) exitWith {};
         if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
 
         [[],{
-            INFO("Init radio settings");
-
             call FUNC(handleLoadout);
             call FUNC(setRadioSettings);
+
+            INFO("Radio setup finished");
         }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
     }
 ] call CBA_fnc_waitUntilAndExecute;

@@ -42,7 +42,7 @@ private _fnc_getCargo = {
 _grid = [_center,30,DIST_MAX,DIST_MIN,TR_SIZE,0] call EFUNC(main,findPosGrid);
 
 if (_grid isEqualTo []) exitWith {
-	INFO("Reinforcements LZ undefined");
+	WARNING("Reinforcements LZ undefined");
     false
 };
 

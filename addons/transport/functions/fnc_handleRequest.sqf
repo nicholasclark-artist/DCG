@@ -132,10 +132,10 @@ TR_INFIL(_transport);
 
         if !(_transport getVariable [VAR_SIGNAL,-1] isEqualTo 1) then {
             TR_EXFIL(_transport);
-            INFO_1("Handle hover bug: send transport to exfil: %1",(getPos _transport) select 2);
+            WARNING_1("Handle hover bug: send transport to exfil: %1",(getPos _transport) select 2);
         } else {
             TR_INFIL(_transport);
-            INFO_1("Handle hover bug: send transport to infil: %1",(getPos _transport) select 2);
+            WARNING_1("Handle hover bug: send transport to infil: %1",(getPos _transport) select 2);
         };
 	};
 

@@ -25,7 +25,7 @@ if (isNull _killer || {_unit isEqualTo _killer}) then {
 };
 
 if (isNull _unit || {isNull _killer} || {_killer isEqualTo _unit} || {side _killer isEqualTo CIVILIAN}) exitWith {
-	INFO_2("Exit handleKilled with killer: %1, victim: %2",_killer,_unit);
+	TRACE_2("Exit handleKilled",_killer,_unit);
     false
 };
 
