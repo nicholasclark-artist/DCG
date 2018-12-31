@@ -1,14 +1,12 @@
 #define MAINPREFIX d
 #define PREFIX dcg
 
-#define MAJOR 4
-#define MINOR 0
-#define PATCHLVL 0
-#define BUILD 1
+#include "script_version.hpp"
 
 #define VERSION MAJOR.MINOR.PATCHLVL.BUILD
 #define VERSION_AR MAJOR,MINOR,PATCHLVL,BUILD
-#define REQUIRED_VERSION 1.68
+
+#define REQUIRED_VERSION 1.88
 
 #define TITLE QUOTE(Dynamic Combat Generator)
 #define TITLESHORT QUOTE(DCG)

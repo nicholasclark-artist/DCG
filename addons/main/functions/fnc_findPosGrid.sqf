@@ -18,11 +18,6 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#ifdef DEBUG_MODE_FULL
-  #define GRID_DEBUG true
-#else
-  #define GRID_DEBUG false
-#endif
 
 params [
 	["_anchor",[0,0,0],[[]]],
@@ -55,20 +50,17 @@ if (_distObj > 0 || {_water > -1}) then {
 };
 
 {
-    _x set [2,(getTerrainHeightASL _x) max 0]
+    _x set [2,(getTerrainHeightASL _x) max 0];
+
+    _mrk = createMarker [FORMAT_1("findPosGrid_%1",_x), _x];
+    _mrk setMarkerType "mil_dot";
+    _mrk setMarkerColor "ColorUNKNOWN";
+    _mrk setMarkerText str (_x select 2);
+    [_mrk] call FUNC(setDebugMarker);
 } forEach _ret;
 
 if (_shuffle) then {
 	[_ret] call FUNC(shuffle);
-};
-
-if (GRID_DEBUG) then {
-    {
-        _mrk = createMarker [format ["debug_%1", _x], _x];
-        _mrk setMarkerType "mil_dot";
-        _mrk setMarkerColor "ColorUNKNOWN";
-        _mrk setMarkerText str (_x select 2);
-    } forEach _ret;
 };
 
 _ret

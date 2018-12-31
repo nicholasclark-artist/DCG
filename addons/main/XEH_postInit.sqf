@@ -119,5 +119,5 @@ _data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
     };
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
 
-MAIN_ADDON = true;
-publicVariable QUOTE(MAIN_ADDON);
+ADDON = true;
+publicVariable QUOTE(ADDON);
