@@ -11,9 +11,7 @@ if !(isMultiplayer) exitWith {};
     {
         if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
        
-		_data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
-		[_data] call FUNC(handleLoadData);
-	}
+        _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
+        [_data] call FUNC(handleLoadData);
+    }
 ] call CBA_fnc_waitUntilAndExecute;
-
-
