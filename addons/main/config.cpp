@@ -2,6 +2,7 @@
 
 #include "cfgMods.hpp"
 #include "cfgPatches.hpp"
+#include "cfgSettings.hpp"
 #include "cfgEventHandlers.hpp"
 #include "cfgCompositions.hpp"
 #include "DCG_3DEN.hpp"
