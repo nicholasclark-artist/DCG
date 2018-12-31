@@ -3,8 +3,8 @@
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 
-// #define DEBUG_MODE_FULL
-// #define DISABLE_COMPILE_CACHE
+#define DEBUG_MODE_FULL
+#define DISABLE_COMPILE_CACHE
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
@@ -32,7 +32,7 @@
 
 #define PVEH_HALT QGVAR(pveh_halt)
 #define HALT_ID QUOTE(DOUBLES(ADDON,halt))
-#define HALT_NAME "Stop!"
+#define HALT_NAME "Stop Person"
 #define HALT_STATEMENT missionNamespace setVariable [PVEH_HALT,cursorTarget]; publicVariableServer PVEH_HALT; ["",true] call EFUNC(main,displayText);
 #define HALT_STATEMENT_ACE missionNamespace setVariable [PVEH_HALT,_target]; publicVariableServer PVEH_HALT; ["",true] call EFUNC(main,displayText);
 #define HALT_COND cursorTarget isKindOf 'CAManBase' && {side cursorTarget isEqualTo CIVILIAN} && {!(isPlayer cursorTarget)} && {alive cursorTarget} && {CHECK_DIST2D(player,cursorTarget,10)}
