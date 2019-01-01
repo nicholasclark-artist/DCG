@@ -23,7 +23,7 @@ if (_entity isEqualType []) then {
             GVAR(cleanup) pushBack _x;
         } else {
             _x spawn FUNC(cleanup);
-            WARNING_1("Nested array passed to %1",QGVAR(cleanup))
+            WARNING_1("Multi-dimensional array passed to %1",QGVAR(cleanup))
         };
     } forEach _entity;
 } else {

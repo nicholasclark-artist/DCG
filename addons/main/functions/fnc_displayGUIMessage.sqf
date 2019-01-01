@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-display GUI message
+display GUI message, function must be spawned
 
 Arguments:
 0: message to display <STRING>
@@ -13,32 +13,30 @@ Arguments:
 4: arguments to pass to code <ARRAY>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-_this spawn {
-    params [
-        ["_msg",""],
-        ["_title",TITLE,[""]],
-        ["_confirm","",[""]],
-        ["_code",{},[{}]],
-        ["_args",[],[[]]]
-    ];
+params [
+    ["_msg",""],
+    ["_title",TITLE,[""]],
+    ["_confirm","",[""]],
+    ["_code",{},[{}]],
+    ["_args",[],[[]]]
+];
 
-	closeDialog 0;
+closeDialog 0;
 
-	_ret = [
-		parseText (format ["<t align='center'>%1</t>",_msg]),
-		_title,
-		"Yes",
-		"No"
-	] call bis_fnc_GUImessage;
+_ret = [
+    parseText (format ["<t align='center'>%1</t>",_msg]),
+    _title,
+    "Yes",
+    "No"
+] call bis_fnc_GUImessage;
 
-	if (_ret) then {
-		_args call _code;
-		[_confirm,true] call EFUNC(main,displayText);
-	};
+if (_ret) then {
+    _args call _code;
+    [_confirm,true] call EFUNC(main,displayText);
 };
 
-false
+nil

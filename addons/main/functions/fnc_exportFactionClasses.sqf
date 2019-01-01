@@ -11,36 +11,27 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SIDE_LIST [0,1,2,3]
 
-private _msg = format["// Use the 'Entry' item to populate DCG unit pools%1%1",endl];
+private ["_cfgClass","_side"];
+
+// _msg is an array, this makes concatenation faster
+private _msg = [format["// Use the 'Entry' item to populate %2 unit pools%1%1",endl,toUpper QUOTE(PREFIX)]];
 private _cfg = configFile >> "CfgFactionClasses";
 
 for "_index" from 0 to (count _cfg - 1) do {
-    private _cfgClass = _cfg select _index;
+    _cfgClass = _cfg select _index;
 
     if (isClass _cfgClass) then {
-        private _cfgSide = getNumber (_cfgClass >> "side");
-        private _cfgIcon = getText (_cfgClass >> "icon");
-        private _side = call {
-            if (_cfgSide isEqualTo 0) exitWith {
-                EAST;
-            };
-            if (_cfgSide isEqualTo 1) exitWith {
-                WEST;
-            };
-            if (_cfgSide isEqualTo 2) exitWith {
-                INDEPENDENT;
-            };
-            if (_cfgSide isEqualTo 3) exitWith {
-                CIVILIAN;
-            };
-
-            sideUnknown
+        _side = switch (getNumber (_cfgClass >> "side")) do {
+            case 0: {EAST};
+            case 1: {WEST};
+            case 2: {INDEPENDENT};
+            case 3: {CIVILIAN};
+            default {sideUnknown};
         };
 
-        if (_cfgSide in SIDE_LIST) then {
-            _msg = _msg + (format [
+        if (_side in [EAST,WEST,INDEPENDENT,CIVILIAN]) then {
+            _msg pushBack (format [
                 "Entry: %1 %4Display Name: %2 %4Side: %3 %4%4",
                 configName _cfgClass,
                 getText (_cfgClass >> "displayName"),
@@ -51,7 +42,7 @@ for "_index" from 0 to (count _cfg - 1) do {
     };
 };
 
-copyToClipboard _msg;
+copyToClipboard (_msg joinString "");
 
 titleText ["Exporting faction list to clipboard.", "PLAIN"];
 

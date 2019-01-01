@@ -36,16 +36,16 @@ __________________________________________________________________*/
     {
         if (isServer) then {
             switch (GVAR(displayMarkers)) do {
-                case (0): {
+                case 0: {
                     GVAR(markers) apply {_x setMarkerAlpha 0};
                 };
-                case (1): {
+                case 1: {
                     GVAR(markers) apply {
                         _x setMarkerAlpha 0.4;
                         _x setMarkerBrush "SolidBorder";
                     };
                 };
-                case (2) : {
+                case 2: {
                     GVAR(markers) apply {
                         _x setMarkerAlpha 1;
                         _x setMarkerBrush "Border";

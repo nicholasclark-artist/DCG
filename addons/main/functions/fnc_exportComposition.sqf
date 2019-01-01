@@ -30,11 +30,11 @@ private _br = toString [13,10];
 private _tab = toString [9];
 
 {
-	if (ATTRIBUTE_ANCHOR(_x)) exitWith {
+    if (ATTRIBUTE_ANCHOR(_x)) exitWith {
         _anchor = "Land_HelipadEmpty_F" createVehicle [0,0,0];
         _anchor setVectorUp [0,0,1];
         _anchor setPosATL [getPosATL _x select 0,getPosATL _x select 1,0];
-	};
+    };
 } forEach _selected;
 
 if (isNull _anchor) exitWith {
@@ -45,20 +45,20 @@ if (isNull _anchor) exitWith {
     if (NODE_CHECK(_x)) then {
         for "_i" from 2 to 50 step 1 do {
             private _near = nearestObjects [_x, [], _i];
-			if (count _near > 1) exitWith {
-				_nodes pushBack [str (getPosATL _x vectorDiff getPosATL _anchor), str (_i - 1)];
-			};
-		};
+            if (count _near > 1) exitWith {
+                _nodes pushBack [str (getPosATL _x vectorDiff getPosATL _anchor), str (_i - 1)];
+            };
+        };
     };
 } forEach _selected;
 
 {
-	if !(_x isKindOf "Man") then {
+    if !(_x isKindOf "Man") then {
         if (NODE_CHECK(_x) && {!ATTRIBUTE_ANCHOR(_x)}) exitWith {};
-		GET_DATA(_x);
-		_count = _count + 1;
+        GET_DATA(_x);
+        _count = _count + 1;
         _r = (round (_x distance2D _anchor)) max _r;
-	};
+    };
 } forEach _selected;
 
 _strength = round (_r + (_count * 0.5));
