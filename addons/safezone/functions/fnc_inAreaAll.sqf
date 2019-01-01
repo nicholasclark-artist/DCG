@@ -19,7 +19,6 @@ params [
 ];
 
 // @todo optimize array case 
-
 switch (typeName _entity) do {
     case "ARRAY" : {
         if ((_entity select 0) isEqualType 0) then {
@@ -27,7 +26,7 @@ switch (typeName _entity) do {
         };
 
         {
-            private "_ret";
+            private ["_ret"];
             private _entity = _x;
             
             if !(_entity isEqualType []) then {
@@ -36,9 +35,7 @@ switch (typeName _entity) do {
                 _ret = (SAFEZONES findIf {_entity inArea _x}) > -1
             };	
 
-            if (_ret) exitWith {true};
-
-            false
+            [false,true] select _ret;
         } forEach _entity;
     };
     case "OBJECT" : {
