@@ -8,7 +8,7 @@ handle arsenal loadouts
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define LOADOUT_VAR "bis_fnc_saveInventory_data"
@@ -38,7 +38,7 @@ if (CHECK_ADDON_1("acre_main")) then {
     		INFO("Searching loadouts for ACRE items");
 
     		for "_i" from 0 to ((count LOADOUT_DATA) - 1) do {
-    			if (typeName (LOADOUT_DATA select _i) == "ARRAY") then {
+    			if (LOADOUT_DATA select _i isEqualType []) then {
     				_loadout = (LOADOUT_DATA select _i);
     				_uniformItems = ((_loadout select 0) select 1);
     				_vestItems = ((_loadout select 1) select 1);
@@ -66,3 +66,5 @@ if (CHECK_ADDON_1("acre_main")) then {
     	}
     ] call CBA_fnc_waitUntilAndExecute;
 };
+
+nil

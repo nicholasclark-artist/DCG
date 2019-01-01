@@ -9,22 +9,22 @@ Arguments:
 0: position or object to check <ARRAY,OBJECT>
 
 Return:
-array
+boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
 
 private ["_pos","_ignore","_house"];
 
-if (typeName _this isEqualTo "OBJECT") then {
-	_pos = getPosWorld _this;
-	_ignore = _this;
+if ((_this select 0) isEqualType objNull) then {
+    _pos = getPosWorld (_this select 0);
+    _ignore = (_this select 0);
 } else {
-	_pos = AGLToASL _this;
-	_ignore = objNull;
+    _pos = AGLToASL (_this select 0);
+    _ignore = objNull;
 };
 
-lineIntersectsSurfaces [_pos,_pos vectorAdd [0, 0, 50],_ignore, objNull, true, 1, "GEOM", "NONE"] select 0 params ["","","","_house"];
+lineIntersectsSurfaces [_pos, _pos vectorAdd [0, 0, 50], _ignore, objNull, true, 1, "GEOM", "NONE"] select 0 params ["","","","_house"];
 
-if (!isNil "_house" && {_house isKindOf "House"}) exitWith {true};
+if (_house isKindOf "House") exitWith {true};
 
 false

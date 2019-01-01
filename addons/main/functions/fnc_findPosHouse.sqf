@@ -27,7 +27,7 @@ if !(_houseArray isEqualTo []) then {
 	private _housePosArray = _house buildingPos -1;
 
 	{
-		if (_x call FUNC(inBuilding)) exitWith {
+		if ([_x] call FUNC(inBuilding)) exitWith {
 			_return = [_house,ATLtoASL _x];
 		};
 		false

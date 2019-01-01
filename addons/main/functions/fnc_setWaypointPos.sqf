@@ -14,7 +14,7 @@ __________________________________________________________________*/
 
 params ["_grp","_wp","_target",["_interval",15]];
 
-if (typeName _target isEqualTo "ARRAY") exitWith { // if _target is position exit with simple set position
+if (_target isEqualType []) exitWith { // if _target is position exit with simple set position
 	_wp setWaypointPosition [_target, 0];
 };
 
