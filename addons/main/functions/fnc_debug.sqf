@@ -14,9 +14,19 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 if (_this) then {
-	GVAR(debugMarkers) apply {_x setMarkerAlpha 1};
+    if !(GVAR(debug)) then {
+        GVAR(debug) = true;
+
+        [] spawn {
+            while {GVAR(debug)} do {
+                GVAR(debugMarkers) apply {_x setMarkerAlpha 1};
+                sleep 2;
+            };
+        }; 
+    };
 } else {
-	GVAR(debugMarkers) apply {_x setMarkerAlpha 0};
+    GVAR(debug) = false; 
+    GVAR(debugMarkers) apply {_x setMarkerAlpha 0};
 };
 
 nil
