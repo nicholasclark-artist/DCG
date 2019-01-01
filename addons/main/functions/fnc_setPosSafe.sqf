@@ -10,7 +10,7 @@ Arguments:
 1: positionASL <ARRAY>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -21,3 +21,5 @@ params [
 
 _obj setVectorUp surfaceNormal _pos;
 _obj setPosASL _pos;
+
+nil
