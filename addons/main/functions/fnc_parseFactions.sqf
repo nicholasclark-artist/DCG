@@ -32,16 +32,26 @@ _fnc_parse = {
 
     // parse CfgVehicles for desired configs
     _factionCfg = format [" 
-        (getNumber (_x >> 'scope') >= 2) &&  
+        (getNumber (_x >> 'scope') > 1) &&  
         {toUpper getText (_x >> 'faction') in %1} && 
-        {getText (_x >> 'vehicleClass') == 'Men' || {getText (_x >> 'vehicleClass') == 'Car'} || {getText (_x >> 'vehicleClass') == 'Support'} || {getText (_x >> 'vehicleClass') == 'Armored'} || {getText (_x >> 'vehicleClass') == 'Air'}}
+        {getText (_x >> 'vehicleClass') != 'Autonomous'} &&
+        {configName _x isKindOf 'CAManBase' || {configName _x isKindOf 'Car'} || {configName _x isKindOf 'Tank'} || {configName _x isKindOf 'Air'}}
     ",_factionArr] configClasses (configFile >> "CfgVehicles");
-
-    // get classnames
+    
+    // get classes
     _factionCfg = _factionCfg apply {configName _x};
+    _units = _factionCfg select {_x isKindOf "CAManBase"};
 
-    // return [faction list, unit pool, vehicle pool, aircraft pool]
-    [_factionStr, _factionCfg select {_x isKindOf "Man"}, _factionCfg select {_x isKindOf "LandVehicle"}, _factionCfg select {_x isKindOf "Air"}]
+    // get special classes
+    _officers = _units select {toLower _x find "officer" > -1};
+    _snipers = _units select {toLower _x find "sniper" > -1};
+
+    // remove special classes from units
+    _units = _units - _officers;
+    _units = _units - _snipers;
+
+    // return [faction list, unit pool, vehicle pool, aircraft pool, officer pool, sniper pool]
+    [_factionStr, _units, _factionCfg select {_x isKindOf "LandVehicle"}, _factionCfg select {_x isKindOf "Air"}, _officers, _snipers]
 };
 
 call {
@@ -52,6 +62,8 @@ call {
         GVAR(unitPoolEast) = _ret select 1;
         GVAR(vehPoolEast) = _ret select 2;
         GVAR(airPoolEast) = _ret select 3;
+        GVAR(officerPoolEast) = _ret select 4;
+        GVAR(sniperPoolEast) = _ret select 5;
 
         INFO_2("Parsing %1: %2",QGVAR(factionEast),GVAR(factionEast));
     };
@@ -63,6 +75,8 @@ call {
         GVAR(unitPoolWest) = _ret select 1;
         GVAR(vehPoolWest) = _ret select 2;
         GVAR(airPoolWest) = _ret select 3;
+        GVAR(officerPoolWest) = _ret select 4;
+        GVAR(sniperPoolWest) = _ret select 5;
 
         INFO_2("Parsing %1: %2",QGVAR(factionWest),GVAR(factionWest));
     };
@@ -74,6 +88,8 @@ call {
         GVAR(unitPoolInd) = _ret select 1;
         GVAR(vehPoolInd) = _ret select 2;
         GVAR(airPoolInd) = _ret select 3;
+        GVAR(officerPoolInd) = _ret select 4;
+        GVAR(sniperPoolInd) = _ret select 5;
 
         INFO_2("Parsing %1: %2",QGVAR(factionInd),GVAR(factionInd));
     };
