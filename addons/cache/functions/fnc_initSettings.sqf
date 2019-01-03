@@ -35,7 +35,7 @@ __________________________________________________________________*/
     ],
     true,
     {
-        "IsMoving" setDynamicSimulationDistanceCoef GVAR(distCoef);
+        "IsMoving" setDynamicSimulationDistanceCoef _this;
     }
 ] call CBA_Settings_fnc_init;
 
@@ -52,7 +52,7 @@ __________________________________________________________________*/
     ],
     true,
     {
-        "Group" setDynamicSimulationDistance GVAR(distGroup);
+        "Group" setDynamicSimulationDistance _this;
     }
 ] call CBA_Settings_fnc_init;
 
@@ -69,7 +69,7 @@ __________________________________________________________________*/
     ],
     true,
     {
-        "Vehicle" setDynamicSimulationDistance GVAR(distVehicle);
+        "Vehicle" setDynamicSimulationDistance _this;
     }
 ] call CBA_Settings_fnc_init;
 
@@ -86,7 +86,7 @@ __________________________________________________________________*/
     ],
     true,
     {
-        "EmptyVehicle" setDynamicSimulationDistance GVAR(distEmpty);
+        "EmptyVehicle" setDynamicSimulationDistance _this;
     }
 ] call CBA_Settings_fnc_init;
 
@@ -103,6 +103,6 @@ __________________________________________________________________*/
     ],
     true,
     {
-        "Prop" setDynamicSimulationDistance GVAR(distProp);
+        "Prop" setDynamicSimulationDistance _this;
     }
 ] call CBA_Settings_fnc_init;

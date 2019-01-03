@@ -35,7 +35,7 @@ __________________________________________________________________*/
     true,
     {
         if (isServer) then {
-            switch (GVAR(displayMarkers)) do {
+            switch (_this) do {
                 case 0: {
                     GVAR(markers) apply {_x setMarkerAlpha 0};
                 };
