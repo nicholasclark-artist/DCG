@@ -4,6 +4,8 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+if (!isMultiplayer && {!is3DEN}) exitWith {};
+
 LOG(MSG_INIT);
 
 MAIN_ADDON = false;
@@ -59,16 +61,24 @@ PREP(exportFactionClasses);
 PREP(parseFactions);
 PREP(landAt);
 
+GVAR(cleanup) = [];
+
+// map variables
 GVAR(locations) = [];
 GVAR(locals) = [];
 GVAR(hills) = [];
 GVAR(marines) = [];
 GVAR(range) = worldSize*0.5;
 GVAR(center) = [GVAR(range),GVAR(range),0];
-GVAR(cleanup) = [];
-GVAR(saveDataCurrent) = [];
+
+// debug variables
 GVAR(debug) = false;
 GVAR(debugMarkers) = [];
+
+// save system variables 
+GVAR(saveDataCurrent) = [];
+
+// unit pool variables
 GVAR(unitPoolWest) = [];
 GVAR(vehPoolWest) = [];
 GVAR(airPoolWest) = [];
