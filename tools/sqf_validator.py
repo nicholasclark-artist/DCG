@@ -13,8 +13,8 @@ if sys.version_info.major == 2:
 
 
 def validKeyWordAfterCode(content, index):
-    keyWords = ["for", "do", "count", "each", "forEach", "else", "and", "not",
-                "isEqualTo", "in", "call", "spawn", "execVM", "catch", "param", "select", "apply"]
+    keyWords = ["for", "do", "count", "each", "forEach", "else", "and", "not", "isEqualTo", "in", "call",
+                "spawn", "execVM", "catch", "param", "select", "apply", "findIf", "remoteExec", "remoteExecCall", "<", ">", "==", "!="]
     for word in keyWords:
         try:
             subWord = content.index(word, index, index+len(word))
