@@ -41,7 +41,7 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
 
 	if (EGVAR(approval,enable) isEqualTo 1) then {
 		_cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
-		_cost = _cost*COST_MULTIPIER;
+		_cost = _cost*FOB_COST_MULTIPIER;
 
 		missionNamespace setVariable [PVEH_AVADD,[getPosASL (_this select 1),_cost]];
 		publicVariableServer PVEH_AVADD;
@@ -52,7 +52,7 @@ GVAR(curator) removeAllEventHandlers "CuratorObjectDeleted";
 GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
 	if (EGVAR(approval,enable) isEqualTo 1) then {
 		_cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
-		_cost = _cost*COST_MULTIPIER;
+		_cost = _cost*FOB_COST_MULTIPIER;
 
 		missionNamespace setVariable [PVEH_AVADD,[getPosASL (_this select 1),_cost * -1]];
 		publicVariableServer PVEH_AVADD;

@@ -8,57 +8,49 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define COST_MULTIPIER 0.5
+#define FOB_COST_MULTIPIER 0.5
 #define FOB_RECON GVAR(uav)
 #define FOB_DEPLOYED !(GVAR(location) isEqualTo locationNull)
 #define FOB_POSITION (getPos GVAR(location))
 #define FOB_MED ["Land_Medevac_house_V1_F", "Land_Medevac_HQ_V1_F","B_Slingload_01_Medevac_F"]
+
+#define FOB_CREATE_NAME "Deploy FOB"
 #define FOB_CREATE_ANIM 'AinvPknlMstpSnonWnonDnon_medic4'
-
-#define PVEH_CREATE QGVAR(pveh_create)
-#define PVEH_DELETE QGVAR(pveh_delete)
-#define PVEH_TRANSFER QGVAR(pveh_transfer)
-#define PVEH_ASSIGN QGVAR(pveh_assign)
-
-#define CREATE_ID QUOTE(DOUBLES(ADDON,create))
-#define CREATE_NAME "Deploy FOB"
-#define CREATE_STATEMENT \
+#define FOB_CREATE_STATEMENT \
     [player,FOB_CREATE_ANIM] call EFUNC(main,setAnim); \
     [{ \
         _format = format ["Forward Operating Base Deployed \n \nPress [%1] to start building",call FUNC(getKeybind)]; \
         [_format,true] call EFUNC(main,displayText); \
-    	missionNamespace setVariable [PVEH_CREATE,player]; \
-    	publicVariableServer PVEH_CREATE; \
+    	missionNamespace setVariable [QGVAR(createPVEH),player]; \
+    	publicVariableServer QGVAR(createPVEH); \
     }, [], 9] call CBA_fnc_waitAndExecute
 
-#define CREATE_COND !(FOB_DEPLOYED) && {isNull getAssignedCuratorUnit GVAR(curator)} && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {!(COMPARE_STR(animationState player,FOB_CREATE_ANIM))} && {[player] call FUNC(isAllowedOwner)} && {!((getpos player isFlatEmpty  [6, -1, -1, -1, 0, false, player]) isEqualTo [])}
-#define CREATE_KEYCODE \
-	if (CREATE_COND) then { \
-		CREATE_STATEMENT \
+#define FOB_CREATE_COND !(FOB_DEPLOYED) && {isNull getAssignedCuratorUnit GVAR(curator)} && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {!(COMPARE_STR(animationState player,FOB_CREATE_ANIM))} && {[player] call FUNC(isAllowedOwner)} && {!((getpos player isFlatEmpty  [6, -1, -1, -1, 0, false, player]) isEqualTo [])}
+#define FOB_CREATE_KEYCODE \
+	if (FOB_CREATE_COND) then { \
+		FOB_CREATE_STATEMENT \
 	}
 
-#define TRANSFER_ID QUOTE(DOUBLES(ADDON,transfer))
-#define TRANSFER_NAME "Transfer FOB Control"
-#define TRANSFER_STATEMENT \
-    missionNamespace setVariable [PVEH_TRANSFER,[player,cursorTarget]]; \
-    publicVariableServer PVEH_TRANSFER; \
+#define FOB_TRANSFER_NAME "Transfer FOB Control"
+#define FOB_TRANSFER_STATEMENT \
+    missionNamespace setVariable [QGVAR(transferPVEH),[player,cursorTarget]]; \
+    publicVariableServer QGVAR(transferPVEH); \
     [format ["FOB control transferred to %1", name cursorTarget],true] call EFUNC(main,displayText)
-#define TRANSFER_STATEMENT_ACE \
-    missionNamespace setVariable [PVEH_TRANSFER,[player,_target]]; \
-    publicVariableServer PVEH_TRANSFER; \
+#define FOB_TRANSFER_STATEMENT_ACE \
+    missionNamespace setVariable [QGVAR(transferPVEH),[player,_target]]; \
+    publicVariableServer QGVAR(transferPVEH); \
     [format ["FOB control transferred to %1", name _target],true] call EFUNC(main,displayText)
-#define TRANSFER_COND FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer cursorTarget} && {cursorTarget isKindOf 'CAManBase'} && {[cursorTarget] call FUNC(isAllowedOwner)}
-#define TRANSFER_COND_ACE FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer _target} && {_target isKindOf 'CAManBase'} && {[_target] call FUNC(isAllowedOwner)}
-#define TRANSFER_KEYCODE \
-    if (TRANSFER_COND) then { \
-        TRANSFER_STATEMENT \
+#define FOB_TRANSFER_COND FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer cursorTarget} && {cursorTarget isKindOf 'CAManBase'} && {[cursorTarget] call FUNC(isAllowedOwner)}
+#define FOB_TRANSFER_COND_ACE FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer _target} && {_target isKindOf 'CAManBase'} && {[_target] call FUNC(isAllowedOwner)}
+#define FOB_TRANSFER_KEYCODE \
+    if (FOB_TRANSFER_COND) then { \
+        FOB_TRANSFER_STATEMENT \
     }
 
-#define CONTROL_ID QUOTE(DOUBLES(ADDON,control))
-#define CONTROL_NAME "Assume FOB Control"
-#define CONTROL_STATEMENT \
-    missionNamespace setVariable [PVEH_ASSIGN,player]; \
-    publicVariableServer PVEH_ASSIGN; \
+#define FOB_CONTROL_NAME "Assume FOB Control"
+#define FOB_CONTROL_STATEMENT \
+    missionNamespace setVariable [QGVAR(assignPVEH),player]; \
+    publicVariableServer QGVAR(assignPVEH); \
     [ \
         {getAssignedCuratorUnit GVAR(curator) isEqualTo player}, \
         { \
@@ -67,33 +59,29 @@
         }, \
         [] \
     ] call CBA_fnc_waitUntilAndExecute
-#define CONTROL_COND FOB_DEPLOYED && {isNull (getAssignedCuratorUnit GVAR(curator))} && {[player] call FUNC(isAllowedOwner)}
-#define CONTROL_KEYCODE \
-	if (CONTROL_COND) then { \
-		CONTROL_STATEMENT \
+#define FOB_CONTROL_COND FOB_DEPLOYED && {isNull (getAssignedCuratorUnit GVAR(curator))} && {[player] call FUNC(isAllowedOwner)}
+#define FOB_CONTROL_KEYCODE \
+	if (FOB_CONTROL_COND) then { \
+		FOB_CONTROL_STATEMENT \
 	}
 
-
-
-#define DELETE_ID QUOTE(DOUBLES(ADDON,delete))
-#define DELETE_NAME "Dismantle FOB"
-#define DELETE_STATEMENT \
+#define FOB_DELETE_NAME "Dismantle FOB"
+#define FOB_DELETE_STATEMENT \
     [ \
         "Are you sure you want to dismantle the Forward Operating Base?", \
         TITLE, \
         "Forward Operating Base dismantled.", \
         {missionNamespace setVariable [(_this select 0),true]; publicVariableServer (_this select 0);}, \
-        [PVEH_DELETE] \
+        [QGVAR(deletePVEH)] \
     ] spawn EFUNC(main,displayGUIMessage)
-#define DELETE_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {cameraOn isEqualTo player} && {!(visibleMap)}
-#define DELETE_KEYCODE \
-	if (DELETE_COND) then { \
-		DELETE_STATEMENT \
+#define FOB_DELETE_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {cameraOn isEqualTo player} && {!(visibleMap)}
+#define FOB_DELETE_KEYCODE \
+	if (FOB_DELETE_COND) then { \
+		FOB_DELETE_STATEMENT \
 	}
 
-#define RECON_ID QUOTE(DOUBLES(ADDON,recon))
-#define RECON_NAME "FOB Aerial Recon"
-#define RECON_STATEMENT \
+#define FOB_RECON_NAME "FOB Aerial Recon"
+#define FOB_RECON_STATEMENT \
 	if (((UAVControl FOB_RECON) select 0) isEqualTo player) then { \
 		objNull remoteControl gunner FOB_RECON; \
 		player switchCamera "internal"; \
@@ -101,22 +89,21 @@
 		player remoteControl gunner FOB_RECON; \
 		FOB_RECON switchCamera "internal"; \
 	}
-#define RECON_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {!isNull FOB_RECON} && {!(visibleMap)}
-#define RECON_KEYCODE \
-	if (RECON_COND) then { \
-		RECON_STATEMENT \
+#define FOB_RECON_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {!isNull FOB_RECON} && {!(visibleMap)}
+#define FOB_RECON_KEYCODE \
+	if (FOB_RECON_COND) then { \
+		FOB_RECON_STATEMENT \
 	}
 
-#define BUILD_ID QUOTE(DOUBLES(ADDON,build))
-#define BUILD_NAME "Build FOB"
-#define BUILD_STATEMENT \
+#define FOB_BUILD_NAME "Build FOB"
+#define FOB_BUILD_STATEMENT \
 	if (isNull (findDisplay 312)) then { \
 		openCuratorInterface; \
 	} else { \
 		findDisplay 312 closeDisplay 2; \
 	}
-#define BUILD_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {isNull (objectParent player)} && {cameraOn isEqualTo player} && {!(visibleMap)}
-#define BUILD_KEYCODE \
-	if (BUILD_COND) then { \
-		BUILD_STATEMENT \
+#define FOB_BUILD_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {isNull (objectParent player)} && {cameraOn isEqualTo player} && {!(visibleMap)}
+#define FOB_BUILD_KEYCODE \
+	if (FOB_BUILD_COND) then { \
+		FOB_BUILD_STATEMENT \
 	}

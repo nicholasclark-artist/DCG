@@ -18,7 +18,7 @@ private _unit = getAssignedCuratorUnit GVAR(curator);
     // ignore units in vehicles, only subtract cost of vehicle
     if (EGVAR(approval,enable) isEqualTo 1 && {!(_x isKindOf "Man") || (_x isKindOf "Man" && (isNull objectParent _x))}) then {
         _cost = [typeOf _x] call FUNC(getCuratorCost);
-        _cost = _cost*COST_MULTIPIER;
+        _cost = _cost*FOB_COST_MULTIPIER;
         [FOB_POSITION,_cost*-1] call EFUNC(approval,addValue);
     };
     _x call EFUNC(main,cleanup);

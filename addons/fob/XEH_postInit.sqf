@@ -13,10 +13,10 @@ if !(isMultiplayer) exitWith {};
 
 		call FUNC(init);
 
-		PVEH_CREATE addPublicVariableEventHandler {[_this select 1] call FUNC(handleCreate)};
-		PVEH_DELETE addPublicVariableEventHandler {[_this select 1] call FUNC(handleDelete)};
-		PVEH_TRANSFER addPublicVariableEventHandler {(_this select 1) call FUNC(handleTransfer)};
-		PVEH_ASSIGN addPublicVariableEventHandler {[GVAR(curator),_this select 1] call FUNC(handleAssign)};
+		QGVAR(createPVEH) addPublicVariableEventHandler {[_this select 1] call FUNC(handleCreate)};
+		QGVAR(deletePVEH) addPublicVariableEventHandler {[_this select 1] call FUNC(handleDelete)};
+		QGVAR(transferPVEH) addPublicVariableEventHandler {(_this select 1) call FUNC(handleTransfer)};
+		QGVAR(assignPVEH) addPublicVariableEventHandler {[GVAR(curator),_this select 1] call FUNC(handleAssign)};
 
 		addMissionEventHandler ["HandleDisconnect",{
 			if ((_this select 0) isEqualTo getAssignedCuratorUnit GVAR(curator)) then {

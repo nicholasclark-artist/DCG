@@ -13,7 +13,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 private _keyArr = [];
-private _entry = [COMPONENT_NAME, BUILD_ID] call CBA_fnc_getKeybind;
+private _entry = [COMPONENT_NAME, QGVAR(build)] call CBA_fnc_getKeybind;
 
 if !(isNil "_entry") then {
     private _modifiers = (_entry select 5) select 1;
