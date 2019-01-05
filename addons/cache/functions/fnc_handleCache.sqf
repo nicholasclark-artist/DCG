@@ -15,7 +15,7 @@ __________________________________________________________________*/
 {
     if (!(dynamicSimulationEnabled _x) && {!(isPlayer leader _x)} && {!(_x getVariable [CACHE_DISABLE,false])}) then {
         _x enableDynamicSimulation true;
-        LOG_1("Enable dynamic simulation: %1",_x);
+        // LOG_1("Enable dynamic simulation: %1",_x);
     };
     false
 } count allGroups;

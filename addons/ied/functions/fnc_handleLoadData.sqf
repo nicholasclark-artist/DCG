@@ -12,8 +12,6 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define DIST_MIN 512
-#define DIST worldSize*0.053 max DIST_MIN
 #define ACE_TYPES ["IEDUrbanBig_Remote_Mag","IEDUrbanSmall_Remote_Mag"]
 #define VANILLA_TYPES ["IEDUrbanBig_F","IEDUrbanSmall_F"]
 #define CREATE_IED(POS) \
@@ -29,9 +27,9 @@ __________________________________________________________________*/
         GVAR(list) pushBack _ied; \
     };
 
-params ["_data"];
+// params ["_data"];
 
-if (_data isEqualTo []) then {
+// if (_data isEqualTo []) then {
 	{
 		private _roads = _x nearRoads 200;
 
@@ -43,13 +41,12 @@ if (_data isEqualTo []) then {
                 CREATE_IED(_pos)
 			};
 		};
-		false
-	} count EGVAR(main,grid);
-} else {
-	for "_index" from 0 to count _data - 1 do {
-        private _pos = _data select _index;
-        CREATE_IED(_pos)
-	};
-};
+	} forEach EGVAR(main,grid);
+// } else {
+// 	for "_index" from 0 to count _data - 1 do {
+//         private _pos = _data select _index;
+//         CREATE_IED(_pos)
+// 	};
+// };
 
 nil

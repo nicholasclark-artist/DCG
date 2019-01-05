@@ -22,7 +22,7 @@ if !(_data isEqualTo []) exitWith {
         _data spawn FUNC(setOccupied);
     };
 };
-
+// @todo something here is making occupy addon run twice
 private _locations = EGVAR(main,locations) select {!([_x select 1] call EFUNC(safezone,inAreaAll))};
 
 if (_locations isEqualTo []) exitWith {

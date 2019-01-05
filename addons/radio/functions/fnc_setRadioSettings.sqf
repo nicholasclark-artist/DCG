@@ -21,7 +21,7 @@ if (CHECK_ADDON_1("acre_main")) then {
     } forEach ACRE_BASERADIOS;
 
     for "_c" from 1 to NETWORK_COUNT do {
-        _name = ["Comm Net", _c] joinString " ";
+        _name = ["Network", _c] joinString " ";
         ["ACRE_PRC148", PRESET, _c, "name", _name] call acre_api_fnc_setPresetChannelField;
         ["ACRE_PRC152", PRESET, _c, "description", _name] call acre_api_fnc_setPresetChannelField;
         ["ACRE_PRC117F", PRESET, _c, "label", _name] call acre_api_fnc_setPresetChannelField;

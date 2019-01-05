@@ -15,10 +15,6 @@ __________________________________________________________________*/
 
 params ["_data"];
 
-if !(_data isEqualTo []) then {
-	[_data select 0] call FUNC(findLocation);
-} else {
-	[] call FUNC(findLocation);
-};
+[[_data] call FUNC(findLocation),[] call FUNC(findLocation)] select (_data isEqualTo []);
 
 nil

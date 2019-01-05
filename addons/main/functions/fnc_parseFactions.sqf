@@ -44,7 +44,7 @@ _fnc_parse = {
     // apply filter to configs
     _factionCfg = _factionCfg select {
         _class = _x;
-        _filters findIf {toLower getText(_class >> "displayName") find _x > -1} < 0;
+        _filters findIf {toLower getText(_class >> "displayName") find _x > -1} < 0
     };
 
     // get classes
