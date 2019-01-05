@@ -34,11 +34,11 @@
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
 
 // fob cost macros
-#define COST_MAN 1.5
-#define COST_CAR 3
-#define COST_TANK 6
-#define COST_AIR 8
-#define COST_SHIP 3
+#define COST_MAN 2
+#define COST_CAR 7
+#define COST_TANK 10
+#define COST_AIR 14
+#define COST_SHIP 7
 #define COST_AMMO 0.1
 #define COST_STRUCT 2
 #define COST_ITEM 0.1
