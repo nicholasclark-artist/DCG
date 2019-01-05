@@ -16,16 +16,19 @@ __________________________________________________________________*/
 params ["_data"];
 
 if !(_data isEqualTo []) then {
-	{
-		_x params ["_type","_pos","_dir","_vector"];
+    // @todo add support for loading units
+    {
+        _x params ["_type","_pos","_dir","_vector","_vars"];
 
-		_veh = _type createVehicle [0,0,0];
-		_veh setDir _dir;
-		_veh setPosASL _pos;
-		_veh setVectorUp _vector;
+        private _veh = _type createVehicle [0,0,0];
 
-		false
-	} count _data;
+        {
+            _veh setVariable [_x select 0, _x select 1, false];
+        } forEach _vars;
+
+        _veh setDir _dir;
+        [_veh,_pos] call FUNC(setPosSafe);
+    } forEach _data;
 };
 
 nil
