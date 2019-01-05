@@ -1,14 +1,17 @@
 branches:
   only:
-   - master
-   - release
+    - master
+    - release
+dist: trusty
 language: python
 python:
-- '3.4'
+  - '3.5'
+install: true
 before_script:
-- if [ -n "${GH_TOKEN}" ] && [ "${TRAVIS_BRANCH}" == "master" ] && [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
-    pip install pygithub;
-    pip install pygithub3;
-  fi
+  - if [ -n "${GH_TOKEN}" ] && [ "${TRAVIS_BRANCH}" == "master" ] && [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
+      pip install pygithub;
+      pip install pygithub3;
+    fi
 script:
-- python3 tools/sqf_validator.py
+  - python3 tools/sqf_validator.py
+  - python3 tools/config_style_checker.py
