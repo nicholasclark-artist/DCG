@@ -13,35 +13,36 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define PUSHBACK_DATA(ADDONTOSAVE,DATATOSAVE) \
     LOG_2("Saving %1: %2.",QGVARMAIN(ADDONTOSAVE),DATATOSAVE); \
-    GVAR(saveDataCurrent) pushBack [QGVARMAIN(ADDONTOSAVE),DATATOSAVE]
+    GVAR(saveDataScenario) pushBack [QGVARMAIN(ADDONTOSAVE),DATATOSAVE]
 
 if !(isServer) exitWith {};
 
 // overwrite current data
-GVAR(saveDataCurrent) = [SAVE_SCENARIO_ID];
+GVAR(saveDataScenario) = [SAVE_SCENARIO_ID];
 
 // MAIN ADDON
-// don't need to check for main addon, it's always enabled
-private _data = [];
+if (CHECK_ADDON_2(main)) then {
+    private _data = [];
 
-{
-    // @todo remove entities that are saved by other addons
-    if (_x getVariable [SAVE_ID_ENTITY_MAIN,false] && {!isPlayer _x}) then {
-        _entity = _x;
+    {
+        // @todo add support for saving units
+        if (_x getVariable [QGVAR(saveEntity),false] && {!(_x isKindOf "MAN")}) then {
+            _entity = _x;
 
-        // save entity variables if "dcg" found in string
-        _vars = (allVariables _entity) select {(_x find QUOTE(PREFIX)) >= 0};
+            // save entity variables if "dcg" found in string
+            private _vars = (allVariables _entity) select {(_x find QUOTE(PREFIX)) >= 0};
 
-        // @todo nested loops are bad
-        {
-            _vars set [_forEachIndex,[_x,_entity getVariable _x]];	
-        } forEach _vars;
+            // set as [variable name, variable value]
+            {
+                _vars set [_forEachIndex,[_x,_entity getVariable _x]];	
+            } forEach _vars;
 
-        _data pushBack [typeOf _x,getPosASL _x,getDir _x,vectorUp _x,_vars];
-    };
-} foreach (allMissionObjects "All");
+            _data pushBack [typeOf _x,getPosASL _x,getDir _x,vectorUp _x,_vars];
+        };
+    } foreach (allMissionObjects "All");
 
-PUSHBACK_DATA(main,_data);
+    PUSHBACK_DATA(main,_data);
+};
 
 // OCCUPY ADDON
 if (CHECK_ADDON_2(occupy)) then {
@@ -54,7 +55,7 @@ if (CHECK_ADDON_2(occupy)) then {
     private _airCount = 0;
 
     { 
-        if ((driver _x) getVariable [SAVE_ID_ENTITY(occupy),false]) then {
+        if ((driver _x) getVariable [QEGVAR(occupy,saveEntity),false]) then { 
             if (_x isKindOf "Man") exitWith {
                 _infCount = _infCount + 1;
             };
@@ -65,7 +66,7 @@ if (CHECK_ADDON_2(occupy)) then {
                 _airCount = _airCount + 1;
             };
         };
-    } forEach (_position nearEntities [["Man","LandVehicle","Air"],_size*2]);
+    } forEach (_position nearEntities [["Man","LandVehicle","Air"],_size*1.5]);
 
     _data append [_name,_position,_size,_type,[_infCount,_vehCount,_airCount]];
 
@@ -121,18 +122,20 @@ if (CHECK_ADDON_2(weather)) then {
     PUSHBACK_DATA(weather,_data);
 };
 
+/* 
 // IED ADDON
-// if (CHECK_ADDON_2(ied)) then {
-// 	private _data = [];
-// 	{
-//         private _pos = getPos _x;
-//         _pos resize 2;
-// 		_data pushBack _pos;
-// 		false
-// 	} count EGVAR(ied,list);
+if (CHECK_ADDON_2(ied)) then {
+	private _data = [];
+	{
+        private _pos = getPos _x;
+        _pos resize 2;
+		_data pushBack _pos;
+		false
+	} count EGVAR(ied,list);
 
-// 	PUSHBACK_DATA(ied,_data);
-// };
+	PUSHBACK_DATA(ied,_data);
+}; 
+*/
 
 // TASK ADDON
 if (CHECK_ADDON_2(task)) then {
@@ -153,19 +156,19 @@ if (CHECK_ADDON_2(approval)) then {
 };
 
 // following code must run last
-private _dataProfile = SAVE_GET_VAR;
+private _dataProfile = SAVE_GETVAR;
 
 if !(_dataProfile isEqualTo []) then {
     // only replace data for current scenario
     {
         if ((_x select 0) == SAVE_SCENARIO_ID) exitWith {
-            _dataProfile set [_forEachIndex,GVAR(saveDataCurrent)];
+            _dataProfile set [_forEachIndex,GVAR(saveDataScenario)];
         };
-        _dataProfile pushBack GVAR(saveDataCurrent);
+        _dataProfile pushBack GVAR(saveDataScenario);
     } forEach _dataProfile;
 } else {
-    _dataProfile pushBack GVAR(saveDataCurrent);
+    _dataProfile pushBack GVAR(saveDataScenario);
 };
 
-SAVE_SET_VAR(_dataProfile);
+SAVE_SETVAR(_dataProfile);
 saveProfileNamespace;

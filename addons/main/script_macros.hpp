@@ -33,17 +33,7 @@
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
 
-// save macros 
-#define SAVE_ID QUOTE(DOUBLES(MAIN_ADDON,saveData))
-#define SAVE_ID_ENTITY(COMPONENT1) QUOTE(DOUBLES(GVARMAIN(COMPONENT1),saveEntity))
-#define SAVE_ID_ENTITY_MAIN QUOTE(DOUBLES(MAIN_ADDON,saveEntity))
-#define SAVE_PVEH QUOTE(DOUBLES(MAIN_ADDON,saveDataPVEH))
-#define SAVE_PVEH_DELETE QUOTE(DOUBLES(MAIN_ADDON,deleteDataPVEH))
-#define SAVE_SET_VAR(VAR1) profileNamespace setVariable [SAVE_ID,VAR1]
-#define SAVE_GET_VAR profileNamespace getVariable [SAVE_ID,[]]
-#define SAVE_SCENARIO_ID ([QUOTE(VERSION), toUpper worldName, toUpper missionName] joinString " - ")
-
-// fob macros
+// fob cost macros
 #define COST_MAN 1.5
 #define COST_CAR 3
 #define COST_TANK 6

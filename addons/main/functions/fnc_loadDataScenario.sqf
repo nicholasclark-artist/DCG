@@ -12,10 +12,10 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer) exitWith {};
+if (!isMultiplayer && {!is3DEN}) exitWith {};
 
 {
 	if (toUpper (_x select 0) isEqualTo SAVE_SCENARIO_ID) exitWith {
-		GVAR(saveDataCurrent) = _x;
+		GVAR(saveDataScenario) = _x;
 	};
-} forEach (SAVE_GET_VAR);
+} forEach (SAVE_GETVAR);

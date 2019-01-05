@@ -8,8 +8,8 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define SET_UNITVAR(OBJ) (OBJ) setVariable [SAVE_ID_ENTITY(COMPONENT),true]
-#define GET_UNITVAR(OBJ) (OBJ) getVariable [SAVE_ID_ENTITY(COMPONENT),false]
+#define SET_UNITVAR(OBJ) (OBJ) setVariable [QGVAR(saveEntity),true]
+#define GET_UNITVAR(OBJ) (OBJ) getVariable [QGVAR(saveEntity),false]
 #define SPAWN_DELAY 1
 #define PATROL_UNITCOUNT 2
 #define ITERATIONS 3000
