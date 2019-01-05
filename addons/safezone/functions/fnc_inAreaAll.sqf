@@ -33,7 +33,7 @@ switch (typeName _entity) do {
                 _ret = [_entity] call FUNC(inAreaAll);
             } else {
                 _ret = (SAFEZONES findIf {_entity inArea _x}) > -1
-            };	
+            };
 
             [false,true] select _ret;
         } forEach _entity;
