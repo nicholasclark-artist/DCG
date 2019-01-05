@@ -31,8 +31,8 @@ private _grp = [[0,0,0],0,_count,CIVILIAN,1.25] call EFUNC(main,spawnGroup);
 [_grp] call EFUNC(cache,disableCache);
 
 [
-	{count units (_this select 0) >= (_this select 2)},
-	{
+    {count units (_this select 0) >= (_this select 2)},
+    {
         params ["_grp","_pos","_count","_size","_buildings","_name"];
 
         {
@@ -62,6 +62,6 @@ private _grp = [[0,0,0],0,_count,CIVILIAN,1.25] call EFUNC(main,spawnGroup);
                 missionNamespace setVariable [LOCATION_ID(_name),false];
             };
         }, HANDLER_DELAY, [_pos,_name,units _grp]] call CBA_fnc_addPerFrameHandler;
-	},
-	[_grp,_pos,_count,_size,_buildings,_name]
+    },
+    [_grp,_pos,_count,_size,_buildings,_name]
 ] call CBA_fnc_waitUntilAndExecute;

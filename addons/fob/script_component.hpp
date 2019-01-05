@@ -21,15 +21,15 @@
     [{ \
         _format = format ["Forward Operating Base Deployed \n \nPress [%1] to start building",call FUNC(getKeybind)]; \
         [_format,true] call EFUNC(main,displayText); \
-    	missionNamespace setVariable [QGVAR(createPVEH),player]; \
-    	publicVariableServer QGVAR(createPVEH); \
+        missionNamespace setVariable [QGVAR(createPVEH),player]; \
+        publicVariableServer QGVAR(createPVEH); \
     }, [], 9] call CBA_fnc_waitAndExecute
 
 #define FOB_CREATE_COND !(FOB_DEPLOYED) && {isNull getAssignedCuratorUnit GVAR(curator)} && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {!(COMPARE_STR(animationState player,FOB_CREATE_ANIM))} && {[player] call FUNC(isAllowedOwner)} && {!((getpos player isFlatEmpty  [6, -1, -1, -1, 0, false, player]) isEqualTo [])}
 #define FOB_CREATE_KEYCODE \
-	if (FOB_CREATE_COND) then { \
-		FOB_CREATE_STATEMENT \
-	}
+    if (FOB_CREATE_COND) then { \
+        FOB_CREATE_STATEMENT \
+    }
 
 #define FOB_TRANSFER_NAME "Transfer FOB Control"
 #define FOB_TRANSFER_STATEMENT \
@@ -61,9 +61,9 @@
     ] call CBA_fnc_waitUntilAndExecute
 #define FOB_CONTROL_COND FOB_DEPLOYED && {isNull (getAssignedCuratorUnit GVAR(curator))} && {[player] call FUNC(isAllowedOwner)}
 #define FOB_CONTROL_KEYCODE \
-	if (FOB_CONTROL_COND) then { \
-		FOB_CONTROL_STATEMENT \
-	}
+    if (FOB_CONTROL_COND) then { \
+        FOB_CONTROL_STATEMENT \
+    }
 
 #define FOB_DELETE_NAME "Dismantle FOB"
 #define FOB_DELETE_STATEMENT \
@@ -76,34 +76,34 @@
     ] spawn EFUNC(main,displayGUIMessage)
 #define FOB_DELETE_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {cameraOn isEqualTo player} && {!(visibleMap)}
 #define FOB_DELETE_KEYCODE \
-	if (FOB_DELETE_COND) then { \
-		FOB_DELETE_STATEMENT \
-	}
+    if (FOB_DELETE_COND) then { \
+        FOB_DELETE_STATEMENT \
+    }
 
 #define FOB_RECON_NAME "FOB Aerial Recon"
 #define FOB_RECON_STATEMENT \
-	if (((UAVControl FOB_RECON) select 0) isEqualTo player) then { \
-		objNull remoteControl gunner FOB_RECON; \
-		player switchCamera "internal"; \
-	} else { \
-		player remoteControl gunner FOB_RECON; \
-		FOB_RECON switchCamera "internal"; \
-	}
+    if (((UAVControl FOB_RECON) select 0) isEqualTo player) then { \
+        objNull remoteControl gunner FOB_RECON; \
+        player switchCamera "internal"; \
+    } else { \
+        player remoteControl gunner FOB_RECON; \
+        FOB_RECON switchCamera "internal"; \
+    }
 #define FOB_RECON_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {!isNull FOB_RECON} && {!(visibleMap)}
 #define FOB_RECON_KEYCODE \
-	if (FOB_RECON_COND) then { \
-		FOB_RECON_STATEMENT \
-	}
+    if (FOB_RECON_COND) then { \
+        FOB_RECON_STATEMENT \
+    }
 
 #define FOB_BUILD_NAME "Build FOB"
 #define FOB_BUILD_STATEMENT \
-	if (isNull (findDisplay 312)) then { \
-		openCuratorInterface; \
-	} else { \
-		findDisplay 312 closeDisplay 2; \
-	}
+    if (isNull (findDisplay 312)) then { \
+        openCuratorInterface; \
+    } else { \
+        findDisplay 312 closeDisplay 2; \
+    }
 #define FOB_BUILD_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {isNull (objectParent player)} && {cameraOn isEqualTo player} && {!(visibleMap)}
 #define FOB_BUILD_KEYCODE \
-	if (FOB_BUILD_COND) then { \
-		FOB_BUILD_STATEMENT \
-	}
+    if (FOB_BUILD_COND) then { \
+        FOB_BUILD_STATEMENT \
+    }

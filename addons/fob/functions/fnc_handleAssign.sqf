@@ -15,8 +15,8 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-	["_curator",objNull,[objNull,[]]],
-	["_unit",objNull,[objNull,[]]]
+    ["_curator",objNull,[objNull,[]]],
+    ["_unit",objNull,[objNull,[]]]
 ];
 
 private _previousCurator = getAssignedCuratorLogic _unit;

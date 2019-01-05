@@ -12,21 +12,21 @@ if !(isMultiplayer) exitWith {};
     {
         if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
        
-		_data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
-		[_data] call FUNC(handleLoadData);
+        _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
+        [_data] call FUNC(handleLoadData);
 
         if !(CHECK_ADDON_1("ace_explosives")) then {
-    		[FUNC(handleIED), 1, []] call CBA_fnc_addPerFrameHandler;
+            [FUNC(handleIED), 1, []] call CBA_fnc_addPerFrameHandler;
         };
 
         {
             _mrk = createMarker [str _x,getPos _x];
-        	_mrk setMarkerType "mil_triangle";
-        	_mrk setMarkerSize [0.5,0.5];
-        	_mrk setMarkerColor "ColorRed";
-        	[_mrk] call EFUNC(main,setDebugMarker);
+            _mrk setMarkerType "mil_triangle";
+            _mrk setMarkerSize [0.5,0.5];
+            _mrk setMarkerColor "ColorRed";
+            [_mrk] call EFUNC(main,setDebugMarker);
         } forEach GVAR(list);
-	}
+    }
 ] call CBA_fnc_waitUntilAndExecute;
 
 

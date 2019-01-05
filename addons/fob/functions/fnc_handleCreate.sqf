@@ -15,8 +15,8 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-	["_center",objNull,[objNull,[]]],
-	["_points",1,[0]]
+    ["_center",objNull,[objNull,[]]],
+    ["_points",1,[0]]
 ];
 
 private _unit = objNull;
@@ -24,27 +24,27 @@ private _pos = [];
 private _type = "";
 
 call {
-	if (_center isEqualType objNull) exitWith {
-		_unit = _center;
-		_pos = _center modelToWorld [0,3,0];
-	};
-	if (_center isEqualType []) exitWith {
-		_unit = objNull;
-		_pos = _center;
-	};
+    if (_center isEqualType objNull) exitWith {
+        _unit = _center;
+        _pos = _center modelToWorld [0,3,0];
+    };
+    if (_center isEqualType []) exitWith {
+        _unit = objNull;
+        _pos = _center;
+    };
 };
 
 call {
-	if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
-		_type = "B_cargoNet_01_ammo_F";
-	};
-	if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
-		_type = "O_cargoNet_01_ammo_F"
-	};
-	if (EGVAR(main,playerSide) isEqualTo INDEPENDENT) exitWith {
-		_type = "I_cargoNet_01_ammo_F"
-	};
-	_type = "B_cargoNet_01_ammo_F";
+    if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
+        _type = "B_cargoNet_01_ammo_F";
+    };
+    if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
+        _type = "O_cargoNet_01_ammo_F"
+    };
+    if (EGVAR(main,playerSide) isEqualTo INDEPENDENT) exitWith {
+        _type = "I_cargoNet_01_ammo_F"
+    };
+    _type = "B_cargoNet_01_ammo_F";
 };
 
 GVAR(anchor) = _type createVehicle [0,0,0];
@@ -60,10 +60,10 @@ clearBackpackCargoGlobal GVAR(anchor);
 [[],{
     if (hasInterface) then {
         if (CHECK_ADDON_1("ace_cargo")) then {
-    		[GVAR(anchor), false] call ace_cargo_fnc_makeLoadable;
-    	};
+            [GVAR(anchor), false] call ace_cargo_fnc_makeLoadable;
+        };
 
-     	[GVAR(anchor)] call EFUNC(main,armory);
+         [GVAR(anchor)] call EFUNC(main,armory);
     };
 
     GVAR(location) = createLocation ["NameCity",getPos GVAR(anchor),GVAR(range),GVAR(range)];
@@ -98,14 +98,14 @@ clearBackpackCargoGlobal GVAR(anchor);
 
             [GVAR(curator),_unit] call FUNC(handleAssign);
 
-        	// unit does not immediately become owner of curator
-        	[
-        		{getAssignedCuratorUnit GVAR(curator) isEqualTo (_this select 0)},
-        		{
-        			[] remoteExecCall [QFUNC(curatorEH), owner (getAssignedCuratorUnit GVAR(curator)), false];
-        		},
-        		[_unit]
-        	] call CBA_fnc_waitUntilAndExecute;
+            // unit does not immediately become owner of curator
+            [
+                {getAssignedCuratorUnit GVAR(curator) isEqualTo (_this select 0)},
+                {
+                    [] remoteExecCall [QFUNC(curatorEH), owner (getAssignedCuratorUnit GVAR(curator)), false];
+                },
+                [_unit]
+            ] call CBA_fnc_waitUntilAndExecute;
 
             [FOB_POSITION,AV_FOB] call EFUNC(approval,addValue);
         };

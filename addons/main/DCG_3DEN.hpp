@@ -29,16 +29,16 @@
 
 class ctrlMenuStrip;
 class display3DEN {
-	class Controls {
-		class MenuStrip: ctrlMenuStrip {
-			class Items {
-				class Tools {
-					items[] += {QUOTE(MAIN_FOLDER)};
-				};
-				class MAIN_FOLDER {
-					text = TITLE;
-					items[] = {QUOTE(EXPORTCOMP_ITEM),QUOTE(EXPORTFACTION_ITEM)};
-				};
+    class Controls {
+        class MenuStrip: ctrlMenuStrip {
+            class Items {
+                class Tools {
+                    items[] += {QUOTE(MAIN_FOLDER)};
+                };
+                class MAIN_FOLDER {
+                    text = TITLE;
+                    items[] = {QUOTE(EXPORTCOMP_ITEM),QUOTE(EXPORTFACTION_ITEM)};
+                };
                 class EXPORTCOMP_ITEM {
                     text = EXPORTCOMP_TEXT;
                     action = QUOTE(call FUNC(exportComposition));
@@ -47,30 +47,30 @@ class display3DEN {
                     text = EXPORTFACTION_TEXT;
                     action = QUOTE(call FUNC(exportFactionClasses));
                 };
-			};
-		};
-	};
+            };
+        };
+    };
 };
 
 class Cfg3DEN {
-	class Object {
-		class AttributeCategories {
-			class COMP_ITEM {
-				displayName = COMP_TEXT;
-				collapsed = 1;
-				class Attributes {
-					class COMP_ANCHOR {
-						displayName = COMP_ANCHOR_TEXT;
-						tooltip = COMP_ANCHOR_TIP;
-    					property = QUOTE(COMP_ANCHOR);
-						control = "Checkbox";
-						expression = "";
-						defaultValue = "false";
-						unique = 0;
-						// validate = "number";
-						condition = "1 - (objectAgent + logicModule + objectBrain)";
-						// typeName = "NUMBER";
-					};
+    class Object {
+        class AttributeCategories {
+            class COMP_ITEM {
+                displayName = COMP_TEXT;
+                collapsed = 1;
+                class Attributes {
+                    class COMP_ANCHOR {
+                        displayName = COMP_ANCHOR_TEXT;
+                        tooltip = COMP_ANCHOR_TIP;
+                        property = QUOTE(COMP_ANCHOR);
+                        control = "Checkbox";
+                        expression = "";
+                        defaultValue = "false";
+                        unique = 0;
+                        // validate = "number";
+                        condition = "1 - (objectAgent + logicModule + objectBrain)";
+                        // typeName = "NUMBER";
+                    };
                     class COMP_VECTORUP {
                         displayName = COMP_VECTORUP_TEXT;
                         tooltip = COMP_VECTORUP_TIP;
@@ -95,26 +95,26 @@ class Cfg3DEN {
                         condition = "1 - (objectAgent + logicModule + objectBrain)";
                         // typeName = "NUMBER";
                     };
-				};
-			};
-			class SAVE_ITEM {
-				displayName = SAVE_TEXT;
-				collapsed = 1;
-				class Attributes {
-					class SAVE_ENTITY {
-						displayName = SAVE_ENTITY_TEXT;
-						tooltip = SAVE_ENTITY_TIP;
-    					property = QUOTE(SAVE_ENTITY);
-						control = "Checkbox";
-						expression = QUOTE(_this setVariable [ARR_3(QQGVAR(saveEntity),_value,false)]);
-						defaultValue = "false";
-						unique = 0;
-						// validate = "number";
-						condition = "1 - (objectAgent + logicModule)";
-						// typeName = "NUMBER";
-					};
-				};
-			};
-		};
-	};
+                };
+            };
+            class SAVE_ITEM {
+                displayName = SAVE_TEXT;
+                collapsed = 1;
+                class Attributes {
+                    class SAVE_ENTITY {
+                        displayName = SAVE_ENTITY_TEXT;
+                        tooltip = SAVE_ENTITY_TIP;
+                        property = QUOTE(SAVE_ENTITY);
+                        control = "Checkbox";
+                        expression = QUOTE(_this setVariable [ARR_3(QQGVAR(saveEntity),_value,false)]);
+                        defaultValue = "false";
+                        unique = 0;
+                        // validate = "number";
+                        condition = "1 - (objectAgent + logicModule)";
+                        // typeName = "NUMBER";
+                    };
+                };
+            };
+        };
+    };
 };

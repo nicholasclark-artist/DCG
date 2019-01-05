@@ -15,7 +15,7 @@ __________________________________________________________________*/
 #define SAFEZONES GVAR(list)
 
 params [
-	["_entity", objNull, [objNull, grpNull, locationNull, "", []]]
+    ["_entity", objNull, [objNull, grpNull, locationNull, "", []]]
 ];
 
 // @todo optimize array case 

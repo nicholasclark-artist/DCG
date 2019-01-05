@@ -9,7 +9,7 @@ class Extended_PostInit_EventHandlers {
     };
 };
 class Extended_Killed_EventHandlers {
-	class CAManBase {
+    class CAManBase {
         class ADDON {
             killed = QUOTE(_this call FUNC(handleKilled));
         };

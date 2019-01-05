@@ -41,15 +41,15 @@
 #define TR_READY "READY"
 #define TR_NOTREADY "NOT READY"
 #define TR_COOLDOWN(REQUESTOR) \
-	[ \
-		{ \
+    [ \
+        { \
             {GVAR(status) = TR_READY} remoteExecCall [QUOTE(BIS_fnc_call),_this,false]; \
-			GVAR(count) = GVAR(count) - 1; \
-			publicVariable QGVAR(count); \
-		}, \
-		(REQUESTOR), \
-		GVAR(cooldown) \
-	] call CBA_fnc_waitAndExecute
+            GVAR(count) = GVAR(count) - 1; \
+            publicVariable QGVAR(count); \
+        }, \
+        (REQUESTOR), \
+        GVAR(cooldown) \
+    ] call CBA_fnc_waitAndExecute
 #define TR_EXFIL(TRANSPORT) \
     [ \
         TRANSPORT, \
@@ -57,17 +57,17 @@
         "GET IN", \
         { \
             [ \
-    			{ \
-    				if !(_this getVariable [VAR_SIGNAL,-1] isEqualTo 1) then { \
-    					{if !(_x isEqualTo (driver _this)) then {moveOut _x}} forEach (crew _this); \
+                { \
+                    if !(_this getVariable [VAR_SIGNAL,-1] isEqualTo 1) then { \
+                        {if !(_x isEqualTo (driver _this)) then {moveOut _x}} forEach (crew _this); \
                         _this call EFUNC(main,cleanup); \
                         _this doMove [0,0,0]; \
                         _this setVariable [QGVAR(status),TR_WAITING,false]; \
-    				}; \
-    			}, \
-    			_this select 0, \
-    			TR_IDLE_TIME \
-    		] call CBA_fnc_waitAndExecute; \
+                    }; \
+                }, \
+                _this select 0, \
+                TR_IDLE_TIME \
+            ] call CBA_fnc_waitAndExecute; \
         } \
     ] call EFUNC(main,landAt)
 #define TR_INFIL(TRANSPORT) \

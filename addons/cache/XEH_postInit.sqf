@@ -11,6 +11,6 @@ if !(isMultiplayer) exitWith {};
     {
         if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
         
-		[FUNC(handleCache), 30, []] call CBA_fnc_addPerFrameHandler;
+        [FUNC(handleCache), 30, []] call CBA_fnc_addPerFrameHandler;
     }
 ] call CBA_fnc_waitUntilAndExecute;
