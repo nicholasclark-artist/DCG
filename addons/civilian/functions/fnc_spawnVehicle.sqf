@@ -23,7 +23,7 @@ private _grp = [_start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 [_grp] call EFUNC(cache,disableCache);
 
 [
-    {{_x getVariable [ISDRIVER,false]} count (units (_this select 0)) > 0},
+    {{_x getVariable [QEGVAR(main,isDriver),false]} count (units (_this select 0)) > 0},
     {
         params ["_grp","_start","_mid","_end","_player"];
 
