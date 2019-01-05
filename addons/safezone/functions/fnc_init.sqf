@@ -3,16 +3,19 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-initialize safezone triggers
+initialize safezone triggers, run from EDEN attributes
 
 Arguments:
+0: editor placed marker <STRING>
 
 Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(isMultiplayer) exitWith {}; // handle BIS_fnc_sideColor editor script error 
+if (is3DEN) exitWith {}; // only run in mission
+
+params ["_marker"];
 
 private _act = "
     {
@@ -22,22 +25,20 @@ private _act = "
     } forEach thisList;
 ";
 
-_trg = createTrigger ["EmptyDetector", getMarkerPos _this];
-_trg setTriggerActivation [FORMAT_1("%1",EGVAR(main,enemySide)), "PRESENT", true];
-_trg setTriggerStatements ["this", _act, ""];  
-_trg setTriggerArea [(getMarkerSize _this) select 0, (getMarkerSize _this) select 1, markerDir _this, COMPARE_STR(markerShape _this,"RECTANGLE")];
+// handle markers with bad shapes
+if (!(COMPARE_STR(markerShape _marker,"RECTANGLE")) && {!(COMPARE_STR(markerShape _marker,"ELLIPSE"))}) then {
+    _marker setMarkerShape "ELLIPSE";
+};
 
-_marker = createMarker [FORMAT_2("%1_marker_%2",QUOTE(ADDON),count GVAR(markers)), getMarkerPos _this]; 
-_marker setMarkerSize [(getMarkerSize _this) select 0, (getMarkerSize _this) select 1];
-_marker setMarkerDir (markerDir _this);
-_marker setMarkerShape (markerShape _this);
-_marker setMarkerBrush "SolidBorder";
 _marker setMarkerColor ([EGVAR(main,playerSide),true] call BIS_fnc_sideColor); 
 _marker setMarkerAlpha 0;
 
+_trg = createTrigger ["EmptyDetector", getMarkerPos _marker];
+_trg setTriggerActivation [format["%1",EGVAR(main,enemySide)], "PRESENT", true];
+_trg setTriggerStatements ["this", _act, ""];  
+_trg setTriggerArea [(getMarkerSize _marker) select 0, (getMarkerSize _marker) select 1, markerDir _marker, COMPARE_STR(markerShape _marker,"RECTANGLE")];
+
 GVAR(list) pushBack _trg;
 GVAR(markers) pushBack _marker;
-
-deleteMarker _this;
 
 nil
