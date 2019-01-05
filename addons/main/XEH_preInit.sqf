@@ -4,8 +4,6 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isMultiplayer && {!is3DEN}) exitWith {};
-
 LOG(MSG_INIT);
 
 MAIN_ADDON = false;
@@ -27,7 +25,7 @@ PREP(findPosTerrain);
 PREP(getNearPlayers);
 PREP(getPool);
 PREP(saveData);
-PREP(loadData);
+PREP(loadDataScenario);
 PREP(loadDataAddon);
 PREP(inBuilding);
 PREP(inLOS);
@@ -76,27 +74,27 @@ GVAR(debug) = false;
 GVAR(debugMarkers) = [];
 
 // save system variables 
-GVAR(saveDataCurrent) = [];
+GVAR(saveDataScenario) = [];
 
 // unit pool variables
-GVAR(unitPoolWest) = [];
-GVAR(vehPoolWest) = [];
-GVAR(airPoolWest) = [];
-GVAR(officerPoolWest) = [];
-GVAR(sniperPoolWest) = [];
-GVAR(unitPoolEast) = [];
-GVAR(vehPoolEast) = [];
-GVAR(airPoolEast) = [];
-GVAR(officerPoolEast) = [];
-GVAR(sniperPoolEast) = [];
-GVAR(unitPoolInd) = [];
-GVAR(vehPoolInd) = [];
-GVAR(airPoolInd) = [];
-GVAR(officerPoolInd) = [];
-GVAR(sniperPoolInd) = [];
-GVAR(unitPoolCiv) = [];
-GVAR(vehPoolCiv) = [];
-GVAR(airPoolCiv) = [];
+GVAR(unitsWest) = [];
+GVAR(vehiclesWest) = [];
+GVAR(aircraftWest) = [];
+GVAR(officersWest) = [];
+GVAR(snipersWest) = [];
+GVAR(unitsEast) = [];
+GVAR(vehiclesEast) = [];
+GVAR(aircraftEast) = [];
+GVAR(officersEast) = [];
+GVAR(snipersEast) = [];
+GVAR(unitsInd) = [];
+GVAR(vehiclesInd) = [];
+GVAR(aircraftInd) = [];
+GVAR(officersInd) = [];
+GVAR(snipersInd) = [];
+GVAR(unitsCiv) = [];
+GVAR(vehiclesCiv) = [];
+GVAR(aircraftCiv) = [];
 
 // functions required on all machines
 publicVariable QFUNC(setAction);
@@ -111,8 +109,8 @@ publicVariable QGVAR(range);
 publicVariable QGVAR(center);
 publicVariable QUOTE(MAIN_ADDON);
 
-// load current mission data
-call FUNC(loadData);
+// load current scenario data
+call FUNC(loadDataScenario);
 
 // init cba settings
 SETTINGS_INIT;
