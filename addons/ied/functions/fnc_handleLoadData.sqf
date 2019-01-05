@@ -30,18 +30,18 @@ __________________________________________________________________*/
 // params ["_data"];
 
 // if (_data isEqualTo []) then {
-	{
-		private _roads = _x nearRoads 200;
+    {
+        private _roads = _x nearRoads 200;
 
-		if !(_roads isEqualTo []) then {
-			private _road = selectRandom _roads;
-			private _pos = getPos _road;
+        if !(_roads isEqualTo []) then {
+            private _road = selectRandom _roads;
+            private _pos = getPos _road;
 
-			if (!([_pos] call EFUNC(safezone,inAreaAll)) && {isOnRoad _road}) then {
+            if (!([_pos] call EFUNC(safezone,inAreaAll)) && {isOnRoad _road}) then {
                 CREATE_IED(_pos)
-			};
-		};
-	} forEach EGVAR(main,grid);
+            };
+        };
+    } forEach EGVAR(main,grid);
 // } else {
 // 	for "_index" from 0 to count _data - 1 do {
 //         private _pos = _data select _index;

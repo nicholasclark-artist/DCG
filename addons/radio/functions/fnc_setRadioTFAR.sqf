@@ -20,9 +20,9 @@ private _pairs = [];
 {player removeItem _x} forEach (player call TFAR_fnc_radiosList);
 
 {
-	_x params ["_net","_class"];
+    _x params ["_net","_class"];
 
-	if ({COMPARE_STR(str player,_x)} count _net > 0) then { // check if player in comm net
+    if ({COMPARE_STR(str player,_x)} count _net > 0) then { // check if player in comm net
         if !(_class isKindOf "Bag_Base") then {
             if (player canAdd _class) then {
                 player addItem _class;
@@ -42,14 +42,14 @@ private _pairs = [];
 
         _pairs pushBack [_class,_forEachIndex]; // pushBack classname and channel pair
         };
-	};
+    };
 } forEach [
-	[GVAR(commNet01),GVAR(commNet01_TFAR)],
-	[GVAR(commNet02),GVAR(commNet02_TFAR)],
-	[GVAR(commNet03),GVAR(commNet03_TFAR)],
-	[GVAR(commNet04),GVAR(commNet04_TFAR)],
-	[GVAR(commNet05),GVAR(commNet05_TFAR)],
-	[GVAR(commNet06),GVAR(commNet06_TFAR)]
+    [GVAR(commNet01),GVAR(commNet01_TFAR)],
+    [GVAR(commNet02),GVAR(commNet02_TFAR)],
+    [GVAR(commNet03),GVAR(commNet03_TFAR)],
+    [GVAR(commNet04),GVAR(commNet04_TFAR)],
+    [GVAR(commNet05),GVAR(commNet05_TFAR)],
+    [GVAR(commNet06),GVAR(commNet06_TFAR)]
 ];
 
 LOG_1("TFAR inventory pairs: %1",_pairs);
@@ -85,6 +85,6 @@ LOG_1("TFAR missing classes: %1",_missing);
 ] call CBA_fnc_waitAndExecute;
 
 if !(_missing isEqualTo []) then {
-	_missing = _missing joinString ", ";
-	[format ["Cannot add the following radios to your inventory: %1",_missing],true] call EFUNC(main,displayText);
+    _missing = _missing joinString ", ";
+    [format ["Cannot add the following radios to your inventory: %1",_missing],true] call EFUNC(main,displayText);
 };

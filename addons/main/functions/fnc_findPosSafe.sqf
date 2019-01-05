@@ -20,17 +20,17 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-	["_center",[0,0,0],[[]]],
-	["_min",0,[0]],
-	["_max",50,[0]],
-	["_dist",0,[0]],
-	["_water",-1,[0]],
-	["_gradient",-1,[0]],
-	["_dir",-1,[0]]
+    ["_center",[0,0,0],[[]]],
+    ["_min",0,[0]],
+    ["_max",50,[0]],
+    ["_dist",0,[0]],
+    ["_water",-1,[0]],
+    ["_gradient",-1,[0]],
+    ["_dir",-1,[0]]
 ];
 
 if (_dir < 0) then {
-	_dir = random 360;
+    _dir = random 360;
 };
 
 private _pos = _center getPos [floor (random ((_max - _min) + 1)) + _min, _dir];

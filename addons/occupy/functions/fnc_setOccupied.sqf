@@ -48,14 +48,14 @@ private _vehCount = 0;
 private _airCount = 0;
 
 call {
-	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
-		_pool = EGVAR(main,unitsEast);
-	};
-	if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
-		_pool = EGVAR(main,unitsWest);
-	};
+    if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
+        _pool = EGVAR(main,unitsEast);
+    };
+    if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
+        _pool = EGVAR(main,unitsWest);
+    };
     if (EGVAR(main,enemySide) isEqualTo RESISTANCE) exitWith {
-    	_pool = EGVAR(main,unitsInd);
+        _pool = EGVAR(main,unitsInd);
     };
 };
 

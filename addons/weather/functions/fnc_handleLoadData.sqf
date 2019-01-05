@@ -18,7 +18,7 @@ params [
 ];
 
 if (_data isEqualTo []) then {
-	private "_mapdata";
+    private "_mapdata";
 
     if (GVAR(month) isEqualTo -1) then {
         GVAR(month) = ceil random 12;
@@ -28,7 +28,7 @@ if (_data isEqualTo []) then {
         GVAR(time) = round random 23;
     };
 
-	GVAR(date) = [missionStart select 0, GVAR(month), ceil random 27, GVAR(time), round random 30];
+    GVAR(date) = [missionStart select 0, GVAR(month), ceil random 27, GVAR(time), round random 30];
 
     {
         if (COMPARE_STR(_x select 0,worldName)) exitWith {
@@ -37,14 +37,14 @@ if (_data isEqualTo []) then {
         };
     } forEach GVAR(mapData);
 
-	if !(_mapdata isEqualTo []) then {
-		GVAR(overcast) = ((_mapdata select (GVAR(month) - 1)) + random 0.05) min 1;
-	} else {
-		GVAR(overcast) = random [0,0.5,1];
-	};
+    if !(_mapdata isEqualTo []) then {
+        GVAR(overcast) = ((_mapdata select (GVAR(month) - 1)) + random 0.05) min 1;
+    } else {
+        GVAR(overcast) = random [0,0.5,1];
+    };
 } else {
-	GVAR(overcast) = _data select 0;
-	GVAR(date) = _data select 1;
+    GVAR(overcast) = _data select 0;
+    GVAR(date) = _data select 1;
 };
 
 nil

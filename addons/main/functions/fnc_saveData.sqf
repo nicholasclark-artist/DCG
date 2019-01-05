@@ -125,15 +125,15 @@ if (CHECK_ADDON_2(weather)) then {
 /* 
 // IED ADDON
 if (CHECK_ADDON_2(ied)) then {
-	private _data = [];
-	{
+    private _data = [];
+    {
         private _pos = getPos _x;
         _pos resize 2;
-		_data pushBack _pos;
-		false
-	} count EGVAR(ied,list);
+        _data pushBack _pos;
+        false
+    } count EGVAR(ied,list);
 
-	PUSHBACK_DATA(ied,_data);
+    PUSHBACK_DATA(ied,_data);
 }; 
 */
 

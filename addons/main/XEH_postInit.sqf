@@ -124,7 +124,7 @@ QGVAR(deleteDataPVEH) addPublicVariableEventHandler {
         // load saved data
         _data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
         [_data] call FUNC(handleLoadData);
-	}
+    }
 ] call CBA_fnc_waitUntilAndExecute;
 
 MAIN_ADDON = true;

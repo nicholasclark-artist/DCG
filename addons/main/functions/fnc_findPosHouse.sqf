@@ -23,15 +23,15 @@ private _houseArray = _center nearObjects ["House",_range];
 _houseArray = _houseArray select {!((_x buildingPos -1) isEqualTo []) && {!(typeOf _x in BAD_HOUSES)}};
 
 if !(_houseArray isEqualTo []) then {
-	private _house = selectRandom _houseArray;
-	private _housePosArray = _house buildingPos -1;
+    private _house = selectRandom _houseArray;
+    private _housePosArray = _house buildingPos -1;
 
-	{
-		if ([_x] call FUNC(inBuilding)) exitWith {
-			_return = [_house,ATLtoASL _x];
-		};
-		false
-	} count _housePosArray;
+    {
+        if ([_x] call FUNC(inBuilding)) exitWith {
+            _return = [_house,ATLtoASL _x];
+        };
+        false
+    } count _housePosArray;
 };
 
 _return

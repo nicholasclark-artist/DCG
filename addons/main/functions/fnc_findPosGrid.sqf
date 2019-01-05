@@ -20,13 +20,13 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-	"_anchor",
-	["_dist",64,[0]],
-	["_range",256,[0]],
-	["_rangeMin",0,[0]],
-	["_distObj",0,[0]],
-	["_water",-1,[0]],
-	["_shuffle",false,[false]]
+    "_anchor",
+    ["_dist",64,[0]],
+    ["_range",256,[0]],
+    ["_rangeMin",0,[0]],
+    ["_distObj",0,[0]],
+    ["_water",-1,[0]],
+    ["_shuffle",false,[false]]
 ];
 
 private _ret = [];
@@ -37,7 +37,7 @@ private ["_column", "_row"];
 
 for "_y" from 0 to _count do {
     _column = [_origin select 0,(_origin select 1) + (_dist*_y)];
-	_ret pushBack _column;
+    _ret pushBack _column;
 
     for "_x" from 1 to _count do {
         _row = [(_column select 0) + (_dist*_x), _column select 1];
@@ -62,7 +62,7 @@ if (_distObj > 0 || {_water > -1}) then {
 } forEach _ret;
 
 if (_shuffle) then {
-	[_ret] call FUNC(shuffle);
+    [_ret] call FUNC(shuffle);
 }; 
 
 _ret

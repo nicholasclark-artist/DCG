@@ -20,9 +20,9 @@ _side = param [1,GVAR(enemySide)];
 _newgrp = createGroup _side;
 
 {
-	[_x] joinSilent grpNull;
-	[_x] joinSilent _newgrp;
-	false
+    [_x] joinSilent grpNull;
+    [_x] joinSilent _newgrp;
+    false
 } count _units;
 
 _newgrp

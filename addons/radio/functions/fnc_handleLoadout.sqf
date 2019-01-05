@@ -33,37 +33,37 @@ if (CHECK_ADDON_1("acre_main")) then {
     // remove ACRE items from loadouts to prevent radio ID issues
     // loadouts saved during the mission are not checked
     [
-    	{!(LOADOUT_DATA isEqualTo [])},
-    	{
-    		INFO("Searching loadouts for ACRE items");
+        {!(LOADOUT_DATA isEqualTo [])},
+        {
+            INFO("Searching loadouts for ACRE items");
 
-    		for "_i" from 0 to ((count LOADOUT_DATA) - 1) do {
-    			if (LOADOUT_DATA select _i isEqualType []) then {
-    				_loadout = (LOADOUT_DATA select _i);
-    				_uniformItems = ((_loadout select 0) select 1);
-    				_vestItems = ((_loadout select 1) select 1);
-    				_backpackItems = ((_loadout select 2) select 1);
-    				{
-    					if ((_x select [0,5]) == "ACRE_") then {
+            for "_i" from 0 to ((count LOADOUT_DATA) - 1) do {
+                if (LOADOUT_DATA select _i isEqualType []) then {
+                    _loadout = (LOADOUT_DATA select _i);
+                    _uniformItems = ((_loadout select 0) select 1);
+                    _vestItems = ((_loadout select 1) select 1);
+                    _backpackItems = ((_loadout select 2) select 1);
+                    {
+                        if ((_x select [0,5]) == "ACRE_") then {
                             _uniformItems set [_forEachindex,"Chemlight_green"];
                             INFO("Removed ACRE item from uniform");
                         };
-    				} forEach _uniformItems;
-    				{
-    					if ((_x select [0,5]) == "ACRE_") then {
+                    } forEach _uniformItems;
+                    {
+                        if ((_x select [0,5]) == "ACRE_") then {
                             _vestItems set [_forEachindex,"Chemlight_green"];
                             INFO("Removed ACRE item from vest");
                         };
-    				} forEach _vestItems;
-    				{
-    					if ((_x select [0,5]) == "ACRE_") then {
+                    } forEach _vestItems;
+                    {
+                        if ((_x select [0,5]) == "ACRE_") then {
                             _backpackItems set [_forEachindex,"Chemlight_green"];
                             INFO("Removed ACRE item from backpack");
                         };
-    				} forEach _backpackItems;
-    			};
-    		};
-    	}
+                    } forEach _backpackItems;
+                };
+            };
+        }
     ] call CBA_fnc_waitUntilAndExecute;
 };
 

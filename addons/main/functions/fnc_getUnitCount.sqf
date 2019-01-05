@@ -16,9 +16,9 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-	["_min",0],
-	["_max",100],
-	["_multiplier",1]
+    ["_min",0],
+    ["_max",100],
+    ["_multiplier",1]
 ];
 
 private _playerCount = count (call CBA_fnc_players);

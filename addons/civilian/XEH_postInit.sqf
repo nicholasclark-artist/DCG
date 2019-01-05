@@ -54,16 +54,16 @@ if !(isMultiplayer) exitWith {};
 
         [FUNC(handleAnimal), HANDLER_DELAY, _animalList] call CBA_fnc_addPerFrameHandler;
 
-		{
-			_pos = _x select 0;
-			_mrk = createMarker [format["%1_animal_%2",QUOTE(PREFIX),_pos],_pos];
-			_mrk setMarkerColor "ColorBlack";
-			_mrk setMarkerShape "ELLIPSE";
-			_mrk setMarkerBrush "Solid";
-			_mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
-			[_mrk] call EFUNC(main,setDebugMarker);
-		} forEach _animalList;
-	}
+        {
+            _pos = _x select 0;
+            _mrk = createMarker [format["%1_animal_%2",QUOTE(PREFIX),_pos],_pos];
+            _mrk setMarkerColor "ColorBlack";
+            _mrk setMarkerShape "ELLIPSE";
+            _mrk setMarkerBrush "Solid";
+            _mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
+            [_mrk] call EFUNC(main,setDebugMarker);
+        } forEach _animalList;
+    }
 ] call CBA_fnc_waitUntilAndExecute;
 
 

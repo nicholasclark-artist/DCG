@@ -15,7 +15,7 @@ __________________________________________________________________*/
 if (!isMultiplayer && {!is3DEN}) exitWith {};
 
 {
-	if (toUpper (_x select 0) isEqualTo SAVE_SCENARIO_ID) exitWith {
-		GVAR(saveDataScenario) = _x;
-	};
+    if (toUpper (_x select 0) isEqualTo SAVE_SCENARIO_ID) exitWith {
+        GVAR(saveDataScenario) = _x;
+    };
 } forEach (SAVE_GETVAR);

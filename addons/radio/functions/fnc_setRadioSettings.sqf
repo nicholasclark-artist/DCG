@@ -31,17 +31,17 @@ if (CHECK_ADDON_1("acre_main")) then {
         [_x, PRESET] call acre_api_fnc_setPreset;
     } forEach ACRE_BASERADIOS;
 
-	if (hasInterface) then {
-		player addEventHandler ["respawn",{
-			[
-				{!isNull player && {alive player}},
-				{
-					call FUNC(setRadioACRE)
-				},
-				[]
-			] call CBA_fnc_waitUntilAndExecute;
-		}];
-	};
+    if (hasInterface) then {
+        player addEventHandler ["respawn",{
+            [
+                {!isNull player && {alive player}},
+                {
+                    call FUNC(setRadioACRE)
+                },
+                []
+            ] call CBA_fnc_waitUntilAndExecute;
+        }];
+    };
 };
 
 if (isServer) then {

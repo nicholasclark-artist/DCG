@@ -14,7 +14,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-	["_data",[],[[]]]
+    ["_data",[],[[]]]
 ];
 
 if !(_data isEqualTo []) exitWith {

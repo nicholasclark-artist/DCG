@@ -20,9 +20,9 @@ _output = "";
 _location = _input find _replace;
 
 if (_location > -1) then {
-	_front = _input select [0, _location];
-	_end = _input select [_location + (count _replace)];
-	_output = format ["%1%2%3", _front, _replaceWith, _end];
+    _front = _input select [0, _location];
+    _end = _input select [_location + (count _replace)];
+    _output = format ["%1%2%3", _front, _replaceWith, _end];
 };
 
 _output;

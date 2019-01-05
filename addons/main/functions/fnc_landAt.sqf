@@ -20,11 +20,11 @@ __________________________________________________________________*/
 #define VAR_CANCEL QUOTE(DOUBLES(ADDON,cancelLandAt))
 
 params [
-	["_heli",objNull,[objNull]],
-	["_pos",[0,0,0],[[]]],
-	["_type","LAND",[""]],
-	["_onComplete",{},[{}]],
-	["_params",[],[[]]]
+    ["_heli",objNull,[objNull]],
+    ["_pos",[0,0,0],[[]]],
+    ["_type","LAND",[""]],
+    ["_onComplete",{},[{}]],
+    ["_params",[],[[]]]
 ];
 
 _heli setVariable [VAR_LANDED,false];
@@ -72,7 +72,7 @@ _heli animate ["dvere2_posunZ", 0];
 
                 // check if heli has actually landed, sometimes heli will touch ground and rise to a hover if object is interferring with LZ
                 [
-        			{
+                    {
                         params ["_heli","_onComplete","_params","_helipad"];
 
                         if (isTouchingGround _heli) then {
@@ -81,10 +81,10 @@ _heli animate ["dvere2_posunZ", 0];
                             _params call _onComplete;
                             deleteVehicle _helipad;
                         };
-        			},
-        			[_heli,_onComplete,_params,_helipad],
-        			1.5
-        		] call CBA_fnc_waitAndExecute;
+                    },
+                    [_heli,_onComplete,_params,_helipad],
+                    1.5
+                ] call CBA_fnc_waitAndExecute;
             },
             [_heli,_onComplete,_params,_helipad]
         ] call CBA_fnc_waitUntilAndExecute;

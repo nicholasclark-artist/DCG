@@ -16,9 +16,9 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-	["_unit",objNull,[objNull]],
-	["_anim","",[""]],
-	["_priority",0,[0]]
+    ["_unit",objNull,[objNull]],
+    ["_anim","",[""]],
+    ["_priority",0,[0]]
 ];
 
 call {

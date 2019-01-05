@@ -20,29 +20,29 @@ __________________________________________________________________*/
 #define TR_SIZE 15
 
 params [
-	["_center",[],[[]]],
-	["_side",GVAR(enemySide),[sideUnknown]]
+    ["_center",[],[[]]],
+    ["_side",GVAR(enemySide),[sideUnknown]]
 ];
 
 private _unitPool = [_side,0] call FUNC(getPool);
 private _vehPool = [_side,1] call FUNC(getPool);
 private _fnc_getCargo = {
-	params ["_class"];
+    params ["_class"];
 
-	private _baseCfg = configFile >> "CfgVehicles" >> _class;
-	private _numCargo = count ("
-		if (isText(_x >> 'proxyType') && {getText(_x >> 'proxyType') isEqualTo 'CPCargo'}) then {
-			true
-		};
-	"configClasses (_baseCfg >> "Turrets")) + getNumber (_baseCfg >> "transportSoldier");
+    private _baseCfg = configFile >> "CfgVehicles" >> _class;
+    private _numCargo = count ("
+        if (isText(_x >> 'proxyType') && {getText(_x >> 'proxyType') isEqualTo 'CPCargo'}) then {
+            true
+        };
+    "configClasses (_baseCfg >> "Turrets")) + getNumber (_baseCfg >> "transportSoldier");
 
-	_numCargo
+    _numCargo
 };
 
 _grid = [_center,30,DIST_MAX,DIST_MIN,TR_SIZE,0] call EFUNC(main,findPosGrid);
 
 if (_grid isEqualTo []) exitWith {
-	WARNING("Reinforcements LZ undefined");
+    WARNING("Reinforcements LZ undefined");
     false
 };
 
@@ -50,9 +50,9 @@ private _lz = ASLtoAGL (selectRandom _grid);
 private _type = selectRandom _vehPool;
 
 if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
-	if (_side isEqualTo EAST) exitWith {_type = "O_Heli_Light_02_unarmed_F"};
-	if (_side isEqualTo WEST) exitWith {_type = "B_Heli_Light_01_F"};
-	if (_side isEqualTo RESISTANCE) exitWith {_type = "I_Heli_light_03_unarmed_F"};
+    if (_side isEqualTo EAST) exitWith {_type = "O_Heli_Light_02_unarmed_F"};
+    if (_side isEqualTo WEST) exitWith {_type = "B_Heli_Light_01_F"};
+    if (_side isEqualTo RESISTANCE) exitWith {_type = "I_Heli_light_03_unarmed_F"};
 };
 
 private _heli = createVehicle [_type,_center getPos [DIST_SPAWN,random 360],[],0,"FLY"];
@@ -72,16 +72,16 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
 
 // place patrol group in cargo
 [
-	{count units (_this select 1) >= MAX_CARGO(_this select 0)},
-	{
-		params ["_heli","_grpPatrol"];
+    {count units (_this select 1) >= MAX_CARGO(_this select 0)},
+    {
+        params ["_heli","_grpPatrol"];
 
-		{
-			_x assignAsCargoIndex [_heli, _forEachIndex];
-			_x moveInCargo _heli;
-		} forEach (units _grpPatrol);
-	},
-	[_heli,_grpPatrol]
+        {
+            _x assignAsCargoIndex [_heli, _forEachIndex];
+            _x moveInCargo _heli;
+        } forEach (units _grpPatrol);
+    },
+    [_heli,_grpPatrol]
 ] call CBA_fnc_waitUntilAndExecute;
 
 // move to drop off position

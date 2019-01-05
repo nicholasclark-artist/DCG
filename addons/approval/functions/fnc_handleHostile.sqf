@@ -19,13 +19,13 @@ if !(_players isEqualTo []) then {
     private _pos = getPos _player;
 
     if (!([_pos] call EFUNC(safezone,inAreaAll)) && {alive _player} && {((getPos player) select 2) < 10}) then {
-    	if (random 1 > AV_CONVERT2(_pos)) then {
-    		_ret = [_player] call FUNC(spawnHostile);
+        if (random 1 > AV_CONVERT2(_pos)) then {
+            _ret = [_player] call FUNC(spawnHostile);
 
             if (GVAR(notify) && {_ret}) then {
                 ["Aerial recon shows hostile civilian activity in your region!", true] remoteExecCall [QEFUNC(main,displayText), allPlayers, false];
             };
-    	};
+        };
     };
 };
 
