@@ -25,3 +25,4 @@ publicVariable QFUNC(handleKilled);
 publicVariable QFUNC(handleClient);
 
 SETTINGS_INIT;
+    

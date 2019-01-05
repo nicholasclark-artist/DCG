@@ -19,3 +19,4 @@ GVAR(drivers) = [];
 GVAR(blacklist) = [];
 
 SETTINGS_INIT;
+   

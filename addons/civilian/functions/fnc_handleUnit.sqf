@@ -16,28 +16,28 @@ __________________________________________________________________*/
 {
     _x params ["_name","_position","_size","_type"];
 
-	if (!(missionNamespace getVariable [LOCATION_ID(_name),false]) && {GVAR(blacklist) find _name isEqualTo -1}) then {
+    if (!(missionNamespace getVariable [LOCATION_ID(_name),false]) && {GVAR(blacklist) find _name isEqualTo -1}) then {
         _position =+ _position;
         _position resize 2;
 
         _players = [_position,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers);
 
-		if !(_players isEqualTo []) then {
+        if !(_players isEqualTo []) then {
             private "_unitCount";
 
-			call {
-				if (_type isEqualTo "NameVillage") exitWith {
-					_unitCount = ceil(5*GVAR(multiplier));
-				};
-				if (_type isEqualTo "NameCity") exitWith {
-					_unitCount = ceil(10*GVAR(multiplier));
-				};
+            call {
+                if (_type isEqualTo "NameVillage") exitWith {
+                    _unitCount = ceil(5*GVAR(multiplier));
+                };
+                if (_type isEqualTo "NameCity") exitWith {
+                    _unitCount = ceil(10*GVAR(multiplier));
+                };
                 _unitCount = ceil(15*GVAR(multiplier));
-			};
+            };
 
-			[_position,_unitCount,_name,_size] call FUNC(spawnUnit);
-		};
-	};
+            [_position,_unitCount,_name,_size] call FUNC(spawnUnit);
+        };
+    };
 
-	false
+    false
 } count (_this select 0);
