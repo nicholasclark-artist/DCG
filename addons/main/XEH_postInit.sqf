@@ -47,6 +47,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 
 {
     // update locations with center positions if available
+    // @todo improve conditional checks 
     _nameNoSpace = (_x select 0) splitString " " joinString "";
     _cityCenterA2 = _cfgLocations >> ("ACityC_" + _nameNoSpace);
     _cityCenterA3 = _cfgLocations >> ("CityC_" + _nameNoSpace);
@@ -64,9 +65,10 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 
     // update locations with safe positions
     if !([_x select 1,2,0] call FUNC(isPosSafe)) then {
-        _places = selectBestPlaces [_x select 1, _x select 2, "(1 + houses) * (1 - sea)", 35, 4];
+        _places = selectBestPlaces [_x select 1, (_x select 2)*0.5, "(1 + houses) * (1 - sea)", 35, 4];
         _places = _places select {(_x select 1) > 0 && {[_x select 0,2,0] call FUNC(isPosSafe)}};
 
+        // @todo remove location if safe position not found
         if !(_places isEqualTo []) then {
             _position = (selectRandom _places) select 0;
             _position set [2,(getTerrainHeightASL _position) max 0];
@@ -90,20 +92,11 @@ if !(isNil {HEADLESSCLIENT}) then {
 };
 
 // save functionality
-[{
-    if (GVAR(autoSave)) then {call FUNC(saveData)};
-}, 1800, []] call CBA_fnc_addPerFrameHandler;
-
-SAVE_PVEH addPublicVariableEventHandler {call FUNC(saveData)};
-
-SAVE_PVEH_DELETE addPublicVariableEventHandler {
-    profileNamespace setVariable [SAVE_ID,nil];
+QGVAR(saveDataPVEH) addPublicVariableEventHandler {call FUNC(saveData)};
+QGVAR(deleteDataPVEH) addPublicVariableEventHandler {
+    profileNamespace setVariable [QGVAR(saveData),nil];
     saveProfileNamespace;
 };
-
-// load saved data
-_data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
-[_data] call FUNC(handleLoadData);
 
 // set client actions
 [[],{
@@ -113,11 +106,26 @@ _data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
         } forEach [
             [QGVARMAIN(actions),format["%1 Actions",toUpper QUOTE(PREFIX)],{},{true},{},[],player,1,["ACE_SelfActions"]],
             [QGVARMAIN(data),"Mission Data"],
-            [SAVE_ACTION_ID,SAVE_ACTION_NAME,{SAVE_ACTION_STATEMENT},{SAVE_ACTION_COND},{},[],player,1,["ACE_SelfActions",QGVARMAIN(actions),QGVARMAIN(data)]],
-            [SAVE_ACTION_ID_DELETE,SAVE_ACTION_NAME_DELETE,{SAVE_ACTION_STATEMENT_DELETE},{SAVE_ACTION_COND_DELETE},{},[],player,1,["ACE_SelfActions",QGVARMAIN(actions),QGVARMAIN(data)]]
+            [QGVAR(saveData),SAVE_ACTION_NAME,{SAVE_ACTION_STATEMENT},{SAVE_ACTION_COND},{},[],player,1,["ACE_SelfActions",QGVARMAIN(actions),QGVARMAIN(data)]],
+            [QGVAR(deleteSaveData),SAVE_ACTION_NAME_DELETE,{SAVE_ACTION_STATEMENT_DELETE},{SAVE_ACTION_COND_DELETE},{},[],player,1,["ACE_SelfActions",QGVARMAIN(actions),QGVARMAIN(data)]]
         ];
     };
 }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
+
+// everything that needs to run after CBA settings are adjusted (post briefing)
+[
+    {CHECK_POSTBRIEFING},
+    {
+        // autosave handler 
+        [{
+            if (GVAR(autoSave)) then {call FUNC(saveData)};
+        }, 1800, []] call CBA_fnc_addPerFrameHandler;
+
+        // load saved data
+        _data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
+        [_data] call FUNC(handleLoadData);
+	}
+] call CBA_fnc_waitUntilAndExecute;
 
 MAIN_ADDON = true;
 publicVariable QUOTE(MAIN_ADDON);
