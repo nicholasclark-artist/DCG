@@ -91,6 +91,6 @@
 
 #define PREP_SNIPER(POS,COUNT,SIZE) \
     if (GVAR(sniper)) then { \
-    	[POS,ceil random COUNT,SIZE,SIZE+500] call EFUNC(main,spawnSniper); \
+        [POS,ceil random COUNT,SIZE,SIZE+500] call EFUNC(main,spawnSniper); \
         INFO("Prep snipers finished"); \
     }

@@ -8,7 +8,7 @@ save data to server profile
 Arguments:
 
 Return:
-none 
+none
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define PUSHBACK_DATA(ADDONTOSAVE,DATATOSAVE) \
