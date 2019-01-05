@@ -20,7 +20,6 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CFGEXPORT(CFGARR,CFGNAME) CFGARR pushBack str CFGNAME
 
 params [
     ["_side",0,[0]],
@@ -41,19 +40,16 @@ for "_index" from 0 to (count _cfg - 1) do {
         private _cfgSide = getNumber (_cfgClass >> "side");
         private _cfgScope = getNumber (_cfgClass >> "scope");
 
-        // exclude officers and snipers if display filter is empty
-        // if (COMPARE_STR(_filterDisplay,"") && {((toLower _cfgDisplay find "officer") > -1 || (toLower _cfgDisplay find "sniper") > -1)}) exitWith {};
-
         if (_cfgSide isEqualTo _side && {_cfgScope > 1} && {_cfgName isKindOf _type} && {(toLower _cfgName find toLower _filter) > -1} && {(toLower _cfgDisplay find toLower _filterDisplay) > -1}) then {
-            CFGEXPORT(_classArr,_cfgName);
+            _classArr pushBack str _cfgName
         };
     };
 };
 
+titleText [format ["Exporting %1 classes to clipboard.",count _classArr], "PLAIN"];
+
 _classArr = _classArr joinString ",";
 
 copyToClipboard _classArr;
-
-titleText [format ["Exporting %1 classes to clipboard.",count _classArr], "PLAIN"];
 
 nil
