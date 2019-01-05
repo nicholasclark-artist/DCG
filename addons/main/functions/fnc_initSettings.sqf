@@ -11,6 +11,7 @@ Return:
 bool
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define ERROR_SAMESIDE format ["%1 cannot be equal to %2!",QGVAR(enemySide),QGVAR(playerSide)]
 
 [
     QGVAR(enable), // Internal setting name, should always contain a tag! This will be the global variable which takes the value of the setting.
@@ -45,7 +46,7 @@ __________________________________________________________________*/
 [
     QGVAR(playerSide),
     "LIST",
-    ["Player Side","Cannot be the same as enemy side."],
+    ["Player Side","Cannot be the same as enemy side and must be equal to the side of playable units. It's recommended to force this setting in the EDEN editor."],
     COMPONENT_NAME,
     [
         [EAST,WEST,INDEPENDENT],
@@ -53,11 +54,7 @@ __________________________________________________________________*/
         1
     ],
     true,
-    {
-        if (GVAR(playerSide) isEqualTo GVAR(enemySide)) then {
-            ERROR("Player side cannot be equal to enemy side");
-        };
-    }
+    {}
 ] call CBA_Settings_fnc_init;
 
 [
@@ -72,64 +69,105 @@ __________________________________________________________________*/
     ],
     true,
     {
-        if (GVAR(playerSide) isEqualTo GVAR(enemySide)) then {
-            ERROR("Enemy side cannot be equal to player side");
+        if (_this isEqualTo GVAR(playerSide)) then {
+            systemChat (LOG_SYS_FORMAT("ERROR",ERROR_SAMESIDE));
+            ERROR(ERROR_SAMESIDE);
         };
     }
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(factionEast),
+    QGVAR(factionsEast),
     "EDITBOX",
-    ["East Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
+    ["East Factions","Entities from the listed factions will be included. Factions must be separated by a comma."],
     COMPONENT_NAME,
     "OPF_F",
     true,
     {
-        if (isServer) then {
-            [0] call FUNC(parseFactions);
-        };
+        [0] call FUNC(parseFactions);
     }
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(factionWest),
+    QGVAR(filtersEast),
     "EDITBOX",
-    ["West Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
+    ["East Filters","Exclude entities by listing display names. Names must be separated by a comma and partial names are allowed."],
+    COMPONENT_NAME,
+    "diver,vr ,pilot,survivor,crew,rifleman (unarmed)",
+    true,
+    {
+        [0] call FUNC(parseFactions);
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(factionsWest),
+    "EDITBOX",
+    ["West Factions","Entities from the listed factions will be included. Factions must be separated by a comma."],
     COMPONENT_NAME,
     "BLU_F",
     true,
     {
-        if (isServer) then {
-            [1] call FUNC(parseFactions);
-        };
+        [1] call FUNC(parseFactions);
     }
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(factionInd),
+    QGVAR(filtersWest),
     "EDITBOX",
-    ["Independent Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
+    ["West Filters","Exclude entities by listing display names. Names must be separated by a comma and partial names are allowed."],
+    COMPONENT_NAME,
+    "diver,vr ,pilot,survivor,crew,rifleman (unarmed)",
+    true,
+    {
+        [1] call FUNC(parseFactions);
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(factionsInd),
+    "EDITBOX",
+    ["Independent Factions","Entities from the listed factions will be included. Factions must be separated by a comma."],
     COMPONENT_NAME,
     "IND_F",
     true,
     {
-        if (isServer) then {
-            [2] call FUNC(parseFactions);
-        };
+        [2] call FUNC(parseFactions);
     }
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(factionCiv),
+    QGVAR(filtersInd),
     "EDITBOX",
-    ["Civilian Factions","Units from the listed factions will be included. Factions must be separated by a comma."],
+    ["Ind Filters","Exclude entities by listing display names. Names must be separated by a comma and partial names are allowed."],
+    COMPONENT_NAME,
+    "diver,vr ,pilot,survivor,crew,rifleman (unarmed)",
+    true,
+    {
+        [2] call FUNC(parseFactions);
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(factionsCiv),
+    "EDITBOX",
+    ["Civilian Factions","Entities from the listed factions will be included. Factions must be separated by a comma."],
     COMPONENT_NAME,
     "CIV_F",
     true,
     {
-        if (isServer) then {
-            [3] call FUNC(parseFactions);
-        };
+        [3] call FUNC(parseFactions);
+    }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(filtersCiv),
+    "EDITBOX",
+    ["Civ Filters","Exclude entities by listing display names. Names must be separated by a comma and partial names are allowed."],
+    COMPONENT_NAME,
+    "driver,vr ,pilot,construction,kart",
+    true,
+    {
+        [3] call FUNC(parseFactions);
     }
 ] call CBA_Settings_fnc_init;

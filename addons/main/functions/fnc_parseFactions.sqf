@@ -17,92 +17,90 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define CONFIGTOPARSE configFile >> "CfgVehicles"
 
 private _side = _this select 0;
 
 _fnc_parse = {
-    _factionStr = _this select 0;
+    params ["_side","_factions","_filters"];
 
     // remove whitespace
-    _factionStr = _factionStr splitString toString [32,9,13,10] joinString "";
+    _factions = _factions splitString toString [32,9,13,10] joinString "";
 
     // convert to array and format elements
-    _factionArr = _factionStr splitString ",";
-    _factionArr = _factionArr apply {toUpper _x};
+    _filters = _filters splitString ",";
+    _factions = _factions splitString ",";
+    _filters = _filters apply {toLower _x};
+    _factions = _factions apply {toUpper _x};
 
     // parse CfgVehicles for desired configs
-    _factionCfg = format [" 
+    private _factionCfg = format [" 
         (getNumber (_x >> 'scope') > 1) &&  
         {toUpper getText (_x >> 'faction') in %1} && 
         {getText (_x >> 'vehicleClass') != 'Autonomous'} &&
         {configName _x isKindOf 'CAManBase' || {configName _x isKindOf 'Car'} || {configName _x isKindOf 'Tank'} || {configName _x isKindOf 'Air'}}
-    ",_factionArr] configClasses (configFile >> "CfgVehicles");
-    
+    ",_factions] configClasses (CONFIGTOPARSE);
+
+    // apply filter to configs
+    _factionCfg = _factionCfg select {
+        _class = _x;
+        _filters findIf {toLower getText(_class >> "displayName") find _x > -1} < 0
+    };
+
     // get classes
     _factionCfg = _factionCfg apply {configName _x};
-    _units = _factionCfg select {_x isKindOf "CAManBase"};
-
-    // get special classes
-    _officers = _units select {toLower _x find "officer" > -1};
-    _snipers = _units select {toLower _x find "sniper" > -1};
+    private _units = _factionCfg select {_x isKindOf "CAManBase"};
+    
+    // get special classes using display name
+    private _officers = _units select {toLower getText ((CONFIGTOPARSE) >> _x >> "displayName") find "officer" > -1};
+    private _snipers = _units select {toLower getText ((CONFIGTOPARSE) >> _x >> "displayName") find "sniper" > -1};
 
     // remove special classes from units
-    _units = _units - _officers;
+    _units = _units - _officers; 
     _units = _units - _snipers;
 
-    // return [faction list, unit pool, vehicle pool, aircraft pool, officer pool, sniper pool]
-    [_factionStr, _units, _factionCfg select {_x isKindOf "LandVehicle"}, _factionCfg select {_x isKindOf "Air"}, _officers, _snipers]
+    // return [unit pool, vehicle pool, aircraft pool, officer pool, sniper pool]
+    [_units, _factionCfg select {_x isKindOf "LandVehicle"}, _factionCfg select {_x isKindOf "Air"}, _officers, _snipers]
 };
 
+// @todo check if any pool is empty and log warning
 call {
     if (_side isEqualTo 0) exitWith {
-        _ret = [GVAR(factionEast)] call _fnc_parse;
+        _ret = [_side, GVAR(factionsEast), GVAR(filtersEast)] call _fnc_parse;
 
-        GVAR(factionEast) = _ret select 0;
-        GVAR(unitPoolEast) = _ret select 1;
-        GVAR(vehPoolEast) = _ret select 2;
-        GVAR(airPoolEast) = _ret select 3;
-        GVAR(officerPoolEast) = _ret select 4;
-        GVAR(sniperPoolEast) = _ret select 5;
-
-        INFO_2("Parsing %1: %2",QGVAR(factionEast),GVAR(factionEast));
+        GVAR(unitsEast) = _ret select 0;
+        GVAR(vehiclesEast) = _ret select 1;
+        GVAR(aircraftEast) = _ret select 2;
+        GVAR(officersEast) = _ret select 3;
+        GVAR(snipersEast) = _ret select 4;
     };
 
     if (_side isEqualTo 1) exitWith {
-        _ret = [GVAR(factionWest)] call _fnc_parse;
+        _ret = [_side, GVAR(factionsWest), GVAR(filtersWest)] call _fnc_parse;
 
-        GVAR(factionWest) = _ret select 0;
-        GVAR(unitPoolWest) = _ret select 1;
-        GVAR(vehPoolWest) = _ret select 2;
-        GVAR(airPoolWest) = _ret select 3;
-        GVAR(officerPoolWest) = _ret select 4;
-        GVAR(sniperPoolWest) = _ret select 5;
-
-        INFO_2("Parsing %1: %2",QGVAR(factionWest),GVAR(factionWest));
+        GVAR(unitsWest) = _ret select 0;
+        GVAR(vehiclesWest) = _ret select 1;
+        GVAR(aircraftWest) = _ret select 2;
+        GVAR(officersWest) = _ret select 3;
+        GVAR(snipersWest) = _ret select 4;
     };
 
     if (_side isEqualTo 2) exitWith {
-        _ret = [GVAR(factionInd)] call _fnc_parse;
+        _ret = [_side, GVAR(factionsInd), GVAR(filtersInd)] call _fnc_parse;
 
-        GVAR(factionInd) = _ret select 0;
-        GVAR(unitPoolInd) = _ret select 1;
-        GVAR(vehPoolInd) = _ret select 2;
-        GVAR(airPoolInd) = _ret select 3;
-        GVAR(officerPoolInd) = _ret select 4;
-        GVAR(sniperPoolInd) = _ret select 5;
-
-        INFO_2("Parsing %1: %2",QGVAR(factionInd),GVAR(factionInd));
+        GVAR(unitsInd) = _ret select 0;
+        GVAR(vehiclesInd) = _ret select 1;
+        GVAR(aircraftInd) = _ret select 2;
+        GVAR(officersInd) = _ret select 3;
+        GVAR(snipersInd) = _ret select 4;
     };
 
     if (_side isEqualTo 3) exitWith {
-        _ret = [GVAR(factionCiv)] call _fnc_parse;
+        _ret = [_side, GVAR(factionsCiv), GVAR(filtersCiv)] call _fnc_parse;
 
-        GVAR(factionCiv) = _ret select 0;
-        GVAR(unitPoolCiv) = _ret select 1;
-        GVAR(vehPoolCiv) = _ret select 2;
-        GVAR(airPoolCiv) = _ret select 3;
-
-        INFO_2("Parsing %1: %2",QGVAR(factionCiv),GVAR(factionCiv));
+        GVAR(unitsCiv) = _ret select 0;
+        GVAR(vehiclesCiv) = _ret select 1;
+        GVAR(aircraftCiv) = _ret select 2;
     };
 };
 

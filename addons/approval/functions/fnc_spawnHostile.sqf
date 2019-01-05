@@ -50,12 +50,12 @@ call {
 
 		call {
 			if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
-				_unitPool = EGVAR(main,unitPoolEast);
+				_unitPool = EGVAR(main,unitsEast);
 			};
 			if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
-				_unitPool = EGVAR(main,unitPoolWest);
+				_unitPool = EGVAR(main,unitsWest);
 			};
-			_unitPool = EGVAR(main,unitPoolInd);
+			_unitPool = EGVAR(main,unitsInd);
 		};
 
 		(selectRandom _unitPool) createUnit [[0,0,0], _tempGrp];
@@ -177,7 +177,7 @@ call {
 
 	if (_type isEqualTo 2) exitWith {
 		private _grp = createGroup CIVILIAN;
-		(selectRandom EGVAR(main,unitPoolCiv)) createUnit [_hostilePos, _grp];
+		(selectRandom EGVAR(main,unitsCiv)) createUnit [_hostilePos, _grp];
 
         (leader _grp) addUniform (selectRandom REBEL_UNIFORMS);
 

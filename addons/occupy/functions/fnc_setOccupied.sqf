@@ -37,7 +37,7 @@ params [
     ["_data",nil,[[]]]
 ];
 
-INFO_1("%1",_this);
+LOG_1("%1",_this);
 
 private _objArray = [];
 private _mrkArray = [];
@@ -49,13 +49,13 @@ private _airCount = 0;
 
 call {
 	if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
-		_pool = EGVAR(main,unitPoolEast);
+		_pool = EGVAR(main,unitsEast);
 	};
 	if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
-		_pool = EGVAR(main,unitPoolWest);
+		_pool = EGVAR(main,unitsWest);
 	};
     if (EGVAR(main,enemySide) isEqualTo RESISTANCE) exitWith {
-    	_pool = EGVAR(main,unitPoolInd);
+    	_pool = EGVAR(main,unitsInd);
     };
 };
 

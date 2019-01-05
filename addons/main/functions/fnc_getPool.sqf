@@ -20,17 +20,17 @@ params [
 ];
 
 if (_side isEqualTo EAST) exitWith {
-    [GVAR(unitPoolEast),GVAR(vehPoolEast),GVAR(airPoolEast),GVAR(officerPoolEast),GVAR(sniperPoolEast)] select _type;
+    [GVAR(unitsEast),GVAR(vehiclesEast),GVAR(aircraftEast),GVAR(officersEast),GVAR(snipersEast)] select _type;
 };
 
 if (_side isEqualTo WEST) exitWith {
-    [GVAR(unitPoolWest),GVAR(vehPoolWest),GVAR(airPoolWest),GVAR(officerPoolWest),GVAR(sniperPoolWest)] select _type;
+    [GVAR(unitsWest),GVAR(vehiclesWest),GVAR(aircraftWest),GVAR(officersWest),GVAR(snipersWest)] select _type;
 }; 
 
 if (_side isEqualTo INDEPENDENT) exitWith {
-    [GVAR(unitPoolInd),GVAR(vehPoolInd),GVAR(airPoolInd),GVAR(officerPoolInd),GVAR(sniperPoolInd)] select _type;
+    [GVAR(unitsInd),GVAR(vehiclesInd),GVAR(aircraftInd),GVAR(officersInd),GVAR(snipersInd)] select _type;
 }; 
 
 if (_side isEqualTo CIVILIAN) exitWith {
-    [GVAR(unitPoolCiv),GVAR(vehPoolCiv),GVAR(airPoolCiv),[],[]] select _type;
+    [GVAR(unitsCiv),GVAR(vehiclesCiv),GVAR(aircraftCiv),[],[]] select _type;
 }; 
