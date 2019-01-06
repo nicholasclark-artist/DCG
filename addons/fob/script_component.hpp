@@ -9,7 +9,6 @@
 #include "\d\dcg\addons\main\script_macros.hpp"
 
 #define FOB_COST_MULTIPIER 0.5
-#define FOB_RECON GVAR(uav)
 #define FOB_DEPLOYED !(GVAR(location) isEqualTo locationNull)
 #define FOB_POSITION (getPos GVAR(location))
 #define FOB_MED ["Land_Medevac_house_V1_F", "Land_Medevac_HQ_V1_F","B_Slingload_01_Medevac_F"]
@@ -82,14 +81,14 @@
 
 #define FOB_RECON_NAME "FOB Aerial Recon"
 #define FOB_RECON_STATEMENT \
-    if (((UAVControl FOB_RECON) select 0) isEqualTo player) then { \
-        objNull remoteControl gunner FOB_RECON; \
+    if (((UAVControl GVAR(uav)) select 0) isEqualTo player) then { \
+        objNull remoteControl gunner GVAR(uav); \
         player switchCamera "internal"; \
     } else { \
-        player remoteControl gunner FOB_RECON; \
-        FOB_RECON switchCamera "internal"; \
+        player remoteControl gunner GVAR(uav); \
+        GVAR(uav) switchCamera "internal"; \
     }
-#define FOB_RECON_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {!isNull FOB_RECON} && {!(visibleMap)}
+#define FOB_RECON_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {!isNull GVAR(uav)} && {!(visibleMap)}
 #define FOB_RECON_KEYCODE \
     if (FOB_RECON_COND) then { \
         FOB_RECON_STATEMENT \

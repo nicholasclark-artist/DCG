@@ -36,29 +36,29 @@ if (_ifRecon) then {
         };
     };
 
-    FOB_RECON = createVehicle [_type, _position, [], 0, "FLY"];
-    publicVariable QUOTE(FOB_RECON);
-    createVehicleCrew FOB_RECON;
-    FOB_RECON allowDamage false;
-    FOB_RECON setCaptive true;
+    GVAR(uav) = createVehicle [_type, _position, [], 0, "FLY"];
+    publicVariable QGVAR(uav);
+    createVehicleCrew GVAR(uav);
+    GVAR(uav) allowDamage false;
+    GVAR(uav) setCaptive true;
 
     {
         _x setCaptive true;
-    } forEach crew FOB_RECON;
+    } forEach crew GVAR(uav);
 
-    FOB_RECON lockDriver true;
-    FOB_RECON flyInHeight 140;
+    GVAR(uav) lockDriver true;
+    GVAR(uav) flyInHeight 140;
 
-    FOB_RECON addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
+    GVAR(uav) addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
 
-    private _wp = group FOB_RECON addWaypoint [_position, 0];
+    private _wp = group GVAR(uav) addWaypoint [_position, 0];
     _wp setWaypointType "LOITER";
     _wp setWaypointLoiterType "CIRCLE_L";
     _wp setWaypointLoiterRadius (GVAR(range)*1.5);
 } else {
     {
-        FOB_RECON deleteVehicleCrew _x;
-    } forEach crew FOB_RECON;
+        GVAR(uav) deleteVehicleCrew _x;
+    } forEach crew GVAR(uav);
 
-    deleteVehicle FOB_RECON;
+    deleteVehicle GVAR(uav);
 };

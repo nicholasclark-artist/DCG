@@ -12,9 +12,9 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-GVAR(status) = TR_WAITING;
+GVAR(status) = TR_STATE_WAITING;
 
-[STR_EXFIL,true] call EFUNC(main,displayText);
+[TR_STR_EXFIL,true] call EFUNC(main,displayText);
 
 [EH_EXFIL, "onMapSingleClick", {
     params [
@@ -25,9 +25,9 @@ GVAR(status) = TR_WAITING;
         ["_class","C_Heli_Light_01_civil_F",[""]]
     ];
 
-    if (COMPARE_STR(GVAR(status),TR_WAITING)) then {
+    if (COMPARE_STR(GVAR(status),TR_STATE_WAITING)) then {
         if (surfaceIsWater _pos) then {
-            [STR_NOTLAND,true] call EFUNC(main,displayText);
+            [TR_STR_NOTLAND,true] call EFUNC(main,displayText);
         } else {
             _exfil = _pos isFlatEmpty [TR_CHECKDIST, 50, 0.45, 10, -1, false, player];
 
@@ -39,16 +39,16 @@ GVAR(status) = TR_WAITING;
                 _exfilMrk setMarkerText format ["EXTRACTION LZ (%1)",name player];
 
                 [EH_EXFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-                [STR_INFIL,true] call EFUNC(main,displayText);
+                [TR_STR_INFIL,true] call EFUNC(main,displayText);
 
                 [EH_INFIL, "onMapSingleClick", {
                     _class = _this select 4;
                     _exfil = _this select 5;
                     _exfilMrk = _this select 6;
 
-                    if (COMPARE_STR(GVAR(status),TR_WAITING)) then {
+                    if (COMPARE_STR(GVAR(status),TR_STATE_WAITING)) then {
                         if (surfaceIsWater _pos) then {
-                            [STR_NOTLAND,true] call EFUNC(main,displayText);
+                            [TR_STR_NOTLAND,true] call EFUNC(main,displayText);
                         } else {
                             _infil = _pos isFlatEmpty [TR_CHECKDIST, 50, 0.45, 10, -1, false, player];
 
@@ -61,21 +61,21 @@ GVAR(status) = TR_WAITING;
                                     _infilMrk setMarkerText format ["INSERTION LZ (%1)",name player];
 
                                     [EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-                                    missionNamespace setVariable [PVEH_REQUEST,[player,_class,_exfil,_infil,_exfilMrk,_infilMrk]];
-                                    publicVariableServer PVEH_REQUEST;
+                                    missionNamespace setVariable [QGVAR(requestPVEH),[player,_class,_exfil,_infil,_exfilMrk,_infilMrk]];
+                                    publicVariableServer QGVAR(requestPVEH);
 
-                                    GVAR(status) = TR_NOTREADY;
+                                    GVAR(status) = TR_STATE_NOTREADY;
                                 } else {
-                                    [STR_CLOSE,true] call EFUNC(main,displayText);
+                                    [TR_STR_CLOSE,true] call EFUNC(main,displayText);
                                 };
                             } else {
-                                [STR_BADTERRAIN,true] call EFUNC(main,displayText);
+                                [TR_STR_BADTERRAIN,true] call EFUNC(main,displayText);
                             };
                         };
                     };
                 },[_class,_exfil,_exfilMrk]] call BIS_fnc_addStackedEventHandler;
             } else {
-                [STR_BADTERRAIN,true] call EFUNC(main,displayText);
+                [TR_STR_BADTERRAIN,true] call EFUNC(main,displayText);
             };
         };
     };
@@ -83,9 +83,9 @@ GVAR(status) = TR_WAITING;
 
 [
     {
-        if !(COMPARE_STR(GVAR(status),TR_NOTREADY)) then {
-            GVAR(status) = TR_READY;
-            [STR_CANCEL,true] call EFUNC(main,displayText);
+        if !(COMPARE_STR(GVAR(status),TR_STATE_NOTREADY)) then {
+            GVAR(status) = TR_STATE_READY;
+            [TR_STR_CANCEL,true] call EFUNC(main,displayText);
             [EH_EXFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
             [EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
             deleteMarker MRK_INFIL(name player);

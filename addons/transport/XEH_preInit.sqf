@@ -13,7 +13,7 @@ PREP(request);
 PREP(getChildren);
 PREP(canCallTransport);
 
-GVAR(status) = TR_READY;
+GVAR(status) = TR_STATE_READY;
 GVAR(count) = 0;
 
 publicVariable QFUNC(request);

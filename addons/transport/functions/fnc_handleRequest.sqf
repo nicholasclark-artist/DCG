@@ -38,29 +38,29 @@ publicVariable QGVAR(count);
 _transport = createVehicle [_classname,_exfil getPos [TR_SPAWN_DIST,random 360],[],0,"FLY"];
 
 // set variables in transport namespace
-_transport setVariable [QGVAR(status),TR_NOTREADY,false];
-_transport setVariable [VAR_HELIPAD_EXFIL,_exfil,false];
-_transport setVariable [VAR_HELIPAD_INFIL,_infil,false];
-_transport setVariable [VAR_REQUESTOR,_requestor,false];
-_transport setVariable [VAR_MARKER_EXFIL,_exfilMrk,false];
-_transport setVariable [VAR_MARKER_INFIL,_infilMrk,false];
-_transport setVariable [VAR_STUCKPOS,[0,0,0],false];
-_transport setVariable [VAR_SIGNAL,0,true]; // cast to all players so signal action is available
+_transport setVariable [QGVAR(status),TR_STATE_NOTREADY,false];
+_transport setVariable [QGVAR(exfil),_exfil,false];
+_transport setVariable [QGVAR(infil),_infil,false];
+_transport setVariable [QGVAR(requestor),_requestor,false];
+_transport setVariable [QGVAR(exfilMrk),_exfilMrk,false];
+_transport setVariable [QGVAR(infilMrk),_infilMrk,false];
+_transport setVariable [QGVAR(stuckPos),[0,0,0],false];
+_transport setVariable [QGVAR(signal),0,true]; // cast to all players so signal action is available
 
 // start cooldown when transport is deleted
 _transport addEventHandler ["Deleted",{
     _transport = _this select 0;
 
-    deleteMarker (_transport getVariable VAR_MARKER_EXFIL);
-    deleteMarker (_transport getVariable VAR_MARKER_INFIL);
+    deleteMarker (_transport getVariable QGVAR(exfilMrk));
+    deleteMarker (_transport getVariable QGVAR(infilMrk));
 
-    TR_COOLDOWN(_transport getVariable VAR_REQUESTOR);
+    TR_COOLDOWN(_transport getVariable QGVAR(requestor));
 }];
 
 // send hint to players who get in transport
 _transport addEventHandler ["GetIn",{
     if (isPlayer (_this select 2)) then {
-        [STR_GETIN,false] remoteExecCall [QEFUNC(main,displayText),_this select 2,false];
+        [TR_STR_GETIN,false] remoteExecCall [QEFUNC(main,displayText),_this select 2,false];
     };
 }];
 
@@ -94,7 +94,7 @@ _transport lockDriver true;
 
 // move to pick up position
 TR_EXFIL(_transport);
-[STR_ENROUTE,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
+[TR_STR_ENROUTE,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
 
 // move to drop off position
 TR_INFIL(_transport);
@@ -104,13 +104,13 @@ TR_INFIL(_transport);
     params ["_args","_idPFH"];
     _args params ["_requestor","_transport"];
 
-    if (COMPARE_STR(_transport getVariable QGVAR(status),TR_WAITING)) exitWith {
+    if (COMPARE_STR(_transport getVariable QGVAR(status),TR_STATE_WAITING)) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
     };
 
     if (isTouchingGround _transport && {!alive _transport || !canMove _transport || fuel _transport isEqualTo 0}) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
-        [STR_KILLED,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
+        [TR_STR_KILLED,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
         _transport setVariable [QEGVAR(main,forceCleanup),true];
         _transport call EFUNC(main,cleanup);
     };
@@ -121,16 +121,16 @@ TR_INFIL(_transport);
     params ["_args","_idPFH"];
     _args params ["_transport"];
 
-    if (!alive _transport || {COMPARE_STR(_transport getVariable QGVAR(status),TR_WAITING)}) exitWith {
+    if (!alive _transport || {COMPARE_STR(_transport getVariable QGVAR(status),TR_STATE_WAITING)}) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
     };
 
-    _stuckPos = _transport getVariable [VAR_STUCKPOS,[0,0,0]];
+    _stuckPos = _transport getVariable [QGVAR(stuckPos),[0,0,0]];
 
     if (!isTouchingGround _transport && {unitReady _transport} && {CHECK_DIST2D(getPosWorld _transport,_stuckPos,3)}) then {
         _transport setVariable [QUOTE(DOUBLES(MAIN_ADDON,cancelLandAt)),true];
 
-        if !(_transport getVariable [VAR_SIGNAL,-1] isEqualTo 1) then {
+        if !(_transport getVariable [QGVAR(signal),-1] isEqualTo 1) then {
             TR_EXFIL(_transport);
             WARNING_1("Handle hover bug: send transport to exfil: %1",(getPos _transport) select 2);
         } else {
@@ -139,7 +139,7 @@ TR_INFIL(_transport);
         };
     };
 
-    _transport setVariable [VAR_STUCKPOS,getPosWorld _transport];
+    _transport setVariable [QGVAR(stuckPos),getPosWorld _transport];
 }, 10, [_transport]] call CBA_fnc_addPerFrameHandler;
 
 nil

@@ -16,6 +16,6 @@ __________________________________________________________________*/
     _x call EFUNC(main,setAction);
 } forEach [
     [QUOTE(ADDON),QUOTE(COMPONENT_PRETTY),{},{true}],
-    [REQUEST_ID,REQUEST_NAME,{},{REQUEST_COND},{REQUEST_CHILD},[],player,1,ACTIONPATH],
-    [SIGNAL_ID,SIGNAL_NAME,{SIGNAL_STATEMENT},{SIGNAL_COND},{},[],player,1,ACTIONPATH]
+    [QGVAR(request),REQUEST_NAME,{},{REQUEST_COND},{REQUEST_CHILD},[],player,1,ACTIONPATH],
+    [QGVAR(signal),SIGNAL_NAME,{SIGNAL_STATEMENT},{SIGNAL_COND},{},[],player,1,ACTIONPATH]
 ];

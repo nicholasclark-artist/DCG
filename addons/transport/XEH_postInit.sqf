@@ -13,7 +13,7 @@ if !(isMultiplayer) exitWith {};
     {
         if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
         
-        PVEH_REQUEST addPublicVariableEventHandler {
+        QGVAR(requestPVEH) addPublicVariableEventHandler {
             (_this select 1) call FUNC(handleRequest);
         };
         
