@@ -17,7 +17,7 @@ __________________________________________________________________*/
 
 params ["_pos","_count","_name","_size"];
 
-missionNamespace setVariable [LOCATION_ID(_name),true];
+missionNamespace setVariable [CIV_LOCATION_ID(_name),true];
 
 private _units = [];
 private _buildings = _pos nearObjects ["House", _size min 200];
@@ -56,12 +56,12 @@ private _grp = [[0,0,0],0,_count,CIVILIAN,1.25] call EFUNC(main,spawnGroup);
             params ["_args","_idPFH"];
             _args params ["_pos","_name","_units"];
 
-            if (([_pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
+            if (([_pos,GVAR(spawnDist),CIV_ZDIST] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
                 _units call EFUNC(main,cleanup);
-                missionNamespace setVariable [LOCATION_ID(_name),false];
+                missionNamespace setVariable [CIV_LOCATION_ID(_name),false];
             };
-        }, HANDLER_DELAY, [_pos,_name,units _grp]] call CBA_fnc_addPerFrameHandler;
+        }, CIV_HANDLER_DELAY, [_pos,_name,units _grp]] call CBA_fnc_addPerFrameHandler;
     },
     [_grp,_pos,_count,_size,_buildings,_name]
 ] call CBA_fnc_waitUntilAndExecute;

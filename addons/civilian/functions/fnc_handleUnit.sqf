@@ -16,11 +16,11 @@ __________________________________________________________________*/
 {
     _x params ["_name","_position","_size","_type"];
 
-    if (!(missionNamespace getVariable [LOCATION_ID(_name),false]) && {GVAR(blacklist) find _name isEqualTo -1}) then {
+    if (!(missionNamespace getVariable [CIV_LOCATION_ID(_name),false]) && {GVAR(blacklist) find _name isEqualTo -1}) then {
         _position =+ _position;
         _position resize 2;
 
-        _players = [_position,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers);
+        _players = [_position,GVAR(spawnDist),CIV_ZDIST] call EFUNC(main,getNearPlayers);
 
         if !(_players isEqualTo []) then {
             private "_unitCount";

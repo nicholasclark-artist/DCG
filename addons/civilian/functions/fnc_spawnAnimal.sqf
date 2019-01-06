@@ -18,7 +18,7 @@ params ["_pos","_types"];
 
 private _agentList = [];
 
-missionNamespace setVariable [LOCATION_ID(_pos),true];
+missionNamespace setVariable [CIV_LOCATION_ID(_pos),true];
 
 for "_i" from 1 to 10 do {
     private _agent = createAgent [selectRandom _types, _pos, [], 150, "NONE"];
@@ -29,9 +29,9 @@ for "_i" from 1 to 10 do {
     params ["_args","_idPFH"];
     _args params ["_pos","_agentList"];
 
-    if (([_pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
+    if (([_pos,GVAR(spawnDist),CIV_ZDIST] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         _agentList call EFUNC(main,cleanup);
-        missionNamespace setVariable [LOCATION_ID(_pos),false];
+        missionNamespace setVariable [CIV_LOCATION_ID(_pos),false];
     };
-}, HANDLER_DELAY, [_pos,_agentList]] call CBA_fnc_addPerFrameHandler;
+}, CIV_HANDLER_DELAY, [_pos,_agentList]] call CBA_fnc_addPerFrameHandler;

@@ -19,8 +19,8 @@ __________________________________________________________________*/
     _pos =+ _pos;
     _pos resize 2;
 
-    if !(missionNamespace getVariable [LOCATION_ID(_pos),false]) then {
-        _players = [_pos,GVAR(spawnDist),ZDIST] call EFUNC(main,getNearPlayers);
+    if !(missionNamespace getVariable [CIV_LOCATION_ID(_pos),false]) then {
+        _players = [_pos,GVAR(spawnDist),CIV_ZDIST] call EFUNC(main,getNearPlayers);
 
         if !(_players isEqualTo []) then {
             [_pos,_types] call FUNC(spawnAnimal);

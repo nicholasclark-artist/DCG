@@ -15,11 +15,11 @@ if !(isMultiplayer) exitWith {};
     {
         if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
 
-        [FUNC(handleUnit), HANDLER_DELAY, EGVAR(main,locations)] call CBA_fnc_addPerFrameHandler;
+        [FUNC(handleUnit), CIV_HANDLER_DELAY, EGVAR(main,locations)] call CBA_fnc_addPerFrameHandler;
         [FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
 
         {
-            _mrk = createMarker [LOCATION_ID(_x select 0),_x select 1];
+            _mrk = createMarker [CIV_LOCATION_ID(_x select 0),_x select 1];
             _mrk setMarkerColor ([CIVILIAN,true] call BIS_fnc_sideColor);
             _mrk setMarkerShape "ELLIPSE";
             _mrk setMarkerBrush "Solid";
@@ -52,7 +52,7 @@ if !(isMultiplayer) exitWith {};
             };
         };
 
-        [FUNC(handleAnimal), HANDLER_DELAY, _animalList] call CBA_fnc_addPerFrameHandler;
+        [FUNC(handleAnimal), CIV_HANDLER_DELAY, _animalList] call CBA_fnc_addPerFrameHandler;
 
         {
             _pos = _x select 0;
