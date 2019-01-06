@@ -86,19 +86,19 @@ if (CHECK_ADDON_2(fob)) then {
             } else {
                 call {
                     if (_x isKindOf "Man") exitWith {
-                        _refund = _refund + abs(COST_MAN*EGVAR(fob,deleteCoef));
+                        _refund = _refund + abs(FOB_COST_MAN*EGVAR(fob,deleteCoef));
                     };
                     if (_x isKindOf "Car") exitWith {
-                        _refund = _refund + abs(COST_CAR*EGVAR(fob,deleteCoef));
+                        _refund = _refund + abs(FOB_COST_CAR*EGVAR(fob,deleteCoef));
                     };
                     if (_x isKindOf "Tank") exitWith {
-                        _refund = _refund + abs(COST_TANK*EGVAR(fob,deleteCoef));
+                        _refund = _refund + abs(FOB_COST_TANK*EGVAR(fob,deleteCoef));
                     };
                     if (_x isKindOf "Air") exitWith {
-                        _refund = _refund + abs(COST_AIR*EGVAR(fob,deleteCoef));
+                        _refund = _refund + abs(FOB_COST_AIR*EGVAR(fob,deleteCoef));
                     };
                     if (_x isKindOf "Ship") exitWith {
-                        _refund = _refund + abs(COST_SHIP*EGVAR(fob,deleteCoef));
+                        _refund = _refund + abs(FOB_COST_SHIP*EGVAR(fob,deleteCoef));
                     };
                 };
             };

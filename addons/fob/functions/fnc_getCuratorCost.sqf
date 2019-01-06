@@ -21,34 +21,34 @@ call {
     _vehClass = toLower getText (configFile >> "CfgVehicles" >> (_this select 0) >> "vehicleClass");
 
     if (_vehClass in ["men","menstory","menrecon","mendiver","mensniper","mensupport"]) exitWith {
-        _cost = COST_MAN
+        _cost = FOB_COST_MAN
     };
     if (_vehClass in ["car","support"]) exitWith {
-        _cost = COST_CAR
+        _cost = FOB_COST_CAR
     };
     if (_vehClass in ["armored"]) exitWith {
-        _cost = COST_TANK
+        _cost = FOB_COST_TANK
     };
     if (_vehClass in ["air"]) exitWith {
-        _cost = COST_AIR
+        _cost = FOB_COST_AIR
     };
     if (_vehClass in ["ship","submarine"]) exitWith {
-        _cost = COST_SHIP
+        _cost = FOB_COST_SHIP
     };
     /*if (_vehClass in ["ammo"]) exitWith {
-        _cost = COST_AMMO
+        _cost = FOB_COST_AMMO
     };*/
     if (_vehClass in [/*"structures",*/"structures_military","structures_village","structures_infrastructure","structures_industrial","lamps"]) exitWith {
-        _cost = COST_STRUCT
+        _cost = FOB_COST_STRUCT
     };
     if (_vehClass in ["fortifications"]) exitWith {
-        _cost = COST_FORT
+        _cost = FOB_COST_FORT
     };
     /*if (_vehClass in ["signs"]) exitWith {
-        _cost = COST_SIGN
+        _cost = FOB_COST_SIGN
     };*/
     /*if (_vehClass in ["small_items","objects","furniture","tents"]) exitWith {
-        _cost = COST_ITEM
+        _cost = FOB_COST_ITEM
     };*/
 };
 

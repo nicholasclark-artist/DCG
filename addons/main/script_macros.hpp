@@ -31,16 +31,16 @@
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
 
 // fob cost macros
-#define COST_MAN 2
-#define COST_CAR 7
-#define COST_TANK 10
-#define COST_AIR 14
-#define COST_SHIP 7
-#define COST_AMMO 0.1
-#define COST_STRUCT 2
-#define COST_ITEM 0.1
-#define COST_FORT 0.2
-#define COST_SIGN 0.1
+#define FOB_COST_MAN 2
+#define FOB_COST_CAR 7
+#define FOB_COST_TANK 10
+#define FOB_COST_AIR 14
+#define FOB_COST_SHIP 7
+#define FOB_COST_AMMO 0.1
+#define FOB_COST_STRUCT 2
+#define FOB_COST_ITEM 0.1
+#define FOB_COST_FORT 0.2
+#define FOB_COST_SIGN 0.1
 
 // approval macros
 #define AP_LOCATION_ID(LOCATION) ([QUOTE(PREFIX),"approval",LOCATION] joinString "_")
