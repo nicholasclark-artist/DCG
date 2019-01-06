@@ -82,7 +82,7 @@ if (CHECK_ADDON_2(fob)) then {
         private _refund = 0;
         {
             if (!(_x isKindOf "Man") && {!(_x isKindOf "Logic")} && {count crew _x isEqualTo 0}) then {
-                _dataObj pushBack [typeOf _x,getPosASL _x,getDir _x,vectorUp _x];
+                _dataObj pushBack [typeOf _x,getPosASL _x,getDir _x];
             } else {
                 call {
                     if (_x isKindOf "Man") exitWith {
