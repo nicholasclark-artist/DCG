@@ -21,9 +21,5 @@ if (GVAR(allow) isEqualTo 0) exitWith {
 };
 
 if (GVAR(allow) isEqualTo 1) exitWith {
-    if (_player isEqualTo leader group _player) then {
-        true
-    } else {
-        false
-    };
+    [false,true] select (_player isEqualTo leader group _player);
 };
