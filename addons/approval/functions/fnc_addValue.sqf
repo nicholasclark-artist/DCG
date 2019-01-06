@@ -21,7 +21,7 @@ params [
 
 private _region = [_position] call FUNC(getRegion);
 private _value = _region getVariable QGVAR(regionValue);
-ISNILS(_value,AV_DEFAULT);
+ISNILS(_value,AP_DEFAULT);
 private _newValue = _value + _add;
 _region setVariable [QGVAR(regionValue),_newValue];
 

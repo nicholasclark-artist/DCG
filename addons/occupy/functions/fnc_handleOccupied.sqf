@@ -103,12 +103,12 @@ private _maxCount = 0;
 
                 if (CHECK_ADDON_2(approval)) then {
                     if (_type isEqualTo "NameCityCapital") exitWith {
-                        [_center,AV_CAPITAL] call EFUNC(approval,addValue);
+                        [_center,AP_CAPITAL] call EFUNC(approval,addValue);
                     };
                     if (_type isEqualTo "NameCity") exitWith {
-                        [_center,AV_CITY] call EFUNC(approval,addValue);
+                        [_center,AP_CITY] call EFUNC(approval,addValue);
                     };
-                    [_center,AV_VILLAGE] call EFUNC(approval,addValue);
+                    [_center,AP_VILLAGE] call EFUNC(approval,addValue);
                 };
 
                 {

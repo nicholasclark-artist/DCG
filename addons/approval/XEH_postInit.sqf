@@ -11,10 +11,10 @@ if !(isMultiplayer) exitWith {};
     {
         if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
         
-        PVEH_QUESTION addPublicVariableEventHandler {(_this select 1) call FUNC(handleQuestion)};
-        PVEH_HINT addPublicVariableEventHandler {[_this select 1,0] call FUNC(handleHint)};
-        PVEH_HALT addPublicVariableEventHandler {[_this select 1] spawn FUNC(handleHalt)};
-        PVEH_AVADD addPublicVariableEventHandler {
+        QGVAR(questionPVEH) addPublicVariableEventHandler {(_this select 1) call FUNC(handleQuestion)};
+        QGVAR(hintPVEH) addPublicVariableEventHandler {[_this select 1,0] call FUNC(handleHint)};
+        QGVAR(stopPVEH) addPublicVariableEventHandler {[_this select 1] spawn FUNC(handleHalt)};
+        QGVAR(addPVEH) addPublicVariableEventHandler {
             (_this select 1) call FUNC(addValue);
             LOG_1("Client add AV: %1",_this);
         };

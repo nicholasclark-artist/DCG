@@ -43,20 +43,19 @@
 #define COST_SIGN 0.1
 
 // approval macros
-#define PVEH_AVADD QEGVAR(approval,pveh_add)
-#define AV_LOCATION_ID(LOCATION) ([QUOTE(PREFIX),"approval",LOCATION] joinString "_")
-#define AV_MIN 0
-#define AV_MAX 100
-#define AV_DEFAULT AV_MAX*0.1
-#define AV_CAR ((AV_MAX*0.005)*EGVAR(approval,multiplier))
-#define AV_TANK ((AV_MAX*0.0075)*EGVAR(approval,multiplier))
-#define AV_AIR ((AV_MAX*0.01)*EGVAR(approval,multiplier))
-#define AV_SHIP ((AV_MAX*0.005)*EGVAR(approval,multiplier))
-#define AV_MAN ((AV_MAX*0.001)*EGVAR(approval,multiplier))
-#define AV_CIV ((AV_MAX*0.01)*EGVAR(approval,multiplier))
-#define AV_FOB ((AV_MAX*0.0025)*EGVAR(approval,multiplier))
-#define AV_VILLAGE ((AV_MAX*0.05)*EGVAR(approval,multiplier))
-#define AV_CITY ((AV_MAX*0.1)*EGVAR(approval,multiplier))
-#define AV_CAPITAL ((AV_MAX*0.15)*EGVAR(approval,multiplier))
-#define AV_CONVERT1(POS) (linearConversion [AV_MIN, AV_MAX, [POS] call EFUNC(approval,getValue), 0, 1, true])
-#define AV_CONVERT2(POS) (1 - ((1 - AV_CONVERT1(POS)) * 0.5))
+#define AP_LOCATION_ID(LOCATION) ([QUOTE(PREFIX),"approval",LOCATION] joinString "_")
+#define AP_MIN 0
+#define AP_MAX 100
+#define AP_DEFAULT AP_MAX*0.1
+#define AP_CAR ((AP_MAX*0.005)*EGVAR(approval,multiplier))
+#define AP_TANK ((AP_MAX*0.0075)*EGVAR(approval,multiplier))
+#define AP_AIR ((AP_MAX*0.01)*EGVAR(approval,multiplier))
+#define AP_SHIP ((AP_MAX*0.005)*EGVAR(approval,multiplier))
+#define AP_MAN ((AP_MAX*0.001)*EGVAR(approval,multiplier))
+#define AP_CIV ((AP_MAX*0.01)*EGVAR(approval,multiplier))
+#define AP_FOB ((AP_MAX*0.0025)*EGVAR(approval,multiplier))
+#define AP_VILLAGE ((AP_MAX*0.05)*EGVAR(approval,multiplier))
+#define AP_CITY ((AP_MAX*0.1)*EGVAR(approval,multiplier))
+#define AP_CAPITAL ((AP_MAX*0.15)*EGVAR(approval,multiplier))
+#define AP_CONVERT1(POS) (linearConversion [AP_MIN, AP_MAX, [POS] call EFUNC(approval,getValue), 0, 1, true])
+#define AP_CONVERT2(POS) (1 - ((1 - AP_CONVERT1(POS)) * 0.5))

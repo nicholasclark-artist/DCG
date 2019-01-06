@@ -20,8 +20,8 @@ params [
 private _region = [_position] call FUNC(getRegion);
 private _ret = _region getVariable QGVAR(regionValue);
 
-ISNILS(_ret,AV_DEFAULT);
+ISNILS(_ret,AP_DEFAULT);
 
-_ret = (_ret min AV_MAX) max AV_MIN;
+_ret = (_ret min AP_MAX) max AP_MIN;
 
 _ret

@@ -107,7 +107,7 @@ clearBackpackCargoGlobal GVAR(anchor);
                 [_unit]
             ] call CBA_fnc_waitUntilAndExecute;
 
-            [FOB_POSITION,AV_FOB] call EFUNC(approval,addValue);
+            [FOB_POSITION,AP_FOB] call EFUNC(approval,addValue);
         };
 
         [true,FOB_POSITION] call FUNC(handleRecon);

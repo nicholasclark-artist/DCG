@@ -28,7 +28,7 @@ private _unit = getAssignedCuratorUnit GVAR(curator);
 // remove objects from editable array so objects are not part of new FOB if placed in same position
 GVAR(curator) removeCuratorEditableObjects [curatorEditableObjects GVAR(curator),true];
 
-[FOB_POSITION,AV_FOB*-1] call EFUNC(approval,addValue);
+[FOB_POSITION,AP_FOB*-1] call EFUNC(approval,addValue);
 [false] call FUNC(handleRecon);
 GVAR(respawnPos) call BIS_fnc_removeRespawnPosition;
 deleteVehicle GVAR(anchor);

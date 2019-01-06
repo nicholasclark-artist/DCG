@@ -43,8 +43,8 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
         _cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
         _cost = _cost*FOB_COST_MULTIPIER;
 
-        missionNamespace setVariable [PVEH_AVADD,[getPosASL (_this select 1),_cost]];
-        publicVariableServer PVEH_AVADD;
+        missionNamespace setVariable [QEGVAR(approval,addPVEH),[getPosASL (_this select 1),_cost]];
+        publicVariableServer QEGVAR(approval,addPVEH);
     };
 }];
 
@@ -54,7 +54,7 @@ GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
         _cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
         _cost = _cost*FOB_COST_MULTIPIER;
 
-        missionNamespace setVariable [PVEH_AVADD,[getPosASL (_this select 1),_cost * -1]];
-        publicVariableServer PVEH_AVADD;
+        missionNamespace setVariable [QEGVAR(approval,addPVEH),[getPosASL (_this select 1),_cost * -1]];
+        publicVariableServer QEGVAR(approval,addPVEH);
     };
 }];

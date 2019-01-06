@@ -35,22 +35,22 @@ private _unitValue = 0;
 
 call {
     if (_unit isKindOf "Man" && {!(side group _unit isEqualTo CIVILIAN)}) exitWith {
-        _unitValue = AV_MAN;
+        _unitValue = AP_MAN;
     };
     if (_unit isKindOf "Man" && {side group _unit isEqualTo CIVILIAN}) exitWith {
-        _unitValue = AV_CIV;
+        _unitValue = AP_CIV;
     };
     if (_unit isKindOf "Car") exitWith {
-        _unitValue = AV_CAR;
+        _unitValue = AP_CAR;
     };
     if (_unit isKindOf "Tank") exitWith {
-        _unitValue = AV_TANK;
+        _unitValue = AP_TANK;
     };
     if (_unit isKindOf "Air") exitWith {
-        _unitValue = AV_AIR;
+        _unitValue = AP_AIR;
     };
     if (_unit isKindOf "Ship") exitWith {
-        _unitValue = AV_SHIP;
+        _unitValue = AP_SHIP;
     };
 };
 
@@ -61,8 +61,8 @@ if (side group _unit isEqualTo EGVAR(main,playerSide) || {side group _unit isEqu
 if (isServer) then {
     [getPos _unit, _unitValue] call FUNC(addValue);
 } else {
-    missionNamespace setVariable [PVEH_AVADD,[getPos _unit, _unitValue]];
-    publicVariableServer PVEH_AVADD;
+    missionNamespace setVariable [QGVAR(addPVEH),[getPos _unit, _unitValue]];
+    publicVariableServer QGVAR(addPVEH);
 };
 
 true

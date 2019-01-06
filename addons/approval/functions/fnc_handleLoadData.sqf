@@ -22,7 +22,7 @@ params [
     private _value = if (count _data > _forEachIndex + 1) then {
         _data select _forEachIndex
     } else {
-        AV_DEFAULT
+        AP_DEFAULT
     };
 
     private _location = createLocation ["Name", ASLtoAGL _x, REGION_SIZE, REGION_SIZE];
