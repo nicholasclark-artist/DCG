@@ -34,7 +34,7 @@ private _grp = [_start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         _wp setWaypointTimeout [0, 0, 0];
         _wp setWaypointCompletionRadius 100;
         _wp setWaypointBehaviour "CARELESS";
-        _wp setWaypointSpeed "LIMITED";
+        _wp setWaypointSpeed (selectRandom ["LIMITED","NORMAL"]);
 
         _wp = _grp addWaypoint [_end,0];
         _statement = format ["deleteVehicle (objectParent this); deleteVehicle this; %1 = %1 - [this];", QGVAR(drivers)];

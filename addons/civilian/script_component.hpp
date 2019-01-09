@@ -11,3 +11,7 @@
 #define CIV_HANDLER_DELAY 10
 #define CIV_ZDIST 50
 #define CIV_LOCATION_ID(NAME) ([QUOTE(ADDON),NAME] joinString "_")
+
+#define CIV_VILLAGE_COUNT 5
+#define CIV_CITY_COUNT 10
+#define CIV_CAPITAL_COUNT 20

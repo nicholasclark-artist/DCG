@@ -28,7 +28,7 @@ __________________________________________________________________*/
     ["Civilian Count","Amount of civilian units spawned in a location."],
     COMPONENT_NAME,
     [
-        [1,1.5],
+        [1,2],
         ["Low","High"],
         0
     ],
@@ -39,10 +39,10 @@ __________________________________________________________________*/
 [
     QGVAR(spawnDist),
     "SLIDER",
-    ["Spawn Distance","Distance from location center that units will spawn."],
+    ["Spawn Distance","Civilian entities will spawn when a player is within this distance of a location."],
     COMPONENT_NAME,
     [
-        300,
+        1,
         1000,
         400,
         0

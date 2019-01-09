@@ -7,13 +7,14 @@ __________________________________________________________________*/
 LOG(MSG_INIT);
 
 PREP(initSettings);
-PREP(handleUnit);
+PREP(initCivPresence);
+// PREP(handleUnit);
 PREP(handleVehicle);
 PREP(handleAnimal);
-PREP(spawnUnit);
+// PREP(spawnUnit);
 PREP(spawnVehicle);
 PREP(spawnAnimal);
-PREP(setPatrol);
+// PREP(setPatrol);
 
 GVAR(drivers) = [];
 GVAR(blacklist) = [];
