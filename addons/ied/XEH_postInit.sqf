@@ -20,7 +20,7 @@ if !(isMultiplayer) exitWith {};
         };
 
         {
-            _mrk = createMarker [str _x,getPos _x];
+            _mrk = createMarker [format["%1_%2",QUOTE(ADDON),_forEachIndex],getPos _x];
             _mrk setMarkerType "mil_triangle";
             _mrk setMarkerSize [0.5,0.5];
             _mrk setMarkerColor "ColorRed";
