@@ -35,10 +35,11 @@ private _iterations01 = [];
         _mrk setMarkerSize [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist)];
         [_mrk] call EFUNC(main,setDebugMarker);
 
+        // @todo test trigger performance
         private _trg = createTrigger ["EmptyDetector", _position, true]; // local trigger creates 'Ref to nonnetwork object' spam in log
         _trg setTriggerActivation ["ANYPLAYER", "PRESENT", true];
-        _trg setTriggerStatements ["this", format ["hint '%1: ON'",_name], format ["hint '%1: OFF'",_name]]; // @todo delay trigger check
-        _trg setTriggerArea [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist), 0, false]; // @todo test z-dist
+        _trg setTriggerStatements ["this", "", ""];
+        _trg setTriggerArea [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist), 0, false, CIV_ZDIST];
 
         private _houses = (_position nearObjects ["House", _radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
         [_houses] call dcg_main_fnc_shuffle;
@@ -56,8 +57,8 @@ private _iterations01 = [];
         _moduleMain setVariable ["bis_fnc_initmodules_activate",true,true]; // @todo check if public is required
 
         // main options
-        _moduleMain setVariable ["#area",[_position,_radius,_radius,0,false,-1]]; // gets passed to inAreaArray @todo test z-dist
-        _moduleMain setVariable ["#debug",false];
+        _moduleMain setVariable ["#area",[_position,_radius,_radius,0,false,CIV_ZDIST]]; // gets passed to inAreaArray
+        _moduleMain setVariable ["#debug",true];
         _moduleMain setVariable ["#useagents",true];
         _moduleMain setVariable ["#usepanicmode",true];
         _moduleMain setVariable ["#unitcount",count _houses];
