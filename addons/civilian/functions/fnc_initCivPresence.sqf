@@ -33,7 +33,7 @@ private _iterations01 = [];
         _mrk setMarkerShape "ELLIPSE";
         _mrk setMarkerBrush "Border";
         _mrk setMarkerSize [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist)];
-        // [_mrk] call EFUNC(main,setDebugMarker);
+        [_mrk] call EFUNC(main,setDebugMarker);
 
         private _trg = createTrigger ["EmptyDetector", _position, true]; // local trigger creates 'Ref to nonnetwork object' spam in log
         _trg setTriggerActivation ["ANYPLAYER", "PRESENT", true];
@@ -57,7 +57,7 @@ private _iterations01 = [];
 
         // main options
         _moduleMain setVariable ["#area",[_position,_radius,_radius,0,false,-1]]; // gets passed to inAreaArray @todo test z-dist
-        _moduleMain setVariable ["#debug",true];
+        _moduleMain setVariable ["#debug",false];
         _moduleMain setVariable ["#useagents",true];
         _moduleMain setVariable ["#usepanicmode",true];
         _moduleMain setVariable ["#unitcount",count _houses];
@@ -99,10 +99,6 @@ private _iterations01 = [];
             _moduleWaypoint setVariable ["#capacity",2];
             _moduleWaypoint setVariable ["#usebuilding",true];
             _moduleWaypoint setVariable ["#terminal",false];
-
-            _mrk = createMarker [["wp",getpos _moduleWaypoint] joinString "_",getpos _moduleWaypoint];
-            _mrk setMarkerType "mil_dot";
-            _mrk setMarkerText "wp";
 
             _moduleSpawn synchronizeObjectsAdd [_trg];
             _moduleWaypoint synchronizeObjectsAdd [_trg];            
