@@ -6,7 +6,7 @@ __________________________________________________________________*/
 #define LOCATIONS_TYPE ["Alsatian_Random_F","Fin_random_F","Cock_random_F","Hen_random_F"]
 #define LOCALS_TYPE ["Sheep_random_F","Rabbit_F"]
 #define HILLS_TYPE ["Sheep_random_F","Goat_random_F"]
-#define LIMIT 8
+#define ANIMAL_COUNT 24
 
 if !(isMultiplayer) exitWith {};
 
@@ -25,35 +25,20 @@ if !(isMultiplayer) exitWith {};
         [FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
 
         // @todo fix animal list picking same position several times
-        _animalList = [];
+        private _animalList = [];
 
-        for "_i" from 0 to LIMIT - 1 do {
-            if !(EGVAR(main,locations) isEqualTo []) then {
-                _pos = (selectRandom EGVAR(main,locations)) select 1;
-                if ((_animalList find _pos) isEqualTo -1) then {
-                    _animalList pushBack [_pos,LOCATIONS_TYPE];
-                };
-            };
+        _animalList append (EGVAR(main,locations) apply {[_x select 1,LOCATIONS_TYPE]});
+        _animalList append (EGVAR(main,locals) apply {[_x select 1,LOCALS_TYPE]});
+        _animalList append (EGVAR(main,hills) apply {[_x select 0,HILLS_TYPE]});
 
-            if !(EGVAR(main,locals) isEqualTo []) then {
-                _pos = (selectRandom EGVAR(main,locals)) select 1;
-                if ((_animalList find _pos) isEqualTo -1) then {
-                    _animalList pushBack [_pos,LOCALS_TYPE];
-                };
-            };
+        [_animalList] call EFUNC(main,shuffle);
 
-            if !(EGVAR(main,hills) isEqualTo []) then {
-                _pos = (selectRandom EGVAR(main,hills)) select 0;
-                if ((_animalList find _pos) isEqualTo -1) then {
-                    _animalList pushBack [_pos,HILLS_TYPE];
-                };
-            };
-        };
+        _animalList resize ANIMAL_COUNT;
 
         [FUNC(handleAnimal), CIV_HANDLER_DELAY, _animalList] call CBA_fnc_addPerFrameHandler;
 
         {
-            _mrk = createMarker [format["%1_animal_%2",QUOTE(PREFIX),diag_frameNo + _forEachIndex],ASLtoAGL (_x select 0)];
+            _mrk = createMarker [format["%1_animal_%2",QUOTE(PREFIX),_forEachIndex],ASLtoAGL (_x select 0)];
             _mrk setMarkerColor "ColorBlack";
             _mrk setMarkerShape "ELLIPSE";
             _mrk setMarkerBrush "Solid";
