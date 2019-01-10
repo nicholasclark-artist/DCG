@@ -11,20 +11,16 @@ Return:
 none
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define ITERATIONS 300
-#define BUFFER 100
-#define RANGE 1000
+#define CIV_ITERATIONS 300
+#define CIV_BUFFER 100
+#define CIV_RANGE 1000
 
-private ["_players","_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
+private ["_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
 
 if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
-    _players = call CBA_fnc_players;
+     _player = selectRandom ((call CBA_fnc_players) select {((getPos _x) select 2) < 10});
 
-    if !(_players isEqualTo []) then {
-        _player = selectRandom _players;
-
-        if ((getPos _player) select 2 > 5) exitWith {};
-
+    if !(isNil "_player") then {
         _roads = _player nearRoads 200;
 
         // get start and end point for vehicle that passes by target player
@@ -37,7 +33,7 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
             _road = _roadMid;
 
             // get roads in start direction
-            for "_i" from 1 to ITERATIONS do {
+            for "_i" from 1 to CIV_ITERATIONS do {
                 _roadConnect = roadsConnectedTo _road;
 
                 // if next road doesn't exist, exit with last road
@@ -48,7 +44,7 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
                 _road = _roadConnect select 0;
 
                 // if loop is done or road is far enough
-                if (!(CHECK_VECTORDIST(getPosASL _road,getPosASL _roadMid,RANGE)) || {_i isEqualTo ITERATIONS}) exitWith {
+                if (!(CHECK_VECTORDIST(getPosASL _road,getPosASL _roadMid,CIV_RANGE)) || {_i isEqualTo CIV_ITERATIONS}) exitWith {
                     _roadStart = _road;
                 };
             };
@@ -56,7 +52,7 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
             _road = _roadMid;
 
             // get roads in end direction
-            for "_i" from 1 to ITERATIONS do {
+            for "_i" from 1 to CIV_ITERATIONS do {
                 _roadConnect = roadsConnectedTo _road;
 
                 // if next road doesn't exist, exit with last road
@@ -68,16 +64,16 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
                 _road = _roadConnect select 1;
 
                 // if loop is done or road is far enough
-                if (!(CHECK_VECTORDIST(getPosASL _road,getPosASL _roadMid,RANGE)) || {_i isEqualTo ITERATIONS}) exitWith {
+                if (!(CHECK_VECTORDIST(getPosASL _road,getPosASL _roadMid,CIV_RANGE)) || {_i isEqualTo CIV_ITERATIONS}) exitWith {
                     _roadEnd = _road;
                 };
             };
 
             if (!(_roadStart isEqualTo _roadEnd) &&
-                {!(CHECK_VECTORDIST(getPosASL _roadStart,getPosASL _roadEnd,RANGE))} &&
+                {!(CHECK_VECTORDIST(getPosASL _roadStart,getPosASL _roadEnd,CIV_RANGE))} &&
                 {!([getPosASL _roadStart,eyePos _player] call EFUNC(main,inLOS))} &&
-                {([getPos _roadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
-                {([getPos _roadEnd,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
+                {([getPos _roadStart,CIV_BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
+                {([getPos _roadEnd,CIV_BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
                 {!([_roadStart,_roadEnd] call EFUNC(safezone,inAreaAll))}) then {
                     [getPos _roadStart,getPos _roadMid,getPos _roadEnd,_player] call FUNC(spawnVehicle);
             };
