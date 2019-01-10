@@ -28,13 +28,11 @@ params [
     ["_cargo",false,[false]]
 ];
 
-private _grp = createGroup _side;
+private _grp = createGroup [_side,true];
 private _check = [];
 private _unitPool = [_side,0] call FUNC(getPool);
 private _vehPool = [_side,1] call FUNC(getPool);
 private _airPool = [_side,2] call FUNC(getPool);
-
-_grp deleteGroupWhenEmpty true;
 
 // don't consider height to simplify spawning
 _pos =+ _pos;
@@ -80,9 +78,9 @@ if (_type isEqualTo 0) exitWith {
     _grp addVehicle _veh;
     (driver _veh) setVariable [QGVAR(isDriver),true];
 
+    _veh setUnloadInCombat [true,true];
+    
     if (_cargo) then {
-        _veh setUnloadInCombat [true,true];
-
         [{
             params ["_args","_idPFH"];
             _args params ["_grp","_unitPool","_veh","_count"];
