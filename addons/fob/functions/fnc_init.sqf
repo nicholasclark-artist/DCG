@@ -30,4 +30,4 @@ GVAR(curator) addEventHandler ["killed", {
     call FUNC(init);
 }];
 
-TRACE_1("Curators",allCurators);
+TRACE_1("",allCurators);
