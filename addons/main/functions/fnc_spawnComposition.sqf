@@ -48,7 +48,7 @@ for "_index" from 0 to (count (CONFIG)) - 1 do {
     _compList pushBack [_index,_normalized];
 };
 
-_compList = [_compList] call FUNC(shuffle);
+[_compList] call FUNC(shuffle);
 
 // find base with strength close to passed strength
 {
