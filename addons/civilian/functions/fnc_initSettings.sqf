@@ -23,20 +23,6 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(multiplier),
-    "LIST",
-    ["Civilian Count","Amount of civilian units spawned in a location."],
-    COMPONENT_NAME,
-    [
-        [1,2],
-        ["Low","High"],
-        0
-    ],
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
     QGVAR(spawnDist),
     "SLIDER",
     ["Spawn Distance","Civilian entities will spawn when a player is within this distance of a location."],
@@ -52,9 +38,24 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(vehMaxCount),
+    QGVAR(unitLimit),
     "SLIDER",
-    ["Max Vehicle Count","Max number of active civilian vehicles."],
+    ["Unit Limit","Limits the number of civilian units per location."],
+    COMPONENT_NAME,
+    [
+        0,
+        40,
+        25,
+        0
+    ],
+    true,
+    {}
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(vehLimit),
+    "SLIDER",
+    ["Vehicle Limit","Limits the number of spawned civilian vehicles."],
     COMPONENT_NAME,
     [
         0,

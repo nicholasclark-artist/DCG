@@ -17,7 +17,7 @@ __________________________________________________________________*/
 
 private ["_players","_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
 
-if (count GVAR(drivers) <= ceil GVAR(vehMaxCount)) then {
+if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
     _players = call CBA_fnc_players;
 
     if !(_players isEqualTo []) then {
