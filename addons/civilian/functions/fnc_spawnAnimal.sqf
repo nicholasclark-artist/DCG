@@ -21,7 +21,7 @@ private _agentList = [];
 missionNamespace setVariable [CIV_LOCATION_ID(_pos),true];
 
 for "_i" from 1 to 10 do {
-    private _agent = createAgent [selectRandom _types, _pos, [], 150, "NONE"];
+    private _agent = createAgent [selectRandom _types, _pos, [], GVAR(spawnDist) * 0.5, "NONE"];
     _agentList pushBack _agent;
 };
 
