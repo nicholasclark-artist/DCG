@@ -64,30 +64,25 @@ _transport addEventHandler ["GetIn",{
     };
 }];
 
-private _pilot = "";
+createVehicleCrew _transport;
+group _transport addVehicle _transport;
+_transport setUnloadInCombat [false,false];
 
-call {
-    if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
-        _pilot = "O_Helipilot_F";
-    };
-    if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
-        _pilot = "B_Helipilot_F";
-    };
-    if (EGVAR(main,playerSide) isEqualTo RESISTANCE) exitWith {
-        _pilot = "I_Helipilot_F";
-    };
-    _pilot = "C_man_w_worker_F";
-};
+// in case 'setUnloadInCombat' fails
+{
+    _x addEventHandler ["GetOutMan",{deleteVehicle (_this select 0)}];
+} forEach crew _transport;
 
-_pilot = createGroup EGVAR(main,playerSide) createUnit [_pilot,[0,0,0], [], 0, "NONE"];
-_pilot moveInDriver _transport;
+_pilot = driver _transport;
 _pilot disableAI "FSM";
 _pilot setBehaviour "CARELESS";
-_pilot addEventHandler ["GetOutMan",{deleteVehicle (_this select 0)}];
 
-// lock cockpit
-_transport lockTurret [[0],true];
+// lock vehicle except cargo
 _transport lockDriver true;
+
+{
+    _transport lockTurret [_x, true];
+} forEach (allTurrets [_transport, false]);
 
 // disable caching on transport, can cause waypoint issues
 [group _transport] call EFUNC(cache,disableCache);
