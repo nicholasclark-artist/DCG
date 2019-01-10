@@ -24,7 +24,6 @@ if !(isMultiplayer) exitWith {};
 
         [FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
 
-        // @todo fix animal list picking same position several times
         private _animalList = [];
 
         _animalList append (EGVAR(main,locations) apply {[_x select 1,LOCATIONS_TYPE]});
