@@ -91,11 +91,16 @@ if !(isNil {HEADLESSCLIENT}) then {
     }, 120, []] remoteExecCall [QUOTE(CBA_fnc_addPerFrameHandler),owner HEADLESSCLIENT,false];
 };
 
-// save functionality
+// save event handlers
 QGVAR(saveDataPVEH) addPublicVariableEventHandler {call FUNC(saveData)};
 QGVAR(deleteDataPVEH) addPublicVariableEventHandler {
     profileNamespace setVariable [QGVAR(saveData),nil];
     saveProfileNamespace;
+};
+
+// debug event handlers 
+QGVAR(debugMarkers) addPublicVariableEventHandler {
+    if (GVAR(debug)) then {[1] call FUNC(debug)};
 };
 
 // set client actions

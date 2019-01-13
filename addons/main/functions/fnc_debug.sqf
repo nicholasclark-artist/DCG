@@ -3,30 +3,26 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-enable/disable debug markers
+set debug options
 
 Arguments:
-0: enable debug <BOOL>
+0: debug options <NUMBER>
 
 Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (_this) then {
-    if !(GVAR(debug)) then {
-        GVAR(debug) = true;
-
-        [] spawn {
-            while {GVAR(debug)} do {
-                GVAR(debugMarkers) apply {_x setMarkerAlpha 1};
-                sleep 2;
-            };
-        }; 
+switch (_this select 0) do {
+    case 0: {
+        GVAR(debug) = false; 
+        GVAR(debugMarkers) apply {_x setMarkerAlpha 0};
     };
-} else {
-    GVAR(debug) = false; 
-    GVAR(debugMarkers) apply {_x setMarkerAlpha 0};
+    case 1: {
+        GVAR(debug) = true; 
+        GVAR(debugMarkers) apply {_x setMarkerAlpha 1};
+    };
+    default { };
 };
 
 nil

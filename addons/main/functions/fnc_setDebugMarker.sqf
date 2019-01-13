@@ -13,9 +13,8 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private _marker = _this select 0;
-
-_marker setMarkerAlpha 0;
-GVAR(debugMarkers) pushBack _marker;
+(_this select 0) setMarkerAlpha 0;
+GVAR(debugMarkers) pushBack (_this select 0);
+publicVariableServer QGVAR(debugMarkers);
 
 nil
