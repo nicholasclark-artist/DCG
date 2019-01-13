@@ -17,13 +17,13 @@ if (is3DEN) exitWith {}; // only run in mission
 
 params ["_marker"];
 
-private _act = "
+private _act = format ["
     {
-        if !(isPlayer _x) then {
+        if (!isPlayer _x && {!(_x getVariable [%1, false])}) then {
             _x call CBA_fnc_deleteEntity;
         };
     } forEach thisList;
-";
+",QGVAR(keepEntity)]; // @todo add keep functionality to documentation
 
 // handle markers with bad shapes
 if (!(COMPARE_STR(markerShape _marker,"RECTANGLE")) && {!(COMPARE_STR(markerShape _marker,"ELLIPSE"))}) then {
