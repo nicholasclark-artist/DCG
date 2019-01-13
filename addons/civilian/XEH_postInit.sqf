@@ -16,10 +16,9 @@ if !(isMultiplayer) exitWith {};
         if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
 
         [
-            {time > 5}, // possible fix for civ module init failing sometimes
-            {
-                EGVAR(main,locations) call FUNC(initCivPresence);
-            }
+            {diag_tickTime > (_this + 5)}, // possible fix for civ module init failing sometimes
+            {EGVAR(main,locations) call FUNC(handleUnit)},
+            diag_tickTime
         ] call CBA_fnc_waitUntilAndExecute;
 
         [FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
