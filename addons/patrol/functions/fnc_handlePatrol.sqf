@@ -29,7 +29,7 @@ if !(GVAR(groups) isEqualTo []) then {
     };
 };
 
-if (count GVAR(groups) <= ceil GVAR(groupsMaxCount)) then {
+if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
     _players = call CBA_fnc_players;
 
     if !(_players isEqualTo []) then {

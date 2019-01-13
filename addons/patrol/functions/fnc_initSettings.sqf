@@ -25,12 +25,12 @@ __________________________________________________________________*/
 [
     QGVAR(cooldown),
     "SLIDER",
-    ["Patrol Spawn Cooldown","Time in seconds between potential patrol spawns."],
+    ["Spawn Cooldown","Time in seconds between potential patrol spawns."],
     COMPONENT_NAME,
     [
-        300,
+        60,
         3600,
-        900,
+        600,
         0
     ],
     true,
@@ -38,9 +38,9 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(groupsMaxCount),
+    QGVAR(groupLimit),
     "SLIDER",
-    ["Max Group Count","Max number of active patrol groups."],
+    ["Group Limit","Maximum number of active patrol groups."],
     COMPONENT_NAME,
     [
         1,

@@ -14,7 +14,6 @@
 #define HEADLESSCLIENT GVARMAIN(HC)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
 #define SETTINGS_INIT publicVariable QFUNC(initSettings); remoteExecCall [QFUNC(initSettings), -2, true]; call FUNC(initSettings)
-// #define SETTINGS_OVERWRITE(SETTING,VALUE) [{MAIN_ADDON && {CHECK_POSTBRIEFING}},{missionNamespace setVariable [SETTING,_this]},VALUE] remoteExecCall [QUOTE(CBA_fnc_waitUntilAndExecute),-2,true]
 
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
@@ -24,8 +23,6 @@
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
 #define CHECK_POSTBRIEFING (getClientStateNumber > 9)
-// #define CHECK_PREINIT if (!isServer) exitWith {}
-// #define CHECK_POSTINIT if (!(EGVAR(main,enable)) || {!(GVAR(enable))} || {!isServer} || {!isMultiplayer}) exitWith {}
 
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
@@ -43,7 +40,7 @@
 #define FOB_COST_SIGN 0.1
 
 // approval macros
-#define AP_LOCATION_ID(LOCATION) ([QUOTE(PREFIX),"approval",LOCATION] joinString "_")
+// #define AP_LOCATION_ID(LOCATION) ([QUOTE(PREFIX),"approval",LOCATION] joinString "_")
 #define AP_MIN 0
 #define AP_MAX 100
 #define AP_DEFAULT AP_MAX*0.1
@@ -52,7 +49,7 @@
 #define AP_AIR ((AP_MAX*0.01)*EGVAR(approval,multiplier))
 #define AP_SHIP ((AP_MAX*0.005)*EGVAR(approval,multiplier))
 #define AP_MAN ((AP_MAX*0.001)*EGVAR(approval,multiplier))
-#define AP_CIV ((AP_MAX*0.01)*EGVAR(approval,multiplier))
+#define AP_CIV ((AP_MAX*0.05)*EGVAR(approval,multiplier))
 #define AP_FOB ((AP_MAX*0.0025)*EGVAR(approval,multiplier))
 #define AP_VILLAGE ((AP_MAX*0.05)*EGVAR(approval,multiplier))
 #define AP_CITY ((AP_MAX*0.1)*EGVAR(approval,multiplier))

@@ -38,9 +38,9 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(maxCount),
+    QGVAR(limit),
     "SLIDER",
-    ["Max Transport Count","Maximum number of active transports."],
+    ["Transport Limit","Maximum number of active transports."],
     COMPONENT_NAME,
     [
         1,
