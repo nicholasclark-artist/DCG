@@ -21,3 +21,21 @@ __________________________________________________________________*/
     true, // "global" flag. Set this to true to always have this setting synchronized between all clients in multiplayer
     {} // function that will be executed once on mission start and every time the setting is changed.
 ] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(time),
+    "SLIDER",
+    ["Respawn Time","Time in seconds that the player must wait before respawn."],
+    COMPONENT_NAME,
+    [
+        0,
+        3600,
+        600,
+        0
+    ],
+    true,
+    {
+        INFO("LOCAL"); // @todo check locality 
+        setPlayerRespawnTime _this;
+    }
+] call CBA_Settings_fnc_init;
