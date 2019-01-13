@@ -14,7 +14,7 @@
 #define SAVE_SCENARIO_ID ([QUOTE(VERSION), toUpper worldName, toUpper missionName] joinString " - ")
 
 #define SAVE_ACTION_NAME "Save Mission Data"
-#define SAVE_ACTION_COND time > 60 && {isServer || IS_ADMIN_LOGGED}
+#define SAVE_ACTION_COND CBA_missionTime > 60 && {isServer || IS_ADMIN_LOGGED}
 #define SAVE_ACTION_STATEMENT \
     [ \
         format ["Are you sure you want to overwrite the saved data for %1?", SAVE_SCENARIO_ID], \
