@@ -26,12 +26,12 @@
         AP_QUESTION_STATEMENT \
     }
 
-#define AP_HALT_NAME "Stop Person"
-#define AP_HALT_STATEMENT missionNamespace setVariable [QGVAR(stopPVEH),cursorTarget]; publicVariableServer QGVAR(stopPVEH); ["",true] call EFUNC(main,displayText);
-#define AP_HALT_STATEMENT_ACE missionNamespace setVariable [QGVAR(stopPVEH),_target]; publicVariableServer QGVAR(stopPVEH); ["",true] call EFUNC(main,displayText);
-#define AP_HALT_COND cursorTarget isKindOf "CAManBase" && {side cursorTarget isEqualTo CIVILIAN} && {!(isPlayer cursorTarget)} && {alive cursorTarget} && {CHECK_DIST2D(player,cursorTarget,10)}
-#define AP_HALT_COND_ACE _target isKindOf "CAManBase" && {side _target isEqualTo CIVILIAN} && {!(isPlayer _target)} && {alive _target} && {CHECK_DIST2D(player,_target,10)}
-#define AP_HALT_KEYCODE \
-    if (AP_HALT_COND) then { \
-        AP_HALT_STATEMENT \
+#define AP_STOP_NAME "Stop Person"
+#define AP_STOP_STATEMENT missionNamespace setVariable [QGVAR(stopPVEH),[player,cursorTarget]]; publicVariableServer QGVAR(stopPVEH); ["",true] call EFUNC(main,displayText);
+#define AP_STOP_STATEMENT_ACE missionNamespace setVariable [QGVAR(stopPVEH),_target]; publicVariableServer QGVAR(stopPVEH); ["",true] call EFUNC(main,displayText);
+#define AP_STOP_COND cursorTarget isKindOf "CAManBase" && {side cursorTarget isEqualTo CIVILIAN} && {!(isPlayer cursorTarget)} && {alive cursorTarget} && {CHECK_DIST2D(player,cursorTarget,10)}
+#define AP_STOP_COND_ACE _target isKindOf "CAManBase" && {side _target isEqualTo CIVILIAN} && {!(isPlayer _target)} && {alive _target} && {CHECK_DIST2D(player,_target,10)}
+#define AP_STOP_KEYCODE \
+    if (AP_STOP_COND) then { \
+        AP_STOP_STATEMENT \
     }

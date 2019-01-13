@@ -53,17 +53,21 @@ private _iterations01 = [];
         
         // main module does not init sometimes, even with 'BIS_fnc_initModules_disableAutoActivation'
         // force init with 'bis_fnc_initmodules_activate'
-        _moduleMain setVariable ["BIS_fnc_initModules_disableAutoActivation",false,true]; // @todo check if public is required
-        _moduleMain setVariable ["bis_fnc_initmodules_activate",true,true]; // @todo check if public is required
+        _moduleMain setVariable ["BIS_fnc_initModules_disableAutoActivation",false]; // @todo check if public is required
+        _moduleMain setVariable ["bis_fnc_initmodules_activate",true]; // @todo check if public is required
 
         // main options
+        private _onCreated = {
+            [_this] call EFUNC(cache,disableCache);
+        };
+        
         _moduleMain setVariable ["#area",[_position,_radius,_radius,0,false,CIV_ZDIST]]; // gets passed to inAreaArray
         _moduleMain setVariable ["#debug",true];
         _moduleMain setVariable ["#useagents",true];
         _moduleMain setVariable ["#usepanicmode",true];
         _moduleMain setVariable ["#unitcount",count _houses];
         _moduleMain setVariable ["#unittypes",EGVAR(main,unitsCiv)];
-        _moduleMain setVariable ["#oncreated",{true}];
+        _moduleMain setVariable ["#oncreated",_onCreated];
         _moduleMain setVariable ["#ondeleted",{true}];
 
         // sync main module to trigger
@@ -86,14 +90,14 @@ private _iterations01 = [];
             _grp = createGroup sideLogic;
             _moduleSpawn = _grp createUnit ["ModuleCivilianPresenceUnit_F", _positionHouse, [], 0, "CAN_COLLIDE"];
 
-            _moduleSpawn setVariable ["BIS_fnc_initModules_disableAutoActivation",false,true]; // @todo check if public is required
-            _moduleSpawn setVariable ["bis_fnc_initmodules_activate",true,true]; // @todo check if public is required
+            _moduleSpawn setVariable ["BIS_fnc_initModules_disableAutoActivation",false]; // @todo check if public is required
+            _moduleSpawn setVariable ["bis_fnc_initmodules_activate",true]; // @todo check if public is required
 
             _grp = createGroup sideLogic;
             _moduleWaypoint = _grp createUnit ["ModuleCivilianPresenceSafeSpot_F", _positionHouse, [], 0, "CAN_COLLIDE"];
 
-            _moduleWaypoint setVariable ["BIS_fnc_initModules_disableAutoActivation",false,true]; // @todo check if public is required
-            _moduleWaypoint setVariable ["bis_fnc_initmodules_activate",true,true]; // @todo check if public is required
+            _moduleWaypoint setVariable ["BIS_fnc_initModules_disableAutoActivation",false]; // @todo check if public is required
+            _moduleWaypoint setVariable ["bis_fnc_initmodules_activate",true]; // @todo check if public is required
 
             // waypoint options
             _moduleWaypoint setVariable ["#type",1];

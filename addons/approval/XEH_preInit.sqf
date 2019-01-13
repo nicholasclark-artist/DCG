@@ -16,7 +16,7 @@ PREP(handleClient);
 PREP(handleQuestion);
 PREP(handleHostile);
 PREP(handleHint);
-PREP(handleHalt);
+PREP(handleStop);
 PREP(spawnHostile);
 
 GVAR(regions) = [];

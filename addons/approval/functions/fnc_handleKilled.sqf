@@ -31,30 +31,19 @@ if (isNull _unit || {isNull _killer} || {_killer isEqualTo _unit} || {side _kill
     false
 };
 
-private _unitValue = 0;
+private _unitValue = call {
+    if (_unit isKindOf "CAManBase" && {!(side group _unit isEqualTo CIVILIAN)}) exitWith {AP_MAN};
+    if (_unit isKindOf "CAManBase" && {side group _unit isEqualTo CIVILIAN}) exitWith {AP_CIV};
+    if (_unit isKindOf "Car") exitWith {AP_CAR};
+    if (_unit isKindOf "Tank") exitWith {AP_TANK};
+    if (_unit isKindOf "Air") exitWith {AP_AIR};
+    if (_unit isKindOf "Ship") exitWith {AP_SHIP};
 
-call {
-    if (_unit isKindOf "Man" && {!(side group _unit isEqualTo CIVILIAN)}) exitWith {
-        _unitValue = AP_MAN;
-    };
-    if (_unit isKindOf "Man" && {side group _unit isEqualTo CIVILIAN}) exitWith {
-        _unitValue = AP_CIV;
-    };
-    if (_unit isKindOf "Car") exitWith {
-        _unitValue = AP_CAR;
-    };
-    if (_unit isKindOf "Tank") exitWith {
-        _unitValue = AP_TANK;
-    };
-    if (_unit isKindOf "Air") exitWith {
-        _unitValue = AP_AIR;
-    };
-    if (_unit isKindOf "Ship") exitWith {
-        _unitValue = AP_SHIP;
-    };
+    0
 };
 
-if (side group _unit isEqualTo EGVAR(main,playerSide) || {side group _unit isEqualTo CIVILIAN}) then {
+// subtract value if unit not enemy
+if !(side group _unit isEqualTo EGVAR(main,enemySide)) then {
     _unitValue = _unitValue * -1;
 };
 

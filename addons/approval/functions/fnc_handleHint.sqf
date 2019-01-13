@@ -34,7 +34,7 @@ if !(isNil "_region") then {
 
             [_hint,true] call EFUNC(main,displayText);
 
-            private _mrk = createMarkerLocal [QUOTE(DOUBLES(ADDON,hintMarker)),_position];
+            private _mrk = createMarkerLocal [QGVAR(hintMarker),_position];
             _mrk setMarkerBrushLocal "SolidBorder";
             _mrk setMarkerColorLocal "ColorBlack";
             _mrk setMarkerSizeLocal _size;

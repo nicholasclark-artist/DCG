@@ -13,10 +13,10 @@ if !(isMultiplayer) exitWith {};
         
         QGVAR(questionPVEH) addPublicVariableEventHandler {(_this select 1) call FUNC(handleQuestion)};
         QGVAR(hintPVEH) addPublicVariableEventHandler {[_this select 1,0] call FUNC(handleHint)};
-        QGVAR(stopPVEH) addPublicVariableEventHandler {[_this select 1] spawn FUNC(handleHalt)};
+        QGVAR(stopPVEH) addPublicVariableEventHandler {(_this select 1) call FUNC(handleStop)};
         QGVAR(addPVEH) addPublicVariableEventHandler {
             (_this select 1) call FUNC(addValue);
-            LOG_1("Client add AV: %1",_this);
+            TRACE_1("Client add value",_this);
         };
 
         _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
