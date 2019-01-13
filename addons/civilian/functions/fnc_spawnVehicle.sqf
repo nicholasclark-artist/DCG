@@ -45,7 +45,7 @@ private _grp = [_start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 
         GVAR(drivers) pushBack _driver;
 
-        TRACE_3("Spawned vehicle",getPos _driver, typeOf _veh, waypoints _driver);
+        TRACE_5("Spawned vehicle",getPos _driver, typeOf _veh, _start, _mid, _end);
     },
     [_grp,_start,_mid,_end,_player]
 ] call CBA_fnc_waitUntilAndExecute;
