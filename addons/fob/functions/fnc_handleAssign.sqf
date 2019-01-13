@@ -25,6 +25,7 @@ unassignCurator _curator;
 unassignCurator _previousCurator;
 
 // a delay between unassigning and assigning curator is required
+// @todo assign new curator on condition check instead of simple wait
 [
     {
         INFO_3("Assigning unit: %1 to curator: %2. Previous assigned curator: %3",_this select 1,_this select 0,_this select 2);
