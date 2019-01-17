@@ -6,8 +6,6 @@ __________________________________________________________________*/
 
 if !(isMultiplayer) exitWith {};
 
-
-
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}},
     {
