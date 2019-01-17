@@ -12,7 +12,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define REGION_SIZE 2000
+#define REGION_SIZE (worldSize/round(worldSize/6000))
 
 params [
     ["_data",[],[[]]]
@@ -25,10 +25,11 @@ params [
         AP_DEFAULT
     };
 
-    private _location = createLocation ["Name", ASLtoAGL _x, REGION_SIZE, REGION_SIZE];
+    private _location = createLocation ["Name", ASLtoAGL _x, REGION_SIZE*0.5, REGION_SIZE*0.5];
     _location setRectangular true;
     _location setVariable [QGVAR(regionValue),_value];
+    
     GVAR(regions) pushBack _location;
-} forEach ([EGVAR(main,center),REGION_SIZE*2,worldSize] call EFUNC(main,findPosGrid));
+} forEach ([EGVAR(main,center),REGION_SIZE,worldSize] call EFUNC(main,findPosGrid));
 
 nil
