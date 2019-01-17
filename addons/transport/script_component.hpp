@@ -21,12 +21,10 @@
 #define MRK_INFIL(VAR) ([VAR,"infil"] joinString "_")
 #define MRK_EXFIL(VAR) ([VAR,"exfil"] joinString "_")
 
-#define EH_INFIL ([QUOTE(ADDON),"infilLZ"] joinString "_")
-#define EH_EXFIL ([QUOTE(ADDON),"exfilLZ"] joinString "_")
-
 #define TR_SPAWN_DIST 4000
 #define TR_IDLE_TIME 300
 #define TR_CHECKDIST 15
+
 #define TR_STATE_WAITING "WAITING"
 #define TR_STATE_READY "READY"
 #define TR_STATE_NOTREADY "NOT READY"

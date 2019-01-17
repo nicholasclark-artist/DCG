@@ -2,13 +2,14 @@
 Author:
 Nicholas Clark (SENSEI)
 
-Description: player transport request
+Description: 
+player transport request
 
 Arguments:
 0: transport vehicle classname <STRING>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -16,7 +17,7 @@ GVAR(status) = TR_STATE_WAITING;
 
 [TR_STR_EXFIL,true] call EFUNC(main,displayText);
 
-[EH_EXFIL, "onMapSingleClick", {
+[QGVAR(exfil), "onMapSingleClick", {
     params [
         ["_units",[],[[]]],
         ["_pos",[],[[0,0,0]]],
@@ -38,10 +39,10 @@ GVAR(status) = TR_STATE_WAITING;
                 _exfilMrk setMarkerColor ([EGVAR(main,playerSide),true] call BIS_fnc_sideColor);
                 _exfilMrk setMarkerText format ["EXTRACTION LZ (%1)",name player];
 
-                [EH_EXFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
+                [QGVAR(exfil), "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
                 [TR_STR_INFIL,true] call EFUNC(main,displayText);
 
-                [EH_INFIL, "onMapSingleClick", {
+                [QGVAR(infil), "onMapSingleClick", {
                     _class = _this select 4;
                     _exfil = _this select 5;
                     _exfilMrk = _this select 6;
@@ -60,7 +61,7 @@ GVAR(status) = TR_STATE_WAITING;
                                     _infilMrk setMarkerColor ([EGVAR(main,playerSide),true] call BIS_fnc_sideColor);
                                     _infilMrk setMarkerText format ["INSERTION LZ (%1)",name player];
 
-                                    [EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
+                                    [QGVAR(infil), "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
                                     missionNamespace setVariable [QGVAR(requestPVEH),[player,_class,_exfil,_infil,_exfilMrk,_infilMrk]];
                                     publicVariableServer QGVAR(requestPVEH);
 
@@ -86,8 +87,8 @@ GVAR(status) = TR_STATE_WAITING;
         if !(COMPARE_STR(GVAR(status),TR_STATE_NOTREADY)) then {
             GVAR(status) = TR_STATE_READY;
             [TR_STR_CANCEL,true] call EFUNC(main,displayText);
-            [EH_EXFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-            [EH_INFIL, "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
+            [QGVAR(exfil), "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
+            [QGVAR(infil), "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
             deleteMarker MRK_INFIL(name player);
             deleteMarker MRK_EXFIL(name player);
         };
@@ -95,3 +96,5 @@ GVAR(status) = TR_STATE_WAITING;
     [],
     30
 ] call CBA_fnc_waitAndExecute;
+
+nil
