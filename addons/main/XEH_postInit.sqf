@@ -78,8 +78,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 } forEach GVAR(locations);
 
 // create world size position grid
-// @todo redo so grid covers entire map (on all terrains)
-GVAR(grid) = [EGVAR(main,center),1000,worldSize,0,0,0] call FUNC(findPosGrid);
+GVAR(grid) = [EGVAR(main,center),worldSize/round(worldSize/1000),worldSize,0,0,0] call FUNC(findPosGrid);
 
 [FUNC(handleCleanup), 120, []] call CBA_fnc_addPerFrameHandler;
 
