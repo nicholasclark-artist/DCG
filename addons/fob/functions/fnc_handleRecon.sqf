@@ -22,18 +22,10 @@ params [
 ];
 
 if (_ifRecon) then {
-    private _type = "";
-
-    call {
-        if (_side isEqualTo WEST) exitWith {
-            _type = "B_UAV_02_F";
-        };
-        if (_side isEqualTo EAST) exitWith {
-            _type = "O_UAV_02_F";
-        };
-        if (_side isEqualTo RESISTANCE) exitWith {
-            _type = "I_UAV_02_F";
-        };
+    private _type = call {
+        if (_side isEqualTo WEST) exitWith {"B_UAV_02_F"};
+        if (_side isEqualTo EAST) exitWith {"O_UAV_02_F"};
+        if (_side isEqualTo INDEPENDENT) exitWith {"I_UAV_02_F"};
     };
 
     GVAR(uav) = createVehicle [_type, _position, [], 0, "FLY"];
@@ -44,6 +36,7 @@ if (_ifRecon) then {
 
     {
         _x setCaptive true;
+        _x setBehaviour "CARELESS"; // should fix uav ai firing on enemies 
     } forEach crew GVAR(uav);
 
     GVAR(uav) lockDriver true;
@@ -56,9 +49,5 @@ if (_ifRecon) then {
     _wp setWaypointLoiterType "CIRCLE_L";
     _wp setWaypointLoiterRadius (GVAR(range)*1.5);
 } else {
-    {
-        GVAR(uav) deleteVehicleCrew _x;
-    } forEach crew GVAR(uav);
-
-    deleteVehicle GVAR(uav);
+    GVAR(uav) call CBA_fnc_deleteEntity;
 };
