@@ -38,7 +38,7 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(notify),
+    QGVAR(hostileHint),
     "CHECKBOX",
     ["Enable Hostile Notification","Notify players when hostile entities spawn."],
     COMPONENT_NAME,

@@ -22,7 +22,7 @@ if !(_players isEqualTo []) then {
         if (random 1 > AP_CONVERT2(_pos)) then {
             _ret = [_player] call FUNC(spawnHostile);
 
-            if (GVAR(notify) && {_ret}) then {
+            if (GVAR(hostileHint) && {_ret}) then {
                 ["Aerial recon shows hostile civilian activity in your region!", true] remoteExecCall [QEFUNC(main,displayText), allPlayers, false];
             };
         };
