@@ -9,7 +9,7 @@ Arguments:
 0: positions and animal classes <ARRAY>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -27,3 +27,5 @@ __________________________________________________________________*/
         };
     };
 } forEach (_this select 0);
+
+nil
