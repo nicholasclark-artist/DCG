@@ -85,7 +85,7 @@ __________________________________________________________________*/
     "OPF_F",
     true,
     {
-        [0] call FUNC(parseFactions);
+        [0] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
 
@@ -97,7 +97,7 @@ __________________________________________________________________*/
     "diver,vr ,pilot,survivor,crew,rifleman (unarmed)",
     true,
     {
-        [0] call FUNC(parseFactions);
+        [0] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
 
@@ -109,7 +109,7 @@ __________________________________________________________________*/
     "BLU_F",
     true,
     {
-        [1] call FUNC(parseFactions);
+        [1] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
 
@@ -121,7 +121,7 @@ __________________________________________________________________*/
     "diver,vr ,pilot,survivor,crew,rifleman (unarmed)",
     true,
     {
-        [1] call FUNC(parseFactions);
+        [1] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
 
@@ -133,7 +133,7 @@ __________________________________________________________________*/
     "IND_F",
     true,
     {
-        [2] call FUNC(parseFactions);
+        [2] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
 
@@ -145,7 +145,7 @@ __________________________________________________________________*/
     "diver,vr ,pilot,survivor,crew,rifleman (unarmed)",
     true,
     {
-        [2] call FUNC(parseFactions);
+        [2] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
 
@@ -157,7 +157,7 @@ __________________________________________________________________*/
     "CIV_F",
     true,
     {
-        [3] call FUNC(parseFactions);
+        [3] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
 
@@ -169,6 +169,6 @@ __________________________________________________________________*/
     "driver,vr ,pilot,construction,kart",
     true,
     {
-        [3] call FUNC(parseFactions);
+        [3] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
