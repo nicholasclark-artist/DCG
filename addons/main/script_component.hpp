@@ -20,7 +20,7 @@
         format ["Are you sure you want to overwrite the saved data for %1?", SAVE_SCENARIO_ID], \
         TITLE, \
         "Data saved to server profile.", \
-        {publicVariableServer QGVAR(saveDataPVEH)} \
+        {[QGVAR(saveData),[]] call CBA_fnc_serverEvent} \
     ] spawn FUNC(displayGUIMessage)
 
 #define SAVE_ACTION_NAME_DELETE "Delete All Saved Mission Data"
@@ -30,5 +30,5 @@
         "Are you sure you want to permenantly delete ALL saved mission data?", \
         TITLE, \
         "Data deleted from server profile.", \
-        {publicVariableServer QGVAR(deleteDataPVEH);} \
+        {[QGVAR(deleteData),[]] call CBA_fnc_serverEvent} \
     ] spawn FUNC(displayGUIMessage)

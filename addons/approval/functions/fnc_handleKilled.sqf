@@ -50,8 +50,7 @@ if !(side group _unit isEqualTo EGVAR(main,enemySide)) then {
 if (isServer) then {
     [getPos _unit, _unitValue] call FUNC(addValue);
 } else {
-    missionNamespace setVariable [QGVAR(addPVEH),[getPos _unit, _unitValue]];
-    publicVariableServer QGVAR(addPVEH);
+    [QGVAR(hint), [getPos _unit, _unitValue]] call CBA_fnc_serverEvent;
 };
 
 true

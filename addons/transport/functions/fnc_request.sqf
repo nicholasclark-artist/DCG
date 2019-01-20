@@ -62,9 +62,9 @@ GVAR(status) = TR_STATE_WAITING;
                                     _infilMrk setMarkerText format ["INSERTION LZ (%1)",name player];
 
                                     [QGVAR(infil), "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-                                    missionNamespace setVariable [QGVAR(requestPVEH),[player,_class,_exfil,_infil,_exfilMrk,_infilMrk]];
-                                    publicVariableServer QGVAR(requestPVEH);
 
+                                    [QGVAR(request), [player,_class,_exfil,_infil,_exfilMrk,_infilMrk]] call CBA_fnc_serverEvent;
+                                    
                                     GVAR(status) = TR_STATE_NOTREADY;
                                 } else {
                                     [TR_STR_CLOSE,true] call EFUNC(main,displayText);

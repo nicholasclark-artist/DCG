@@ -9,7 +9,7 @@
 #include "\d\dcg\addons\main\script_macros.hpp"
 
 #define AP_HINT_NAME "Check Approval in Region"
-#define AP_HINT_STATEMENT missionNamespace setVariable [QGVAR(hintPVEH),player]; publicVariableServer QGVAR(hintPVEH);
+#define AP_HINT_STATEMENT [QGVAR(hint), [player]] call CBA_fnc_serverEvent
 #define AP_HINT_COND true
 #define AP_HINT_KEYCODE \
     if (AP_HINT_COND) then { \
@@ -17,8 +17,8 @@
     }
 
 #define AP_QUESTION_NAME "Question Person"
-#define AP_QUESTION_STATEMENT missionNamespace setVariable [QGVAR(questionPVEH),[player,cursorTarget]]; publicVariableServer QGVAR(questionPVEH);
-#define AP_QUESTION_STATEMENT_ACE missionNamespace setVariable [QGVAR(questionPVEH),[player,_target]]; publicVariableServer QGVAR(questionPVEH);
+#define AP_QUESTION_STATEMENT [QGVAR(question), [player,cursorTarget]] call CBA_fnc_serverEvent
+#define AP_QUESTION_STATEMENT_ACE [QGVAR(question), [player,_target]] call CBA_fnc_serverEvent
 #define AP_QUESTION_COND cursorTarget isKindOf "CAManBase" && {side cursorTarget isEqualTo CIVILIAN} && {!(isPlayer cursorTarget)} && {alive cursorTarget} && {CHECK_DIST2D(player,cursorTarget,10)}
 #define AP_QUESTION_COND_ACE _target isKindOf "CAManBase" && {side _target isEqualTo CIVILIAN} && {!(isPlayer _target)} && {alive _target} && {CHECK_DIST2D(player,_target,10)}
 #define AP_QUESTION_KEYCODE \
@@ -27,8 +27,8 @@
     }
 
 #define AP_STOP_NAME "Stop Person"
-#define AP_STOP_STATEMENT missionNamespace setVariable [QGVAR(stopPVEH),[player,cursorTarget]]; publicVariableServer QGVAR(stopPVEH); ["",true] call EFUNC(main,displayText);
-#define AP_STOP_STATEMENT_ACE missionNamespace setVariable [QGVAR(stopPVEH),_target]; publicVariableServer QGVAR(stopPVEH); ["",true] call EFUNC(main,displayText);
+#define AP_STOP_STATEMENT [QGVAR(stop), [player,cursorTarget]] call CBA_fnc_serverEvent; ["",true] call EFUNC(main,displayText)
+#define AP_STOP_STATEMENT_ACE [QGVAR(stop), [player,_target]] call CBA_fnc_serverEvent; ["",true] call EFUNC(main,displayText)
 #define AP_STOP_COND cursorTarget isKindOf "CAManBase" && {side cursorTarget isEqualTo CIVILIAN} && {!(isPlayer cursorTarget)} && {alive cursorTarget} && {CHECK_DIST2D(player,cursorTarget,10)}
 #define AP_STOP_COND_ACE _target isKindOf "CAManBase" && {side _target isEqualTo CIVILIAN} && {!(isPlayer _target)} && {alive _target} && {CHECK_DIST2D(player,_target,10)}
 #define AP_STOP_KEYCODE \

@@ -15,6 +15,7 @@ __________________________________________________________________*/
 
 (_this select 0) setMarkerAlpha 0;
 GVAR(debugMarkers) pushBack (_this select 0);
-publicVariableServer QGVAR(debugMarkers);
+
+[QGVAR(debugMarkers),[]] call CBA_fnc_serverEvent;
 
 nil

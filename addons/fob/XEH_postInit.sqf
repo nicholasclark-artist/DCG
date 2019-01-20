@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(isMultiplayer) exitWith {};
+POSTINIT;
 
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}},
@@ -12,13 +12,12 @@ if !(isMultiplayer) exitWith {};
         if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {
             LOG(MSG_EXIT);
         };
-
-        call FUNC(init);
-
-        QGVAR(createPVEH) addPublicVariableEventHandler {[_this select 1] call FUNC(handleCreate)};
-        QGVAR(deletePVEH) addPublicVariableEventHandler {[_this select 1] call FUNC(handleDelete)};
-        QGVAR(transferPVEH) addPublicVariableEventHandler {(_this select 1) call FUNC(handleTransfer)};
-        QGVAR(assignPVEH) addPublicVariableEventHandler {[GVAR(curator),_this select 1] call FUNC(handleAssign)};
+        
+        // eventhandlers
+        [QGVAR(create), {_this call FUNC(handleCreate)}] call CBA_fnc_addEventHandler;
+        [QGVAR(delete), FUNC(handleDelete)] call CBA_fnc_addEventHandler;
+        [QGVAR(transfer), {_this call FUNC(handleTransfer)}] call CBA_fnc_addEventHandler;
+        [QGVAR(assign), {_this call FUNC(handleAssign)}] call CBA_fnc_addEventHandler;
 
         addMissionEventHandler ["HandleDisconnect",{
             if ((_this select 0) isEqualTo getAssignedCuratorUnit GVAR(curator)) then {
@@ -27,13 +26,13 @@ if !(isMultiplayer) exitWith {};
             false
         }];
 
+        // load data from server profile
         call FUNC(handleLoadData);
 
-        [[],{
-            if (hasInterface) then {
-                call FUNC(handleClient);
-            };
-         }] remoteExecCall [QUOTE(BIS_fnc_call),0,true];
+        call FUNC(init);
+
+        // setup clients
+        remoteExecCall [QFUNC(handleClient),0,true];
     }
 ] call CBA_fnc_waitUntilAndExecute;
 

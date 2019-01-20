@@ -13,6 +13,8 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #include "\a3\editor_f\Data\Scripts\dikCodes.h"
 
+if (!hasInterface) exitWith {};
+
 [QUOTE(ADDON),"Forward Operating Base",{},{true},{call FUNC(getChildren)}] call EFUNC(main,setAction);
 
 // if ace interaction menu is enabled add transfer action to receiving unit's menu, instead of self menu
@@ -30,15 +32,7 @@ if (CHECK_ADDON_1(ace_interact_menu)) then {
 
 player addEventHandler ["Respawn",{
     if ((_this select 1) isEqualTo getAssignedCuratorUnit GVAR(curator)) then {
-        [
-            {
-                missionNamespace setVariable [QGVAR(assignPVEH),player];
-                publicVariableServer QGVAR(assignPVEH);
-            },
-            [],
-            5
-        ] call CBA_fnc_waitAndExecute;
+        [CBA_fnc_serverEvent, [QGVAR(assign), [GVAR(curator), player]], 5] call CBA_fnc_waitAndExecute;
     };
 }];
 
-INFO("Client setup finished");
