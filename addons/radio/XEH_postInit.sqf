@@ -4,7 +4,7 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(isMultiplayer) exitWith {};
+POSTINIT;
 
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}},
