@@ -4,64 +4,67 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-LOG(MSG_INIT);
+PREINIT;
 
 MAIN_ADDON = false;
 
 PREP(initSettings);
-PREP(debug);
+PREP(displayText);
+PREP(displayGUIMessage);
 PREP(handleLoadData);
 PREP(handleCleanup);
-PREP(setDebugMarker);
-PREP(removeDebugMarker);
-PREP(armory);
-PREP(cleanup);
+PREP(handleClient);
 PREP(findPosHouse);
-PREP(replaceString);
 PREP(findPosOverwatch);
 PREP(findPosGrid);
 PREP(findPosSafe);
 PREP(findPosTerrain);
-PREP(getNearPlayers);
-PREP(getPool);
-PREP(saveData);
-PREP(loadDataScenario);
-PREP(loadDataAddon);
 PREP(inBuilding);
 PREP(inLOS);
 PREP(isPosSafe);
-PREP(displayText);
-PREP(displayGUIMessage);
-PREP(removeAction);
-PREP(removeParticle);
+PREP(getNearPlayers);
+PREP(getPool);
+PREP(getUnitCount);
 PREP(setAction);
-PREP(shuffle);
 PREP(setOwner);
 PREP(setSide);
 PREP(setAnim);
-PREP(getUnitCount);
 PREP(setTimer);
 PREP(setUnitDamaged);
 PREP(setSurrender);
 PREP(setVehDamaged);
 PREP(setWaypointPos);
 PREP(setPosSafe);
+PREP(setPool);
+PREP(setMapLocations);
+PREP(setDebugMarker);
 PREP(spawnComposition);
 PREP(spawnGroup);
 PREP(spawnReinforcements);
 PREP(spawnSniper);
 PREP(spawnStatic);
-PREP(splitGroup);
 PREP(exportComposition);
 PREP(exportNetworkTraffic);
 PREP(exportVehicleClasses);
 PREP(exportFactionClasses);
-PREP(parseFactions);
+PREP(replaceString);
+PREP(removeAction);
+PREP(removeDebugMarker);
+PREP(removeParticle);
+PREP(saveData);
+PREP(loadDataScenario);
+PREP(loadDataAddon);
+PREP(armory);
+PREP(cleanup);
+PREP(debug);
+PREP(splitGroup);
 PREP(landAt);
+PREP(shuffle);
 
 GVAR(cleanup) = [];
 
 // map variables
+GVAR(grid) = [];
 GVAR(locations) = [];
 GVAR(locals) = [];
 GVAR(hills) = [];

@@ -6,7 +6,7 @@ __________________________________________________________________*/
 #define ACE_TYPES ["IEDUrbanBig_Remote_Mag","IEDUrbanSmall_Remote_Mag"]
 #define VANILLA_TYPES ["IEDUrbanBig_F","IEDUrbanSmall_F"]
 
-if !(isMultiplayer) exitWith {};
+POSTINIT;
 
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}},

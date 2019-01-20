@@ -12,6 +12,9 @@
 #define PREP_MODULE(folder) [] call compile preprocessFileLineNumbers QPATHTOF(folder\__PREP__.sqf)
 #define MSG_EXIT QUOTE(Exiting: ADDON version: VERSION)
 
+#define PREINIT if (!isServer) exitWith {LOG(MSG_EXIT)}; LOG(MSG_INIT)
+#define POSTINIT if (!isMultiplayer || {!isServer}) exitWith {LOG(MSG_EXIT)}
+
 #define HEADLESSCLIENT GVARMAIN(HC)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
 #define SETTINGS_INIT publicVariable QFUNC(initSettings); remoteExecCall [QFUNC(initSettings), -2, true]; call FUNC(initSettings)

@@ -8,7 +8,7 @@ __________________________________________________________________*/
 #define HILLS_TYPE ["Sheep_random_F","Goat_random_F"]
 #define ANIMAL_COUNT 24
 
-if !(isMultiplayer) exitWith {};
+POSTINIT;
 
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}}, 
