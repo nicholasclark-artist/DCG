@@ -12,6 +12,8 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+if (!hasInterface) exitWith {};
+
 {
     _x call EFUNC(main,setAction);
 } forEach [
