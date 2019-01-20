@@ -9,7 +9,9 @@ if !(isMultiplayer) exitWith {};
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}},
     {
-        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {LOG(MSG_EXIT)};
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {
+            LOG(MSG_EXIT);
+        };
         
         QGVAR(questionPVEH) addPublicVariableEventHandler {(_this select 1) call FUNC(handleQuestion)};
         QGVAR(hintPVEH) addPublicVariableEventHandler {[_this select 1,0] call FUNC(handleHint)};
@@ -19,8 +21,7 @@ if !(isMultiplayer) exitWith {};
             TRACE_1("Client add value",_this);
         };
 
-        _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
-        [_data] call FUNC(handleLoadData);
+        call FUNC(handleLoadData);
 
         [{
             [FUNC(handleHostile), GVAR(hostileCooldown), []] call CBA_fnc_addPerFrameHandler;

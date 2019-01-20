@@ -6,14 +6,13 @@ Description:
 handle loading data
 
 Arguments:
-0: saved data <ARRAY>
 
 Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_data"];
+private _data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
 
 if !(_data isEqualTo []) then {
     // @todo add support for loading units

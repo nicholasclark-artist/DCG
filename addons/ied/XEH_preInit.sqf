@@ -7,7 +7,6 @@ __________________________________________________________________*/
 LOG(MSG_INIT);
 
 PREP(initSettings);
-PREP(handleLoadData);
 PREP(handleIED);
 
 GVAR(list) = [];

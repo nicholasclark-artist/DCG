@@ -9,7 +9,9 @@ if !(isMultiplayer) exitWith {};
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}},
     {
-        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {LOG(MSG_EXIT)};
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {
+            LOG(MSG_EXIT);
+        };
         
         [[],{
             if (hasInterface) then {

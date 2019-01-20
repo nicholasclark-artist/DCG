@@ -9,7 +9,9 @@ if !(isMultiplayer) exitWith {};
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}},
     {
-        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {LOG(MSG_EXIT)};
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {
+            LOG(MSG_EXIT);
+        };
 
         call FUNC(init);
 
@@ -25,8 +27,7 @@ if !(isMultiplayer) exitWith {};
             false
         }];
 
-        _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
-        [_data] call FUNC(handleLoadData);
+        call FUNC(handleLoadData);
 
         [[],{
             if (hasInterface) then {

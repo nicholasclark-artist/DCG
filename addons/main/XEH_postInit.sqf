@@ -131,8 +131,7 @@ QGVAR(debugMarkers) addPublicVariableEventHandler {
         }, 1800, []] call CBA_fnc_addPerFrameHandler;
 
         // load saved data
-        _data = [QUOTE(ADDON)] call FUNC(loadDataAddon);
-        [_data] call FUNC(handleLoadData);
+        call FUNC(handleLoadData);
     }
 ] call CBA_fnc_waitUntilAndExecute;
 

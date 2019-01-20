@@ -13,8 +13,10 @@ if !(isMultiplayer) exitWith {};
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}}, 
     {
-        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {LOG(MSG_EXIT)};
-
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {
+            LOG(MSG_EXIT);
+        };
+        
         [
             {diag_tickTime > (_this + 5)}, // possible fix for civ module init failing sometimes
             {EGVAR(main,locations) call FUNC(handleUnit)},

@@ -6,15 +6,18 @@ Description:
 handle loading data
 
 Arguments:
-0: saved data <ARRAY>
 
 Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_data"];
+private _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
 
-[[_data] call FUNC(findLocation),[] call FUNC(findLocation)] select (_data isEqualTo []);
+if !(_data isEqualTo []) then {
+    [_data] call FUNC(findLocation);
+} else {
+    [] call FUNC(findLocation);
+};
 
 nil

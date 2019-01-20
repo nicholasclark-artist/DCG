@@ -9,9 +9,10 @@ if !(isMultiplayer) exitWith {};
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}},
     {
-        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {LOG(MSG_EXIT)};
-       
-        _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
-        [_data] call FUNC(handleLoadData);
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {
+            LOG(MSG_EXIT);
+        };
+
+        call FUNC(handleLoadData);
     }
 ] call CBA_fnc_waitUntilAndExecute;
