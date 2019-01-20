@@ -4,7 +4,12 @@ Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if !(isMultiplayer) exitWith {};
+if (!isMultiplayer || {!(GVAR(enable))}) exitWith {
+    // set to true even on exit, so other addons can exit 'CBA_fnc_waitUntilAndExecute'
+    MAIN_ADDON = true;
+    publicVariable QUOTE(MAIN_ADDON);
+    LOG(MSG_EXIT);
+};
 
 // get map locations from config
 _cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";

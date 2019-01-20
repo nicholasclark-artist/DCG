@@ -10,6 +10,7 @@
 #endif
 
 #define PREP_MODULE(folder) [] call compile preprocessFileLineNumbers QPATHTOF(folder\__PREP__.sqf)
+#define MSG_EXIT QUOTE(Exiting: ADDON version: VERSION)
 
 #define HEADLESSCLIENT GVARMAIN(HC)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
@@ -18,7 +19,7 @@
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> QUOTE(CfgPatches) >> QUOTE(PATCH)))
-#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QGVARMAIN(VAR)) && {EGVAR(VAR,enable)})
+#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(GVARMAIN(VAR)) && {EGVAR(VAR,enable)})
 #define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= (DIST)
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
@@ -26,6 +27,8 @@
 
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
+
+#define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
 
 // fob cost macros
 #define FOB_COST_MAN 2

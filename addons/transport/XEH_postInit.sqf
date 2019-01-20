@@ -9,7 +9,7 @@ if !(isMultiplayer) exitWith {};
 [
     {MAIN_ADDON && {CHECK_POSTBRIEFING}},
     {
-        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {};
+        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {LOG(MSG_EXIT)};
         
         QGVAR(requestPVEH) addPublicVariableEventHandler {
             (_this select 1) call FUNC(handleRequest);
