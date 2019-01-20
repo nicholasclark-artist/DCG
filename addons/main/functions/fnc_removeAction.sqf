@@ -19,7 +19,7 @@ params [
     "_action"
 ];
 
-if (CHECK_ADDON_1("ace_interact_menu")) then {
+if (CHECK_ADDON_1(ace_interact_menu)) then {
     [_obj,_type,_action] call ace_interact_menu_fnc_removeActionFromObject;
 } else {
     _actionIndex = _action select 0;

@@ -25,7 +25,7 @@ if (typeOf _obj isKindOf "LandVehicle") exitWith {
         moveOut _x;
         _x setVelocity [0, 0, 0];
         _x setBehaviour "CARELESS";
-        if (CHECK_ADDON_1("ace_captives")) then {
+        if (CHECK_ADDON_1(ace_captives)) then {
             [_x,true] call ace_captives_fnc_setSurrendered;
         } else {
             [_x,"AmovPercMstpSsurWnonDnon"] call FUNC(setAnim);
@@ -49,7 +49,7 @@ if (typeOf _obj isKindOf "Ship") exitWith {
 doStop _obj;
 _obj setBehaviour "CARELESS";
 
-if (CHECK_ADDON_1("ace_captives")) then {
+if (CHECK_ADDON_1(ace_captives)) then {
     [_obj,true] call ace_captives_fnc_setSurrendered;
 } else {
     [_obj,"AmovPercMstpSsurWnonDnon"] call FUNC(setAnim);

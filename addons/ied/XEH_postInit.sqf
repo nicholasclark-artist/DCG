@@ -15,7 +15,7 @@ if !(isMultiplayer) exitWith {};
         _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
         [_data] call FUNC(handleLoadData);
 
-        if !(CHECK_ADDON_1("ace_explosives")) then {
+        if !(CHECK_ADDON_1(ace_explosives)) then {
             [FUNC(handleIED), 1, []] call CBA_fnc_addPerFrameHandler;
         };
 

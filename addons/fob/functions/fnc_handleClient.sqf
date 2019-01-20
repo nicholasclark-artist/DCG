@@ -16,7 +16,7 @@ __________________________________________________________________*/
 [QUOTE(ADDON),"Forward Operating Base",{},{true},{call FUNC(getChildren)}] call EFUNC(main,setAction);
 
 // if ace interaction menu is enabled add transfer action to receiving unit's menu, instead of self menu
-if (CHECK_ADDON_1("ace_interact_menu")) then {
+if (CHECK_ADDON_1(ace_interact_menu)) then {
     _action = [QGVAR(transfer), FOB_TRANSFER_NAME, "", {FOB_TRANSFER_STATEMENT_ACE}, {FOB_TRANSFER_COND_ACE}, {}, []] call ace_interact_menu_fnc_createAction;
     ["CAManBase", 0, ["ACE_MainActions"],_action,true] call ace_interact_menu_fnc_addActionToClass;
 };

@@ -14,11 +14,11 @@ __________________________________________________________________*/
 
 if !(hasInterface) exitWith {};
 
-if (CHECK_ADDON_1("acre_main")) exitWith {
+if (CHECK_ADDON_1(acre_main)) exitWith {
     call FUNC(setRadioACRE);
 };
 
-if (CHECK_ADDON_1("task_force_radio")) exitWith {
+if (CHECK_ADDON_1(task_force_radio)) exitWith {
     call FUNC(setRadioTFAR);
 };
 

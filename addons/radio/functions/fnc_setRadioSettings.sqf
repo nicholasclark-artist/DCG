@@ -15,7 +15,7 @@ __________________________________________________________________*/
 #define NETWORK_COUNT 6
 #define ACRE_BASERADIOS ["ACRE_PRC343","ACRE_PRC148","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_SEM52SL"]
 
-if (CHECK_ADDON_1("acre_main")) then {
+if (CHECK_ADDON_1(acre_main)) then {
     {
         [_x, "default", PRESET] call acre_api_fnc_copyPreset;
     } forEach ACRE_BASERADIOS;
@@ -46,7 +46,7 @@ if (CHECK_ADDON_1("acre_main")) then {
 
 if (isServer) then {
     // TFAR settings, cast to clients with "server" param
-    if (CHECK_ADDON_1("task_force_radio")) then {
+    if (CHECK_ADDON_1(task_force_radio)) then {
         _testSetting = "tf_same_sw_frequencies_for_side";
 
         [

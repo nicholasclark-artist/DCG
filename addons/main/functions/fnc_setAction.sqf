@@ -40,7 +40,7 @@ params [
 
 private _actions = [];
 
-if (CHECK_ADDON_1("ace_interact_menu")) then {
+if (CHECK_ADDON_1(ace_interact_menu)) then {
     private _addAction = [_id,_name,"",_statement,_condition,_child,_params,_pos] call ace_interact_menu_fnc_createAction;
     _path = [_obj, _type, _path, _addAction] call ace_interact_menu_fnc_addActionToObject;
     _actions append _path;

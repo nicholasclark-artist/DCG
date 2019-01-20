@@ -15,7 +15,7 @@ __________________________________________________________________*/
 #define ACE_TYPES ["IEDUrbanBig_Remote_Mag","IEDUrbanSmall_Remote_Mag"]
 #define VANILLA_TYPES ["IEDUrbanBig_F","IEDUrbanSmall_F"]
 #define CREATE_IED(POS) \
-    if !(CHECK_ADDON_1("ace_explosives")) then { \
+    if !(CHECK_ADDON_1(ace_explosives)) then { \
         _pos = POS getPos [5, random 360]; \
         _pos set [2,0]; \
         _ied = createSimpleObject [selectRandom VANILLA_TYPES, AGLtoASL _pos]; \

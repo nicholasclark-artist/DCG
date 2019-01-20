@@ -19,7 +19,7 @@ __________________________________________________________________*/
     [QGVAR(hint),AP_HINT_NAME,{AP_HINT_STATEMENT},{AP_HINT_COND},{},[],player,1,ACTIONPATH]
 ];
 
-if (CHECK_ADDON_1("ace_interact_menu")) then {
+if (CHECK_ADDON_1(ace_interact_menu)) then {
     private _action = [QGVAR(stop), AP_STOP_NAME, "", {AP_STOP_STATEMENT_ACE}, {AP_STOP_COND_ACE}, {}, []] call ace_interact_menu_fnc_createAction;
     ["CAManBase", 0, ["ACE_MainActions"],_action,true] call ace_interact_menu_fnc_addActionToClass;
     private _action = [QGVAR(question), AP_QUESTION_NAME, "", {AP_QUESTION_STATEMENT_ACE}, {AP_QUESTION_COND_ACE}, {}, []] call ace_interact_menu_fnc_createAction;

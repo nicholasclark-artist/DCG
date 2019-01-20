@@ -59,7 +59,7 @@ clearBackpackCargoGlobal GVAR(anchor);
 // setup anchor and location on all machines
 [[],{
     if (hasInterface) then {
-        if (CHECK_ADDON_1("ace_cargo")) then {
+        if (CHECK_ADDON_1(ace_cargo)) then {
             [GVAR(anchor), false] call ace_cargo_fnc_makeLoadable;
         };
 

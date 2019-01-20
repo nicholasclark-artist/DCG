@@ -17,7 +17,7 @@
 
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
-#define CHECK_ADDON_1(PATCH) (isClass (configfile >> 'CfgPatches' >> PATCH))
+#define CHECK_ADDON_1(PATCH) (isClass (configfile >> QUOTE(CfgPatches) >> QUOTE(PATCH)))
 #define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(QGVARMAIN(VAR)) && {EGVAR(VAR,enable)})
 #define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= (DIST)
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)

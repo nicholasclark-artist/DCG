@@ -15,7 +15,7 @@ __________________________________________________________________*/
 private ["_action"];
 private _actions = [];
 
-if (CHECK_ADDON_1("ace_interact_menu")) then {
+if (CHECK_ADDON_1(ace_interact_menu)) then {
     _action = [QGVAR(create), FOB_CREATE_NAME, "", {FOB_CREATE_STATEMENT}, {FOB_CREATE_COND}, {}, []] call ace_interact_menu_fnc_createAction;
     _actions pushBack [_action, [], player];
 

@@ -16,7 +16,7 @@ __________________________________________________________________*/
 
 if !(hasInterface) exitWith {};
 
-if (CHECK_ADDON_1("acre_main")) then {
+if (CHECK_ADDON_1(acre_main)) then {
     // ACRE workaround, disable random button to prevent inventory desync
     [
         missionNamespace,
