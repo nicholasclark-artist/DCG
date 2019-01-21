@@ -7,7 +7,7 @@ __________________________________________________________________*/
 POSTINIT;
 
 [
-    {MAIN_ADDON && {CHECK_POSTBRIEFING}},
+    {MAIN_ADDON && {CHECK_INGAME}},
     {
         if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {
             LOG(MSG_EXIT);

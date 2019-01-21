@@ -48,7 +48,7 @@ remoteExecCall [QFUNC(handleClient),0,true];
 
 // everything that needs to run after CBA settings are adjusted (post briefing)
 [
-    {CHECK_POSTBRIEFING},
+    {CHECK_INGAME},
     {
         // autosave handler 
         [{
