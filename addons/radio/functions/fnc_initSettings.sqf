@@ -11,15 +11,18 @@ Return:
 bool
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define CATEGORY_ACRE [COMPONENT_NAME,"ACRE2 Settings"]
+#define CATEGORY_TFAR [COMPONENT_NAME,"TFAR Settings"]
 
 [
-    QGVAR(enable), // Internal setting name, should always contain a tag! This will be the global variable which takes the value of the setting.
-    "CHECKBOX", // setting type
-    format ["Enable %1", COMPONENT_NAME], // Pretty name shown inside the ingame settings menu. Can be stringtable entry.
-    COMPONENT_NAME, // Pretty name of the category where the setting can be found. Can be stringtable entry.
-    true, // data for this setting
-    true, // "global" flag. Set this to true to always have this setting synchronized between all clients in multiplayer
-    {} // function that will be executed once on mission start and every time the setting is changed.
+    QGVAR(enable),
+    "CHECKBOX",
+    format ["Enable %1", COMPONENT_NAME],
+    COMPONENT_NAME,
+    true,
+    true,
+    {[QGVAR(enable),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
@@ -29,7 +32,8 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "plt_pl, a_sl, b_sl",
     true,
-    {}
+    {[QGVAR(commNet01),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
@@ -39,7 +43,8 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "plt_fo, r1_pilot, r1_copilot, r2_pilot, r2_copilot, rh1_co",
     true,
-    {}
+    {[QGVAR(commNet02),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
@@ -49,7 +54,8 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "plt_pl, plt_sgt, plt_med, plt_fo",
     true,
-    {}
+    {[QGVAR(commNet03),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
@@ -59,7 +65,8 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "a_sl, a_med, a1_ftl, a1_ar, a1_gr, a1_r, a2_ftl, a2_ar, a2_gr, a2_r",
     true,
-    {}
+    {[QGVAR(commNet04),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
@@ -69,7 +76,8 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "b_sl, b_med, b1_ftl, b1_ar, b1_gr, b1_r, b2_ftl, b2_ar, b2_gr, b2_r",
     true,
-    {}
+    {[QGVAR(commNet05),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
@@ -79,173 +87,186 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "rh1_co, rh1_driver, rh1_gunner",
     true,
-    {}
+    {[QGVAR(commNet06),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet01_ACRE),
     "LIST",
     ["Network 01 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
         ["AN/PRC-343 PRR","AN/PRC-152","AN/PRC-117F","AN/PRC-77","AN/PRC-148","SEM 52 SL"],
         1
     ],
     true,
-    {}
+    {[QGVAR(commNet01_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet02_ACRE),
     "LIST",
     ["Network 02 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
         ["AN/PRC-343 PRR","AN/PRC-152","AN/PRC-117F","AN/PRC-77","AN/PRC-148","SEM 52 SL"],
         2
     ],
     true,
-    {}
+    {[QGVAR(commNet02_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet03_ACRE),
     "LIST",
     ["Network 03 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
         ["AN/PRC-343 PRR","AN/PRC-152","AN/PRC-117F","AN/PRC-77","AN/PRC-148","SEM 52 SL"],
         0
     ],
     true,
-    {}
+    {[QGVAR(commNet03_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet04_ACRE),
     "LIST",
     ["Network 04 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
         ["AN/PRC-343 PRR","AN/PRC-152","AN/PRC-117F","AN/PRC-77","AN/PRC-148","SEM 52 SL"],
         0
     ],
     true,
-    {}
+    {[QGVAR(commNet04_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet05_ACRE),
     "LIST",
     ["Network 05 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
         ["AN/PRC-343 PRR","AN/PRC-152","AN/PRC-117F","AN/PRC-77","AN/PRC-148","SEM 52 SL"],
         0
     ],
     true,
-    {}
+    {[QGVAR(commNet05_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet06_ACRE),
     "LIST",
     ["Network 06 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
         ["AN/PRC-343 PRR","AN/PRC-152","AN/PRC-117F","AN/PRC-77","AN/PRC-148","SEM 52 SL"],
         0
     ],
     true,
-    {}
+    {[QGVAR(commNet06_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet01_TFAR),
     "LIST",
     ["Network 01 TFAR Radio", "TFAR radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         0
     ],
     true,
-    {}
+    {[QGVAR(commNet01_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet02_TFAR),
     "LIST",
     ["Network 02 TFAR Radio", "TFAR radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         2
     ],
     true,
-    {}
+    {[QGVAR(commNet02_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet03_TFAR),
     "LIST",
     ["Network 03 TFAR Radio", "TFAR radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         1
     ],
     true,
-    {}
+    {[QGVAR(commNet03_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet04_TFAR),
     "LIST",
     ["Network 04 TFAR Radio", "TFAR radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         1
     ],
     true,
-    {}
+    {[QGVAR(commNet04_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet05_TFAR),
     "LIST",
     ["Network 05 TFAR Radio", "TFAR radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         1
     ],
     true,
-    {}
+    {[QGVAR(commNet05_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(commNet06_TFAR),
     "LIST",
     ["Network 06 TFAR Radio", "TFAR radio for units assigned to network."],
-    COMPONENT_NAME,
+    CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
         ["AN/PRC-152","RF-7800S-TR","RT-1523G (ASIP)","AN/PRC148-JEM","AN/PRC-154","AN/PRC-155","FADAK","PNR-1000A","MR3000"],
         1
     ],
     true,
-    {}
+    {[QGVAR(commNet06_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
