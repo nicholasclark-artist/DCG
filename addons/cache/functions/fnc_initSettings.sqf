@@ -36,6 +36,7 @@ __________________________________________________________________*/
     ],
     true,
     {
+        if (!isServer) exitWith {};
         "IsMoving" setDynamicSimulationDistanceCoef _this;
     }
 ] call CBA_Settings_fnc_init;
@@ -53,6 +54,7 @@ __________________________________________________________________*/
     ],
     true,
     {
+        if (!isServer) exitWith {};
         "Group" setDynamicSimulationDistance _this;
     }
 ] call CBA_Settings_fnc_init;
@@ -70,6 +72,7 @@ __________________________________________________________________*/
     ],
     true,
     {
+        if (!isServer) exitWith {};
         "Vehicle" setDynamicSimulationDistance _this;
     }
 ] call CBA_Settings_fnc_init;
@@ -87,6 +90,7 @@ __________________________________________________________________*/
     ],
     true,
     {
+        if (!isServer) exitWith {};
         "EmptyVehicle" setDynamicSimulationDistance _this;
     }
 ] call CBA_Settings_fnc_init;
@@ -104,6 +108,7 @@ __________________________________________________________________*/
     ],
     true,
     {
+        if (!isServer) exitWith {};
         "Prop" setDynamicSimulationDistance _this;
     }
 ] call CBA_Settings_fnc_init;
