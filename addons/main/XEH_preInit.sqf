@@ -9,11 +9,13 @@ PREINIT;
 MAIN_ADDON = false;
 
 PREP(initSettings);
+PREP(initSafezones);
+PREP(initClient);
 PREP(displayText);
 PREP(displayGUIMessage);
 PREP(handleLoadData);
 PREP(handleCleanup);
-PREP(handleClient);
+PREP(handleSettingChange);
 PREP(findPosHouse);
 PREP(findPosOverwatch);
 PREP(findPosGrid);
@@ -21,6 +23,7 @@ PREP(findPosSafe);
 PREP(findPosTerrain);
 PREP(inBuilding);
 PREP(inLOS);
+PREP(inSafezones);
 PREP(isPosSafe);
 PREP(getNearPlayers);
 PREP(getPool);
@@ -61,16 +64,21 @@ PREP(splitGroup);
 PREP(landAt);
 PREP(shuffle);
 
+// settings variables 
+GVAR(settingsInitFinished) = false;
+GVAR(runAtSettingsInitialized) = [];
+
+// cleanup variables
 GVAR(cleanup) = [];
 
 // map variables
-GVAR(grid) = [];
 GVAR(locations) = [];
 GVAR(locals) = [];
 GVAR(hills) = [];
 GVAR(marines) = [];
 GVAR(range) = worldSize*0.5;
 GVAR(center) = [GVAR(range),GVAR(range),0];
+GVAR(grid) = [GVAR(center),worldSize/round(worldSize/1000),worldSize,0,0,0] call FUNC(findPosGrid);
 
 // debug variables
 GVAR(debug) = false;
@@ -78,6 +86,10 @@ GVAR(debugMarkers) = [];
 
 // save system variables 
 GVAR(saveDataScenario) = [];
+
+// safezone variables 
+GVAR(safezoneMarkers) = [];
+GVAR(safezoneTriggers) = [];
 
 // unit pool variables
 GVAR(unitsWest) = [];
@@ -100,20 +112,52 @@ GVAR(vehiclesCiv) = [];
 GVAR(aircraftCiv) = [];
 
 // functions required on all machines
-publicVariable QFUNC(setAction);
 publicVariable QFUNC(setAnim);
+publicVariable QFUNC(setAction);
 publicVariable QFUNC(removeAction);
 publicVariable QFUNC(displayText);
 publicVariable QFUNC(displayGUIMessage);
 publicVariable QFUNC(armory);
+publicVariable QFUNC(initClient);
 
 // variables required on all machines
 publicVariable QGVAR(range);
 publicVariable QGVAR(center);
+publicVariable QGVAR(settingsInitFinished);
 publicVariable QUOTE(MAIN_ADDON);
 
 // load current scenario data
 call FUNC(loadDataScenario);
+
+// eventhandlers 
+["CBA_settingsInitialized", {
+    TRACE_1("CBA_settingsInitialized",_this);
+
+    if !(SLX_XEH_MACHINE select 8) then {
+        WARNING("PostInit not finished");
+    };
+
+    INFO("Settings initialized");
+
+    // run event on settings init
+    [QGVARMAIN(settingsInitialized), []] call CBA_fnc_localEvent;
+
+    // send var to clients for handling setting changes
+    GVAR(settingsInitFinished) = true;
+    publicVariable QGVAR(settingsInitFinished);
+
+    // handle delayed functions
+    INFO_1("%1 delayed functions running",count GVAR(runAtSettingsInitialized));
+    
+    {
+        (_x select 1) call (_x select 0);
+    } forEach GVAR(runAtSettingsInitialized);
+    
+    GVAR(runAtSettingsInitialized) = nil;
+}] call CBA_fnc_addEventHandler;
+
+// populate location array 
+call FUNC(setMapLocations);
 
 // init cba settings
 SETTINGS_INIT;
