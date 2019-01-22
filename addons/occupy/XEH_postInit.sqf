@@ -6,13 +6,7 @@ __________________________________________________________________*/
 
 POSTINIT;
 
-[
-    {MAIN_ADDON && {CHECK_INGAME}},
-    {
-        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {
-            LOG(MSG_EXIT);
-        };
-
-        call FUNC(handleLoadData);
-    }
-] call CBA_fnc_waitUntilAndExecute;
+// eventhandlers
+[QGVARMAIN(settingsInitialized), {
+    call FUNC(handleLoadData);
+}] call CBA_fnc_addEventHandler;

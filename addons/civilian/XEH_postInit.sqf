@@ -10,40 +10,35 @@ __________________________________________________________________*/
 
 POSTINIT;
 
+// per frame handlers
+[FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
+
 [
-    {MAIN_ADDON && {CHECK_INGAME}}, 
-    {
-        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {
-            LOG(MSG_EXIT);
-        };
-        
-        [
-            {diag_tickTime > (_this + 5)}, // possible fix for civ module init failing sometimes
-            {EGVAR(main,locations) call FUNC(handleUnit)},
-            diag_tickTime
-        ] call CBA_fnc_waitUntilAndExecute;
-
-        [FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
-
-        private _animalList = [];
-
-        _animalList append (EGVAR(main,locations) apply {[_x select 1,LOCATIONS_TYPE]});
-        _animalList append (EGVAR(main,locals) apply {[_x select 1,LOCALS_TYPE]});
-        _animalList append (EGVAR(main,hills) apply {[_x select 0,HILLS_TYPE]});
-
-        [_animalList] call EFUNC(main,shuffle);
-
-        _animalList resize ANIMAL_COUNT;
-
-        [FUNC(handleAnimal), CIV_HANDLER_DELAY, _animalList] call CBA_fnc_addPerFrameHandler;
-
-        {
-            _mrk = createMarker [format["%1_animal_%2",QUOTE(PREFIX),_forEachIndex],ASLtoAGL (_x select 0)];
-            _mrk setMarkerColor "ColorBlack";
-            _mrk setMarkerShape "ELLIPSE";
-            _mrk setMarkerBrush "Solid";
-            _mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
-            [_mrk] call EFUNC(main,setDebugMarker);
-        } forEach _animalList;
-    }
+    {diag_tickTime > (_this + 5)}, // possible fix for civ module init failing sometimes
+    {EGVAR(main,locations) call FUNC(handleUnit)},
+    diag_tickTime
 ] call CBA_fnc_waitUntilAndExecute;
+
+// get animal spawn locations
+_animalList = [];
+
+_animalList append (EGVAR(main,locations) apply {[_x select 1,LOCATIONS_TYPE]});
+_animalList append (EGVAR(main,locals) apply {[_x select 1,LOCALS_TYPE]});
+_animalList append (EGVAR(main,hills) apply {[_x select 0,HILLS_TYPE]});
+
+[_animalList] call EFUNC(main,shuffle);
+
+_animalList resize ANIMAL_COUNT;
+
+// animal PFH
+[FUNC(handleAnimal), CIV_HANDLER_DELAY, _animalList] call CBA_fnc_addPerFrameHandler;
+
+// debug
+{
+    _mrk = createMarker [format["%1_animal_%2",QUOTE(PREFIX),_forEachIndex],ASLtoAGL (_x select 0)];
+    _mrk setMarkerColor "ColorBlack";
+    _mrk setMarkerShape "ELLIPSE";
+    _mrk setMarkerBrush "Solid";
+    _mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
+    [_mrk] call EFUNC(main,setDebugMarker);
+} forEach _animalList;

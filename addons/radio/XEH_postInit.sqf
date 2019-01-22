@@ -6,18 +6,9 @@ __________________________________________________________________*/
 
 POSTINIT;
 
-[
-    {MAIN_ADDON && {CHECK_INGAME}},
-    {
-        if (!(EGVAR(main,enable)) || {!(GVAR(enable))}) exitWith {
-            LOG(MSG_EXIT);
-        };
+[[],{
+    call FUNC(handleLoadout);
+    call FUNC(setRadioSettings);
 
-        [[],{
-            call FUNC(handleLoadout);
-            call FUNC(setRadioSettings);
-
-            INFO("Radio setup finished");
-        }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
-    }
-] call CBA_fnc_waitUntilAndExecute;
+    INFO("Radio setup finished");
+}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
