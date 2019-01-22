@@ -23,7 +23,7 @@ POSTINIT;
                 _road = selectRandom _roads;
                 _pos = getPos _road;
 
-                if (!([_pos] call EFUNC(safezone,inAreaAll)) && {isOnRoad _road}) then {
+                if (!([_pos] call EFUNC(main,inSafezones)) && {isOnRoad _road}) then {
                     _pos = _pos getPos [5, random 360];
                     _pos set [2,0];
 

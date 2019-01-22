@@ -18,7 +18,7 @@ if !(_players isEqualTo []) then {
     private _player = selectRandom _players;
     private _pos = getPos _player;
 
-    if (!([_pos] call EFUNC(safezone,inAreaAll)) && {alive _player} && {((getPos player) select 2) < 10}) then {
+    if (!([_pos] call EFUNC(main,inSafezones)) && {alive _player} && {((getPos player) select 2) < 10}) then {
         if (random 1 > AP_CONVERT2(_pos)) then {
             _ret = [_player] call FUNC(spawnHostile);
 
