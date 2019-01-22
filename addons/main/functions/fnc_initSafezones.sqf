@@ -41,4 +41,6 @@ _trg setTriggerArea [(getMarkerSize _marker) select 0, (getMarkerSize _marker) s
 GVAR(safezoneTriggers) pushBack _trg;
 GVAR(safezoneMarkers) pushBack _marker;
 
+TRACE_1("init safezones",safezoneTriggers);
+
 nil

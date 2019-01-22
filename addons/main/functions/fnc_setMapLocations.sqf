@@ -29,22 +29,22 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 
     call {
         if (toLower _type in _typeLocations) exitWith { 
-            if (!([_position] call EFUNC(safezone,inAreaAll)) && {!COMPARE_STR(_name,"")}) then {
+            if (!([_position] call FUNC(inSafezones)) && {!COMPARE_STR(_name,"")}) then {
                 GVAR(locations) pushBack [_name,_position,_size,_type];
             };
         };
         if (toLower _type in _typeLocals) exitWith {
-            if (!([_position] call EFUNC(safezone,inAreaAll)) && {!COMPARE_STR(_name,"")}) then {
+            if (!([_position] call FUNC(inSafezones)) && {!COMPARE_STR(_name,"")}) then {
                 GVAR(locals) pushBack [_name,_position,_size];
             };
         };
         if (toLower _type in _typeHills) exitWith {
-            if !([_position] call EFUNC(safezone,inAreaAll)) then {
+            if !([_position] call FUNC(inSafezones)) then {
                 GVAR(hills) pushBack [_position,_size];
             };
         };
         if (toLower _type in _typeMarines) exitWith {
-            if (!([_position] call EFUNC(safezone,inAreaAll)) && {!COMPARE_STR(_name,"")}) then {
+            if (!([_position] call FUNC(inSafezones)) && {!COMPARE_STR(_name,"")}) then {
                 GVAR(marines) pushBack [_name,_position,_size];
             };
         };
