@@ -13,7 +13,7 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (is3DEN) exitWith {}; // only run in mission
+if (is3DEN || {!GVAR(safezoneEnable)}) exitWith {}; // only run in mission
 
 params ["_marker"];
 
@@ -23,22 +23,22 @@ private _act = format ["
             _x call CBA_fnc_deleteEntity;
         };
     } forEach thisList;
-",QGVAR(keepEntity)]; // @todo add keep functionality to documentation
+",QGVAR(safezoneKeepEntity)]; // @todo add keep functionality to documentation
 
 // handle markers with bad shapes
 if (!(COMPARE_STR(markerShape _marker,"RECTANGLE")) && {!(COMPARE_STR(markerShape _marker,"ELLIPSE"))}) then {
     _marker setMarkerShape "ELLIPSE";
 };
 
-_marker setMarkerColor ([EGVAR(main,playerSide),true] call BIS_fnc_sideColor); 
+_marker setMarkerColor ([GVAR(playerSide),true] call BIS_fnc_sideColor); 
 _marker setMarkerAlpha 0;
 
 _trg = createTrigger ["EmptyDetector", getMarkerPos _marker];
-_trg setTriggerActivation [format["%1",EGVAR(main,enemySide)], "PRESENT", true];
+_trg setTriggerActivation [format["%1",GVAR(enemySide)], "PRESENT", true];
 _trg setTriggerStatements ["this", _act, ""];  
 _trg setTriggerArea [(getMarkerSize _marker) select 0, (getMarkerSize _marker) select 1, markerDir _marker, COMPARE_STR(markerShape _marker,"RECTANGLE")];
 
-GVAR(list) pushBack _trg;
-GVAR(markers) pushBack _marker;
+GVAR(safezoneTriggers) pushBack _trg;
+GVAR(safezoneMarkers) pushBack _marker;
 
 nil

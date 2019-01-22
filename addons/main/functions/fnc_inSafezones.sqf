@@ -12,7 +12,6 @@ Return:
 boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SAFEZONES GVAR(list)
 
 params [
     ["_entity", objNull, [objNull, grpNull, locationNull, "", []]]
@@ -30,25 +29,25 @@ switch (typeName _entity) do {
             private _entity = _x;
             
             if !(_entity isEqualType []) then {
-                _ret = [_entity] call FUNC(inAreaAll);
+                _ret = [_entity] call FUNC(inSafezones);
             } else {
-                _ret = (SAFEZONES findIf {_entity inArea _x}) > -1
+                _ret = (GVAR(safezoneTriggers) findIf {_entity inArea _x}) > -1
             };
 
             [false,true] select _ret;
         } forEach _entity;
     };
     case "OBJECT" : {
-        (SAFEZONES findIf {_entity inArea _x}) > -1
+        (GVAR(safezoneTriggers) findIf {_entity inArea _x}) > -1
     };
     case "GROUP" : {
-        (SAFEZONES findIf {getPos leader _entity inArea _x}) > -1  
+        (GVAR(safezoneTriggers) findIf {getPos leader _entity inArea _x}) > -1  
     };
     case "LOCATION" : {
-        (SAFEZONES findIf {locationPosition _entity inArea _x}) > -1
+        (GVAR(safezoneTriggers) findIf {locationPosition _entity inArea _x}) > -1
     };
     case "STRING" : {
-        (SAFEZONES findIf {getMarkerPos _entity inArea _x}) > -1 
+        (GVAR(safezoneTriggers) findIf {getMarkerPos _entity inArea _x}) > -1 
     };
     default {};
 };

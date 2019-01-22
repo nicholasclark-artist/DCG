@@ -1,1 +1,0 @@
-#include "\d\dcg\addons\safezone\script_component.hpp"
