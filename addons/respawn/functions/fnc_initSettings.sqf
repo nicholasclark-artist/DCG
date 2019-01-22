@@ -36,7 +36,8 @@ __________________________________________________________________*/
     ],
     true,
     {
-        INFO("LOCAL"); // @todo check locality 
+        if (!hasInterface) exitWith {};
+        
         setPlayerRespawnTime _this;
     }
 ] call CBA_Settings_fnc_init;

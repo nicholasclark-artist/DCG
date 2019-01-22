@@ -204,25 +204,25 @@ __________________________________________________________________*/
     ],
     true,
     {
-        if (isServer) then {
-            switch (_this) do {
-                case 0: {
-                    GVAR(safezoneMarkers) apply {_x setMarkerAlpha 0};
-                };
-                case 1: {
-                    GVAR(safezoneMarkers) apply {
-                        _x setMarkerAlpha 0.4;
-                        _x setMarkerBrush "SolidBorder";
-                    };
-                };
-                case 2: {
-                    GVAR(safezoneMarkers) apply {
-                        _x setMarkerAlpha 1;
-                        _x setMarkerBrush "Border";
-                    };
-                };
-                default {};
+        if (!isServer) exitWith {};
+        
+        switch (_this) do {
+            case 0: {
+                GVAR(safezoneMarkers) apply {_x setMarkerAlpha 0};
             };
+            case 1: {
+                GVAR(safezoneMarkers) apply {
+                    _x setMarkerAlpha 0.4;
+                    _x setMarkerBrush "SolidBorder";
+                };
+            };
+            case 2: {
+                GVAR(safezoneMarkers) apply {
+                    _x setMarkerAlpha 1;
+                    _x setMarkerBrush "Border";
+                };
+            };
+            default {};
         };
     }
 ] call CBA_Settings_fnc_init;
