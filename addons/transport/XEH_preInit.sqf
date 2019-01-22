@@ -7,7 +7,7 @@ __________________________________________________________________*/
 PREINIT;
 
 PREP(initSettings);
-PREP(handleClient);
+PREP(initClient);
 PREP(handleRequest);
 PREP(request);
 PREP(getChildren);
@@ -17,7 +17,7 @@ GVAR(status) = TR_STATE_READY;
 GVAR(count) = 0;
 
 publicVariable QFUNC(request);
-publicVariable QFUNC(handleClient);
+publicVariable QFUNC(initClient);
 publicVariable QFUNC(canCallTransport);
 publicVariable QFUNC(getChildren);
 

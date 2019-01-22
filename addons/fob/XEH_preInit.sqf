@@ -8,12 +8,12 @@ PREINIT;
 
 PREP(initSettings);
 PREP(init);
+PREP(initClient);
 PREP(handleAssign);
 PREP(handleCreate);
 PREP(handleDelete);
 PREP(handleTransfer);
 PREP(handleLoadData);
-PREP(handleClient);
 PREP(handleRecon);
 PREP(getKeybind);
 PREP(getChildren);
@@ -33,7 +33,7 @@ publicVariable QFUNC(getChildren);
 publicVariable QFUNC(getCuratorCost);
 publicVariable QFUNC(isAllowedOwner);
 publicVariable QFUNC(curatorEH);
-publicVariable QFUNC(handleClient);
+publicVariable QFUNC(initClient);
 
 publicVariable QGVAR(location);
 

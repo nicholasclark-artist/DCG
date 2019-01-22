@@ -8,7 +8,9 @@ PREINIT;
 
 PREP(initSettings);
 PREP(restoreLoadout);
+PREP(handleClient);
 
 publicVariable QFUNC(restoreLoadout);
+publicVariable QFUNC(handleClient);
 
 SETTINGS_INIT;

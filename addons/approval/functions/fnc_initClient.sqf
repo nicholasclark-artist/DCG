@@ -3,12 +3,12 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-handle client setup
+client setup
 
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -34,3 +34,5 @@ if (CHECK_ADDON_1(ace_interact_menu)) then {
 [COMPONENT_NAME, QGVAR(hint), AP_HINT_NAME, {AP_HINT_KEYCODE}, ""] call CBA_fnc_addKeybind;
 [COMPONENT_NAME, QGVAR(stop), AP_STOP_NAME, {AP_STOP_KEYCODE}, ""] call CBA_fnc_addKeybind;
 [COMPONENT_NAME, QGVAR(question), AP_QUESTION_NAME, {AP_QUESTION_KEYCODE}, ""] call CBA_fnc_addKeybind;
+
+nil

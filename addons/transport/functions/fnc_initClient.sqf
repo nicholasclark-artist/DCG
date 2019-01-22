@@ -18,6 +18,6 @@ if (!hasInterface) exitWith {};
     _x call EFUNC(main,setAction);
 } forEach [
     [QUOTE(ADDON),QUOTE(COMPONENT_PRETTY),{},{true}],
-    [QGVAR(request),REQUEST_NAME,{},{REQUEST_COND},{REQUEST_CHILD},[],player,1,ACTIONPATH],
-    [QGVAR(signal),SIGNAL_NAME,{SIGNAL_STATEMENT},{SIGNAL_COND},{},[],player,1,ACTIONPATH]
+    [QGVAR(request),TR_REQUEST_NAME,{},{TR_REQUEST_COND},{TR_REQUEST_CHILD},[],player,1,ACTIONPATH],
+    [QGVAR(signal),TR_SIGNAL_NAME,{TR_SIGNAL_STATEMENT},{TR_SIGNAL_COND},{},[],player,1,ACTIONPATH]
 ];

@@ -8,6 +8,7 @@ PREINIT;
 
 PREP(initSettings);
 PREP(handleIED);
+PREP(init);
 
 GVAR(list) = [];
 

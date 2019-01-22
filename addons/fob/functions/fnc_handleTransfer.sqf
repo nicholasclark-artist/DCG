@@ -32,7 +32,7 @@ params [
             [name (_this select 1),_this select 2],
             {
                 if (_this select 1) then {
-                    call FUNC(handleClient);
+                    call FUNC(initClient);
                 };
 
                 call FUNC(curatorEH);

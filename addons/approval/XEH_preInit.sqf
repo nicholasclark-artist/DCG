@@ -7,12 +7,12 @@ __________________________________________________________________*/
 PREINIT;
 
 PREP(initSettings);
+PREP(initClient);
 PREP(addValue);
 PREP(getValue);
 PREP(getRegion);
 PREP(handleLoadData);
 PREP(handleKilled);
-PREP(handleClient);
 PREP(handleQuestion);
 PREP(handleHostile);
 PREP(handleHint);
@@ -22,7 +22,7 @@ PREP(spawnHostile);
 GVAR(regions) = [];
 
 publicVariable QFUNC(handleKilled);
-publicVariable QFUNC(handleClient);
+publicVariable QFUNC(initClient);
 
 SETTINGS_INIT;
     
