@@ -91,10 +91,10 @@
         TRANSPORT \
     ] call CBA_fnc_waitUntilAndExecute
 
-#define REQUEST_NAME "Request Transport"
-#define REQUEST_CHILD call FUNC(getChildren)
-#define REQUEST_COND call FUNC(canCallTransport)
+#define TR_REQUEST_NAME "Request Transport"
+#define TR_REQUEST_CHILD call FUNC(getChildren)
+#define TR_REQUEST_COND call FUNC(canCallTransport)
 
-#define SIGNAL_NAME "Signal Take Off"
-#define SIGNAL_STATEMENT (objectParent player) setVariable [QGVAR(signal),1,true]
-#define SIGNAL_COND !(isNull objectParent player) && {((objectParent player) getVariable [QGVAR(signal),-1]) isEqualTo 0}
+#define TR_SIGNAL_NAME "Signal Take Off"
+#define TR_SIGNAL_STATEMENT (objectParent player) setVariable [QGVAR(signal),1,true]
+#define TR_SIGNAL_COND !(isNull objectParent player) && {((objectParent player) getVariable [QGVAR(signal),-1]) isEqualTo 0}

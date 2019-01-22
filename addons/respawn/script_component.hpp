@@ -8,5 +8,3 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define UNITGEAR QGVAR(unitGear)
-#define UNITWEAPON QGVAR(unitWeapon)

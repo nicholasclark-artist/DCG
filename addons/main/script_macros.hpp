@@ -13,7 +13,7 @@
 #define MSG_EXIT QUOTE(Exiting: ADDON version: VERSION)
 
 #define PREINIT if (!isServer) exitWith {LOG(MSG_EXIT)}; LOG(MSG_INIT)
-#define POSTINIT if (!isMultiplayer || {!isServer}) exitWith {LOG(MSG_EXIT)}
+#define POSTINIT if (!isMultiplayer || {!isServer} || {!EGVAR(main,enable)} || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)}
 
 #define HEADLESSCLIENT GVARMAIN(HC)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
