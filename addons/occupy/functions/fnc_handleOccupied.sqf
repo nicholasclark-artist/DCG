@@ -19,7 +19,7 @@ __________________________________________________________________*/
 #define SURRENDER_VAR(SURNAME) [QUOTE(ADDON),SURNAME] joinString "_"
 #define SURRENDER_CHANCE 0.3
 #define REINFORCE_CHANCE 0.1
-#define ENTITY ["Man","LandVehicle","Air","Ship"]
+#define ENTITY ["CAManBase","LandVehicle","Air","Ship"]
 #define ENEMYMAX_MULTIPLIER 0.5
 
 params ["_name","_center","_size","_type","_objArray","_mrkArray"];

@@ -54,7 +54,7 @@ if (CHECK_ADDON_2(occupy)) then {
 
     { 
         if ((driver _x) getVariable [QEGVAR(occupy,saveEntity),false]) then { 
-            if (_x isKindOf "Man") exitWith {
+            if (_x isKindOf "CAManBase") exitWith {
                 _infCount = _infCount + 1;
             };
             if (_x isKindOf "LandVehicle") exitWith {
@@ -64,7 +64,7 @@ if (CHECK_ADDON_2(occupy)) then {
                 _airCount = _airCount + 1;
             };
         };
-    } forEach (_position nearEntities [["Man","LandVehicle","Air"],_size*1.5]);
+    } forEach (_position nearEntities [["CAManBase","LandVehicle","Air"],_size*1.5]);
 
     _data append [_name,_position,_size,_type,[_infCount,_vehCount,_airCount]];
 
@@ -81,11 +81,11 @@ if (CHECK_ADDON_2(fob)) then {
         private _dataObj = [];
         private _refund = 0;
         {
-            if (!(_x isKindOf "Man") && {!(_x isKindOf "Logic")} && {count crew _x isEqualTo 0}) then {
+            if (!(_x isKindOf "CAManBase") && {!(_x isKindOf "Logic")} && {count crew _x isEqualTo 0}) then {
                 _dataObj pushBack [typeOf _x,getPosASL _x,getDir _x];
             } else {
                 call {
-                    if (_x isKindOf "Man") exitWith {
+                    if (_x isKindOf "CAManBase") exitWith {
                         _refund = _refund + abs(FOB_COST_MAN*EGVAR(fob,deleteCoef));
                     };
                     if (_x isKindOf "Car") exitWith {
