@@ -8,6 +8,15 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
+// debug macros
+#ifdef DEBUG_MODE_FULL
+    #undef DEBUG_ADDON
+    #define DEBUG_ADDON 1
+#else
+    #undef DEBUG_ADDON
+    #define DEBUG_ADDON 0
+#endif
+
 // save macros 
 #define SAVE_SETVAR(VAR1) profileNamespace setVariable [QGVAR(saveData),VAR1]
 #define SAVE_GETVAR profileNamespace getVariable [QGVAR(saveData),[]]
