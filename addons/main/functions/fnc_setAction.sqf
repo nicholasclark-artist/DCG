@@ -12,7 +12,7 @@ Arguments:
 3: action condition <STRING>
 4: child action <CODE>
 5: action parameters <ARRAY>
-6: object to add action to <OBJECT>
+6: object to receive action <OBJECT>
 7: ACE action type <NUMBER>
 8: ACE action path <ARRAY>
 9: ACE action position <ARRAY>
@@ -83,7 +83,7 @@ if (CHECK_ADDON_1(ace_interact_menu)) then {
     if (local _obj) then {
         _EH = _obj addEventHandler ["Respawn", _EHStr];
     } else {
-        [_obj, "Respawn", _EHStr] remoteExecCall [QUOTE(addEventHandler), _obj, false];
+        ["Respawn", _EHStr] remoteExecCall [QUOTE(addEventHandler), _obj, false];
         WARNING_1("Adding respawn eventhandler to %1 over network.",_obj);
     };
 
