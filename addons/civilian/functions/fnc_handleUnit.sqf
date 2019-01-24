@@ -35,21 +35,21 @@ private _iterations01 = [];
         _mrk setMarkerSize [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist)];
         [_mrk] call EFUNC(main,setDebugMarker);
 
-        // @todo test trigger performance
         private _trg = createTrigger ["EmptyDetector", _position, true]; // local trigger creates 'Ref to nonnetwork object' spam in log
         _trg setTriggerActivation ["ANYPLAYER", "PRESENT", true];
         _trg setTriggerStatements ["this", "", ""];
         _trg setTriggerArea [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist), 0, false, CIV_ZDIST];
 
         private _houses = (_position nearObjects ["House", _radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
-        [_houses] call dcg_main_fnc_shuffle;
-        _houses resize ((ceil (count _houses * 0.25)) min GVAR(unitLimit));
 
         if (_houses isEqualTo []) then {WARNING_2("Unable to find houses at %1: %2",_name,_position)};
 
+        [_houses] call EFUNC(main,shuffle);
+        _houses resize ((ceil (count _houses * 0.25)) min GVAR(unitLimit));
+
         // main module is immediately moved to ambient group, _grp is null after module creation
         private _grp = createGroup sideLogic;
-        private _moduleMain = _grp createUnit ["ModuleCivilianPresence_F", _position, [], 0, "CAN_COLLIDE"];
+        private _moduleMain = _grp createUnit ["ModuleCivilianPresence_F", [0,0,0], [], 0, "CAN_COLLIDE"];
         
         // main module does not init sometimes, even with 'BIS_fnc_initModules_disableAutoActivation'
         // force init with 'bis_fnc_initmodules_activate'
@@ -58,7 +58,8 @@ private _iterations01 = [];
 
         // main options
         private _onCreated = {
-            [_this] call EFUNC(cache,disableCache);
+            _this setposATL (getposATL _this); // @todo find better fix for spawning in floors
+            _this setSkill 0.1;
         };
         
         _moduleMain setVariable ["#area",[_position,_radius,_radius,0,false,CIV_ZDIST]]; // gets passed to inAreaArray
@@ -83,16 +84,22 @@ private _iterations01 = [];
             if (count _iterations02 isEqualTo count _houses) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
             };
-
+            
             _positionHouse = selectRandom (selectRandom _houses);
+            
+            // create new groups for these modules, old group is null 
 
-            // create new group, old group is null
-            _grp = createGroup sideLogic;
-            _moduleSpawn = _grp createUnit ["ModuleCivilianPresenceUnit_F", _positionHouse, [], 0, "CAN_COLLIDE"];
+            // create half as many spawn points
+            if ((count _iterations02 mod 2) isEqualTo 0) then {
+                _grp = createGroup sideLogic;
+                _moduleSpawn = _grp createUnit ["ModuleCivilianPresenceUnit_F", _positionHouse, [], 0, "CAN_COLLIDE"];
 
-            _moduleSpawn setVariable ["BIS_fnc_initModules_disableAutoActivation",false]; // @todo check if public is required
-            _moduleSpawn setVariable ["bis_fnc_initmodules_activate",true]; // @todo check if public is required
+                _moduleSpawn setVariable ["BIS_fnc_initModules_disableAutoActivation",false]; // @todo check if public is required
+                _moduleSpawn setVariable ["bis_fnc_initmodules_activate",true]; // @todo check if public is required
 
+                _moduleSpawn synchronizeObjectsAdd [_trg];
+            };
+            
             _grp = createGroup sideLogic;
             _moduleWaypoint = _grp createUnit ["ModuleCivilianPresenceSafeSpot_F", _positionHouse, [], 0, "CAN_COLLIDE"];
 
@@ -101,18 +108,17 @@ private _iterations01 = [];
 
             // waypoint options
             _moduleWaypoint setVariable ["#type",1];
-            _moduleWaypoint setVariable ["#capacity",2];
+            _moduleWaypoint setVariable ["#capacity",1];
             _moduleWaypoint setVariable ["#usebuilding",true];
             _moduleWaypoint setVariable ["#terminal",false];
 
-            _moduleSpawn synchronizeObjectsAdd [_trg];
             _moduleWaypoint synchronizeObjectsAdd [_trg];            
 
             _iterations02 pushBack 0;
-        }, 0.25, [_trg,_houses,_iterations02]] call CBA_fnc_addPerFrameHandler;
+        }, 0.05, [_trg,_houses,_iterations02]] call CBA_fnc_addPerFrameHandler;
 
         _iterations01 pushBack 0;
     };
-}, 0.25, [_this,_count,_iterations01]] call CBA_fnc_addPerFrameHandler;
+}, 0.2, [_this,_count,_iterations01]] call CBA_fnc_addPerFrameHandler;
 
 nil
