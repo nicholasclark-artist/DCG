@@ -10,6 +10,8 @@ PREP(initSettings);
 PREP(restoreLoadout);
 PREP(handleClient);
 
+GVAR(handleDisconnectID) = -1;
+
 publicVariable QFUNC(restoreLoadout);
 publicVariable QFUNC(handleClient);
 
