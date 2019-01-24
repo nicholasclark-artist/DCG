@@ -8,4 +8,3 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define CACHE_DISABLE QGVAR(disable)

@@ -13,7 +13,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 {
-    if (!(dynamicSimulationEnabled _x) && {!(isPlayer leader _x)} && {!(_x getVariable [CACHE_DISABLE,false])}) then {
+    if (!(dynamicSimulationEnabled _x) && {!(isPlayer leader _x)} && {!(_x getVariable [QGVAR(disable),false])}) then {
         _x enableDynamicSimulation true;
         // LOG_1("Enable dynamic simulation: %1",_x);
     };

@@ -13,17 +13,17 @@ nil
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+if !(isServer) exitWith {};
+
 params [
     ["_entity",objNull,[grpNull,objNull]]
 ];
 
-if !(isServer) exitWith {};
-
 // stops entity from being added to cache system by addon
-_entity setVariable [CACHE_DISABLE,true];
+_entity setVariable [QGVAR(disable),true];
 
 if (dynamicSimulationEnabled _entity) then {
-    _entity enableDynamicSimulation false;
+    _entity enableDynamicSimulation false; // @todo for given non AI object??
 };
 
 nil
