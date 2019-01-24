@@ -26,7 +26,7 @@ __________________________________________________________________*/
 [
     QGVAR(time),
     "SLIDER",
-    ["Respawn Time","Time in seconds that the player must wait before respawn."],
+    ["Respawn Delay","Time in seconds that the player must wait before respawn."],
     COMPONENT_NAME,
     [
         0,
@@ -40,4 +40,34 @@ __________________________________________________________________*/
         
         setPlayerRespawnTime _this;
     }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(deleteOnDisconnect),
+    "CHECKBOX",
+    "Delete Player Corpses on Disconnect",
+    COMPONENT_NAME,
+    false,
+    true,
+    {
+        if (!isServer) exitWith {};
+
+        switch (_this) do {
+            case true: {
+                if (GVAR(handleDisconnectID) < 0) then {
+                    GVAR(handleDisconnectID) = addMissionEventHandler ["HandleDisconnect",{
+                        deleteVehicle (_this select 0);
+                        false
+                    }];
+                }
+            };
+            case false: {
+                if (GVAR(handleDisconnectID) >= 0) then {
+                    removeMissionEventHandler ["HandleDisconnect", GVAR(handleDisconnectID)];
+                };
+            };
+            default {};
+        };
+    },
+    true
 ] call CBA_Settings_fnc_init;
