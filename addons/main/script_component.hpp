@@ -9,11 +9,13 @@
 #include "\d\dcg\addons\main\script_macros.hpp"
 
 // debug macros
-#ifdef DEBUG_MODE_FULL
+#ifdef DEBUG_ADDON
     #undef DEBUG_ADDON
+#endif
+
+#ifdef DEBUG_MODE_FULL
     #define DEBUG_ADDON 1
 #else
-    #undef DEBUG_ADDON
     #define DEBUG_ADDON 0
 #endif
 
