@@ -7,11 +7,11 @@ __________________________________________________________________*/
 PREINIT;
 
 PREP(initSettings);
+PREP(init);
 PREP(initClient);
 PREP(addValue);
 PREP(getValue);
 PREP(getRegion);
-PREP(handleLoadData);
 PREP(handleKilled);
 PREP(handleQuestion);
 PREP(handleHostile);

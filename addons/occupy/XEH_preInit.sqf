@@ -8,7 +8,7 @@ PREINIT;
 
 PREP(initSettings);
 PREP(findLocation);
-PREP(handleLoadData);
+PREP(init);
 PREP(handleOccupied);
 PREP(setOccupied);
 

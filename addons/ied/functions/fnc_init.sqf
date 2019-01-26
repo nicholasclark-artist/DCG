@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-init IEDs
+init IED addon
 
 Arguments:
 0: position array <ARRAY>

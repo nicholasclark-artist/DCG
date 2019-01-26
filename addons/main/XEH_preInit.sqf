@@ -119,6 +119,7 @@ publicVariable QFUNC(displayText);
 publicVariable QFUNC(displayGUIMessage);
 publicVariable QFUNC(armory);
 publicVariable QFUNC(initClient);
+publicVariable QFUNC(handleSettingChange);
 
 // variables required on all machines
 publicVariable QGVAR(range);

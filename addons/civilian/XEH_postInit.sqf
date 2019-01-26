@@ -10,7 +10,6 @@ __________________________________________________________________*/
 
 POSTINIT;
 
-// eventhandlers
 [QGVARMAIN(settingsInitialized), {
     [FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
 
