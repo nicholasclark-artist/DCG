@@ -12,6 +12,7 @@ bool
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+// @todo add settings: allow rain, allow fog
 [
     QGVAR(enable),
     "CHECKBOX",
