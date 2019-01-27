@@ -12,30 +12,54 @@ number
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (nextWeatherChange < 1) then {
-    // if weather close to forecast value, find new value
-    if (abs (overcast - GVAR(overcast)) <= WEATHER_THRESOLD) then {
-        GVAR(overcast) = call FUNC(getOvercast);
-    };
+if (GVAR(waiting)) exitWith {};
 
-    if (abs (rain - GVAR(rain)) <= WEATHER_THRESOLD) then {
-        GVAR(rain) = call FUNC(getRain);
-    };
+private _forecast = [1] call FUNC(getForecast);
 
-    if (abs ((fogParams select 0) - GVAR(fog)) <= WEATHER_THRESOLD) then {
-        // GVAR(fog) = call FUNC(getFog);
-    };
+if (GVAR(cycle) mod 2 isEqualTo 0) then { // overcast cycle
+    GVAR(mOvercast) = _forecast select 0;
+    WEATHER_DELAY_OVERCAST setOvercast GVAR(mOvercast);
 
-    if (GVAR(cycle) mod 2 isEqualTo 0) then { // overcast and fog cannot be set in same cycle
-        WEATHER_DELAY setOvercast GVAR(overcast);
-        WEATHER_DELAY setRain GVAR(rain);
-    } else {
-        (WEATHER_DELAY)*0.5 setFog GVAR(fog); // fog time param actually works, so set it quicker
-        WEATHER_DELAY setRain GVAR(rain);
-    };
+    GVAR(waiting) = true;
 
-    TRACE_4("",GVAR(cycle),GVAR(overcast),GVAR(rain),GVAR(fog));
-    TRACE_6("",nextWeatherChange,overcast,overcastForecast,fogParams,fogForecast,rain);
+    [{
+        // if overcast reaches forecast
+        if (abs (overcast - GVAR(mOvercast)) <= WEATHER_DEVIATION) exitWith {
+            [_this select 1] call CBA_fnc_removePerFrameHandler;
 
-    GVAR(cycle) = GVAR(cycle) + 1;
+            GVAR(waiting) = false;
+            GVAR(cycle) = GVAR(cycle) + 1;
+
+            TRACE_3("",overcast,overcastForecast,GVAR(mOvercast));
+        };
+
+        // set forecast again if engine tries to interfere
+        if !(overcastForecast isEqualTo GVAR(mOvercast)) then {
+            WARNING("engine interference: overcast not trending towards desired value");
+            WEATHER_DELAY_OVERCAST setOvercast GVAR(mOvercast);
+        };
+    }, 1] call CBA_fnc_addPerFrameHandler;
+} else { // fog cycle
+    GVAR(mFog) = _forecast select 2;
+    WEATHER_DELAY_FOG setFog GVAR(mFog);
+
+    GVAR(waiting) = true;
+    
+    [{
+        // if fog reaches forecast
+        if (abs (fog - GVAR(mFog)) <= WEATHER_DEVIATION) exitWith {
+            [_this select 1] call CBA_fnc_removePerFrameHandler;
+
+            GVAR(waiting) = false;
+            GVAR(cycle) = GVAR(cycle) + 1;
+
+            TRACE_3("",fog,fogForecast,GVAR(mFog));
+        };
+
+        // set forecast again if engine tries to interfere
+        if !(fogForecast isEqualTo GVAR(mFog)) then {
+            WARNING("engine interference: fog not trending towards desired value");
+            WEATHER_DELAY_FOG setFog GVAR(mFog);
+        };
+    }, 1] call CBA_fnc_addPerFrameHandler;
 };

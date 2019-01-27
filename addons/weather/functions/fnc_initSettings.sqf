@@ -25,7 +25,7 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(month),
+    QGVAR(iMonth),
     "LIST",
     "Month",
     COMPONENT_NAME,
@@ -35,14 +35,14 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(month),_this] call EFUNC(main,handleSettingChange)},
+    {[QGVAR(iMonth),_this] call EFUNC(main,handleSettingChange)},
     true
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(time),
+    QGVAR(iHour),
     "SLIDER",
-    ["Time of Day","Hour of the day in 24hr format. A random hour will be set if -1 is selected."],
+    ["Hour","Hour of the day in 24hr format. A random hour will be set if -1 is selected."],
     COMPONENT_NAME,
     [
         -1,
@@ -51,6 +51,40 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(time),_this] call EFUNC(main,handleSettingChange)},
+    {
+        GVAR(iHour) = floor _this; 
+        [QGVAR(iHour),floor _this] call EFUNC(main,handleSettingChange);
+    },
+    true
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(variance),
+    "SLIDER",
+    ["Forecast Variance","Determines how far the weather forecast will deviate from the initial weather."],
+    COMPONENT_NAME,
+    [
+        1,
+        5,
+        1,
+        2
+    ],
+    true,
+    {}
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(precipitationOverride),
+    "SLIDER",
+    ["Probability of Precipitation","A measure of the probability that precipitation will occur. The probability will be map dependent if -1 is selected."],
+    COMPONENT_NAME,
+    [
+        -1,
+        1,
+        -1,
+        0
+    ],
+    true,
+    {[QGVAR(precipitationOverride),_this] call EFUNC(main,handleSettingChange)},
     true
 ] call CBA_Settings_fnc_init;

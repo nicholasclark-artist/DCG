@@ -8,15 +8,23 @@ PREINIT;
 
 PREP(initSettings);
 PREP(init);
-PREP(getOvercast);
-PREP(getRain);
+PREP(getForecast);
 PREP(handleForecast);
+PREP(handleRain);
 
-GVAR(date) = [2013,9,12,7,0];
-GVAR(overcast) = 0;
-GVAR(rain) = 0;
-GVAR(fog) = 0;
+GVAR(waiting) = false;
 GVAR(cycle) = 0;
+
+// initial forecast
+GVAR(iDate) = [0,0,0,0,0];
+GVAR(iOvercast) = 0;
+GVAR(iRain) = 0;
+GVAR(iFog) = 0;
+
+// mid-mission forecast, weather variance
+GVAR(mOvercast) = 0;
+GVAR(mRain) = 0;
+GVAR(mFog) = 0;
 
 // get world data, default to Altis
 _world = ["Altis", worldName] select (isClass (configFile >> "CfgWorlds" >> worldName >> QGVARMAIN(cloudCover)));
