@@ -25,7 +25,7 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(iMonth),
+    QGVAR(month),
     "LIST",
     "Month",
     COMPONENT_NAME,
@@ -35,14 +35,14 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(iMonth),_this] call EFUNC(main,handleSettingChange)},
+    {[QGVAR(month),_this] call EFUNC(main,handleSettingChange)},
     true
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(iHour),
+    QGVAR(hour),
     "SLIDER",
-    ["Hour","Hour of the day in 24hr format. A random hour will be set if -1 is selected."],
+    ["Hour","Hour of the day in 24hr format. A random hour will be set if the value is below 0."],
     COMPONENT_NAME,
     [
         -1,
@@ -52,8 +52,8 @@ __________________________________________________________________*/
     ],
     true,
     {
-        GVAR(iHour) = floor _this; 
-        [QGVAR(iHour),floor _this] call EFUNC(main,handleSettingChange);
+        GVAR(hour) = floor _this; 
+        [QGVAR(hour),floor _this] call EFUNC(main,handleSettingChange);
     },
     true
 ] call CBA_Settings_fnc_init;
@@ -74,15 +74,31 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(precipitationOverride),
+    QGVAR(cloudsOverride),
     "SLIDER",
-    ["Probability of Precipitation","A measure of the probability that precipitation will occur. The probability will be map dependent if -1 is selected."],
+    ["Probability of Clouds","A measure of the probability that mostly cloudy or overcast conditions will occur. The probability is map dependent if the value is below 0."],
     COMPONENT_NAME,
     [
         -1,
         1,
         -1,
-        0
+        2
+    ],
+    true,
+    {[QGVAR(cloudsOverride),_this] call EFUNC(main,handleSettingChange)},
+    true
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(precipitationOverride),
+    "SLIDER",
+    ["Probability of Precipitation","A measure of the probability that precipitation will occur. The probability is map dependent if the value is below 0."],
+    COMPONENT_NAME,
+    [
+        -1,
+        1,
+        -1,
+        2
     ],
     true,
     {[QGVAR(precipitationOverride),_this] call EFUNC(main,handleSettingChange)},

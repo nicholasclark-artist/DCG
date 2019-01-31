@@ -7,6 +7,8 @@ __________________________________________________________________*/
 add3DENEventHandler ["onMissionNew", {
     set3DENMissionAttributes [
         ["Intel", "IntelTimeOfChanges", 1800], // only effects the first weather change
-        ["Intel", "IntelRainIsForced", true] // allow manual weather settings
+        ["Intel", "IntelRainIsForced", true], // enable manual weather settings
+        ["Intel", "IntelLightningIsForced", true], // enable manual weather settings
+        ["Intel", "IntelLightningIsForced", true] // enable manual weather settings
     ];
 }];

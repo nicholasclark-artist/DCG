@@ -6,16 +6,27 @@ __________________________________________________________________*/
 
 POSTINIT;
 
-call FUNC(init);
+[QEGVAR(main,debug), {
+    [_this select 0] call FUNC(handleDebug);
+}] call CBA_fnc_addEventHandler;
 
 [QGVAR(dateChange), {
     INFO("Date changed, adjusting initial forecast");
 
-    GVAR(iDate) = date;
+    GVAR(date) = date;
     
     private _forecast = [0] call FUNC(getForecast);
 
-    GVAR(iOvercast) = _forecast select 0;
-    GVAR(iRain) = _forecast select 1;
-    GVAR(iFog) = _forecast select 2;
+    GVAR(overcast) = _forecast select 0;
+    GVAR(rain) = _forecast select 1;
+    GVAR(fog) = _forecast select 2;
 }] call CBA_fnc_addEventHandler;
+
+[QGVAR(updateMeasurements), {
+    call FUNC(getTemperature);
+    call FUNC(getHumidity);
+
+    TRACE_2("updating climate measurements",GVAR(temperatureCurrent),GVAR(humidityCurrent));
+}] call CBA_fnc_addEventHandler;
+
+call FUNC(init);

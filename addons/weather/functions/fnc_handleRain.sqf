@@ -1,4 +1,4 @@
-    /*
+/*
 Author:
 Nicholas Clark (SENSEI)
 
@@ -13,8 +13,8 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 private _currentRain = rain; 
-GVAR(mRain) = ([1] call FUNC(getForecast)) select 1;
+GVAR(rainForecast) = ([1] call FUNC(getForecast)) select 1;
 
-WEATHER_DELAY_RAIN setRain GVAR(mRain);
+WEATHER_DELAY_RAIN setRain GVAR(rainForecast);
 
-TRACE_5("",GVAR(mRain),_currentRain,overcast,lightnings,rainbow);
+TRACE_5("",GVAR(rainForecast),_currentRain,overcast,lightnings,rainbow);

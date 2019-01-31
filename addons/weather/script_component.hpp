@@ -10,7 +10,7 @@
 
 // #define WEATHER_DELAY (1800 * timeMultiplier)
 #define WEATHER_DELAY_OVERCAST 0
-#define WEATHER_DELAY_RAIN 60
+#define WEATHER_DELAY_RAIN ((random (300 - 60)) + 60) 
 #define WEATHER_DELAY_FOG 1800
 
 #define WEATHER_DEVIATION 0.002

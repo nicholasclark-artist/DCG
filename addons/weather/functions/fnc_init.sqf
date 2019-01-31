@@ -1,4 +1,4 @@
-    /*
+/*
 Author:
 Nicholas Clark (SENSEI)
 
@@ -12,8 +12,6 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-// @todo add fog and PPEffects 
-
 // run after settings init
 if (!EGVAR(main,settingsInitFinished)) exitWith {
     EGVAR(main,runAtSettingsInitialized) pushBack [FUNC(init), _this];
@@ -23,50 +21,58 @@ private _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
 
 // load saved data
 if !(_data isEqualTo []) then {
-    GVAR(iOvercast) = _data select 0;
-    GVAR(iRain) = _data select 1;
-    GVAR(iFog) = _data select 2;
-    GVAR(iDate) = _data select 3;
+    GVAR(overcast) = _data select 0;
+    GVAR(rain) = _data select 1;
+    GVAR(fog) = _data select 2;
+    GVAR(date) = _data select 3;
 
-    GVAR(iMonth) = GVAR(date) select 1;
-    GVAR(iHour) = GVAR(date) select 3;
-    setDate GVAR(iDate);
+    GVAR(month) = GVAR(date) select 1;
+    GVAR(hour) = GVAR(date) select 3;
+    setDate GVAR(date);
+
+    // update measurements 
+    [QGVAR(updateMeasurements), []] call CBA_fnc_localEvent;
 } else {
-    if (GVAR(iMonth) isEqualTo -1) then {GVAR(iMonth) = ceil random 12};
-    if (GVAR(iHour) isEqualTo -1) then {GVAR(iHour) = round random 23};
+    if (GVAR(month) < 0) then {GVAR(month) = ceil random 12};
+    if (GVAR(hour) < 0) then {GVAR(hour) = round random 23};
 
     // set date before getting forecast
-    GVAR(iDate) = [2019, GVAR(iMonth), ceil random 27, GVAR(iHour), round random 30];
-    setDate GVAR(iDate);
+    GVAR(date) = [2019, GVAR(month), ceil random 27, GVAR(hour), round random 30];
+    setDate GVAR(date);
+
+    // update measurements 
+    [QGVAR(updateMeasurements), []] call CBA_fnc_localEvent;
 
     // get initial weather values
     private _forecast = [0] call FUNC(getForecast);
 
-    GVAR(iOvercast) = _forecast select 0;
-    GVAR(iRain) = _forecast select 1;
-    GVAR(iFog) = _forecast select 2;
+    GVAR(overcast) = _forecast select 0;
+    GVAR(rain) = _forecast select 1;
+    GVAR(fog) = _forecast select 2;
 };
 
 [
     {CBA_missionTime > 0},
     {
-        // set starting weather
+        // set initial weather
         [] spawn {
-            0 setOvercast GVAR(iOvercast);
-            0 setFog GVAR(iFog);
-            WEATHER_DELAY_RAIN setRain GVAR(iRain);
+            0 setOvercast GVAR(overcast);
+            0 setFog GVAR(fog);
+            WEATHER_DELAY_RAIN setRain GVAR(rain);
 
             forceWeatherChange;
 
-            TRACE_4("Initial forecast",nextWeatherChange,GVAR(iOvercast),GVAR(iRain),GVAR(iFog));
+            TRACE_4("Initial forecast",nextWeatherChange,GVAR(overcast),GVAR(rain),GVAR(fog));
         };
         
-        // handle date changes 
+        // handle date changes and measurement updates
         [{
-            if (!((date select 0) isEqualTo (GVAR(iDate) select 0)) || {!((date select 1) isEqualTo (GVAR(iDate) select 1))}) then {
+            [QGVAR(updateMeasurements), []] call CBA_fnc_localEvent;
+
+            if !((date select [0,3]) isEqualTo (GVAR(date) select [0,3])) then {
                 [QGVAR(dateChange), []] call CBA_fnc_localEvent;
             };
-        }, 600] call CBA_fnc_addPerFrameHandler;
+        }, 300] call CBA_fnc_addPerFrameHandler;
     }
 ] call CBA_fnc_waitUntilAndExecute;
 
@@ -78,7 +84,7 @@ if !(_data isEqualTo []) then {
 
         [FUNC(handleForecast), 1] call CBA_fnc_addPerFrameHandler;
 
-        if (GVAR(iRain) > 0) then {
+        if (GVAR(rain) > 0) then {
             [FUNC(handleRain), 1800] call CBA_fnc_addPerFrameHandler;
         };
     }
