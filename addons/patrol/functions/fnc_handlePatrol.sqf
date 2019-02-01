@@ -47,7 +47,7 @@ if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
                 _grp = grpNull;
                 _pos = ASLtoAGL _pos;
 
-                if (random 1 < GVAR(vehChance)) then {
+                if (PROBABILITY(GVAR(vehChance))) then { 
                     _grp = [_pos,1,1,EGVAR(main,enemySide),1,true] call EFUNC(main,spawnGroup);
                     [_grp] call EFUNC(cache,disableCache);
 

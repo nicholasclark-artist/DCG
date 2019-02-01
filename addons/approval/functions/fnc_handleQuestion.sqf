@@ -38,7 +38,7 @@ private _text = [
     format ["%1 isn't interested in talking right now.",name _unit]
 ];
 
-if (random 1 < AP_CONVERT1(getpos _player)) then {
+if (PROBABILITY(AP_CONVERT1(getpos _player))) then {
     private _type = [0, floor random 2] select (CHECK_ADDON_2(ied));
 
     if (_type isEqualTo 0) exitWith {

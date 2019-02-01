@@ -61,4 +61,4 @@
 #define AP_CITY ((AP_MAX*0.1)*EGVAR(approval,multiplier))
 #define AP_CAPITAL ((AP_MAX*0.15)*EGVAR(approval,multiplier))
 #define AP_CONVERT1(POS) (linearConversion [AP_MIN, AP_MAX, [POS] call EFUNC(approval,getValue), 0, 1, true])
-#define AP_CONVERT2(POS) (1 - ((1 - AP_CONVERT1(POS)) * 0.5))
+#define AP_CONVERT2(POS) ((1 - AP_CONVERT1(POS)) * 0.5)

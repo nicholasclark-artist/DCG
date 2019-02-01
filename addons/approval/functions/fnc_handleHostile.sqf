@@ -19,7 +19,7 @@ if !(_players isEqualTo []) then {
     private _pos = getPos _player;
 
     if (!([_pos] call EFUNC(main,inSafezones)) && {alive _player} && {((getPos player) select 2) < 10}) then {
-        if (random 1 > AP_CONVERT2(_pos)) then {
+        if (PROBABILITY(AP_CONVERT2(_pos))) then {
             _ret = [_player] call FUNC(spawnHostile);
 
             if (GVAR(hostileHint) && {_ret}) then {
