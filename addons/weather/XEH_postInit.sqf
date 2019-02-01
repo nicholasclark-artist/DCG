@@ -7,11 +7,11 @@ __________________________________________________________________*/
 POSTINIT;
 
 [QEGVAR(main,debug), {
-    [_this select 0] call FUNC(handleDebug);
+    _this call FUNC(handleDebug);
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(dateChange), {
-    INFO("Date changed, adjusting initial forecast");
+    INFO("date changed, adjusting initial forecast");
 
     GVAR(date) = date;
     

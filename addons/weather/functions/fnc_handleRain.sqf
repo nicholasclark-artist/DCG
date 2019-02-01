@@ -17,4 +17,4 @@ GVAR(rainForecast) = ([1] call FUNC(getForecast)) select 1;
 
 WEATHER_DELAY_RAIN setRain GVAR(rainForecast);
 
-TRACE_5("",GVAR(rainForecast),_currentRain,overcast,lightnings,rainbow);
+TRACE_5("",_currentRain,GVAR(rainForecast),overcast,lightnings,rainbow);

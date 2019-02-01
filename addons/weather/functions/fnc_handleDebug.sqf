@@ -9,13 +9,15 @@ Arguments:
 0: debug setting <NUMBER>
 
 Return:
-number
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
 switch (_this select 0) do {
     case 0: { 
-        removeMissionEventHandler ["EachFrame", GVAR(debug)];
+        // removeMissionEventHandler ["EachFrame", GVAR(debug)];
+        removeAllMissionEventHandlers "EachFrame";
+        GVAR(debug) = nil;
     };
     case 1: { 
         GVAR(debug) = addMissionEventHandler ["EachFrame", { 
@@ -36,3 +38,5 @@ switch (_this select 0) do {
     };
     default { };
 };
+
+nil

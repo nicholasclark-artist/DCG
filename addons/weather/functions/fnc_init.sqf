@@ -37,7 +37,7 @@ if !(_data isEqualTo []) then {
     if (GVAR(hour) < 0) then {GVAR(hour) = round random 23};
 
     // set date before getting forecast
-    GVAR(date) = [2019, GVAR(month), ceil random 27, GVAR(hour), round random 30];
+    GVAR(date) = [2019, GVAR(month), ceil random 27, GVAR(hour), floor random 30];
     setDate GVAR(date);
 
     // update measurements 

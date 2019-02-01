@@ -12,12 +12,13 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private _diff = GVAR(temperatureCurrent) - (call FUNC(getDewPoint));
+// temperature-dew point spread
+private _spread = GVAR(temperatureCurrent) - (call FUNC(getDewPoint));
 
-TRACE_1("",_diff);
+TRACE_1("",_spread);
 
-private _fog = if (_diff < 2.5) then {
-    random [0,0.2,0.6] - _diff * 0.11;
+private _fog = if (_spread < 2.5) then {
+    random [0,0.2,0.6] - _spread * 0.11;
 } else {
     0
 };
