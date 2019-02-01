@@ -8,10 +8,9 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-// #define WEATHER_DELAY (1800 * timeMultiplier)
 #define WEATHER_DELAY_OVERCAST 0
-#define WEATHER_DELAY_RAIN ((random (300 - 60)) + 60) 
-#define WEATHER_DELAY_FOG 1800
+#define WEATHER_DELAY_RAIN (((random (300 - 60)) + 60) * timeMultiplier)
+#define WEATHER_DELAY_FOG (1800 * timeMultiplier)
 
 #define WEATHER_DEVIATION 0.002
 
