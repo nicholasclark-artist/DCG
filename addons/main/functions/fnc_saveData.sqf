@@ -115,7 +115,7 @@ if (CHECK_ADDON_2(fob)) then {
 
 // WEATHER ADDON
 if (CHECK_ADDON_2(weather)) then {
-    private _data = [overcast,date];
+    private _data = [GVAR(overcastForecast),GVAR(rainForecast),GVAR(fogForecast),date];
 
     PUSHBACK_DATA(weather,_data);
 };
