@@ -63,6 +63,7 @@ PREP(debug);
 PREP(splitGroup);
 PREP(landAt);
 PREP(shuffle);
+PREP(parseFaction);
 
 // settings variables 
 GVAR(settingsInitFinished) = false;
