@@ -51,7 +51,7 @@ if (_side isEqualTo 2) exitWith {
 };
 
 if (_side isEqualTo 3) exitWith {
-    _ret = [_side, GVAR(factionsCiv), GVAR(filtersCiv)] call _fnc_parse;
+    _ret = [_side, GVAR(factionsCiv), GVAR(filtersCiv)] call FUNC(parseFaction);
 
     GVAR(unitsCiv) = _ret select 0;
     GVAR(vehiclesCiv) = _ret select 1;
