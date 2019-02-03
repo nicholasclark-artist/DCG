@@ -8,23 +8,22 @@ handle cleanup
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CLEAN_DIST 500
+#define CLEAN_DIST 300
 
 GVAR(cleanup) = GVAR(cleanup) select {!isNull _x}; // remove null elements
 
 if !(GVAR(cleanup) isEqualTo []) then {
-    for "_i" from (count GVAR(cleanup) - 1) to 0 step -1 do {
-        private _entity = GVAR(cleanup) select _i;
+    // get non object entities
+    private _entities = GVAR(cleanup) select {!(_x isEqualType objNull)};
+    // get objects, check for force cleanup and near players
+    private _objects = GVAR(cleanup) select {(_x isEqualType objNull) && {_x getVariable [QGVAR(forceCleanup),false] || {[getPos _x,CLEAN_DIST] call EFUNC(main,getNearPlayers) isEqualTo []}}};
 
-        if !(_entity isEqualType objNull) exitWith {
-            _entity call CBA_fnc_deleteEntity;
-        };
+    _entities append _objects;
 
-        if (_entity getVariable [QGVAR(forceCleanup),false] || {[getPos _entity,CLEAN_DIST] call EFUNC(main,getNearPlayers) isEqualTo []}) then {
-            _entity call CBA_fnc_deleteEntity;
-        };
-    };
+    _entities call CBA_fnc_deleteEntity;
 };
+
+nil
