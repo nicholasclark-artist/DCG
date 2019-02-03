@@ -71,7 +71,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 
     // update locations with safe positions
     if !([_x select 1,2,0] call FUNC(isPosSafe)) then {
-        _places = selectBestPlaces [_x select 1, (_x select 2)*0.5, "(1 + houses) * (1 - sea)", 35, 4];
+        _places = selectBestPlaces [_x select 1, (_x select 2)*0.5, EX_HOUSES, 35, 4];
         _places = _places select {(_x select 1) > 0 && {[_x select 0,2,0] call FUNC(isPosSafe)}};
 
         // @todo remove location if safe position not found

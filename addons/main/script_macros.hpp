@@ -33,7 +33,14 @@
 
 #define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
 
-// fob cost macros
+// terrain expressions 
+#define EX_HOUSES "houses * (1 - meadow * 3)"
+#define EX_MEADOW "meadow * (1 - forest) * (1 - sea) * (1 - houses * 2)"
+#define EX_FOREST "(forest + trees) * (1 - meadow * 3)"
+#define EX_HILL "hills * (1 - meadow * 3)"
+#define EX_COAST "sea - waterDepth"
+
+// fob cost
 #define FOB_COST_MAN 2
 #define FOB_COST_CAR 7
 #define FOB_COST_TANK 10
@@ -45,7 +52,7 @@
 #define FOB_COST_FORT 0.2
 #define FOB_COST_SIGN 0.1
 
-// approval macros
+// approval
 // #define AP_LOCATION_ID(LOCATION) ([QUOTE(PREFIX),"approval",LOCATION] joinString "_")
 #define AP_MIN 0
 #define AP_MAX 100

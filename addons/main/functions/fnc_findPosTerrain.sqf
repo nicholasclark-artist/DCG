@@ -33,16 +33,16 @@ private _expression = "";
 
 call {
     if (COMPARE_STR(_terrain,"meadow")) exitWith {
-        _expression = "(1 + meadow) * (1 - forest) * (1 - sea)";
+        _expression = EX_MEADOW;
     };
     if (COMPARE_STR(_terrain,"forest")) exitWith {
-        _expression = "(1 + forest + trees) * (1 - sea)";
+        _expression = EX_FOREST;
     };
     if (COMPARE_STR(_terrain,"house")) exitWith {
-        _expression = "(1 + houses) * (1 - sea)";
+        _expression = EX_HOUSES;
     };
     if (COMPARE_STR(_terrain,"hill")) exitWith {
-        _expression = "(1 + hills) * (1 - sea)";
+        _expression = EX_HILL;
     };
 };
 
