@@ -38,6 +38,10 @@ if (_hostilePos isEqualTo []) exitWith {
     _ret
 };
 
+// set z height to average eyePos
+_hostilePos set [2,1.49];
+_hostilePos = ATLToASL _hostilePos;
+
 if ({[_hostilePos,eyePos _x] call EFUNC(main,inLOS)} count _nearPlayers > 0) exitWith {
     WARNING("Hostile position in line of sight");
     _ret
