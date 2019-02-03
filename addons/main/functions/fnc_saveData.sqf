@@ -15,7 +15,7 @@ __________________________________________________________________*/
     LOG_2("Saving %1: %2.",QGVARMAIN(ADDONTOSAVE),DATATOSAVE); \
     GVAR(saveDataScenario) pushBack [QGVARMAIN(ADDONTOSAVE),DATATOSAVE]
 
-if !(isServer) exitWith {};
+if (!isServer || {CBA_missionTime < 60}) exitWith {};
 
 // overwrite current data
 GVAR(saveDataScenario) = [SAVE_SCENARIO_ID];
