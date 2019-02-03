@@ -3,19 +3,12 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#ifdef DISABLE_COMPILE_CACHE
-    #define WEATHER_DEBUG_HINT true
-#else
-    #define WEATHER_DEBUG_HINT false
-#endif
 
 POSTINIT;
 
-if (WEATHER_DEBUG_HINT) then {
-    [QEGVAR(main,debug), {
-        _this call FUNC(handleDebug);
-    }] call CBA_fnc_addEventHandler;
-};
+// [QEGVAR(main,debug), {
+//     _this call FUNC(handleDebug);
+// }] call CBA_fnc_addEventHandler;
 
 [QGVAR(dateChange), {
     INFO("date changed, adjusting initial forecast");

@@ -62,7 +62,7 @@ if !(_data isEqualTo []) then {
 
             forceWeatherChange;
 
-            TRACE_4("Initial forecast",nextWeatherChange,GVAR(overcast),GVAR(rain),GVAR(fog));
+            TRACE_5("initial forecast",nextWeatherChange,GVAR(overcast),GVAR(rain),GVAR(fog),date);
         };
         
         // handle date changes and measurement updates
@@ -80,7 +80,7 @@ if !(_data isEqualTo []) then {
 [
     {nextWeatherChange < 1},
     {
-        INFO("Handling forecast");
+        INFO("handling forecast");
 
         [FUNC(handleForecast), 1] call CBA_fnc_addPerFrameHandler;
 

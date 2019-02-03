@@ -19,6 +19,5 @@ params ["_name","_value"];
 
 if (!GVAR(settingsInitFinished) || {!isMultiplayer}) exitWith {};
 
-// @todo add all changed settings to an array and send one msg, so warnings are not overwritten
 WARNING_1(MSG,_name);
 [format [MSG,_name]] call FUNC(displayText);
