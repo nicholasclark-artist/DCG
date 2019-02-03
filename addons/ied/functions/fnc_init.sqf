@@ -12,13 +12,15 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define ACE_TYPES ["IEDUrbanBig_Remote_Mag","IEDUrbanSmall_Remote_Mag"]
+#define VANILLA_TYPES ["IEDUrbanBig_F","IEDUrbanSmall_F"]
 
 {
-    _roads = _x nearRoads 200;
+    private _roads = _x nearRoads 200;
 
     if !(_roads isEqualTo []) then {
         _road = selectRandom _roads;
-        _pos = getPos _road;
+        private _pos = getPos _road;
 
         if (!([_pos] call EFUNC(main,inSafezones)) && {isOnRoad _road}) then {
             _pos = _pos getPos [5, random 360];
@@ -41,5 +43,9 @@ __________________________________________________________________*/
         };
     };
 } forEach _this;
+
+if !(CHECK_ADDON_1(ace_explosives)) then {
+    [FUNC(handleIED), 2, []] call CBA_fnc_addPerFrameHandler;
+};
 
 nil
