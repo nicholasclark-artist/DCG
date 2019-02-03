@@ -17,9 +17,4 @@ params [
     ["_position",[],[[]]]
 ];
 
-{
-    if (_position inArea _x) exitWith {
-        _x
-    };
-    nil
-} forEach GVAR(regions);
+GVAR(regions) select (GVAR(regions) findIf {_position inArea _x})
