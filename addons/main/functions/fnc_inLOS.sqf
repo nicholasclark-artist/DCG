@@ -16,8 +16,8 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_posA",[0,0,0],[[]]],
-    ["_posB",[0,0,0],[[]]],
+    ["_posA",[],[[]]],
+    ["_posB",[],[[]]],
     ["_ignore",objNull,[objNull]],
     ["_ignore2",objNull,[objNull]]
 ];

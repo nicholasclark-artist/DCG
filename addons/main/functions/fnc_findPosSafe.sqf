@@ -13,6 +13,7 @@ Arguments:
 4: allow water <NUMBER>
 5: max gradient <NUMBER>
 6: direction min and max <ARRAY>
+6: default position <ARRAY>
 
 Return:
 array
@@ -27,7 +28,8 @@ params [
     ["_check",0,[0,objNull]],
     ["_water",-1,[0]],
     ["_gradient",-1,[0]],
-    ["_dir",[0,360],[[]]]
+    ["_dir",[0,360],[[]]],
+    ["_default",[],[[]]]
 ];
 
 scopeName "main";
@@ -43,6 +45,8 @@ for "_i" from 1 to ITERATIONS do {
 WARNING("falling back to default position");
 
 (_water > 0) call {
+    if !(_default isEqualTo []) exitWith {_default};
+    
     private _pos = getArray (configFile >> "CfgWorlds" >> worldName >> "Armory" >> ["positionStart", "positionStartWater"] select _this);
 
     if !(_pos isEqualTo []) exitWith {
