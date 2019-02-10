@@ -3,11 +3,11 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-set object at safe position
+set object at safe position (positionASL)
 
 Arguments:
 0: object <OBJEECT>
-1: positionASL <ARRAY>
+1: position <ARRAY>
 
 Return:
 nothing
@@ -18,6 +18,12 @@ params [
     ["_obj",objNull,[objNull]],
     ["_pos",[0,0,0],[[]]]
 ];
+
+// force positionASL, allow underwater positions
+if ((_pos select 2) > 0) then {
+    _pos =+ _pos; 
+    _pos set [2,getTerrainHeightASL _pos];
+};
 
 _obj setVectorUp surfaceNormal _pos;
 _obj setPosASL _pos;

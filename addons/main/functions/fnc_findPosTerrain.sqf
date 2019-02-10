@@ -21,7 +21,7 @@ __________________________________________________________________*/
 #define GRAD 0.275
 
 params [
-    ["_anchor",[0,0,0],[[]]],
+    ["_anchor",[],[[]]],
     ["_range",100,[0]],
     ["_terrain","",[""]],
     ["_check",0,[0]],
@@ -46,7 +46,7 @@ call {
     };
 };
 
-if (_terrain isEqualTo "" || {_expression isEqualTo ""}) exitWith {
+if (COMPARE_STR(_terrain,"") || {COMPARE_STR(_expression,"")}) exitWith {
     WARNING("Cannot find position, expression is empty");
 };
 

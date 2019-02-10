@@ -17,9 +17,10 @@ private ["_pos","_ignore","_house"];
 
 if ((_this select 0) isEqualType objNull) then {
     _pos = getPosWorld (_this select 0);
-    _ignore = (_this select 0);
+    _ignore = _this select 0;
 } else {
-    _pos = AGLToASL (_this select 0);
+    _pos =+ _this select 0;
+    _pos set [2, getTerrainHeightASL _pos];
     _ignore = objNull;
 };
 

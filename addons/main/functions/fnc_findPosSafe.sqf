@@ -9,36 +9,55 @@ Arguments:
 0: center position <ARRAY>
 1: min distance from center <NUMBER>
 2: max distance from center <NUMBER>
-3: min distance from object <NUMBER>
+3: search radius, minimum distance from objects or object used to calculate search radius <NUMBER, OBJECT>
 4: allow water <NUMBER>
 5: max gradient <NUMBER>
-6: direction to search <NUMBER>
+6: direction min and max <ARRAY>
 
 Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define ITERATIONS 1000
 
 params [
-    ["_center",[0,0,0],[[]]],
+    ["_center",[],[[],objNull]],
     ["_min",0,[0]],
     ["_max",50,[0]],
-    ["_dist",0,[0]],
+    ["_check",0,[0,objNull]],
     ["_water",-1,[0]],
     ["_gradient",-1,[0]],
-    ["_dir",-1,[0]]
+    ["_dir",[0,360],[[]]]
 ];
 
-if (_dir < 0) then {
-    _dir = random 360;
+scopeName "main";
+
+for "_i" from 1 to ITERATIONS do {
+    _center getPos [floor (random ((_max - _min) + 1)) + _min, floor (random (((_dir select 1) - (_dir select 0)) + 1)) + (_dir select 0)] call {
+        if !([_this,_check,_water,_gradient] call FUNC(isPosSafe)) exitWith {};   
+        _this set [2,getTerrainHeightASL _this];
+        _this select [0,3] breakOut "main";
+    };
 };
 
-private _pos = _center getPos [floor (random ((_max - _min) + 1)) + _min, _dir];
+WARNING("falling back to default position");
 
-if !([_pos,_dist,_water,_gradient] call FUNC(isPosSafe)) exitWith {
-    _center
-};
+(_water > 0) call {
+    private _pos = getArray (configFile >> "CfgWorlds" >> worldName >> "Armory" >> ["positionStart", "positionStartWater"] select _this);
 
-_pos = AGLToASL _pos;
+    if !(_pos isEqualTo []) exitWith {
+        _pos set [2, getTerrainHeightASL _pos];
 
-_pos
+        _pos
+    };
+
+    _pos = getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition");
+
+    if !(_pos isEqualTo []) exitWith {
+        _pos set [2, getTerrainHeightASL _pos];
+        
+        _pos
+    };
+
+    [worldSize * 0.5, worldSize * 0.5, getTerrainHeightASL [worldSize * 0.5, worldSize * 0.5]]
+}
