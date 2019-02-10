@@ -11,7 +11,7 @@ POSTINIT;
 
 // eventhandlers
 [QGVARMAIN(settingsInitialized), {
-    [{if (GVAR(autoSave)) then {call FUNC(saveData)}}, 1800, []] call CBA_fnc_addPerFrameHandler; // @todo start PFH after one cooldown cycle
+    [{if (GVAR(autoSave)) then {call FUNC(saveData)}}, 1800, []] call CBA_fnc_addPerFrameHandler;
     call FUNC(handleLoadData);
 }] call CBA_fnc_addEventHandler;
 
@@ -27,7 +27,7 @@ POSTINIT;
 }] call CBA_fnc_addEventHandler;
 
 // per frame handlers
-[FUNC(handleCleanup), 120, []] call CBA_fnc_addPerFrameHandler; // @todo start PFH after one cooldown cycle
+[FUNC(handleCleanup), 120, []] call CBA_fnc_addPerFrameHandler;
 
 // @todo remove? groups marked for deletion in FUNC(spawnGroup)
 // if !(isNil {HEADLESSCLIENT}) then { 

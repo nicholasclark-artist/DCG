@@ -24,6 +24,28 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
+    QGVAR(allowSafezone),
+    "CHECKBOX",
+    ["Allow in Safezones","Allow civilian entities in safezones."],
+    COMPONENT_NAME,
+    true,
+    true,
+    {[QGVAR(allowSafezone),_this] call EFUNC(main,handleSettingChange)},
+    true
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(blacklist),
+    "EDITBOX",
+    ["Blacklisted Locations","Exclude locations by listing names. Names must be separated by a comma."],
+    COMPONENT_NAME,
+    "",
+    true,
+    {[QGVAR(blacklist),_this] call EFUNC(main,handleSettingChange)},
+    true
+] call CBA_Settings_fnc_init;
+
+[
     QGVAR(spawnDist),
     "SLIDER",
     ["Spawn Distance","Civilian entities will spawn when a player is within this distance of a location."],
