@@ -11,10 +11,11 @@ PREP(handleUnit);
 PREP(handleVehicle);
 PREP(handleAnimal);
 PREP(spawnVehicle);
-PREP(spawnAnimal);
+PREP(spawnAmbient);
 
 GVAR(drivers) = [];
-GVAR(blacklist) = [];
+GVAR(ambient) = [];
+GVAR(animalCount) = 0;
 
 SETTINGS_INIT;
    

@@ -8,6 +8,5 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define CIV_HANDLER_DELAY 10
 #define CIV_ZDIST 200
 #define CIV_LOCATION_ID(NAME) ([QUOTE(ADDON),NAME] joinString "_")

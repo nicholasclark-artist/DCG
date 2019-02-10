@@ -3,40 +3,37 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define LOCATIONS_TYPE ["Alsatian_Random_F","Fin_random_F","Cock_random_F","Hen_random_F"]
-#define LOCALS_TYPE ["Sheep_random_F","Rabbit_F"]
-#define HILLS_TYPE ["Sheep_random_F","Goat_random_F"]
-#define ANIMAL_COUNT 32
 
 POSTINIT;
 
 [QGVARMAIN(settingsInitialized), {
-    [FUNC(handleVehicle), GVAR(vehCooldown), []] call CBA_fnc_addPerFrameHandler;
+    // convert to array and format
+    GVAR(blacklist) = GVAR(blacklist) splitString ",";
+    GVAR(blacklist) = GVAR(blacklist) apply {toLower _x};
 
-    // get animal spawn locations
-    _animalList = [];
+    // get locations for unit spawns
+    private _locations =+ EGVAR(main,locations);
+    private _locals =+ EGVAR(main,locals);
 
-    _animalList append (EGVAR(main,locations) apply {[_x select 1,LOCATIONS_TYPE]});
-    _animalList append (EGVAR(main,locals) apply {[_x select 1,LOCALS_TYPE]});
-    _animalList append (EGVAR(main,hills) apply {[_x select 0,HILLS_TYPE]});
+    // remove unsuitable locals
+    _locals = _locals select {
+        toLower (_x select 0) find "pier" < 0 && 
+        {toLower (_x select 0) find "airbase" < 0} &&
+        {toLower (_x select 0) find "airfield" < 0} &&
+        {toLower (_x select 0) find "terminal" < 0}
+    };
 
-    [_animalList] call EFUNC(main,shuffle);
+    _locations append _locals;
 
-    _animalList resize (count _animalList min ANIMAL_COUNT);
+    if !(GVAR(allowSafezone)) then {
+        // remove locations in safezones
+        GVAR(blacklist) append (_locations select {[_x select 1] call EFUNC(main,inSafezones)});
+    };
 
-    // animal PFH
-    [FUNC(handleAnimal), CIV_HANDLER_DELAY, _animalList] call CBA_fnc_addPerFrameHandler;
+    [FUNC(handleVehicle), GVAR(vehCooldown)] call CBA_fnc_addPerFrameHandler;
+    [FUNC(handleAnimal), 300] call CBA_fnc_addPerFrameHandler;
 
-    // debug
-    {
-        _mrk = createMarker [format["%1_animal_%2",QUOTE(PREFIX),_forEachIndex],ASLtoAGL (_x select 0)];
-        _mrk setMarkerColor "ColorWhite";
-        _mrk setMarkerShape "ELLIPSE";
-        _mrk setMarkerBrush "Border";
-        _mrk setMarkerSize [GVAR(spawnDist),GVAR(spawnDist)];
-        [_mrk] call EFUNC(main,setDebugMarker);
-    } forEach _animalList;
+    // 'waitUntilAndExecute', possible fix for civ module init failing sometimes
+    [{CBA_missionTime > 1}, FUNC(handleUnit), _locations] call CBA_fnc_waitUntilAndExecute;
 }] call CBA_fnc_addEventHandler;
 
-// 'waitUntilAndExecute', possible fix for civ module init failing sometimes
-[{CBA_missionTime > 1}, FUNC(handleUnit), EGVAR(main,locations)] call CBA_fnc_waitUntilAndExecute;
