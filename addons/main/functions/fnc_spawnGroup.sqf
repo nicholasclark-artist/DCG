@@ -89,7 +89,7 @@ if (_type isEqualTo 0) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
             };
 
-            _unit = _grp createUnit [selectRandom _unitPool, [0,0,0], [], 0, "NONE"];
+            _unit = _grp createUnit [selectRandom _unitPool, [0,0,worldSize], [], 0, "CAN_COLLIDE"];
 
             // assign units before 'moveIn' so they dont momentarily dismount
             _unit assignAsCargo _veh;
