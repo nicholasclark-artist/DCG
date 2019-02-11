@@ -21,3 +21,5 @@ if (!GVAR(settingsInitFinished) || {!isMultiplayer}) exitWith {};
 
 WARNING_1(MSG,_name);
 [format [MSG,_name]] call FUNC(displayText);
+
+nil

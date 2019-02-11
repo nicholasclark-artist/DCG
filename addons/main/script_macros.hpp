@@ -34,7 +34,7 @@
 #define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
 
 // terrain expressions 
-#define EX_HOUSES "houses * (1 - meadow * 3)"
+#define EX_HOUSES "houses * (1 - meadow * 2)"
 #define EX_MEADOW "meadow * (1 - forest) * (1 - sea) * (1 - houses * 2)"
 #define EX_FOREST "(forest + trees) * (1 - meadow * 3)"
 #define EX_HILL "hills * (1 - meadow * 3)"
