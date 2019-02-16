@@ -3,30 +3,40 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-transfers objects to a requested owner
+transfer entity to a requested owner
 
 Arguments:
-0: objects to transfer <OBJECT,ARRAY>
-1: machine to receive objects <NUMBER>
+0: entity to transfer <OBJECT,ARRAY>
+1: machine id to receive entity <NUMBER>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
 if (!isServer) exitWith {};
 
-params ["_obj","_id"];
+params [
+    ["_entity",objNull,[objNull,[]]],
+    ["_id",2,[0]]
+];
 
-{
-    if !(isNull group _x) then {
-        if !(groupOwner group _x isEqualTo _id) then {
-            group _x setGroupOwner _id;
-            LOG_2("Transferring group %1 to %2.",group _x,_id);
-        };
-    } else {
-        _x setOwner _id;
-        LOG_2("Transferring %1 to %2.",typeOf _x,_id);
+switch (typeName _entity) do {
+    case "ARRAY": {
+        {
+            [_x,_id] call FUNC(setOwner);
+        } forEach _entity;
     };
-    false
-} count _obj;
+    case "OBJECT": {
+        if !(isNull group _entity) then {
+            group _entity setGroupOwner _id;
+            TRACE_2("",group _entity,_id);
+        } else {
+            _entity setOwner _id;
+            TRACE_2("",_entity,_id);
+        };
+    };
+    default { };
+};
+
+nil

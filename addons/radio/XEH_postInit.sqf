@@ -6,6 +6,9 @@ __________________________________________________________________*/
 
 POSTINIT;
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 [[],{
     call FUNC(handleLoadout);
     call FUNC(setRadioSettings);

@@ -12,6 +12,9 @@ PREP(handleClient);
 
 GVAR(handleDisconnectID) = -1;
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 publicVariable QFUNC(restoreLoadout);
 publicVariable QFUNC(handleClient);
 

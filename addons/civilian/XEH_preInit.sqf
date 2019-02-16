@@ -17,5 +17,8 @@ GVAR(drivers) = [];
 GVAR(ambient) = [];
 GVAR(animalCount) = 0;
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 SETTINGS_INIT;
    

@@ -13,6 +13,9 @@ PREP(setRadioSettings);
 PREP(setRadioACRE);
 PREP(setRadioTFAR);
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 publicVariable QFUNC(handleLoadout);
 publicVariable QFUNC(setRadio);
 publicVariable QFUNC(setRadioSettings);

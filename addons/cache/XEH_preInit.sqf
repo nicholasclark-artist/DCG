@@ -10,4 +10,7 @@ PREP(initSettings);
 PREP(handleCache);
 PREP(disableCache);
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 SETTINGS_INIT;

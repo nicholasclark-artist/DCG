@@ -12,4 +12,7 @@ PREP(init);
 
 GVAR(list) = [];
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 SETTINGS_INIT;

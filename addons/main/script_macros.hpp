@@ -12,10 +12,10 @@
 #define PREP_MODULE(folder) [] call compile preprocessFileLineNumbers QPATHTOF(folder\__PREP__.sqf)
 #define MSG_EXIT QUOTE(Exiting: ADDON version: VERSION)
 
-#define PREINIT if (!isServer) exitWith {LOG(MSG_EXIT)}; LOG(MSG_INIT)
-#define POSTINIT if (!isMultiplayer || {!isServer} || {!EGVAR(main,enable)} || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)}
+#define PREINIT if (!isServer && {hasInterface}) exitWith {LOG(MSG_EXIT)}; LOG(MSG_INIT)
+#define POSTINIT if (!isMultiplayer || {!isServer && hasInterface} || {!EGVAR(main,enable)} || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)}
 
-#define HEADLESSCLIENT GVARMAIN(HC)
+#define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
 #define SETTINGS_INIT publicVariable QFUNC(initSettings); remoteExecCall [QFUNC(initSettings), -2, true]; call FUNC(initSettings)
 
@@ -31,11 +31,9 @@
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
 
-#define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
-
 // terrain expressions 
 #define EX_HOUSES "houses * (1 - meadow * 2)"
-#define EX_MEADOW "meadow * (1 - forest) * (1 - sea) * (1 - houses * 2)"
+#define EX_MEADOW "meadow * (1 - forest) * (1 - sea) * (1 - houses * 3)"
 #define EX_FOREST "(forest + trees) * (1 - meadow * 3)"
 #define EX_HILL "hills * (1 - meadow * 3)"
 #define EX_COAST "sea - waterDepth"

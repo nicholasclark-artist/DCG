@@ -6,6 +6,9 @@ __________________________________________________________________*/
 
 POSTINIT;
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 // [QEGVAR(main,debug), {
 //     _this call FUNC(handleDebug);
 // }] call CBA_fnc_addEventHandler;

@@ -26,7 +26,7 @@ params [
 [
     {getAssignedCuratorUnit GVAR(curator) isEqualTo (_this select 0)},
     {
-        [(curatorEditableObjects GVAR(curator)),owner (_this select 0)] call EFUNC(main,setOwner); // set object locality to new unit, otherwise non local objects lag when edited
+        [curatorEditableObjects GVAR(curator),owner (_this select 0)] call EFUNC(main,setOwner); // set object locality to new unit, otherwise non local objects lag when edited
 
         [
             [name (_this select 1),_this select 2],

@@ -6,5 +6,8 @@ __________________________________________________________________*/
 
 POSTINIT;
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 // setup clients
 remoteExecCall [QFUNC(handleClient),0,true];

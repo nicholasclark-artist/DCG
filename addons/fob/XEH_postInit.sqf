@@ -6,6 +6,9 @@ __________________________________________________________________*/
 
 POSTINIT;
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 [QGVAR(create), {_this call FUNC(handleCreate)}] call CBA_fnc_addEventHandler;
 [QGVAR(delete), FUNC(handleDelete)] call CBA_fnc_addEventHandler;
 [QGVAR(transfer), {_this call FUNC(handleTransfer)}] call CBA_fnc_addEventHandler;

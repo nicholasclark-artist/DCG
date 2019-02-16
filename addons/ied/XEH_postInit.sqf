@@ -6,4 +6,7 @@ __________________________________________________________________*/
 
 POSTINIT;
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 EGVAR(main,grid) call FUNC(init);

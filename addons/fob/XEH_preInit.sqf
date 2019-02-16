@@ -28,6 +28,9 @@ GVAR(curatorExternal) = objNull;
 GVAR(placeCoef) = -0.025;
 GVAR(deleteCoef) = 0.025;
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 publicVariable QFUNC(getKeybind);
 publicVariable QFUNC(getChildren);
 publicVariable QFUNC(getCuratorCost);

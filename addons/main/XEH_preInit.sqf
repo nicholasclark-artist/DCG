@@ -13,6 +13,7 @@ PREP(initSafezones);
 PREP(initClient);
 PREP(displayText);
 PREP(displayGUIMessage);
+PREP(handleHCConnected);
 PREP(handleLoadData);
 PREP(handleCleanup);
 PREP(handleSettingChange);
@@ -29,6 +30,7 @@ PREP(isPosSafe);
 PREP(getNearPlayers);
 PREP(getPool);
 PREP(getUnitCount);
+PREP(sendToHC);
 PREP(setAction);
 PREP(setOwner);
 PREP(setSide);
@@ -66,9 +68,46 @@ PREP(landAt);
 PREP(shuffle);
 PREP(parseFaction);
 
+// headless client variables 
+GVAR(HC) = objNull;
+
 // settings variables 
 GVAR(settingsInitFinished) = false;
 GVAR(runAtSettingsInitialized) = [];
+
+// eventhandlers 
+["CBA_settingsInitialized", {
+    TRACE_1("CBA_settingsInitialized",_this);
+
+    if !(SLX_XEH_MACHINE select 8) then {
+        WARNING("PostInit not finished");
+    };
+
+    INFO("Settings initialized");
+
+    // run event on settings init
+    [QGVARMAIN(settingsInitialized), []] call CBA_fnc_localEvent;
+
+    if (isServer) then {
+        // send var to clients for handling setting changes
+        GVAR(settingsInitFinished) = true;
+        publicVariable QGVAR(settingsInitFinished);
+
+        // handle delayed functions
+        INFO_1("%1 delayed functions running",count GVAR(runAtSettingsInitialized));
+        
+        {
+            (_x select 1) call (_x select 0);
+        } forEach GVAR(runAtSettingsInitialized);
+        
+        GVAR(runAtSettingsInitialized) = nil;
+    };
+}] call CBA_fnc_addEventHandler;
+
+// headless client exit 
+if (!isServer) exitWith {};
+
+[QGVAR(HCConnected), FUNC(handleHCConnected)] call CBA_fnc_addEventHandler;
 
 // cleanup variables
 GVAR(cleanup) = [];
@@ -78,8 +117,8 @@ GVAR(locations) = [];
 GVAR(locals) = [];
 GVAR(hills) = [];
 GVAR(marines) = [];
-GVAR(range) = worldSize*0.5;
-GVAR(center) = [GVAR(range),GVAR(range),0];
+GVAR(radius) = worldSize*0.5;
+GVAR(center) = [GVAR(radius),GVAR(radius),getTerrainHeightASL [GVAR(radius),GVAR(radius)]];
 GVAR(grid) = [GVAR(center),worldSize/round(worldSize/1000),worldSize,0,0,0] call FUNC(findPosGrid);
 
 // debug variables
@@ -124,7 +163,7 @@ publicVariable QFUNC(initClient);
 publicVariable QFUNC(handleSettingChange);
 
 // variables required on all machines
-publicVariable QGVAR(range);
+publicVariable QGVAR(radius);
 publicVariable QGVAR(center);
 publicVariable QGVAR(settingsInitFinished);
 publicVariable QUOTE(MAIN_ADDON);
@@ -132,35 +171,8 @@ publicVariable QUOTE(MAIN_ADDON);
 // load current scenario data
 call FUNC(loadDataScenario);
 
-// eventhandlers 
-["CBA_settingsInitialized", {
-    TRACE_1("CBA_settingsInitialized",_this);
-
-    if !(SLX_XEH_MACHINE select 8) then {
-        WARNING("PostInit not finished");
-    };
-
-    INFO("Settings initialized");
-
-    // run event on settings init
-    [QGVARMAIN(settingsInitialized), []] call CBA_fnc_localEvent;
-
-    // send var to clients for handling setting changes
-    GVAR(settingsInitFinished) = true;
-    publicVariable QGVAR(settingsInitFinished);
-
-    // handle delayed functions
-    INFO_1("%1 delayed functions running",count GVAR(runAtSettingsInitialized));
-    
-    {
-        (_x select 1) call (_x select 0);
-    } forEach GVAR(runAtSettingsInitialized);
-    
-    GVAR(runAtSettingsInitialized) = nil;
-}] call CBA_fnc_addEventHandler;
-
-// populate location array 
-call FUNC(setMapLocations);
-
 // init cba settings
 SETTINGS_INIT;
+
+// populate location arrays
+call FUNC(setMapLocations);

@@ -6,6 +6,9 @@ __________________________________________________________________*/
 
 POSTINIT;
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 [QGVARMAIN(settingsInitialized), {
     // convert to array and format
     GVAR(blacklist) = GVAR(blacklist) splitString ",";

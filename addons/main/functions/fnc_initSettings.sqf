@@ -11,10 +11,11 @@ Return:
 bool
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define ERROR_SAMESIDE format ["%1 cannot be equal to %2!",QGVAR(enemySide),QGVAR(playerSide)]
 #define CATEGORY_FACTION [COMPONENT_NAME,"Faction Settings"]
 #define CATEGORY_SAVE [COMPONENT_NAME,"Save System Settings"]
 #define CATEGORY_SAFE [COMPONENT_NAME,"Safezone Settings"]
-#define ERROR_SAMESIDE format ["%1 cannot be equal to %2!",QGVAR(enemySide),QGVAR(playerSide)]
+#define CATEGORY_HC [COMPONENT_NAME,"Headless Client Settings"]
 
 [
     QGVAR(enable),
@@ -188,7 +189,7 @@ __________________________________________________________________*/
     CATEGORY_SAFE,
     true,
     true,
-    {[QGVAR(enable),_this] call FUNC(handleSettingChange)},
+    {[QGVAR(safezoneEnable),_this] call FUNC(handleSettingChange)},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -225,4 +226,15 @@ __________________________________________________________________*/
             default {};
         };
     }
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(enableHC),
+    "CHECKBOX",
+    "Enable Headless Client",
+    CATEGORY_HC,
+    false,
+    true,
+    {[QGVAR(enableHC),_this] call FUNC(handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;

@@ -12,4 +12,7 @@ PREP(handlePatrol);
 GVAR(groups) = [];
 GVAR(blacklist) = [];
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 SETTINGS_INIT;

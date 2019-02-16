@@ -21,6 +21,9 @@ PREP(spawnHostile);
 
 GVAR(regions) = [];
 
+// headless client exit 
+if (!isServer) exitWith {};
+
 publicVariable QFUNC(handleKilled);
 publicVariable QFUNC(initClient);
 
