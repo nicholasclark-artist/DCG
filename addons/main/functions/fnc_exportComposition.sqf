@@ -31,7 +31,7 @@ private _tab = toString [9];
 
 {
     if (ATTRIBUTE_ANCHOR(_x)) exitWith {
-        _anchor = "Land_HelipadEmpty_F" createVehicle [0,0,0];
+        _anchor = "Land_HelipadEmpty_F" createVehicle DEFAULT_SPAWNPOS;
         _anchor setVectorUp [0,0,1];
         _anchor setPosATL [getPosATL _x select 0,getPosATL _x select 1,0];
     };

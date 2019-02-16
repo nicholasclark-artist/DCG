@@ -47,7 +47,7 @@ call {
     _type = "B_cargoNet_01_ammo_F";
 };
 
-GVAR(anchor) = _type createVehicle [0,0,0];
+GVAR(anchor) = _type createVehicle DEFAULT_SPAWNPOS;
 GVAR(anchor) setPos _pos;
 publicVariable QGVAR(anchor);
 GVAR(anchor) allowDamage false;

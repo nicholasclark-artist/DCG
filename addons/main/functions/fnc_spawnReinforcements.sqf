@@ -59,7 +59,7 @@ private _heli = createVehicle [_type,_center getPos [DIST_SPAWN,random 360],[],0
 _heli lock 3;
 
 private _grp = createGroup _side;
-private _pilot = _grp createUnit [selectRandom _unitPool,[0,0,worldSize], [], 0, "CAN_COLLIDE"];
+private _pilot = _grp createUnit [selectRandom _unitPool, DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
 [_grp] call EFUNC(cache,disableCache);
 _pilot assignAsDriver _heli;
 _pilot moveInDriver _heli;

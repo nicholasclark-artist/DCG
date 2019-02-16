@@ -65,7 +65,7 @@ if (_composition isEqualTo []) then {
     _normalized = (CONFIG) select ((_compList select 0) select 1);
 };
 
-private _anchor = "Land_HelipadEmpty_F" createVehicle [0,0,0];
+private _anchor = "Land_HelipadEmpty_F" createVehicle DEFAULT_SPAWNPOS;
 _anchor setVectorUp [0,0,1];
 _anchor setPosATL [_position select 0,_position select 1,0];
 
@@ -80,9 +80,9 @@ for "_i" from 0 to count _objData - 1 do {
     _relPos = call compile _relPos;
 
     _obj = if !(_simple) then {
-        _type createVehicle [0,0,0];
+        _type createVehicle DEFAULT_SPAWNPOS;
     } else {
-        createSimpleObject [_type, [0,0,0]];
+        createSimpleObject [_type, DEFAULT_SPAWNPOS];
     };
 
     _obj setDir _relDir;

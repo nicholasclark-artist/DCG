@@ -39,8 +39,7 @@ if (_hostilePos isEqualTo []) exitWith {
 };
 
 // set z height to average eyePos
-_hostilePos set [2,1.49];
-_hostilePos = ATLToASL _hostilePos;
+_hostilePos set [2,(getTerrainHeightASL _hostilePos) + 1.5];
 
 if ({[_hostilePos,eyePos _x] call EFUNC(main,inLOS)} count _nearPlayers > 0) exitWith {
     WARNING("Hostile position in line of sight");
@@ -62,7 +61,7 @@ call {
             _unitPool = EGVAR(main,unitsInd);
         };
 
-        (selectRandom _unitPool) createUnit [[0,0,0], _tempGrp];
+        (selectRandom _unitPool) createUnit [DEFAULT_SPAWNPOS, _tempGrp];
         private _vest = vest (leader _tempGrp);
         private _weapon = currentWeapon (leader _tempGrp);
         private _mags = magazines (leader _tempGrp);

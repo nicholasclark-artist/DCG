@@ -75,7 +75,7 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
 
         if (!(_roadStart isEqualTo _roadEnd) &&
             {!(CHECK_VECTORDIST(getPosASL _roadStart,getPosASL _roadEnd,CIV_RANGE))} &&
-            {!([getPosASL _roadStart,eyePos _player] call EFUNC(main,inLOS))} &&
+            {!([[(getPosASL _roadStart) select 0,(getPosASL _roadStart) select 1,(getTerrainHeightASL (getPos _roadStart)) + 1.5],eyePos _player] call EFUNC(main,inLOS))} &&
             {([getPos _roadStart,CIV_BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
             {([getPos _roadEnd,CIV_BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
             {!([_roadStart,_roadEnd] call EFUNC(main,inSafezones))}) then {

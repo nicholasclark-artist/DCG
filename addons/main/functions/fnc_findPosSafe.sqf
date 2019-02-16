@@ -63,5 +63,5 @@ WARNING("falling back to default position");
         _pos
     };
 
-    [worldSize * 0.5, worldSize * 0.5, getTerrainHeightASL [worldSize * 0.5, worldSize * 0.5]]
+    GVAR(center)
 }

@@ -58,11 +58,11 @@ call {
         private _type = ceil random 3;
 
         if (_type isEqualTo 1) exitWith { // tower
-            private _tower = _static1 createVehicle [0,0,0];
+            private _tower = _static1 createVehicle DEFAULT_SPAWNPOS;
             _tower setdir ([_tower, _pos] call BIS_fnc_DirTo) + 180;
             _tower setvectorup [0,0,1];
             _tower setPos _posGrid;
-            private _gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
+            private _gunner = (createGroup _side) createUnit [_unit, DEFAULT_SPAWNPOS, [], 0, "NONE"];
             _gunner setFormDir (getDir _tower);
             _gunner setDir (getDir _tower);
             _gunner setPosATL (_tower buildingpos 1);
@@ -91,9 +91,9 @@ call {
                 deleteVehicle _bunker
             };
 
-            private _static = createVehicle [_static2,[0,0,0], [], 0, "CAN COLLIDE"];
+            private _static = createVehicle [_static2, DEFAULT_SPAWNPOS, [], 0, "CAN COLLIDE"];
             _static setPos (_bunker modelToWorld [0,0,-0.8]);
-            private _gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
+            private _gunner = (createGroup _side) createUnit [_unit, DEFAULT_SPAWNPOS, [], 0, "NONE"];
             _gunner moveInGunner _static;
             _gunner doWatch (_bunker modelToWorld [0,-40,1]);
             _gunnerArray pushBack _gunner;
@@ -102,13 +102,13 @@ call {
         };
 
         if !(_posGrid isFlatEmpty [2, -1, 0.4, 3, -1] isEqualTo []) then { // mortar
-            private _static = _static3 createVehicle [0,0,0];
+            private _static = _static3 createVehicle DEFAULT_SPAWNPOS;
             _static setVectorUp surfaceNormal _posGrid;
             _static setPos _posGrid;
             _objArray pushBack _static;
 
             {
-                private _fort = "Land_BagFence_Round_F" createVehicle [0,0,0];
+                private _fort = "Land_BagFence_Round_F" createVehicle DEFAULT_SPAWNPOS;
                 private _fortPos = (_static modelToWorld _x);
                 _fortPos resize 2;
                 _fort setPos _fortPos;
@@ -121,7 +121,7 @@ call {
                 [-2.3,0,0]
             ];
 
-            private _gunner = (createGroup _side) createUnit [_unit, [0,0,0], [], 0, "NONE"];
+            private _gunner = (createGroup _side) createUnit [_unit, DEFAULT_SPAWNPOS, [], 0, "NONE"];
             _gunner moveInGunner _static;
             _gunnerArray pushBack _gunner;
         };

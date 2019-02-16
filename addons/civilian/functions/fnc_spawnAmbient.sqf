@@ -49,11 +49,11 @@ switch _type do {
                 _path = _path + ".p3d";
             };
 
-            private _temp = createSimpleObject [_path,[0,0,1000]];
+            private _temp = createSimpleObject [_path, DEFAULT_SPAWNPOS];
             _temp setDir _dir;
             
             if ([_position,_temp,0] call EFUNC(main,isPosSafe)) then {
-                _veh = createVehicle [_class,[0,0,worldSize],[],0,"CAN_COLLIDE"];
+                _veh = createVehicle [_class, DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
                 _veh setDir _dir;
                 _veh setPosATL _position;
                 GVAR(ambient) pushBack _veh;

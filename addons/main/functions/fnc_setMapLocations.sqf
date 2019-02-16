@@ -84,7 +84,7 @@ _deletionIndices = [];
         
         if !(_position isEqualTo (_x select 1)) then {
             _x set [1,_position];  
-            TRACE_2("%1 new safe pos %2",_x select 0, _position);
+            TRACE_2("new safe pos",_x select 0,_position);
         } else {
             GVAR(locations) set [_forEachIndex, []];
             WARNING_1("removing unsafe location: %1",_x select 0);

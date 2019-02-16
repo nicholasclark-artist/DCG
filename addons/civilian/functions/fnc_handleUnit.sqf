@@ -61,7 +61,7 @@ private _iterations01 = [];
 
         // main module is immediately moved to ambient group, _grp is null after module creation
         private _grp = createGroup sideLogic;
-        private _moduleMain = _grp createUnit ["ModuleCivilianPresence_F", [0,0,0], [], 0, "CAN_COLLIDE"];
+        private _moduleMain = _grp createUnit ["ModuleCivilianPresence_F", DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
         
         // main module does not init sometimes, even with 'BIS_fnc_initModules_disableAutoActivation'
         // force init with 'bis_fnc_initmodules_activate'
@@ -72,6 +72,9 @@ private _iterations01 = [];
         //@todo fix units getting stuck in floors
         private _onCreated = {
             // _this setVehiclePosition [_this, [], 0, "NONE"];
+            _this setVariable [QEGVAR(main,HCBlacklist), true];
+            _this setVariable ["acex_headless_blacklist", true];
+            [group _this] call EFUNC(cache,disableCache);
             _this setSkill 0.1;
         };
         
@@ -121,7 +124,7 @@ private _iterations01 = [];
 
             // waypoint options
             _moduleWaypoint setVariable ["#type",1];
-            _moduleWaypoint setVariable ["#capacity",1];
+            _moduleWaypoint setVariable ["#capacity",2];
             _moduleWaypoint setVariable ["#usebuilding",true];
             _moduleWaypoint setVariable ["#terminal",false];
 

@@ -15,6 +15,7 @@
 #define PREINIT if (!isServer && {hasInterface}) exitWith {LOG(MSG_EXIT)}; LOG(MSG_INIT)
 #define POSTINIT if (!isMultiplayer || {!isServer && hasInterface} || {!EGVAR(main,enable)} || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)}
 
+#define DEFAULT_SPAWNPOS [0,0,worldsize]
 #define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
 #define SETTINGS_INIT publicVariable QFUNC(initSettings); remoteExecCall [QFUNC(initSettings), -2, true]; call FUNC(initSettings)

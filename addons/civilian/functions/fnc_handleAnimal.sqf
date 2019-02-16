@@ -31,7 +31,7 @@ if (isNil "_player") exitWith {};
 
 if (!GVAR(allowSafezone) && {[_player] call EFUNC(main,inSafezones)}) exitWith {};
 
-private _position = getPos _player;
+private _position = getPosATL _player;
 
 // find all places for given expression
 private ["_place"];
