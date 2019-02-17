@@ -73,13 +73,14 @@ if (_type isEqualTo 0) exitWith {
     };
 
     // use createVehicleCrew to populate vehicles, so DCG's faction/filter settings do not interfere
+    _grp addVehicle _veh;
     createVehicleCrew _veh;
     crew _veh joinSilent _grp;
-    _grp addVehicle _veh;
-    (driver _veh) setVariable [QGVAR(isDriver),true];
-
     _veh setUnloadInCombat [true,true];
     
+    // save reference to vehicle
+    (driver _veh) setVariable [QGVAR(assignedVehicle),assignedVehicle _driver,false];
+
     if (_cargo) then {
         [{
             params ["_args","_idPFH"];
@@ -89,7 +90,7 @@ if (_type isEqualTo 0) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
             };
 
-            _unit = _grp createUnit [selectRandom _unitPool, [0,0,worldSize], [], 0, "CAN_COLLIDE"];
+            _unit = _grp createUnit [selectRandom _unitPool, DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
 
             // assign units before 'moveIn' so they dont momentarily dismount
             _unit assignAsCargo _veh;
