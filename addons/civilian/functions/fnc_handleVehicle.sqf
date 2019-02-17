@@ -13,7 +13,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define CIV_ITERATIONS 300
 #define CIV_BUFFER 100
-#define CIV_RANGE 1000
+#define CIV_RANGE 999
 
 // @todo remove mid waypoint if 'forceFollowRoad' is usable
 private ["_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
@@ -21,10 +21,8 @@ private ["_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadCon
 if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
     _player = selectRandom ((call CBA_fnc_players) select {((getPos _x) select 2) < 10});
 
-    if (isNil "_player") exitWith {};
+    if (isNil "_player" || {!GVAR(allowSafezone) && [_player] call EFUNC(main,inSafezones)}) exitWith {};
 
-    if (!GVAR(allowSafezone) && {[_player] call EFUNC(main,inSafezones)}) exitWith {};
-    
     _roads = _player nearRoads 200;
 
     // get start and end point for vehicle that passes by target player
@@ -48,7 +46,7 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
             _road = _roadConnect select 0;
 
             // if loop is done or road is far enough
-            if (!(CHECK_VECTORDIST(getPosASL _road,getPosASL _roadMid,CIV_RANGE)) || {_i isEqualTo CIV_ITERATIONS}) exitWith {
+            if (_i isEqualTo CIV_ITERATIONS || {!(CHECK_DIST2D(getPosATL _road,getPosATL _roadMid,CIV_RANGE))}) exitWith {
                 _roadStart = _road;
             };
         };
@@ -68,18 +66,25 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
             _road = _roadConnect select 1;
 
             // if loop is done or road is far enough
-            if (!(CHECK_VECTORDIST(getPosASL _road,getPosASL _roadMid,CIV_RANGE)) || {_i isEqualTo CIV_ITERATIONS}) exitWith {
+            if (_i isEqualTo CIV_ITERATIONS || {!(CHECK_DIST2D(getPosATL _road,getPosATL _roadMid,CIV_RANGE))}) exitWith {
                 _roadEnd = _road;
             };
         };
 
-        if (!(_roadStart isEqualTo _roadEnd) &&
-            {!(CHECK_VECTORDIST(getPosASL _roadStart,getPosASL _roadEnd,CIV_RANGE))} &&
-            {!([[(getPosASL _roadStart) select 0,(getPosASL _roadStart) select 1,(getTerrainHeightASL (getPos _roadStart)) + 1.5],eyePos _player] call EFUNC(main,inLOS))} &&
-            {([getPos _roadStart,CIV_BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
-            {([getPos _roadEnd,CIV_BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
+        private ["_posRoadStart","_posRoadMid","_posRoadEnd","_eyePosRoadStart"];
+
+        _posRoadStart = getPosATL _roadStart;
+        _posRoadMid = getPosATL _roadMid;
+        _posRoadEnd = getPosATL _roadEnd;
+        _eyePosRoadStart = getPosASL _roadStart;
+        _eyePosRoadStart = _eyePosRoadStart vectorAdd [0,0,1.5];
+
+        if (!(CHECK_DIST2D(_posRoadStart,_posRoadEnd,CIV_RANGE)) &&
+            {!([_eyePosRoadStart,eyePos _player] call EFUNC(main,inLOS))} &&
+            {([_posRoadStart,CIV_BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
+            {([_posRoadEnd,CIV_BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
             {!([_roadStart,_roadEnd] call EFUNC(main,inSafezones))}) then {
-                [getPos _roadStart,getPos _roadMid,getPos _roadEnd,_player] call FUNC(spawnVehicle);
+                [_roadStart,_roadMid,_roadEnd] call FUNC(spawnVehicle);
         };
     };
 }; 

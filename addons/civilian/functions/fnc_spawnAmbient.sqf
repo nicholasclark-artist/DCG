@@ -10,6 +10,7 @@ Arguments:
 1: radius <NUMBER>
 2: ambient object count <NUMBER>
 3: ambient object type <NUMBER>
+4: trigger that activated function <OBJECT>
 
 Return:
 nothing
@@ -20,10 +21,11 @@ params [
     ["_position",[],[[]]],
     ["_radius",100,[0]],
     ["_count",5,[0]],
-    ["_type",0,[0]]
+    ["_type",0,[0]],
+    ["_trigger",objNull,[objNull]]
 ];
 
-GVAR(ambient) = GVAR(ambient) select {!isNull _x}; // remove null elements
+private _ambientList = [];
 
 switch _type do {
     case 0: { // ambient vehicles 
@@ -56,12 +58,15 @@ switch _type do {
                 _veh = createVehicle [_class, DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
                 _veh setDir _dir;
                 _veh setPosATL _position;
-                GVAR(ambient) pushBack _veh;
+                _ambientList pushBack _veh;
             };
             deleteVehicle _temp;
         };
     };
     default { };
 };
+
+// save reference to all ambient objects in trigger
+SETVAR(_trigger,GVAR(ambient),_ambientList);
 
 nil

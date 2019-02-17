@@ -43,7 +43,7 @@ private _iterations01 = [];
         [_houses] call EFUNC(main,shuffle);
         _houses resize (((ceil (count _houses * 0.25)) + 1) min GVAR(unitLimit));
 
-        private _mrk = createMarker [CIV_LOCATION_ID(_name),_position];
+        private _mrk = createMarker [[QUOTE(PREFIX),_name] joinString "_",_position];
         _mrk setMarkerColor ([CIVILIAN,true] call BIS_fnc_sideColor);
         _mrk setMarkerShape "ELLIPSE";
         _mrk setMarkerBrush "Border";
@@ -55,9 +55,11 @@ private _iterations01 = [];
         _trg setTriggerArea [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist), 0, false, CIV_ZDIST];
 
         // spawn ambient objects
-        private _act = format ["[%2,%3,%4] call %1",QFUNC(spawnAmbient),_position,_radius,5 min (count _houses)];
-        private _deact = QUOTE(GVAR(ambient) call EFUNC(main,cleanup)); 
-        _trg setTriggerStatements ["this", _act, _deact];
+        _trg setTriggerStatements [
+            "this",
+            format ["[%2,%3,%4,thisTrigger] call %1",QFUNC(spawnAmbient),_position,_radius,5 min (count _houses)],
+            QUOTE(GETVAR(thisTrigger,QGVAR(ambient),[]) call EFUNC(main,cleanup))
+        ];
 
         // main module is immediately moved to ambient group, _grp is null after module creation
         private _grp = createGroup sideLogic;

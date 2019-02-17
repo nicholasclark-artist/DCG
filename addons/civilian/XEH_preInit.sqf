@@ -14,7 +14,6 @@ PREP(spawnVehicle);
 PREP(spawnAmbient);
 
 GVAR(drivers) = [];
-GVAR(ambient) = [];
 GVAR(animalCount) = 0;
 
 // headless client exit 
