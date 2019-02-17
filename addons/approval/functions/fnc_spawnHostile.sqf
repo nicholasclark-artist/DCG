@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-spawn hostile unit to attack target
+send hostile unit to attack target
 
 Arguments:
 0: target player <OBJECT>
@@ -14,60 +14,38 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define BOMBS ["R_TBG32V_F","HelicopterExploSmall"]
 #define BOMB_RANGE 15
-#define SOUNDPATH "A3\Sounds_F\sfx\Beep_Target.wss"
-#define TYPEMAX 2
 #define SAFE_DIST 50
 #define REBEL_COUNT 6
 #define REBEL_UNIFORMS ["U_I_C_Soldier_Bandit_3_F","U_I_C_Soldier_Bandit_5_F","U_I_C_Soldier_Bandit_2_F"]
 
 private _player = _this select 0;
-private _ret = false;
-private _hostilePos = [];
 private _pos = getPos _player;
-private _type = floor random (TYPEMAX + 1);
+private _isPosGood = true;
+private _hostilePos = selectRandom (([_pos,64,512,256,4,0] call EFUNC(main,findPosGrid)) select {[_x,SAFE_DIST] call EFUNC(main,getNearPlayers) isEqualTo []});
 private _nearPlayers = [_pos,SAFE_DIST] call EFUNC(main,getNearPlayers);
 
-{
-    if ([_x,SAFE_DIST] call EFUNC(main,getNearPlayers) isEqualTo []) exitWith {
-        _hostilePos = _x;
-    };
-} forEach ([_pos,64,512,256,4,0] call EFUNC(main,findPosGrid));
-
-if (_hostilePos isEqualTo []) exitWith {
-    WARNING("Hostile spawn position empty");
-    _ret
+// check if hostile position found, check if hostile position in line of sight (at average eye height)
+_isPosGood = if (isNil "_hostilePos" || {(_nearPlayers findIf {[_hostilePos vectorAdd [0,0,1.5],eyePos _x] call EFUNC(main,inLOS)}) > -1}) then {
+    false
 };
 
-// set z height to average eyePos
-_hostilePos set [2,(getTerrainHeightASL _hostilePos) + 1.5];
-
-if ({[_hostilePos,eyePos _x] call EFUNC(main,inLOS)} count _nearPlayers > 0) exitWith {
-    WARNING("Hostile position in line of sight");
-    _ret
-};
-
-call {
-    if (_type isEqualTo 0) exitWith {
-        private _unitPool = [];
-        private _tempGrp = createGroup EGVAR(main,enemySide);
-
-        call {
-            if (EGVAR(main,enemySide) isEqualTo EAST) exitWith {
-                _unitPool = EGVAR(main,unitsEast);
-            };
-            if (EGVAR(main,enemySide) isEqualTo WEST) exitWith {
-                _unitPool = EGVAR(main,unitsWest);
-            };
-            _unitPool = EGVAR(main,unitsInd);
+switch (floor random 3) do {
+    case 0: { // rebels
+        if (!_isPosGood) exitWith {
+            WARNING("cannot find suitable rebel spawn position");
+            false
         };
 
-        (selectRandom _unitPool) createUnit [DEFAULT_SPAWNPOS, _tempGrp];
+        // get loadout from temp unit
+        private _tempGrp = createGroup EGVAR(main,enemySide);
+        (selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool))) createUnit [DEFAULT_SPAWNPOS, _tempGrp];
         private _vest = vest (leader _tempGrp);
         private _weapon = currentWeapon (leader _tempGrp);
         private _mags = magazines (leader _tempGrp);
 
         deleteVehicle (leader _tempGrp);
 
+        // spawn civs
         private _grp = [_hostilePos,0,REBEL_COUNT,CIVILIAN,1] call EFUNC(main,spawnGroup);
 
         [
@@ -75,14 +53,16 @@ call {
             {
                 params ["_grp","_pos","_vest","_weapon","_mags"];
 
+                // equip rebel uniforms
                 {
                     _x addUniform (selectRandom REBEL_UNIFORMS);
                 } forEach units _grp;
 
+                // set enemy side
                 _grp = [units _grp] call EFUNC(main,setSide);
-
                 [_grp] call EFUNC(cache,disableCache);
 
+                // equip civs with enemy loadout
                 {
                     _y = _x;
                     _y addVest _vest;
@@ -90,138 +70,198 @@ call {
                     {_y addMagazine _x} forEach _mags;
                 } forEach units _grp;
 
+                // send to target
                 _wp = _grp addWaypoint [_pos,0];
                 _wp setWaypointBehaviour "AWARE";
                 _wp setWaypointFormation "STAG COLUMN";
-                _cond = "!(behaviour this isEqualTo ""COMBAT"")";
-                _wp setWaypointStatements [_cond, format ["thisList call %1;",QEFUNC(main,cleanup)]];
+                _wp setWaypointStatements ["!(behaviour this isEqualTo ""COMBAT"")", QUOTE(thisList call EFUNC(main,cleanup))];
 
-                INFO_1("Rebels spawned at %1",getPos leader _grp);
+                INFO_1("rebels spawned at %1",getPos leader _grp);
             },
             [_grp,_pos,_vest,_weapon,_mags]
         ] call CBA_fnc_waitUntilAndExecute;
 
-        _ret = true;
+        true
     };
+    case 1: { // hostile vehicle
+        // @todo attach visible explosives to vehicle
 
-    if (_type isEqualTo 1) exitWith {
-        if (EGVAR(civilian,drivers) isEqualTo []) exitWith {
-            WARNING("No drivers available to turn hostile");
+        // get civ driver
+        private _drivers = (allUnits select {side _x isEqualTo CIVILIAN}) select {!isNull (objectParent _x)};
+        private _driver = _drivers findIf {CHECK_DIST2D(getPosATL _x,_pos,2000) && {!(CHECK_DIST2D(getPosATL _x,_pos,50))}};
+
+        if (_driver < 0) exitWith {
+            WARNING("cannot find suitable vehicle to turn hostile");
+            false
         };
 
-        private _driver = objNull;
+        _driver = _drivers select _driver;
 
+        // check locality
+        if !(local _driver) exitWith {
+            WARNING("hostile vehicle not local");
+            false
+        };
+
+        // check for players in vehicle
+        if (crew (objectParent _driver) findIf {isPlayer _x} > -1) exitWith {
+            WARNING("player in hostile vehicle");
+            false
+        };
+
+        // remove other units in vehicle
         {
-            if (CHECK_DIST2D(getPos _x,_pos,2000)) exitWith {
-                _driver = _x;
+            if !(_x isEqualTo _driver) then {
+                deleteVehicle _x;
             };
-        } forEach EGVAR(civilian,drivers);
+        } forEach crew (objectParent _driver);
 
-        if !(isNull _driver) then {
+        // stop driver
+        private _wp = [group _driver, currentWaypoint group _driver];
+        _wp setWaypointPosition [getpos _driver,0];
+
+        [
             {
-                if !(_x isEqualTo _driver) then {
-                    deleteVehicle _x;
-                };
-            } forEach crew (vehicle _driver);
+                params ["_player","_driver","_wp"];
 
-            private _wp = [group _driver, currentWaypoint group _driver];
-            _wp setWaypointPosition [getpos _driver,0];
+                deleteWaypoint _wp;
 
-            [
-                {
-                    params ["_player","_driver","_wp"];
+                // turn hostile
+                _grp = [[_driver]] call EFUNC(main,setSide);
+                [_grp] call EFUNC(cache,disableCache);
+                _driver = leader _grp;
 
-                    deleteWaypoint _wp;
+                // set loadout
+                _driver addUniform (selectRandom REBEL_UNIFORMS);
+                _driver addVest "V_TacVestIR_blk";
 
-                    _driver addUniform (selectRandom REBEL_UNIFORMS);
+                // eventhandlers
+                _driver removeAllEventHandlers "firedNear";
 
-                    _grp = [[_driver]] call EFUNC(main,setSide);
-
-                    [_grp] call EFUNC(cache,disableCache);
-
-                    _unit = leader _grp;
-                    _unit removeAllEventHandlers "firedNear";
-                    _unit addEventHandler ["Hit", {
+                // event to detonate prematurely if hit
+                (objectParent _driver) addEventHandler ["Hit", { 
+                    if (PROBABILITY(0.1)) then {
                         "HelicopterExploSmall" createVehicle ((_this select 0) modeltoworld [0,0,0]);
                         (_this select 0) removeAllEventHandlers "Hit";
-                    }];
+                    };
+                }];
+                
+                // set behaviors
+                _driver setBehaviour "CARELESS";
+                _driver disableAI "FSM";
+                _driver allowFleeing 0;
+                (objectParent _driver) allowCrewInImmobile true;
+                
+                // send to target
+                _wp = (group _driver) addWaypoint [getPos _player, 0];
+                _wp setWaypointSpeed "FULL";
+                _wp setWaypointStatements ["true", QUOTE(this call EFUNC(main,cleanup))];
 
-                    _unit setBehaviour "CARELESS";
-                    _unit allowfleeing 0;
-                    _unit addVest "V_TacVestIR_blk";
-                    _wp = (group _unit) addWaypoint [getPos _player, 0];
-                    _wp setWaypointSpeed "FULL";
+                // follow player
+                [{
+                    params ["_args","_idPFH"];
+                    _args params ["_grp","_wp","_player"];
 
-                    [group _unit,_wp,_player,6] call EFUNC(main,setWaypointPos);
+                    if (isNull _grp || {isNil _player}) exitWith {
+                        [_idPFH] call CBA_fnc_removePerFrameHandler;
+                    };
+                    _wp setWaypointPosition [getPosASL _player, -1];
+                }, 5, [group _driver,_wp,_player]] call CBA_fnc_addPerFrameHandler;
 
-                    [{
-                        params ["_args","_idPFH"];
-                        _args params ["_unit","_player"];
+                // detonate hostile if close to target
+                [
+                    {CHECK_DIST(_this select 0,_this select 1,BOMB_RANGE)},
+                    {
+                        (selectRandom BOMBS) createVehicle (getPosATL (_this select 0));
+                        (_this select 0) setDamage [1,false];
+                    },
+                    [objectParent _driver,_player],
+                    600,
+                    {
+                        (_this select 0) call CBA_fnc_deleteEntity;
+                        
+                        INFO_1("hostile vehicle failed to reach target %1",_this select 1);
+                    }
+                ] call CBA_fnc_waitUntilAndExecute;
 
-                        if !(alive _unit) exitWith {
-                            [_idPFH] call CBA_fnc_removePerFrameHandler;
-                        };
-                        if ((vehicle _unit) distance _player <= BOMB_RANGE) exitWith {
-                            [_idPFH] call CBA_fnc_removePerFrameHandler;
-                            (selectRandom BOMBS) createVehicle (getPosATL (vehicle _unit));
-                            deleteVehicle (vehicle _unit);
-                        };
-                    }, 0.1, [_unit,_player]] call CBA_fnc_addPerFrameHandler;
+                INFO_1("hostile vehicle spawned at %1", getPos _driver);
+            },
+            [_player,_driver,_wp],
+            5
+        ] call CBA_fnc_waitAndExecute;
 
-                    INFO_1("Suicide vehicle spawned at %1", getPos _unit);
-                },
-                [_player,_driver,_wp],
-                5
-            ] call CBA_fnc_waitAndExecute;
-
-            _ret = true;
-        };
+        true
     };
+    
+    case 2: { // hostile unit
+        if (!_isPosGood) exitWith {
+            WARNING("cannot find suitable hostile unit spawn position");
+            false
+        };
 
-    if (_type isEqualTo 2) exitWith {
+        // set hostile
         private _grp = createGroup CIVILIAN;
         (selectRandom EGVAR(main,unitsCiv)) createUnit [_hostilePos, _grp];
-
-        (leader _grp) addUniform (selectRandom REBEL_UNIFORMS);
-
         _grp = [[leader _grp]] call EFUNC(main,setSide);
-
         [_grp] call EFUNC(cache,disableCache);
         
         private _unit = leader _grp;
+
+        // set loadout
+        _unit addUniform (selectRandom REBEL_UNIFORMS);
+        _unit addVest "V_TacVestIR_blk";
+
+        // eventhandlers
         _unit removeAllEventHandlers "firedNear";
-        _unit addEventHandler ["Hit", {
-            "HelicopterExploSmall" createVehicle ((_this select 0) modeltoworld [0,0,0]);
-            (_this select 0) removeAllEventHandlers "Hit";
+
+        // event to detonate prematurely if hit
+        _unit addEventHandler ["Hit", { 
+            if (PROBABILITY(0.333)) then {
+                "HelicopterExploSmall" createVehicle ((_this select 0) modeltoworld [0,0,0]);
+                (_this select 0) removeAllEventHandlers "Hit";
+            };
         }];
 
+        // set behaviors 
         _unit enableStamina false;
         _unit setBehaviour "CARELESS";
-        _unit allowfleeing 0;
-        _unit addVest "V_TacVestIR_blk";
+        _unit allowFleeing 0;
+        
+        // send to target
         _wp = (group _unit) addWaypoint [_pos, 0];
         _wp setWaypointSpeed "FULL";
+        _wp setWaypointStatements ["true", QUOTE(this call EFUNC(main,cleanup))];
 
-        [group _unit,_wp,_player,6] call EFUNC(main,setWaypointPos);
-
+        // follow player
         [{
             params ["_args","_idPFH"];
-            _args params ["_unit","_player"];
+            _args params ["_grp","_wp","_player"];
 
-            if !(alive _unit) exitWith {
+            if (isNull _grp || {isNil _player}) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
             };
-            if (CHECK_DIST(_unit,_player,BOMB_RANGE)) exitWith {
-                [_idPFH] call CBA_fnc_removePerFrameHandler;
-                (selectRandom BOMBS) createVehicle (getPosATL _unit);
-                deleteVehicle _unit;
-            };
-        }, 0.1, [_unit,_player]] call CBA_fnc_addPerFrameHandler;
+            _wp setWaypointPosition [getPosASL _player, -1];
+        }, 5, [group _unit,_wp,_player]] call CBA_fnc_addPerFrameHandler;
 
-        INFO_1("Suicide bomber spawned at %1", getPos _unit);
+        // detonate hostile if close to target
+        [
+            {CHECK_DIST(_this select 0,_this select 1,BOMB_RANGE)},
+            {
+                (selectRandom BOMBS) createVehicle (getPosATL (_this select 0));
+                (_this select 0) call CBA_fnc_deleteEntity;
+            },
+            [_unit,_player],
+            600,
+            {
+                (_this select 0) call CBA_fnc_deleteEntity;
+                INFO_1("hostile unit failed to reach target %1",_this select 1);
+            }
+        ] call CBA_fnc_waitUntilAndExecute;
 
-        _ret = true;
+        INFO_1("hostile unit spawned at %1", getPos _unit);
+
+        true
     };
-};
 
-_ret
+    default {false};
+};
