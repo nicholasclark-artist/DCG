@@ -18,11 +18,11 @@ _units = param [0,[],[[]]];
 _side = param [1,GVAR(enemySide)];
 
 _newgrp = createGroup _side;
+_newgrp deleteGroupWhenEmpty true;
 
 {
     [_x] joinSilent grpNull;
     [_x] joinSilent _newgrp;
-    false
-} count _units;
+} forEach _units;
 
 _newgrp

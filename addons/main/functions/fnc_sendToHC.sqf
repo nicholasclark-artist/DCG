@@ -19,7 +19,7 @@ params ["_obj"];
 
 TRACE_1("",_obj);
 
-if (!(_obj in allUnits) || {isPlayer _obj} || {_obj isKindOf "UAV"}) exitWith {};
+if (isNull GVAR(HC) || {!(_obj in allUnits)} || {isPlayer _obj} || {_obj isKindOf "UAV"}) exitWith {};
 
 private _id = owner GVAR(HC);
 

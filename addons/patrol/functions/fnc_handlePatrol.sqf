@@ -8,42 +8,40 @@ run patrol handler
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define PATROL_RANGE 700
+#define PATROL_MINRANGE PATROL_RANGE*0.5
 
 // delete null and lonely groups
-if !(GVAR(groups) isEqualTo []) then {
-    for "_i" from (count GVAR(groups) - 1) to 0 step -1 do {
-        _grp = GVAR(groups) select _i;
-
-        if (isNull _grp || {([getPosATL (leader _grp),PATROL_RANGE] call EFUNC(main,getNearPlayers) isEqualTo []) && !(behaviour (leader _grp) isEqualTo "COMBAT")}) then {
-            if !(isNull _grp) then {
-                {
-                    deleteVehicle _x;
-                } forEach (units _grp);
-                deleteGroup _grp;
-            };
-            GVAR(groups) deleteAt _i;
-        };
-    };
+_groupsToDelete = GVAR(groups) select {
+    isNull _grp || 
+    {([getPosATL (leader _grp),PATROL_RANGE] call EFUNC(main,getNearPlayers) isEqualTo []) && 
+    !(behaviour (leader _grp) isEqualTo "COMBAT")}
 };
+
+{
+    GVAR(groups) deleteAt (GVAR(groups) find _x);
+    GETVAR(leader _x,EGVAR(main,assignedVehicle),objNull) call CBA_fnc_deleteEntity;
+    _x call CBA_fnc_deleteEntity;
+} forEach _groupsToDelete;
 
 if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
     _players = call CBA_fnc_players;
 
     if !(_players isEqualTo []) then {
         _player = selectRandom _players;
-
-        if ((GVAR(blacklist) findIf {_player inArea [_x select 0,_x select 1,_x select 1,0,false,-1]}) < 0) then { // check if player is in a blacklist area
-            _posArray = [getpos _player,100,PATROL_RANGE,PATROL_MINRANGE,10,0,false] call EFUNC(main,findPosGrid);
+        
+        if !([_player] call EFUNC(main,inSafezones)) then {
+            _posArray = [getPosATL _player,100,PATROL_RANGE,PATROL_MINRANGE,10,0,false] call EFUNC(main,findPosGrid);
 
             if (_posArray isEqualTo []) exitWith {};
 
             _pos = selectRandom _posArray;
-            _players = [getPos _player,100] call EFUNC(main,getNearPlayers);
-
-            if ([_pos,100] call EFUNC(main,getNearPlayers) isEqualTo [] && {{[_pos,eyePos _x] call EFUNC(main,inLOS)} count _players isEqualTo 0}) then {
+            _players = [getPosATL _player,100] call EFUNC(main,getNearPlayers);
+            
+            if ([_pos,100] call EFUNC(main,getNearPlayers) isEqualTo [] && {{[[_pos select 0,_pos select 1,(_pos select 2) + 1.5],eyePos _x] call EFUNC(main,inLOS)} count _players isEqualTo 0}) then {
                 _grp = grpNull;
                 _pos = ASLtoAGL _pos;
 
@@ -70,7 +68,7 @@ if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
                         [_grp,_player]
                     ] call CBA_fnc_waitUntilAndExecute;
 
-                    INFO_1("Spawning vehicle patrol at %1",_pos);
+                    INFO_1("spawning vehicle patrol at %1",_pos);
                 } else {
                     _count = 4;
                     _grp = [_pos,0,_count,EGVAR(main,enemySide),2] call EFUNC(main,spawnGroup);
@@ -95,10 +93,12 @@ if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
                         [_grp,_player,_count]
                     ] call CBA_fnc_waitUntilAndExecute;
 
-                    INFO_1("Spawning infantry patrol at %1",_pos);
+                    INFO_1("spawning infantry patrol at %1",_pos);
                 };
                 GVAR(groups) pushBack _grp;
             };
         };
     };
 };
+
+nil
