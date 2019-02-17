@@ -12,7 +12,8 @@ POSTINIT;
         [{if (GVAR(autoSave)) then {call FUNC(saveData)}}, 1800, []] call CBA_fnc_addPerFrameHandler;
         call FUNC(handleLoadData);
 
-        if (GVAR(enableHC)) then {
+        // disable if ace headless addon detected 
+        if (GVAR(enableHC) && {!(CHECK_ADDON_1(acex_headless))}) then {
             ["AllVehicles", "init", FUNC(sendToHC), nil, nil, true] call CBA_fnc_addClassEventHandler;
 
             addMissionEventHandler ["HandleDisconnect", {

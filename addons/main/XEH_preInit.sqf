@@ -39,7 +39,6 @@ PREP(setTimer);
 PREP(setUnitDamaged);
 PREP(setSurrender);
 PREP(setVehDamaged);
-PREP(setWaypointPos);
 PREP(setPosSafe);
 PREP(setPool);
 PREP(setMapLocations);
