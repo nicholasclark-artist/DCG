@@ -11,7 +11,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define REGION_SIZE (worldSize/round(worldSize/6000))
+#define REGION_SIZE (worldSize/(1 max (round(worldSize/GVAR(regionSize)))))
 
 // run after settings init
 if (!EGVAR(main,settingsInitFinished)) exitWith {

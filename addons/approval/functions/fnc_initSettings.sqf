@@ -40,6 +40,22 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
+    QGVAR(regionSize),
+    "SLIDER",
+    ["Region Size",format ["Approximate diameter of each region cell in meters. If the value is greater than or equal to the current world size (%1: %2), a single region will cover the entire map.",worldName,worldSize]],
+    COMPONENT_NAME,
+    [
+        1000,
+        10000,
+        6000,
+        0
+    ],
+    true,
+    {[QGVAR(regionSize),_this] call EFUNC(main,handleSettingChange)},
+    true
+] call CBA_Settings_fnc_init;
+
+[
     QGVAR(hostileHint),
     "CHECKBOX",
     ["Enable Hostile Notification","Notify players when hostile entities spawn."],
