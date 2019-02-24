@@ -4,9 +4,11 @@
 #ifdef DISABLE_COMPILE_CACHE
     #undef PREP
     #define PREP(fncName) FUNC(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,fncName).sqf)
+    #define PREP_VOR(fncName) FUNC(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\voronoi\DOUBLES(fnc,fncName).sqf)
 #else
     #undef PREP
     #define PREP(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
+    #define PREP_VOR(fncName) [QPATHTOF(functions\voronoi\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
 #endif
 
 #define PREP_MODULE(folder) [] call compile preprocessFileLineNumbers QPATHTOF(folder\__PREP__.sqf)
@@ -15,6 +17,7 @@
 #define PREINIT if (!isServer && {hasInterface}) exitWith {LOG(MSG_EXIT)}; LOG(MSG_INIT)
 #define POSTINIT if (!isMultiplayer || {!isServer && hasInterface} || {!EGVAR(main,enable)} || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)}
 
+// variable macros
 #define GETVAR_SYS(var1,var2) getVariable [ARR_2(QUOTE(var1),var2)]
 #define SETVAR_SYS(var1,var2) setVariable [ARR_2(QUOTE(var1),var2)]
 #define SETPVAR_SYS(var1,var2) setVariable [ARR_3(QUOTE(var1),var2,true)]
@@ -37,6 +40,40 @@
 #define GETGVAR(var1,var2) GETMVAR(GVAR(var1),var2)
 #define GETEGVAR(var1,var2,var3) GETMVAR(EGVAR(var1,var2),var3)
 
+// heaps
+// Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
+
+// Min/max switch, comment for a min heap, uncomment for a max heap
+#define MAX_HEAP
+
+#define NODEPARAMS(x) (x) params ["_key", "_value"]
+#define NODE_KEY 0
+#define NODE_VALUE 1
+
+#ifdef MAX_HEAP
+	//Max heap
+	#define INFINITY 1e39
+	#define UNDEFINED_KEY -INFINITY
+	#define G_TOP_KEY INFINITY
+
+	#define COMPARE(x,y) ((x) > (y))
+#else
+	//Min heap
+	#define INFINITY 1e39
+	#define UNDEFINED_KEY INFINITY
+	#define G_TOP_KEY -INFINITY
+
+	#define COMPARE(x,y) ((x) < (y))
+#endif
+
+#define KEY(x) ((x) select NODE_KEY)
+#define VALUE(x) ((x) select NODE_VALUE)
+#define PARENT(x) (floor (((x)-1)/2))
+#define LEFT(x) (2*(x)+1)
+#define RIGHT(x) (2*(x)+2)
+#define LAST(x) ((count (x))-1)
+
+// checks
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> QUOTE(CfgPatches) >> QUOTE(PATCH)))
@@ -46,6 +83,7 @@
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
 #define CHECK_INGAME (getClientStateNumber > 9)
 
+// compares 
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
 
@@ -57,6 +95,7 @@
 #define EX_COAST "sea - waterDepth"
 
 // misc
+#define ASLZ(POS) ((getTerrainHeightASL POS) max 0)
 #define DEFAULT_SPAWNPOS [0,0,worldsize]
 #define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
