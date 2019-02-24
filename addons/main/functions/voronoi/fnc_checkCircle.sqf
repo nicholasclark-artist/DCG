@@ -51,7 +51,7 @@ if(_aValid && _cValid) then {
 #ifdef DO_DEBUG
     diag_log text format ["_aSite = %1,  _cSite = %2, Not Equal = %3", _aSite, _cSite, !(_aSite isEqualTo _cSite)];
 #endif
-    if(!(_aSite isEqualTo _cSite)) then {			
+    if(!(_aSite isEqualTo _cSite)) then {
         private _leftParentEdgePtr = GET_PTR(_leftParentPtr)#PARABOLA_EDGE;
         private _rightParentEdgePtr = GET_PTR(_rightParentPtr)#PARABOLA_EDGE;
         private _ins = [_leftParentEdgePtr, _rightParentEdgePtr, _vertices] call FUNC(getEdgeIntersection);
@@ -72,7 +72,7 @@ if(_aValid && _cValid) then {
                 _vertices pushBack _point;
                 _bParabola set [PARABOLA_EVENT, _event];
                 _event set [EVENT_ARCH, _bPtr];
-#ifdef DO_DEBUG					
+#ifdef DO_DEBUG
                 diag_log text format ["Adding new circle event: %1", _event];
 #endif
                 [_eventQueue, _point#POINT_Y, _event] call FUNC(heapInsert);

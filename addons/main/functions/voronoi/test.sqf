@@ -62,7 +62,7 @@ TEST_sites = [];
 
 onMapSingleClick {
     if(_shift) then {
-        _pos spawn {			
+        _pos spawn {
             // TEST_sites pushBack _this;
 
             TEST_sites = [];

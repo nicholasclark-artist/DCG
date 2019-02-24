@@ -77,12 +77,12 @@ diag_log text _str;
     private _spacesPerChild = (2*_treeL+1 - _n)/(_n + 1);
     private _spacer = "";
     for "_i" from 1 to _spacesPerChild do {
-        _spacer = _spacer + "	";
+        _spacer = _spacer + "   ";
     };
 
     private _str = format ["%1 | %2", _forEachIndex, _spacer];
     {
-        _str = _str + _x + _spacer;	
+        _str = _str + _x + _spacer;
     } forEach _level;
 
     diag_log text _str;

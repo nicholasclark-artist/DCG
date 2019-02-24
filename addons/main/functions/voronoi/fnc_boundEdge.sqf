@@ -55,7 +55,7 @@ switch (true) do {
                 0 min (_start#POINT_Y - 10) 
             };
 
-            [(_my-_lineG)/_lineF, _my]	
+            [(_my-_lineG)/_lineF, _my]
         } else {
             [_mx, _my]
         };
@@ -78,7 +78,7 @@ switch (true) do {
                 _height max (_end#POINT_Y + 10) 
             };
 
-            [(_my-_lineG)/_lineF, _my]	
+            [(_my-_lineG)/_lineF, _my]
         } else {
             [_mx, _my]
         };

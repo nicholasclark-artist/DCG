@@ -41,7 +41,7 @@ private _end = if(_my < 0 || _my > _height) then {
         0 min (_nEdge#EDGE_START#POINT_Y - 10) 
     };
 
-    [(_my-_eG)/_eF, _my]	
+    [(_my-_eG)/_eF, _my]
 } else {
     [_mx, _my]
 };
