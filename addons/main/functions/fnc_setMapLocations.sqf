@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-set map location data
+create map location hashes and generate voronoi diagram based on hashes
 
 Arguments:
 
@@ -12,6 +12,14 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SAFE_DIST 2
+#define SAFE_RADIUS 50
+#define INDEX_KEY 0
+#define INDEX_VALUE 1
+#define LOCATION_KVP [_name,[_position,_radius,_type]]
+#define LOCAL_KVP [_name,[_position,_radius]]
+#define HILL_KVP [configName _location, [_position,_radius]]
+#define MARINE_KVP [_name,[_position,_radius]]
+#define VORONOI_SEARCH_RADIUS 300
 
 // get map locations from config
 private _cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";
@@ -20,79 +28,218 @@ private _typeLocals = ["namelocal"];
 private _typeHills = ["hill"];
 private _typeMarines = ["namemarine"];
 
-private ["_location","_type","_name","_position","_size"];
+private ["_location","_type","_name","_position","_radius","_ret","_positionSafe","_nameNoSpace","_cityCenterA2","_cityCenterA3"];
 
 for "_i" from 0 to (count _cfgLocations) - 1 do {
     _location = _cfgLocations select _i;
     _type = getText (_location >> "type");
     _name = getText (_location >> "name");
     _position = getArray (_location >> "position");
-    _position set [2,(getTerrainHeightASL _position) max 0];
-    _size = ((getNumber (_location >> "radiusA")) + (getNumber (_location >> "radiusB")))*0.5;
+    _position set [2,ASLZ(_position)];
+    _radius = ((getNumber (_location >> "radiusA")) + (getNumber (_location >> "radiusB")))*0.5;
 
     call {
         if (toLower _type in _typeLocations) exitWith { 
-            if (!([_position] call FUNC(inSafezones)) && {!COMPARE_STR(_name,"")}) then {
-                GVAR(locations) pushBack [_name,_position,_size,_type];
+            if (!COMPARE_STR(_name,"") && {!([_position] call FUNC(inSafezones))}) then {
+                // get config city center positions if available
+                _nameNoSpace = _name splitString " " joinString "";
+                _cityCenterA2 = _cfgLocations >> ("ACityC_" + _nameNoSpace);
+                _cityCenterA3 = _cfgLocations >> ("CityC_" + _nameNoSpace);
+
+                if (isClass _cityCenterA2) then {
+                    _position = getArray (_cityCenterA2 >> "position");
+                    _position set [2,ASLZ(_position)];
+                };
+                if (isClass _cityCenterA3) then {
+                    _position = getArray (_cityCenterA3 >> "position");
+                    _position set [2,ASLZ(_position)];
+                }; 
+                
+                // setup return, key-value pair
+                _ret = LOCATION_KVP;
+
+                // check if config position is safe
+                if !([ASLtoAGL _position,SAFE_DIST,0] call FUNC(isPosSafe)) then {
+                    // find new safe position
+                    _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
+                    
+                    if !(_positionSafe isEqualTo _position) then {
+                        _ret#INDEX_VALUE set [0,_positionSafe];  
+                        INFO_2("location: %1, safe position: %2",_name,_positionSafe);
+                    } else {
+                        _ret set [INDEX_VALUE,[]];
+                        WARNING_1("removing unsafe location: %1",_name);
+                    };
+                };
+                
+                GVAR(locations) pushBack _ret;
             };
         };
         if (toLower _type in _typeLocals) exitWith {
-            if (!([_position] call FUNC(inSafezones)) && {!COMPARE_STR(_name,"")}) then {
-                GVAR(locals) pushBack [_name,_position,_size];
+            if (!COMPARE_STR(_name,"") && {!([_position] call FUNC(inSafezones))}) then {
+                // setup return, key-value pair
+                _ret = LOCAL_KVP;
+
+                // check if config position is safe
+                if !([ASLtoAGL _position,SAFE_DIST,0] call FUNC(isPosSafe)) then {
+                    // find new safe position
+                    _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
+                    
+                    if !(_positionSafe isEqualTo _position) then {
+                        _ret#INDEX_VALUE set [0,_positionSafe];  
+                        INFO_2("local: %1, safe position: %2",_name,_positionSafe);
+                    } else {
+                        _ret set [INDEX_VALUE,[]];
+                        WARNING_1("removing unsafe local: %1",_name);
+                    };
+                };
+
+                GVAR(locals) pushBack _ret;
             };
         };
         if (toLower _type in _typeHills) exitWith {
             if !([_position] call FUNC(inSafezones)) then {
-                GVAR(hills) pushBack [_position,_size];
+                // setup return, key-value pair
+                _ret = HILL_KVP;
+
+                // check if config position is safe
+                if !([ASLtoAGL _position,SAFE_DIST,0] call FUNC(isPosSafe)) then {
+                    // find new safe position
+                    _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
+                    
+                    if !(_positionSafe isEqualTo _position) then {
+                        _ret#INDEX_VALUE set [0,_positionSafe];  
+                        INFO_2("hill: %1, safe position: %2",configName _location,_positionSafe);
+                    } else {
+                        _ret set [INDEX_VALUE,[]];
+                        WARNING_1("removing unsafe hill: %1",configName _location);
+                    };
+                };
+                GVAR(hills) pushBack _ret;
             };
         };
         if (toLower _type in _typeMarines) exitWith {
             if (!([_position] call FUNC(inSafezones)) && {!COMPARE_STR(_name,"")}) then {
-                GVAR(marines) pushBack [_name,_position,_size];
+                // setup return, key-value pair
+                _ret = MARINE_KVP;
+
+                // check if config position is safe
+                if !([ASLtoAGL _position,SAFE_DIST,2] call FUNC(isPosSafe)) then {
+                    // find new safe position
+                    _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,2,-1,[0,360],_position] call FUNC(findPosSafe);
+                    
+                    if !(_positionSafe isEqualTo _position) then {
+                        _ret#INDEX_VALUE set [0,_positionSafe];    
+                        INFO_2("marine: %1, safe position: %2",_name,_positionSafe);
+                    } else {
+                        _ret set [INDEX_VALUE,[]];
+                        WARNING_1("removing unsafe marine: %1",_name);
+                    };
+                };
+
+                GVAR(marines) pushBack _ret;
             };
         };
     };
 };
 
-private ["_deletionIndices","_nameNoSpace","_cityCenterA2","_cityCenterA3","_places"];
+// remove unsafe positions 
+GVAR(locations) = GVAR(locations) select {!(_x#INDEX_VALUE isEqualTo [])};
+GVAR(locals) = GVAR(locals) select {!(_x#INDEX_VALUE isEqualTo [])};
+GVAR(hills) = GVAR(hills) select {!(_x#INDEX_VALUE isEqualTo [])};
+GVAR(marines) = GVAR(marines) select {!(_x#INDEX_VALUE isEqualTo [])};
 
-// update location positions, remove if position not safe
+// convert to hashes
+GVAR(locations) = [GVAR(locations), []] call CBA_fnc_hashCreate;
+GVAR(locals) = [GVAR(locals), []] call CBA_fnc_hashCreate;
+GVAR(hills) = [GVAR(hills), []] call CBA_fnc_hashCreate;
+GVAR(marines) = [GVAR(marines), []] call CBA_fnc_hashCreate;
 
-_deletionIndices = [];
+// create voronoi diagram
+private _sites = [];
+
+// get sites from location hash
+[GVAR(locations),{
+    _sites pushBack _value#0;
+}] call CBA_fnc_hashEachPair;
+
+// set as position2D
+_sites =+ _sites;
+{_x resize 2} forEach _sites;
+
+// generate diagram
+_voronoi = [_sites, worldSize, worldSize] call FUNC(getEdges);
+TRACE_1("",_voronoi);
+
+// create polygon hash from voronoi diagram
+private ["_edgeStart","_edgeEnd","_locationL","_locationR","_keyL","_keyR","_valueL","_valueR"];
+
+GVAR(locationPolygons) = ([GVAR(locations)] call CBA_fnc_hashKeys) apply {[_x,[]]};
+GVAR(locationPolygons) = [GVAR(locationPolygons)] call CBA_fnc_hashCreate;
 
 {
-    // get config city center positions if available
-    _nameNoSpace = (_x select 0) splitString " " joinString "";
-    _cityCenterA2 = _cfgLocations >> ("ACityC_" + _nameNoSpace);
-    _cityCenterA3 = _cfgLocations >> ("CityC_" + _nameNoSpace);
+    _edgeStart =+ _x#0;
+    _edgeStart pushBack 0;
 
-    if (isClass _cityCenterA2) then {
-        _position = getArray (_cityCenterA2 >> "position");
-        _position set [2,(getTerrainHeightASL _position) max 0];
-        _x set [1,_position];
-    };
-    if (isClass _cityCenterA3) then {
-        _position = getArray (_cityCenterA3 >> "position");
-        _position set [2,(getTerrainHeightASL _position) max 0];
-        _x set [1,_position];
+    _edgeEnd =+ _x#1;
+    _edgeEnd pushBack 0;
+
+    // get locations to the left and right of voronoi edge
+    _locationL = [(nearestLocations [_x#2,_typeLocations,VORONOI_SEARCH_RADIUS])#0,locationNull] select (_x#2 isEqualTo objNull);
+    _locationR = [(nearestLocations [_x#3,_typeLocations,VORONOI_SEARCH_RADIUS])#0,locationNull] select (_x#3 isEqualTo objNull);
+    
+    // get name's of locations, same as hash key
+    _keyL = text _locationL;
+    _keyR = text _locationR;
+
+    // add edge vertices to polygon hash if location in hash
+    if !(COMPARE_STR(_keyL,"")) then { 
+        _valueL = [GVAR(locationPolygons),_keyL] call CBA_fnc_hashGet;
+        _valueL pushBackUnique _edgeStart;
+        _valueL pushBackUnique _edgeEnd;
+        [GVAR(locationPolygons),_keyL,_valueL] call CBA_fnc_hashSet;
     };
 
-    // check if config position is safe
-    if !([_x select 1,SAFE_DIST,0] call FUNC(isPosSafe)) then {
-        // find new safe position
-        _position = [_x select 1,0,_x select 2,SAFE_DIST,0,-1,[0,360],_x select 1] call FUNC(findPosSafe);
-        
-        if !(_position isEqualTo (_x select 1)) then {
-            _x set [1,_position];  
-            TRACE_2("new safe pos",_x select 0,_position);
-        } else {
-            GVAR(locations) set [_forEachIndex, []];
-            WARNING_1("removing unsafe location: %1",_x select 0);
-        };
+    if !(COMPARE_STR(_keyR,"")) then {
+        _valueR = [GVAR(locationPolygons),_keyR] call CBA_fnc_hashGet;
+        _valueR pushBackUnique _edgeStart;
+        _valueR pushBackUnique _edgeEnd;
+        [GVAR(locationPolygons),_keyR,_valueR] call CBA_fnc_hashSet;
     };
-} forEach GVAR(locations);
+} forEach _voronoi;
 
-// remove unsafe locations
-GVAR(locations) = GVAR(locations) select {!(_x isEqualTo [])};
+// sort polygon positions
+private ["_center","_dirToArr","_polygonIndices","_newValue"];
+
+[GVAR(locationPolygons),{
+    _center = [0,0,0];
+    _dirToArr = [];
+    _polygonIndices = [];
+    _newValue = [];
+
+    // get center of positions
+    {
+        _center = _center vectorAdd _x;
+    } forEach _value;
+
+    _center = [_center#0 / ((count _value) max 1),_center#1 / ((count _value) max 1),0];
+
+    // sort by position direction from center
+    {
+        _dirToArr pushBack [_center getDir _x,_forEachIndex];
+    } forEach _value;
+
+    _dirToArr sort true;
+
+    _polygonIndices = _dirToArr apply {_x#1};
+    
+    _newValue resize (count _value);
+
+    for "_i" from 0 to (count _value) - 1 do {
+        _newValue set [_i,_value#(_polygonIndices#_i)];
+    };
+    
+    [GVAR(locationPolygons),_key,_newValue] call CBA_fnc_hashSet;
+}] call CBA_fnc_hashEachPair;
 
 nil
