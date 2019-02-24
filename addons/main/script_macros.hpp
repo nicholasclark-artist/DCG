@@ -51,19 +51,19 @@
 #define NODE_VALUE 1
 
 #ifdef MAX_HEAP
-	//Max heap
-	#define INFINITY 1e39
-	#define UNDEFINED_KEY -INFINITY
-	#define G_TOP_KEY INFINITY
+    //Max heap
+    #define INFINITY 1e39
+    #define UNDEFINED_KEY -INFINITY
+    #define G_TOP_KEY INFINITY
 
-	#define COMPARE(x,y) ((x) > (y))
+    #define COMPARE(x,y) ((x) > (y))
 #else
-	//Min heap
-	#define INFINITY 1e39
-	#define UNDEFINED_KEY INFINITY
-	#define G_TOP_KEY -INFINITY
+    //Min heap
+    #define INFINITY 1e39
+    #define UNDEFINED_KEY INFINITY
+    #define G_TOP_KEY -INFINITY
 
-	#define COMPARE(x,y) ((x) < (y))
+    #define COMPARE(x,y) ((x) < (y))
 #endif
 
 #define KEY(x) ((x) select NODE_KEY)
