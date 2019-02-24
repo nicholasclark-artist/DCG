@@ -1,10 +1,10 @@
 /*
-	Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
-	Date: 2018-10-12
-	Please do not redistribute this work without acknowledgement of the original author. 
-	You are otherwise free to use this code as you wish.
+    Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
+    Date: 2018-10-12
+    Please do not redistribute this work without acknowledgement of the original author. 
+    You are otherwise free to use this code as you wish.
 
-	Description: Returns the intersection point of 2 half-edges.
+    Description: Returns the intersection point of 2 half-edges.
 */
 
 #include "script_component.hpp"
@@ -62,29 +62,29 @@ if(_bDirY == 0) then { _bDirY = 0.0001; };
 
 //diag_log text "(_x - _aX)/_aDirX < 0 = ";
 if((_x - _aX)/_aDirX < 0) exitWith {
-	//diag_log text "true";
-	POINT_NULL
+    //diag_log text "true";
+    POINT_NULL
 };
 //diag_log text "false";
 
 //diag_log text "(_y - _aY)/_aDirY < 0 =";
 if((_y - _aY)/_aDirY < 0) exitWith {
-	//diag_log text "true";
-	POINT_NULL
+    //diag_log text "true";
+    POINT_NULL
 };
 //diag_log text "false";
 
 //diag_log text "(_x - _bX)/_bDirX < 0 =";
 if((_x - _bX)/_bDirX < 0) exitWith {
-	//diag_log text "true";
-	POINT_NULL
+    //diag_log text "true";
+    POINT_NULL
 };
 //diag_log text "false";
 
 //diag_log text "(_y - _bY)/_bDirY < 0 =";
 if((_y - _bY)/_bDirY < 0) exitWith {
-	//diag_log text "true";
-	POINT_NULL
+    //diag_log text "true";
+    POINT_NULL
 };
 //diag_log text "false";
 

@@ -1,10 +1,10 @@
 /*
-	Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
-	Date: 2018-10-12
-	Please do not redistribute this work without acknowledgement of the original author. 
-	You are otherwise free to use this code as you wish.
+    Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
+    Date: 2018-10-12
+    Please do not redistribute this work without acknowledgement of the original author. 
+    You are otherwise free to use this code as you wish.
 
-	Description: Return the first predecessor in the beachline tree that is in the given direction (left/right)
+    Description: Return the first predecessor in the beachline tree that is in the given direction (left/right)
 */
 
 #include "script_component.hpp"
@@ -22,14 +22,14 @@ if(PTR_IS_NULL(_parentPtr)) exitWith { PTR_NULL };
 private _lastPtr = _pPtr;
 private _childPtr = GET_PTR(_parentPtr)#([PARABOLA_RIGHT, PARABOLA_LEFT] select _left);
 while { _childPtr == _lastPtr} do {
-	private _nextParent = GET_PTR(_parentPtr)#PARABOLA_PARENT;
-	if(PTR_IS_NULL(_nextParent)) exitWith {
-		_parentPtr = PTR_NULL;
-	};
+    private _nextParent = GET_PTR(_parentPtr)#PARABOLA_PARENT;
+    if(PTR_IS_NULL(_nextParent)) exitWith {
+        _parentPtr = PTR_NULL;
+    };
 
-	_lastPtr = _parentPtr;
-	_parentPtr = _nextParent;
-	_childPtr = GET_PTR(_parentPtr)#([PARABOLA_RIGHT, PARABOLA_LEFT] select _left);
+    _lastPtr = _parentPtr;
+    _parentPtr = _nextParent;
+    _childPtr = GET_PTR(_parentPtr)#([PARABOLA_RIGHT, PARABOLA_LEFT] select _left);
 };
 
 #ifdef DO_DEBUG

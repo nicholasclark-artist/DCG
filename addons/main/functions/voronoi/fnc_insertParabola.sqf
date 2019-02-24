@@ -1,10 +1,10 @@
 /*
-	Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
-	Date: 2018-10-12
-	Please do not redistribute this work without acknowledgement of the original author. 
-	You are otherwise free to use this code as you wish.
+    Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
+    Date: 2018-10-12
+    Please do not redistribute this work without acknowledgement of the original author. 
+    You are otherwise free to use this code as you wish.
 
-	Description: Inserts a new site into the beachline tree.
+    Description: Inserts a new site into the beachline tree.
 */
 
 #include "script_component.hpp"
@@ -15,45 +15,45 @@ diag_log text format ["Called by: %1", _fnc_scriptNameParent];
 #endif
 
 params ["_rootPtr", "_point", "_scanlineY", "_height", "_edges", "_vertices", "_eventQueue", "_deletedEvents"];
-	
+    
 // Null case: The tree is empty
 private _root = GET_PTR(_rootPtr);
 if(PARABOLA_IS_NULL(_root)) exitWith {
-	//diag_log text "INSERT_PARABOLA: Tree is empty.";
-	private _newParabola = _point call FUNC(newParabola);
-	SET_PTR(_rootPtr, _newParabola);
+    //diag_log text "INSERT_PARABOLA: Tree is empty.";
+    private _newParabola = _point call FUNC(newParabola);
+    SET_PTR(_rootPtr, _newParabola);
 };
 
 // Degenerate case: new point has a y similiar the root y.
 _root params ["_rootSite", "_rootIsLeaf"];
 if(_rootIsLeaf && _rootSite#POINT_Y - _point#POINT_Y < 1 ) exitWith {
 #ifdef DO_DEBUG
-	diag_log text "INSERT_PARABOLA: New point close to root.";
+    diag_log text "INSERT_PARABOLA: New point close to root.";
 #endif
-	_point params ["_pointX", "_pointY"];
-	_rootSite params ["_rootSiteX", "_rootSiteY"];
+    _point params ["_pointX", "_pointY"];
+    _rootSite params ["_rootSiteX", "_rootSiteY"];
 
-	_root set [PARABOLA_IS_LEAF, false];
+    _root set [PARABOLA_IS_LEAF, false];
 
-	private _leftParabola = _rootSite call FUNC(newParabola);
-	private _rightParabola = _point call FUNC(newParabola);
-	private _leftPtr = NEW_PTR(_leftParabola);
-	private _rightPtr = NEW_PTR(_rightParabola);
+    private _leftParabola = _rootSite call FUNC(newParabola);
+    private _rightParabola = _point call FUNC(newParabola);
+    private _leftPtr = NEW_PTR(_leftParabola);
+    private _rightPtr = NEW_PTR(_rightParabola);
 
-	[_rootPtr, _leftPtr, true] call FUNC(treeSetChild);
-	[_rootPtr, _rightPtr, false] call FUNC(treeSetChild);
+    [_rootPtr, _leftPtr, true] call FUNC(treeSetChild);
+    [_rootPtr, _rightPtr, false] call FUNC(treeSetChild);
 
-	private _start = [(_pointX + _rootSiteX)/2, _height];
-	_vertices pushBack _start;
+    private _start = [(_pointX + _rootSiteX)/2, _height];
+    _vertices pushBack _start;
 
-	private _newEdge = if(_pointX < _rootSiteX) then {
-		[_start, _rootSite, _point] call FUNC(newEdge)
-	} else {
-		[_start, _point, _rootSite] call FUNC(newEdge)
-	};
+    private _newEdge = if(_pointX < _rootSiteX) then {
+        [_start, _rootSite, _point] call FUNC(newEdge)
+    } else {
+        [_start, _point, _rootSite] call FUNC(newEdge)
+    };
 
-	_edges pushBack _newEdge;
-	_root set [PARABOLA_EDGE, NEW_PTR(_newEdge)];
+    _edges pushBack _newEdge;
+    _root set [PARABOLA_EDGE, NEW_PTR(_newEdge)];
 };
 
 // General case: New site
@@ -71,8 +71,8 @@ private _parabola = GET_PTR(_parabolaPtr);
 //Delete prior circle event that has nows become invalid.
 private _circleEvent = _parabola#PARABOLA_EVENT;
 if(!EVENT_IS_NULL(_circleEvent)) then {
-	_deletedEvents pushBackUnique _circleEvent;
-	_parabola set [PARABOLA_EVENT, PTR_NULL];
+    _deletedEvents pushBackUnique _circleEvent;
+    _parabola set [PARABOLA_EVENT, PTR_NULL];
 };
 
 //Get Y coordinate for new edge.

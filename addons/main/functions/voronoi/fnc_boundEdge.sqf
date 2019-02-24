@@ -1,10 +1,10 @@
 /*
-	Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
-	Date: 2018-10-12
-	Please do not redistribute this work without acknowledgement of the original author. 
-	You are otherwise free to use this code as you wish.
+    Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
+    Date: 2018-10-12
+    Please do not redistribute this work without acknowledgement of the original author. 
+    You are otherwise free to use this code as you wish.
 
-	Description: Trims edge at the boundary of the given square [0,0] and [width, height].
+    Description: Trims edge at the boundary of the given square [0,0] and [width, height].
 */
 
 #include "script_component.hpp"

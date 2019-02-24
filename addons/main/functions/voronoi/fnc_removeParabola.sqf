@@ -1,10 +1,10 @@
 /*
-	Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
-	Date: 2018-10-12
-	Please do not redistribute this work without acknowledgement of the original author. 
-	You are otherwise free to use this code as you wish.
+    Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
+    Date: 2018-10-12
+    Please do not redistribute this work without acknowledgement of the original author. 
+    You are otherwise free to use this code as you wish.
 
-	Description: Remove a disappearing parabola from the beachline tree and generate the endpoint for all relevant edges.
+    Description: Remove a disappearing parabola from the beachline tree and generate the endpoint for all relevant edges.
 */
 
 #include "script_component.hpp"
@@ -31,7 +31,7 @@ diag_log text format ["_p2Ptr = %1", _p2Ptr];
 #endif
 
 if(_p0Ptr == _p2Ptr) then {
-	["REMOVE_PARABOLA - _p0 and _p2 are the same. _this = %1", _this] call BIS_fnc_error;
+    ["REMOVE_PARABOLA - _p0 and _p2 are the same. _this = %1", _this] call BIS_fnc_error;
 };
 
 private _p0 = GET_PTR(_p0Ptr);
@@ -43,13 +43,13 @@ private _p0Event = _p0#PARABOLA_EVENT;
 private _p2Event = _p2#PARABOLA_EVENT;
 
 if(!EVENT_IS_NULL(_p0Event)) then {
-	_deletedEvents pushBackUnique _p0event;
-	_p0 set [PARABOLA_EVENT, EVENT_NULL];
+    _deletedEvents pushBackUnique _p0event;
+    _p0 set [PARABOLA_EVENT, EVENT_NULL];
 };
 
 if(!EVENT_IS_NULL(_p2Event)) then {
-	_deletedEvents pushBackUnique _p2Event;
-	_p2 set [PARABOLA_EVENT, EVENT_NULL];
+    _deletedEvents pushBackUnique _p2Event;
+    _p2 set [PARABOLA_EVENT, EVENT_NULL];
 };
 
 //Find event point
@@ -65,9 +65,9 @@ GET_PTR(GET_PTR(_rightParentPtr)#PARABOLA_EDGE) set [EDGE_END, _pointP];
 private _higherParentPtr = PTR_NULL;
 private _ptr = _p1Ptr;
 while { !PTR_IS_NULL(_ptr) } do {
-	_ptr = GET_PTR(_ptr)#PARABOLA_PARENT;
-	if(_ptr == _leftParentPtr) then { _higherParentPtr = _leftParentPtr; };
-	if(_ptr == _rightParentPtr) then { _higherParentPtr = _rightParentPtr; };
+    _ptr = GET_PTR(_ptr)#PARABOLA_PARENT;
+    if(_ptr == _leftParentPtr) then { _higherParentPtr = _leftParentPtr; };
+    if(_ptr == _rightParentPtr) then { _higherParentPtr = _rightParentPtr; };
 };
 
 private _higherParent = GET_PTR(_higherParentPtr);
@@ -83,10 +83,10 @@ private _p1Parent = GET_PTR(_p1ParentPtr);
 //Get sibling
 private _siblingPtr = _p1Parent#([PARABOLA_LEFT, PARABOLA_RIGHT] select (_p1Parent#PARABOLA_LEFT == _p1Ptr));
 if(GET_PTR(_p1GrandparentPtr)#PARABOLA_LEFT == _p1ParentPtr) then {
-	[_p1GrandparentPtr, _siblingPtr, true] call FUNC(treeSetChild);
+    [_p1GrandparentPtr, _siblingPtr, true] call FUNC(treeSetChild);
 };
 if(GET_PTR(_p1GrandparentPtr)#PARABOLA_RIGHT == _p1ParentPtr) then {
-	[_p1GrandparentPtr, _siblingPtr, false] call FUNC(treeSetChild);
+    [_p1GrandparentPtr, _siblingPtr, false] call FUNC(treeSetChild);
 };
 
 //Delete p1 and its parent edge from the beachline tree (its already stored in edges).
