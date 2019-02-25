@@ -20,7 +20,7 @@ switch (_this select 0) do {
         GVAR(debug) = nil;
     };
     case 1: { 
-        GVAR(debug) = addMissionEventHandler ["EachFrame", { 
+        GVAR(debugEachFrame) = { 
             toFixed 2;
             _cycle = ["FOG","OVERCAST"] select ((GVAR(cycle) mod 2) isEqualTo 0); 
             _format = format [
@@ -34,7 +34,9 @@ switch (_this select 0) do {
                 rain
             ];
             hintSilent _format;     
-        }];
+        };
+
+        GVAR(debug) = addMissionEventHandler ["EachFrame",{call GVAR(debugEachFrame)}];
     };
     default { };
 };

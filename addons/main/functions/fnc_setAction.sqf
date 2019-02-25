@@ -67,8 +67,8 @@ if (CHECK_ADDON_1(ace_interact_menu)) then {
         _actions pushBack [-1];
     };
 
-    private _EH = -1;
-    private _EHStr = format [
+    private _event = -1;
+    _statement = format [
         "
             if !(%2 isEqualTo {}) then {
                 (_this select 0) addAction ['%1',%2,%3,0,false,true,'','%4'];
@@ -81,13 +81,13 @@ if (CHECK_ADDON_1(ace_interact_menu)) then {
     ];
 
     if (local _obj) then {
-        _EH = _obj addEventHandler ["Respawn", _EHStr];
+        _event = _obj addEventHandler ["Respawn", _statement];
     } else {
-        ["Respawn", _EHStr] remoteExecCall [QUOTE(addEventHandler), _obj, false];
+        ["Respawn", _statement] remoteExecCall [QUOTE(addEventHandler), _obj, false];
         WARNING_1("Adding respawn eventhandler to %1 over network.",_obj);
     };
 
-    _actions pushBack _EH;
+    _actions pushBack _event;
 };
 
 _actions

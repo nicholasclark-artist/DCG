@@ -24,16 +24,11 @@ if ((_fx select 0) isEqualType 0) then {
 
 {
     if (toUpper (getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "vehicleClass")) isEqualTo "EMITTERS") then {
-        _x addMPEventHandler ["MPKilled", {
-            {
-                deleteVehicle _x;
-            } forEach ((_this select 0) getVariable ["effects", []]);
+        _x addMPEventHandler ["MPKilled",{
+            {deleteVehicle _x} forEach ((_this select 0) getVariable ["effects", []]);
 
-            if (isServer) then {
-                deleteVehicle (_this select 0);
-            };
+            if (isServer) then {deleteVehicle (_this select 0)};
         }];
-
         _x setDamage 1;
     };
 } forEach _fx;
