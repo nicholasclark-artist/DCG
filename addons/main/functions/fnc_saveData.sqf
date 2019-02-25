@@ -146,9 +146,9 @@ if (CHECK_ADDON_2(task)) then {
 if (CHECK_ADDON_2(approval)) then {
     private _data = [];
 
-    {
-        _data pushBack (_x getVariable QEGVAR(approval,regionValue));
-    } forEach EGVAR(approval,regions);
+    [EGVAR(approval,regions),{
+        _data pushBack [_key,_value#1];
+    }] call CBA_fnc_hashEachPair;
 
     PUSHBACK_DATA(approval,_data);
 };
