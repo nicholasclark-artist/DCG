@@ -67,6 +67,41 @@ PREP(landAt);
 PREP(shuffle);
 PREP(parseFaction);
 
+// heap functions
+PREP(heapSwap);
+PREP(heapPercUp);
+PREP(heapPercDown);
+PREP(heapPeek);
+PREP(heapPop);
+PREP(heapInsert);
+PREP(heapDelete);
+PREP(heapSize);
+PREP(heapNew);
+
+// voronoi functions
+PREP_VOR(getEdges);
+PREP_VOR(newEdge);
+PREP_VOR(newEvent);
+PREP_VOR(newParabola);
+PREP_VOR(treeSetChild);
+PREP_VOR(treeGetParent);
+PREP_VOR(treeGetLeafChild);
+PREP_VOR(insertParabola);
+PREP_VOR(removeParabola);
+PREP_VOR(finishEdge);
+PREP_VOR(getXOfEdge);
+PREP_VOR(getParabolaByX);
+PREP_VOR(getY);
+PREP_VOR(checkCircle);
+PREP_VOR(getEdgeIntersection);
+PREP_VOR(printTree);
+PREP_VOR(pointerNewContainer);
+PREP_VOR(pointerDelContainer);
+PREP_VOR(pointerNew);
+PREP_VOR(pointerSet);
+PREP_VOR(pointerGet);
+PREP_VOR(boundEdge);
+
 // headless client variables 
 GVAR(HC) = objNull;
 
@@ -117,7 +152,8 @@ GVAR(locals) = [];
 GVAR(hills) = [];
 GVAR(marines) = [];
 GVAR(radius) = worldSize*0.5;
-GVAR(center) = [GVAR(radius),GVAR(radius),getTerrainHeightASL [GVAR(radius),GVAR(radius)]];
+GVAR(center) = [GVAR(radius),GVAR(radius)];
+GVAR(center) set [2,ASLZ(GVAR(center))];
 GVAR(grid) = [GVAR(center),worldSize/round(worldSize/1000),worldSize,0,0,0] call FUNC(findPosGrid);
 
 // debug variables
