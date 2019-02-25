@@ -150,6 +150,7 @@ GVAR(hills) = GVAR(hills) select {!(_x#INDEX_VALUE isEqualTo [])};
 GVAR(marines) = GVAR(marines) select {!(_x#INDEX_VALUE isEqualTo [])};
 
 // convert to hashes
+// KVP: ["",[]]
 GVAR(locations) = [GVAR(locations), []] call CBA_fnc_hashCreate;
 GVAR(locals) = [GVAR(locals), []] call CBA_fnc_hashCreate;
 GVAR(hills) = [GVAR(hills), []] call CBA_fnc_hashCreate;
@@ -168,12 +169,16 @@ _sites =+ _sites;
 {_x resize 2} forEach _sites;
 
 // generate diagram
-_voronoi = [_sites, worldSize, worldSize] call FUNC(getEdges);
-TRACE_1("",_voronoi);
+private _dT = diag_tickTime;
+private _voronoi = [_sites, worldSize, worldSize] call FUNC(getEdges);
+private _execTime = diag_tickTime - _dT;
+
+TRACE_3("",count _sites,count _voronoi,_execTime);
 
 // create polygon hash from voronoi diagram
 private ["_edgeStart","_edgeEnd","_locationL","_locationR","_keyL","_keyR","_valueL","_valueR"];
 
+// KVP: ["",[]]
 GVAR(locationPolygons) = ([GVAR(locations)] call CBA_fnc_hashKeys) apply {[_x,[]]};
 GVAR(locationPolygons) = [GVAR(locationPolygons)] call CBA_fnc_hashCreate;
 
@@ -193,14 +198,14 @@ GVAR(locationPolygons) = [GVAR(locationPolygons)] call CBA_fnc_hashCreate;
     _keyR = text _locationR;
 
     // add edge vertices to polygon hash if location in hash
-    if !(COMPARE_STR(_keyL,"")) then { 
+    if ([GVAR(locationPolygons),_keyL] call CBA_fnc_hashHasKey) then {
         _valueL = [GVAR(locationPolygons),_keyL] call CBA_fnc_hashGet;
         _valueL pushBackUnique _edgeStart;
         _valueL pushBackUnique _edgeEnd;
         [GVAR(locationPolygons),_keyL,_valueL] call CBA_fnc_hashSet;
     };
 
-    if !(COMPARE_STR(_keyR,"")) then {
+    if ([GVAR(locationPolygons),_keyR] call CBA_fnc_hashHasKey) then {
         _valueR = [GVAR(locationPolygons),_keyR] call CBA_fnc_hashGet;
         _valueR pushBackUnique _edgeStart;
         _valueR pushBackUnique _edgeEnd;
@@ -231,8 +236,8 @@ private ["_center","_dirToArr","_polygonIndices","_newValue"];
 
     _dirToArr sort true;
 
+    // sort value based on direction order
     _polygonIndices = _dirToArr apply {_x#1};
-    
     _newValue resize (count _value);
 
     for "_i" from 0 to (count _value) - 1 do {
