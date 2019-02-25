@@ -8,7 +8,7 @@ get action children
 Arguments:
 
 Return:
-none
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 

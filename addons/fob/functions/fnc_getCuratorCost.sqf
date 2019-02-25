@@ -9,7 +9,7 @@ Arguments:
 0: object classname <STRING>
 
 Return:
-none
+number
 __________________________________________________________________*/
 #include "script_component.hpp"
 

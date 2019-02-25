@@ -8,7 +8,7 @@ handle client setup
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #include "\a3\editor_f\Data\Scripts\dikCodes.h"
@@ -36,3 +36,4 @@ player addEventHandler ["Respawn",{
     };
 }];
 
+nil

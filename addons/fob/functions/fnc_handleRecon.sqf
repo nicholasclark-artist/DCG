@@ -40,9 +40,11 @@ if (_ifRecon) then {
     } forEach crew GVAR(uav);
 
     GVAR(uav) lockDriver true;
-    GVAR(uav) flyInHeight 140;
-
-    GVAR(uav) addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
+    GVAR(uav) flyInHeight 200;
+    
+    GVAR(uav) addEventHandler ["Fuel",{
+        if !(_this select 1) then {(_this select 0) setFuel 1};
+    }];
 
     private _wp = group GVAR(uav) addWaypoint [_position, 0];
     _wp setWaypointType "LOITER";

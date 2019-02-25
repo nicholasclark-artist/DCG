@@ -8,14 +8,14 @@ setup eventhandlers on curator unit
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
 INFO_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
 
-GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
-GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
+// save event code to variable, give eventhandler less code to compile, https://feedback.bistudio.com/T123355
+GVAR(curatorRegistered) = {
     _costs = [];
     {
         _side = getNumber (configFile >> "CfgVehicles" >> _x >> "side");
@@ -31,10 +31,9 @@ GVAR(curator) addEventHandler ["CuratorObjectRegistered",{
     } forEach (_this select 1);
 
     _costs
-}];
+};
 
-GVAR(curator) removeAllEventHandlers "CuratorObjectPlaced";
-GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
+GVAR(curatorPlaced) = {
     if (typeOf (_this select 1) in FOB_MED) then {
         (_this select 1) setVariable ["ace_medical_isMedicalFacility",true,true];
     };
@@ -45,14 +44,24 @@ GVAR(curator) addEventHandler ["CuratorObjectPlaced",{
 
         [QEGVAR(approval,add), [getPosASL (_this select 1), _cost]] call CBA_fnc_serverEvent;
     };
-}];
+};
 
-GVAR(curator) removeAllEventHandlers "CuratorObjectDeleted";
-GVAR(curator) addEventHandler ["CuratorObjectDeleted",{
+GVAR(curatorDeleted) = {
     if (EGVAR(approval,enable) isEqualTo 1) then {
         _cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
         _cost = _cost*FOB_COST_MULTIPIER;
 
         [QEGVAR(approval,add), [getPosASL (_this select 1),_cost * -1]] call CBA_fnc_serverEvent;
     };
-}];
+};
+
+GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
+GVAR(curator) addEventHandler ["CuratorObjectRegistered",{call GVAR(curatorRegistered)}];
+
+GVAR(curator) removeAllEventHandlers "CuratorObjectPlaced";
+GVAR(curator) addEventHandler ["CuratorObjectPlaced",{call GVAR(curatorPlaced)}];
+
+GVAR(curator) removeAllEventHandlers "CuratorObjectDeleted";
+GVAR(curator) addEventHandler ["CuratorObjectDeleted",{call GVAR(curatorDeleted)}];
+
+nil
