@@ -39,10 +39,11 @@ _factions = _factions apply {toUpper _x};
 // parse CfgVehicles for desired configs
 private _factionCfg = format [" 
     (getNumber (_x >> 'scope') > 1) &&  
-    {toUpper getText (_x >> 'faction') in %1} && 
+    {getNumber (_x >> 'side') isEqualTo %1} && 
+    {toUpper getText (_x >> 'faction') in %2} && 
     {getText (_x >> 'vehicleClass') != 'Autonomous'} &&
-    {configName _x isKindOf 'CAManBase' || {configName _x isKindOf 'Car'} || {configName _x isKindOf 'Tank'} || {configName _x isKindOf 'Air'}}
-",_factions] configClasses (CONFIGTOPARSE);
+    {configName _x isKindOf 'CAManBase' || configName _x isKindOf 'Car' || configName _x isKindOf 'Tank' || configName _x isKindOf 'Air'}
+",_side,_factions] configClasses (CONFIGTOPARSE);
 
 // apply filter to configs
 _factionCfg = _factionCfg select {
@@ -57,8 +58,8 @@ private _land = _factionCfg select {_x isKindOf "LandVehicle"};
 private _air = _factionCfg select {_x isKindOf "Air"};
 
 // get special classes using display name
-private _officers = _units select {toLower getText ((CONFIGTOPARSE) >> _x >> "displayName") find "officer" > -1};
-private _snipers = _units select {toLower getText ((CONFIGTOPARSE) >> _x >> "displayName") find "sniper" > -1};
+private _officers = _units select {toLower getText (CONFIGTOPARSE >> _x >> "displayName") find "officer" > -1};
+private _snipers = _units select {toLower getText (CONFIGTOPARSE >> _x >> "displayName") find "sniper" > -1};
 
 // remove special classes from units
 _units = _units - _officers; 
