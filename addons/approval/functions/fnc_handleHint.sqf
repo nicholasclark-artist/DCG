@@ -9,49 +9,63 @@ Arguments:
 0: player to send hint to <OBJECT>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define MAP_DRAWTIME 30
+#define AP_HINT_TITLE(NAME) format ["<t size='1.5' align='center'>Region %1</t><br/>",NAME]
+#define AP_HINT_SUBTITLE "<t size='0.92' align='center'>Open map to view region</t><br/><br/>"
+#define AP_HINT_BODY(NAME,TYPE,ALT,DIST) format ["Nearest settlement: %1 <br/>Settlement type: %2 <br/>Settlement altitude: %3m <br/>Distance to settlement: %4m <br/>",NAME,TYPE,ALT,DIST]
 
 params [
     ["_player",objNull,[objNull]]
 ];
 
-private _region = [getPos _player] call FUNC(getRegion);
-private _value = [getpos _player] call FUNC(getValue);
-private _safety = linearConversion [0, 1, AP_CONVERT2(getPos _player), 0, 100, true];
+private _position = getPosATL _player;
+private _region = [_position] call FUNC(getRegion);
+private _name = _region#0;
+private _value = _region#1;
+private _altitude = round (_value#0#2);
+private _distance = round (_value#0 distance2D _position);
+private _type = ([EGVAR(main,locations),_name] call CBA_fnc_hashGet)#2;
 
-_value = parseNumber (_value toFixed 1);
-_safety = parseNumber (_safety toFixed 1);
-
-private _hint = format ["Region Approval: %1/%3 \nRegion Safety: %2/%3",_value,_safety,AP_MAX];
-
-if !(isNil "_region") then {
-    [
-        [getPos _region,size _region,_hint],
-        {
-            params ["_position","_size","_hint"];
-
-            [_hint,true] call EFUNC(main,displayText);
-
-            private _mrk = createMarkerLocal [QGVAR(hintMarker),_position];
-            _mrk setMarkerBrushLocal "SolidBorder";
-            _mrk setMarkerColorLocal "ColorBlack";
-            _mrk setMarkerSizeLocal _size;
-            _mrk setMarkerShapeLocal "RECTANGLE";
-            _mrk setMarkerAlphaLocal 1;
-
-            if (CHECK_MARKER(_mrk)) then {
-                [{
-                    params ["_args","_idPFH"];
-                    _args params ["_mrk"];
-                    if (markerAlpha _mrk < 0.01) exitWith {
-                        [_idPFH] call CBA_fnc_removePerFrameHandler;
-                        deleteMarker _mrk;
-                    };
-                    _mrk setMarkerAlphaLocal (markerAlpha _mrk - .005);
-                }, 0, [_mrk]] call CBA_fnc_addPerFrameHandler;
-            };
-        }
-    ] remoteExecCall [QUOTE(BIS_fnc_call), owner _player, false];
+_type = switch (toLower _type) do {
+    case "namevillage": {"Village"};
+    case "namecity": {"City"};
+    case "namecitycapital": {"Capital"};
+    default {"Unknown"};
 };
+
+private _text = [AP_HINT_TITLE(mapGridPosition _position),AP_HINT_SUBTITLE,AP_HINT_BODY(_name,_type,_altitude,_distance)] joinString "";
+
+[
+    [_value,_text],
+    {
+        params ["_value","_text"];
+        
+        private _statement = format ["_this select 0 drawPolygon [%1,%2];",_value#2,_value#3];
+        private _map = findDisplay 12 displayCtrl 51;
+        private _id = _map ctrlAddEventHandler ["Draw",_statement];
+
+        GVAR(regionMapID) = _id;
+
+        // convert to text on client to avoid SimpleSerialization warning
+        _text = parseText _text;
+        [_text,true] call EFUNC(main,displayText);
+
+        [
+            {!(GVAR(regionMapID) isEqualTo _this#1) || {CBA_missionTime > (_this#2 + MAP_DRAWTIME)}},
+            {
+                // only overwrite hint if client has not requested another hint
+                if (GVAR(regionMapID) isEqualTo _this#1) then {
+                    ["",false] call EFUNC(main,displayText);
+                };
+
+                _this#0 ctrlRemoveEventHandler ["Draw",_this#1];
+            },
+            [_map,_id,CBA_missionTime]
+        ] call CBA_fnc_waitUntilAndExecute; 
+    }
+] remoteExecCall [QUOTE(BIS_fnc_call), owner _player, false];
+
+nil

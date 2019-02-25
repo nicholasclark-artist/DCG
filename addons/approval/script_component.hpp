@@ -8,7 +8,7 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define AP_HINT_NAME "Check Approval in Region"
+#define AP_HINT_NAME "Region Data"
 #define AP_HINT_STATEMENT [QGVAR(hint), [player]] call CBA_fnc_serverEvent
 #define AP_HINT_COND true
 #define AP_HINT_KEYCODE \
