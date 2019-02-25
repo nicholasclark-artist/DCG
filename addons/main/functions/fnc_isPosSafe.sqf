@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-checks if position is safe
+checks if positionAGL is safe
 
 Arguments:
 0: position <ARRAY>
@@ -27,9 +27,11 @@ params [
     ["_ignore",objNull,[objNull]]
 ];
 
-// always check position at surface level
-_pos =+ _pos;
-_pos set [2,0];
+// convert to position3D for surface and bounding box checks
+if (count _pos isEqualTo 2) then {
+    _pos =+ _pos;
+    _pos pushBack 0;
+};
 
 private _bbCheck = objNull;
 
@@ -68,7 +70,7 @@ _objs = _objs select {
 };
 
 // check if under surface
-private _z = lineIntersectsSurfaces [[_pos select 0,_pos select 1,(getTerrainHeightASL _pos) + 1], [_pos select 0,_pos select 1,getTerrainHeightASL _pos] vectorAdd [0, 0, 50], _ignore, objNull, false, 1, "GEOM", "NONE"] isEqualTo [];
+private _z = lineIntersectsSurfaces [AGLToASL _pos, (AGLToASL _pos) vectorAdd [0, 0, 50], _ignore, objNull, false, 1, "GEOM", "NONE"] isEqualTo [];
 
 if (isNull _bbCheck) exitWith {_z && {_objs isEqualTo []}};
 
