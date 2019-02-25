@@ -6,7 +6,7 @@ Description:
 handles civilian unit spawns using Civilian Presence modules
 
 Arguments:
-0: location array <ARRAY>
+0: hash key array <ARRAY>
 
 Return:
 nothing
@@ -18,31 +18,39 @@ __________________________________________________________________*/
     #define CIV_PRESENCE_DEBUG false
 #endif
 
+// run iterations until location count reached
 private _count = count _this;
 private _iterations01 = [];
 
 [{
     params ["_args","_idPFH"];
     _args params ["_locations","_count","_iterations01"];
-    (_locations select (count _iterations01)) params ["_name","_position","_radius","_type"];
+
+    // get current location params
+    (_locations select (count _iterations01)) params ["_name","_position","_radius"];
     
+    // exit if all locations handled
     if (count _iterations01 isEqualTo _count) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
     };
 
-    _position = ASLToATL _position;
+    // add iteration
     _iterations01 pushBack 0;
 
+    _position = ASLToATL _position;
+
+    // skip location if name in blacklist
     if !((toLower _name) in GVAR(blacklist)) then {
         // get houses in area
         private _houses = (_position nearObjects ["House", _radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
 
-        if (count _houses < 2) exitWith {WARNING_2("unsuitable spawn location: %1: %2: %3",_name,_position,count _houses)};
+        if (count _houses < 2) exitWith {WARNING_3("unsuitable spawn location: %1: %2: %3",_name,_position,count _houses)};
         
         // use houses as basis for unit spawns
         [_houses] call EFUNC(main,shuffle);
         _houses resize (((ceil (count _houses * 0.25)) + 1) min GVAR(unitLimit));
 
+        // debug markers
         private _mrk = createMarker [[QUOTE(PREFIX),_name] joinString "_",_position];
         _mrk setMarkerColor ([CIVILIAN,true] call BIS_fnc_sideColor);
         _mrk setMarkerShape "ELLIPSE";
@@ -50,14 +58,15 @@ private _iterations01 = [];
         _mrk setMarkerSize [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist)];
         [_mrk] call EFUNC(main,setDebugMarker);
 
+        // player detection trigger
         private _trg = createTrigger ["EmptyDetector", _position, true]; // local trigger creates 'Ref to nonnetwork object' spam in log
         _trg setTriggerActivation ["ANYPLAYER", "PRESENT", true];
         _trg setTriggerArea [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist), 0, false, CIV_ZDIST];
 
-        // spawn ambient objects
+        // spawn ambient objects when player activates trigger
         _trg setTriggerStatements [
             "this",
-            format ["[%2,%3,%4,thisTrigger] call %1",QFUNC(spawnAmbient),_position,_radius,5 min (count _houses)],
+            format ["[%2,200 min %3,5 min %4,0,thisTrigger] call %1",QFUNC(spawnAmbient),_position,_radius,count _houses],
             QUOTE(GETVAR(thisTrigger,QGVAR(ambient),[]) call EFUNC(main,cleanup))
         ];
 
@@ -73,18 +82,25 @@ private _iterations01 = [];
         // main options
         //@todo fix units getting stuck in floors
         private _onCreated = {
+            // spawn position
             // _this setVehiclePosition [_this, [], 0, "NONE"];
+
+            // headless client / cache support
             _this setVariable [QEGVAR(main,HCBlacklist), true];
             _this setVariable ["acex_headless_blacklist", true];
-            [group _this] call EFUNC(cache,disableCache);
+
+            // behaviors 
             _this setSkill 0.1;
+
+            // animations
+            _this setAnimSpeedCoef (0.8 + random 0.2);
         };
         
         _moduleMain setVariable ["#area",[_position,_radius,_radius,0,false,CIV_ZDIST]]; // gets passed to inAreaArray
         _moduleMain setVariable ["#debug",CIV_PRESENCE_DEBUG];
         _moduleMain setVariable ["#useagents",true];
         _moduleMain setVariable ["#usepanicmode",true];
-        _moduleMain setVariable ["#unitcount",count _houses];
+        _moduleMain setVariable ["#unitcount",count _houses]; // @todo adjust unit count based on time of day
         _moduleMain setVariable ["#unittypes",EGVAR(main,unitsCiv)];
         _moduleMain setVariable ["#oncreated",_onCreated];
         _moduleMain setVariable ["#ondeleted",{true}];
@@ -99,12 +115,14 @@ private _iterations01 = [];
             params ["_args","_idPFH"];
             _args params ["_trg","_houses","_iterations02"]; 
 
+            // exit if all houses handled
             if (count _iterations02 isEqualTo count _houses) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
             };
             
-            _positionHouse = selectRandom (selectRandom _houses);
-            
+            // _positionHouse = selectRandom (selectRandom _houses);
+            _positionHouse = selectRandom (_houses select (count _iterations02));
+
             // create new groups for these modules, old group is null 
 
             // create half as many spawn points
