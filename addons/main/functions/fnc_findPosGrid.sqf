@@ -54,7 +54,7 @@ if (_distObj > 0 || {_water > -1}) then {
 };
 
 {
-    _x set [2,(getTerrainHeightASL _x) max 0];
+    _x set [2,ASLZ(_x)];
 
     // _mrk = createMarker [format["%1_grid_%2",QUOTE(PREFIX),diag_frameNo + _forEachIndex], _x];
     // _mrk setMarkerType "mil_dot";

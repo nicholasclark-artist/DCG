@@ -30,11 +30,11 @@ _unitCount
 // DEBUG
 // _str = "";
 // for "_p" from 1 to 100 do {
-// 	_multiplier = 1;
-// 	_min = 0;
-// 	_max = 100;
-// 	_unitCount = ceil (((log (_p max 2) / log 2) * 10) * _multiplier);
-// 	_unitCount = (_unitCount max _min) min _max;
-// 	diag_log text (format["P:%1, U:%2",_p,_unitCount]);
+//     _multiplier = 1;
+//     _min = 0;
+//     _max = 100;
+//     _unitCount = ceil (((log (_p max 2) / log 2) * 10) * _multiplier);
+//     _unitCount = (_unitCount max _min) min _max;
+//     diag_log text (format["P:%1, U:%2",_p,_unitCount]);
 // };
 // diag_log text "END";

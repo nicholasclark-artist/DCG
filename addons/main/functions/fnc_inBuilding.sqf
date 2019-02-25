@@ -20,7 +20,7 @@ if ((_this select 0) isEqualType objNull) then {
     _ignore = _this select 0;
 } else {
     _pos =+ _this select 0;
-    _pos set [2, getTerrainHeightASL _pos];
+    _pos set [2,ASLZ(_pos)];
     _ignore = objNull;
 };
 

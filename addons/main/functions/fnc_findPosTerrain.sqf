@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-finds a position of a certain terrain type. If the terrain type is "house", the function returns an array including the house object and position
+finds a positionASL of a certain terrain type. If the terrain type is "house", the function returns an array including the house object and position
 
 Arguments:
 0: center position <ARRAY>
@@ -59,14 +59,13 @@ _places = if !(_rural) then {
 };
 
 {
-    private _pos = _x select 0;
-    _pos set [2,getTerrainHeightASL _pos];
-
     if !(_terrain isEqualTo "house") then {
-        if (_check > 0 && {!([_pos,_check,0,GRAD] call FUNC(isPosSafe))}) exitWith {};
-        _ret = _pos;
+        if (_check > 0 && {!([_x select 0,_check,0,GRAD] call FUNC(isPosSafe))}) exitWith {};
+
+        _ret =+ _x select 0;
+        _ret set [2,ASLZ(_ret)];
     } else {
-        _ret = [_pos,DIST_HOUSE] call FUNC(findPosHouse);
+        _ret = [_x select 0,DIST_HOUSE] call FUNC(findPosHouse);
     };
 
     if !(_ret isEqualTo []) exitWith {};

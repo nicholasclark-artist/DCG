@@ -15,8 +15,11 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define BAD_HOUSES ["Land_HouseV_1L2"]
 
-private _center = param [0,[0,0,0]];
-private _range = param [1,100,[0]];
+params [
+    ["_center",[0,0,0],[[]]],
+    ["_range",100,[0]]
+];
+
 private _return = [];
 
 private _houseArray = _center nearObjects ["House",_range];
@@ -30,8 +33,7 @@ if !(_houseArray isEqualTo []) then {
         if ([_x] call FUNC(inBuilding)) exitWith {
             _return = [_house,ATLtoASL _x];
         };
-        false
-    } count _housePosArray;
+    } forEach _housePosArray;
 };
 
 _return

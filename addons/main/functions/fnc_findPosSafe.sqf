@@ -37,7 +37,7 @@ scopeName "main";
 for "_i" from 1 to ITERATIONS do {
     _center getPos [floor (random ((_max - _min) + 1)) + _min, floor (random (((_dir select 1) - (_dir select 0)) + 1)) + (_dir select 0)] call {
         if !([_this,_check,_water,_gradient] call FUNC(isPosSafe)) exitWith {};   
-        _this set [2,getTerrainHeightASL _this];
+        _this set [2,ASLZ(_this)];
         _this select [0,3] breakOut "main";
     };
 };
@@ -50,7 +50,7 @@ WARNING("falling back to default position");
     private _pos = getArray (configFile >> "CfgWorlds" >> worldName >> "Armory" >> ["positionStart", "positionStartWater"] select _this);
 
     if !(_pos isEqualTo []) exitWith {
-        _pos set [2, getTerrainHeightASL _pos];
+        _pos set [2,ASLZ(_pos)];
 
         _pos
     };
@@ -58,7 +58,7 @@ WARNING("falling back to default position");
     _pos = getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition");
 
     if !(_pos isEqualTo []) exitWith {
-        _pos set [2, getTerrainHeightASL _pos];
+        _pos set [2,ASLZ(_pos)];
         
         _pos
     };

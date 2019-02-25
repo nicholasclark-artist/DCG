@@ -25,7 +25,7 @@ params [
     ["_height",50,[0]]
 ];
 
-_pos set [2, getTerrainHeightASL _pos];
+_pos set [2,ASLZ(_pos)];
 
 private _ret = [];
 private _posArray = [_pos,75,_max,_min,4] call EFUNC(main,findPosGrid);
