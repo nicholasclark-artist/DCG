@@ -8,7 +8,7 @@ check server profile for saved data and assign it for current scenario
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -19,3 +19,5 @@ if (!isMultiplayer && {!is3DEN}) exitWith {};
         GVAR(saveDataScenario) = _x;
     };
 } forEach (SAVE_GETVAR);
+
+nil

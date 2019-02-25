@@ -10,7 +10,7 @@ Arguments:
 1: unit to question <OBJECT>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define COOLDOWN 300
@@ -85,3 +85,5 @@ if (PROBABILITY(AP_CONVERT1(getpos _player))) then {
 } else {
     SEND_MSG(selectRandom _text);
 };
+
+nil

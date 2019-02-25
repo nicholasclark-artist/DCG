@@ -24,13 +24,15 @@ GVAR(saveDataScenario) = [SAVE_SCENARIO_ID];
 if (CHECK_ADDON_2(main)) then {
     private _data = [];
 
+    private ["_entity","_vars"];
+
     {
         // @todo add support for saving units
         if (_x getVariable [QGVAR(saveEntity),false] && {!(_x isKindOf "MAN")}) then {
             _entity = _x;
 
-            // save entity variables if "dcg" found in string
-            private _vars = (allVariables _entity) select {(_x find QUOTE(PREFIX)) >= 0};
+            // save entity variables if "dcg" found in variable name
+            _vars = (allVariables _entity) select {(_x find QUOTE(PREFIX)) >= 0};
 
             // set as [variable name, variable value]
             {_vars set [_forEachIndex,[_x,_entity getVariable _x]]} forEach _vars;
@@ -107,7 +109,6 @@ if (CHECK_ADDON_2(fob)) then {
         _data pushBack _dataObj;
         _refund = ((_data select 1) + _refund) min 1;
         _data set [1,_refund];
-        //_data pushBack [EGVAR(fob,AVBonus)];
     };
 
     PUSHBACK_DATA(fob,_data);
@@ -119,21 +120,6 @@ if (CHECK_ADDON_2(weather)) then {
 
     PUSHBACK_DATA(weather,_data);
 };
-
-/* 
-// IED ADDON
-if (CHECK_ADDON_2(ied)) then {
-    private _data = [];
-    {
-        private _pos = getPos _x;
-        _pos resize 2;
-        _data pushBack _pos;
-        false
-    } count EGVAR(ied,list);
-
-    PUSHBACK_DATA(ied,_data);
-}; 
-*/
 
 // TASK ADDON
 if (CHECK_ADDON_2(task)) then {

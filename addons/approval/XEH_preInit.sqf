@@ -10,7 +10,6 @@ PREP(initSettings);
 PREP(init);
 PREP(initClient);
 PREP(addValue);
-PREP(getValue);
 PREP(getRegion);
 PREP(handleKilled);
 PREP(handleQuestion);
