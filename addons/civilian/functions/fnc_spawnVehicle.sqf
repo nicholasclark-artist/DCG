@@ -35,7 +35,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         // eventhandlers
         _driver addEventHandler ["GetOutMan", {
             GVAR(drivers) deleteAt (GVAR(drivers) find (_this select 0));
-            [_this select 0, _this select 2] call EFUNC(main,cleanup);
+            [_this select 0, _this select 2] call EFUNC(main,cleanup);            
         }];
 
         // behaviors
