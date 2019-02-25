@@ -12,7 +12,7 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define PATROL_RANGE 700
-#define PATROL_MINRANGE PATROL_RANGE*0.5
+#define PATROL_MINRANGE PATROL_RANGE*0.6
 
 // delete null and lonely groups
 _groupsToDelete = GVAR(groups) select {
@@ -45,7 +45,7 @@ if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
                 _grp = grpNull;
                 _pos = ASLtoAGL _pos;
 
-                if (PROBABILITY(GVAR(vehChance))) then { 
+                if (PROBABILITY(GVAR(vehicleProbability))) then { 
                     _grp = [_pos,1,1,EGVAR(main,enemySide),1,true] call EFUNC(main,spawnGroup);
                     [_grp] call EFUNC(cache,disableCache);
 

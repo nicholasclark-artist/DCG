@@ -15,6 +15,8 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define CONFIG configfile >> QGVARMAIN(compositions)
 
+// @todo use parseSimpleArray instead of compile
+
 params [
     ["_position",[],[[]]],
     ["_strength",0.5,[0]]

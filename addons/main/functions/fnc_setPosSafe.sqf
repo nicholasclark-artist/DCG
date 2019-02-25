@@ -20,9 +20,9 @@ params [
 ];
 
 // force positionASL, allow underwater positions
-if ((_pos select 2) > 0) then {
+if (count _pos isEqualTo 2 || {(_pos select 2) > 0}) then {
     _pos =+ _pos; 
-    _pos set [2,getTerrainHeightASL _pos];
+    _pos set [2,ASLZ(_pos)];
 };
 
 _obj setVectorUp surfaceNormal _pos;

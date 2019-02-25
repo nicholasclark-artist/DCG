@@ -35,7 +35,8 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {}
+    {[QGVAR(cooldown),_this] call EFUNC(main,handleSettingChange)},
+    true
 ] call CBA_Settings_fnc_init;
 
 [
@@ -45,8 +46,8 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     [
         1,
-        10,
-        5,
+        16,
+        4,
         0
     ],
     true,
@@ -54,9 +55,9 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(vehChance),
+    QGVAR(vehicleProbability),
     "SLIDER",
-    ["Vehicle Spawn Chance","Probability of spawned patrol being a vehicle unit."],
+    ["Vehicle Probability","Probability of spawned patrol being a vehicle unit."],
     COMPONENT_NAME,
     [
         0,

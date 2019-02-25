@@ -36,7 +36,7 @@ switch (_this select 0) do {
         _forecast pushBack _overcast;
 
         // rain variance 
-        private _rain = if (GVAR(rain) > 0 && {PROBABILITY(0.5)}) then { // add another probability check so it doesn't continuously rain on an overcast day
+        private _rain = if (GVAR(rain) > 0 && {PROBABILITY(0.5)}) then { // add another probability check so it doesn't continuously rain
             private _rainMin = GVAR(rain) - WEATHER_RAIN_VARIANCE;
             private _rainMax = GVAR(rain) + WEATHER_RAIN_VARIANCE;
             private _rainfall = (random (_rainMax - _rainMin)) + _rainMin; 
@@ -51,7 +51,7 @@ switch (_this select 0) do {
 
         _forecast pushBack _rain;
 
-        // get new value every cycle, so fog is not constant
+        // no variance, get new value every cycle, so fog is not constant
         _forecast pushBack (call FUNC(getFog));
 
         _forecast
