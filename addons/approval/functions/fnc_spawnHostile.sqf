@@ -84,8 +84,6 @@ switch (floor random 3) do {
         true
     };
     case 1: { // hostile vehicle
-        // @todo attach visible explosives to vehicle
-
         // get civ driver
         private _drivers = (allUnits select {side _x isEqualTo CIVILIAN}) select {!isNull (objectParent _x)};
         private _driver = _drivers findIf {CHECK_DIST2D(getPosATL _x,_pos,2000) && {!(CHECK_DIST2D(getPosATL _x,_pos,50))}};

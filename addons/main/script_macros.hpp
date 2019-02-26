@@ -46,32 +46,32 @@
 // Min/max switch, comment for a min heap, uncomment for a max heap
 #define MAX_HEAP
 
-#define NODEPARAMS(x) (x) params ["_key", "_value"]
-#define NODE_KEY 0
-#define NODE_VALUE 1
+#define HEAP_NODEPARAMS(x) (x) params ["_key", "_value"]
+#define HEAP_NODE_KEY 0
+#define HEAP_NODE_VALUE 1
 
 #ifdef MAX_HEAP
     //Max heap
-    #define INFINITY 1e39
-    #define UNDEFINED_KEY -INFINITY
-    #define G_TOP_KEY INFINITY
+    #define HEAP_INFINITY 1e39
+    #define HEAP_UNDEFINED_KEY -HEAP_INFINITY
+    #define HEAP_G_TOP_KEY HEAP_INFINITY
 
-    #define COMPARE(x,y) ((x) > (y))
+    #define HEAP_COMPARE(x,y) ((x) > (y))
 #else
     //Min heap
-    #define INFINITY 1e39
-    #define UNDEFINED_KEY INFINITY
-    #define G_TOP_KEY -INFINITY
+    #define HEAP_INFINITY 1e39
+    #define HEAP_UNDEFINED_KEY HEAP_INFINITY
+    #define HEAP_G_TOP_KEY -HEAP_INFINITY
 
-    #define COMPARE(x,y) ((x) < (y))
+    #define HEAP_COMPARE(x,y) ((x) < (y))
 #endif
 
-#define KEY(x) ((x) select NODE_KEY)
-#define VALUE(x) ((x) select NODE_VALUE)
-#define PARENT(x) (floor (((x)-1)/2))
-#define LEFT(x) (2*(x)+1)
-#define RIGHT(x) (2*(x)+2)
-#define LAST(x) ((count (x))-1)
+#define HEAP_KEY(x) ((x) select HEAP_NODE_KEY)
+#define HEAP_VALUE(x) ((x) select HEAP_NODE_VALUE)
+#define HEAP_PARENT(x) (floor (((x)-1)/2))
+#define HEAP_LEFT(x) (2*(x)+1)
+#define HEAP_RIGHT(x) (2*(x)+2)
+#define HEAP_LAST(x) ((count (x))-1)
 
 // checks
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
@@ -128,5 +128,5 @@
 #define AP_VILLAGE ((AP_MAX*0.05)*EGVAR(approval,multiplier))
 #define AP_CITY ((AP_MAX*0.1)*EGVAR(approval,multiplier))
 #define AP_CAPITAL ((AP_MAX*0.15)*EGVAR(approval,multiplier))
-#define AP_CONVERT1(POS) (linearConversion [AP_MIN, AP_MAX, ([POS] call EFUNC(approval,getRegion)) select 1, 0, 1, true])
+#define AP_CONVERT1(POS) (linearConversion [AP_MIN, AP_MAX, ([POS] call EFUNC(approval,getRegion)) select 1 select 1, 0, 1, true])
 #define AP_CONVERT2(POS) ((1 - AP_CONVERT1(POS)) * 0.5)

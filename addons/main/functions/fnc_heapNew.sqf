@@ -12,7 +12,7 @@
 private _return = [];
 if(_this isEqualType []) then {
     private _heap = +_this;
-    private _i = LAST(_heap);
+    private _i = HEAP_LAST(_heap);
     while { _i >= 0 } do {
         [_heap, _i] call FUNC(heapPercDown);
         _i = _i - 1;

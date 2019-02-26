@@ -9,14 +9,14 @@
 #include "script_component.hpp"
 
 params ["_heap", "_i"];
-private _key = KEY(_heap#_i);
-private _left = LEFT(_i);
-private _keyLeft = if(_left < count _heap) then { KEY(_heap#_left) } else { UNDEFINED_KEY };
-private _right = RIGHT(_i);
-private _keyRight = if(_right < count _heap) then { KEY(_heap#_right) } else { UNDEFINED_KEY };
+private _key = HEAP_KEY(_heap#_i);
+private _left = HEAP_LEFT(_i);
+private _keyLeft = if(_left < count _heap) then { HEAP_KEY(_heap#_left) } else { HEAP_UNDEFINED_KEY };
+private _right = HEAP_RIGHT(_i);
+private _keyRight = if(_right < count _heap) then { HEAP_KEY(_heap#_right) } else { HEAP_UNDEFINED_KEY };
 
-if(COMPARE(_keyLeft,_key) || COMPARE(_keyRight,_key)) then {
-    private _swap = [_left,_right] select COMPARE(_keyRight,_keyLeft);
+if(HEAP_COMPARE(_keyLeft,_key) || HEAP_COMPARE(_keyRight,_key)) then {
+    private _swap = [_left,_right] select HEAP_COMPARE(_keyRight,_keyLeft);
     [_heap, _i, _swap] call FUNC(heapSwap);
     [_heap, _swap] call FUNC(heapPercDown);
 };

@@ -19,18 +19,18 @@ private _found = -1;
 while {count _visitQueue > 0 && _found < 0} do {
     private _i = _visitQueue deleteAt 0;
     private _elem = _heap#_i;
-    private _elemKey = KEY(_elem);
+    private _elemKey = HEAP_KEY(_elem);
     
     if(_key == _elemKey) then {
         _found = _i;
     } else {
-        private _leftChild = LEFT(_i);
-        if(_leftChild <= LAST(_heap)) then {
+        private _leftChild = HEAP_LEFT(_i);
+        if(_leftChild <= HEAP_LAST(_heap)) then {
             _visitQueue pushBack _leftChild;
         };
         
-        private _rightChild = RIGHT(_i);
-        if(_rightChild <= LAST(_heap)) then {
+        private _rightChild = HEAP_RIGHT(_i);
+        if(_rightChild <= HEAP_LAST(_heap)) then {
             _visitQueue pushBack _rightChild;
         };
     };
@@ -39,7 +39,7 @@ while {count _visitQueue > 0 && _found < 0} do {
 //If found delete it
 private _delete = _found >= 0;
 if(_delete) then {
-    _heap#_found set [NODE_KEY, G_TOP_KEY];
+    _heap#_found set [HEAP_NODE_KEY, HEAP_G_TOP_KEY];
     [_heap, _found] call FUNC(heapPercUp);
     _heap call FUNC(heapPop);
 };

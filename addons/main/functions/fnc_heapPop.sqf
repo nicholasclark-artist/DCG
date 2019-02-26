@@ -13,7 +13,7 @@ if(_this isEqualType [] && !(_this isEqualTo [])) then {
     private _heap = _this;
     _return = (_heap#0);
 
-    private _last = LAST(_heap);
+    private _last = HEAP_LAST(_heap);
     if(_last == 0) then {
         _heap deleteAt _last;
     } else {
