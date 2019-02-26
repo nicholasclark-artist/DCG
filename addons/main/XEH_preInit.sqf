@@ -209,5 +209,5 @@ call FUNC(loadDataScenario);
 // init cba settings
 SETTINGS_INIT;
 
-// populate location arrays
+// populate location hashes
 call FUNC(setMapLocations);

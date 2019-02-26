@@ -54,7 +54,7 @@ if (CHECK_ADDON_1(ace_interact_menu)) then {
     _condition = _condition select [1,(count _condition) - 2];
 
     if !(_statement isEqualTo {}) then {
-        private _addAction = _obj addAction [_name,_statement,_params,0,false,true,"",_condition];
+        private _addAction = _obj addAction [_name,_statement,_params,0,false,true,"",_condition,10];
         _actions pushBack _addAction;
     } else {
         _actions pushBack -1;

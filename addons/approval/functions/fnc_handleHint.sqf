@@ -13,9 +13,9 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define MAP_DRAWTIME 30
-#define AP_HINT_TITLE(NAME) format ["<t size='1.5' align='center'>Region %1</t><br/>",NAME]
-#define AP_HINT_SUBTITLE "<t size='0.92' align='center'>Open map to view region</t><br/><br/>"
-#define AP_HINT_BODY(NAME,TYPE,ALT,DIST) format ["Nearest settlement: %1 <br/>Settlement type: %2 <br/>Settlement altitude: %3m <br/>Distance to settlement: %4m <br/>",NAME,TYPE,ALT,DIST]
+#define AP_HINT_TITLE(NAME) format ["<t size='1.4' align='center'>Region %1</t><br/>",NAME]
+#define AP_HINT_SUBTITLE "<t size='0.94' align='center'>Open map to view region</t><br/><br/>"
+#define AP_HINT_BODY(NAME,TYPE,ALT,DIST) format ["<t align='center'>Nearest settlement: %1 <br/>Settlement type: %2 <br/>Settlement altitude: %3m <br/>Distance to settlement: %4m</t><br/>",NAME,TYPE,ALT,DIST]
 
 params [
     ["_player",objNull,[objNull]]

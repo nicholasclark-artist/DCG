@@ -21,7 +21,6 @@ PREP(getCuratorCost);
 PREP(isAllowedOwner);
 PREP(curatorEH);
 
-GVAR(location) = locationNull;
 GVAR(respawnPos) = [];
 GVAR(anchor) = objNull;
 GVAR(curatorExternal) = objNull;
@@ -31,13 +30,16 @@ GVAR(deleteCoef) = 0.025;
 // headless client exit 
 if (!isServer) exitWith {};
 
+// define location via remoteExec instead of publicVariable to avoid SimpleSerialization warning
+[[],{
+    GVAR(location) = locationNull;
+}] remoteExecCall [QUOTE(BIS_fnc_call),0];
+
 publicVariable QFUNC(getKeybind);
 publicVariable QFUNC(getChildren);
 publicVariable QFUNC(getCuratorCost);
 publicVariable QFUNC(isAllowedOwner);
 publicVariable QFUNC(curatorEH);
 publicVariable QFUNC(initClient);
-
-publicVariable QGVAR(location);
 
 SETTINGS_INIT;
