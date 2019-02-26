@@ -72,6 +72,15 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     };
                 };
                 
+                // overwrite radius
+                if !(_ret#INDEX_VALUE isEqualTo []) then {
+                    _radius = [_ret#INDEX_VALUE#0] call FUNC(findLocationRadius);
+
+                    if (_radius > 0) then {
+                        _ret#INDEX_VALUE set [1,_radius]; 
+                    };
+                };
+
                 GVAR(locations) pushBack _ret;
             };
         };

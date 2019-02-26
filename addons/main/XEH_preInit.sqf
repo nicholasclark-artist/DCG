@@ -17,6 +17,7 @@ PREP(handleHCConnected);
 PREP(handleLoadData);
 PREP(handleCleanup);
 PREP(handleSettingChange);
+PREP(findLocationRadius);
 PREP(findPosHouse);
 PREP(findPosOverwatch);
 PREP(findPosGrid);
