@@ -23,17 +23,6 @@ __________________________________________________________________*/
     true
 ] call CBA_Settings_fnc_init;
 
-// [
-//     QGVAR(allowSafezone),
-//     "CHECKBOX",
-//     ["Allow in Safezones","Allow FOB deployment in safezones."],
-//     COMPONENT_NAME,
-//     true,
-//     true,
-//     {[QGVAR(allowSafezone),_this] call EFUNC(main,handleSettingChange)},
-//     true
-// ] call CBA_Settings_fnc_init;
-
 [
     QGVAR(allow),
     "LIST",

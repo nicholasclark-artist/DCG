@@ -29,7 +29,7 @@ private _player = selectRandom (call CBA_fnc_players);
 
 if (isNil "_player") exitWith {};
 
-if (!GVAR(allowSafezone) && {[_player] call EFUNC(main,inSafezones)}) exitWith {};
+if ([_player] call EFUNC(main,inSafezones)) exitWith {};
 
 private _position = getPosATL _player;
 

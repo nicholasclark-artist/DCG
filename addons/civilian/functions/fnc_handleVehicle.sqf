@@ -21,7 +21,7 @@ private ["_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadCon
 if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
     _player = selectRandom ((call CBA_fnc_players) select {((getPos _x) select 2) < 10});
 
-    if (isNil "_player" || {!GVAR(allowSafezone) && [_player] call EFUNC(main,inSafezones)}) exitWith {};
+    if (isNil "_player" || {[_player] call EFUNC(main,inSafezones)}) exitWith {};
 
     _roads = _player nearRoads 200;
 
