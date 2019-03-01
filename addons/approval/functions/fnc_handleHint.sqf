@@ -36,14 +36,14 @@ _type = switch (toLower _type) do {
     default {"Unknown"};
 };
 
-private _text = [AP_HINT_TITLE(mapGridPosition _position),AP_HINT_SUBTITLE,AP_HINT_BODY(_name,_type,_altitude,_distance)] joinString "";
+private _text = [AP_HINT_TITLE(mapGridPosition (_value select 0)),AP_HINT_SUBTITLE,AP_HINT_BODY(_name,_type,_altitude,_distance)] joinString "";
 
 [
     [_value,_text],
     {
         params ["_value","_text"];
         
-        private _statement = format ["_this select 0 drawPolygon [%1,%2];",_value#2,_value#3];
+        private _statement = format ["_this#0 drawPolygon [%1,%2];",_value#2,_value#3];
         private _map = findDisplay 12 displayCtrl 51;
         private _id = _map ctrlAddEventHandler ["Draw",_statement];
 
