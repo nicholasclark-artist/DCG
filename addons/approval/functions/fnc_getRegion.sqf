@@ -24,7 +24,7 @@ _ret = [];
 {
     // get copy of array
     _value =+ [GVAR(regions),_x] call CBA_fnc_hashGet;
-
+    
     if (_position inPolygon _value#2) exitWith {
         _ret = [_x,_value];
     }; 

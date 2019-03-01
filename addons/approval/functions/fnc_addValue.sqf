@@ -28,7 +28,7 @@ _value set [1,_newValue];
 
 // calculate new color, [R,G,B,A]
 private _colorValue = linearConversion [AP_MIN,AP_MAX,_newValue,0,1,true];
-private _newColor = [1 - _colorValue, _colorValue, 0, 1];
+private _newColor = [1 - _colorValue,_colorValue,0,1];
 _value set [3,_newColor];
 
 [GVAR(regions),_region#0,_value] call CBA_fnc_hashSet;

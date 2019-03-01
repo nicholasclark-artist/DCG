@@ -8,12 +8,12 @@ handle vanilla ieds
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
 if (GVAR(list) isEqualTo []) exitWith {
-    [_this select 1] call CBA_fnc_removePerFrameHandler;
+    [_this#1] call CBA_fnc_removePerFrameHandler;
 };
 
 {
@@ -25,6 +25,6 @@ if (GVAR(list) isEqualTo []) exitWith {
         (selectRandom TYPE_EXP) createVehicle (getPosATL _x);
         deleteVehicle _x;
     };
+} forEach GVAR(list);
 
-    false
-} count GVAR(list);
+nil
