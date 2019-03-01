@@ -23,6 +23,11 @@ __________________________________________________________________*/
 
 // get map locations from config
 private _cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";
+
+if (count _cfgLocations isEqualTo 0) exitWith {
+    ERROR_1("%1 does not have config locations",worldName);
+};
+
 private _typeLocations = ["namecitycapital","namecity","namevillage"];
 private _typeLocals = ["namelocal"];
 private _typeHills = ["hill"];
@@ -65,7 +70,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     
                     if !(_positionSafe isEqualTo _position) then {
                         _ret#INDEX_VALUE set [0,_positionSafe];  
-                        INFO_2("location: %1, safe position: %2",_name,_positionSafe);
+                        TRACE_2("location safe position",_name,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
                         WARNING_1("removing unsafe location: %1",_name);
@@ -96,7 +101,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     
                     if !(_positionSafe isEqualTo _position) then {
                         _ret#INDEX_VALUE set [0,_positionSafe];  
-                        INFO_2("local: %1, safe position: %2",_name,_positionSafe);
+                        TRACE_2("local safe position",_name,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
                         WARNING_1("removing unsafe local: %1",_name);
@@ -118,7 +123,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     
                     if !(_positionSafe isEqualTo _position) then {
                         _ret#INDEX_VALUE set [0,_positionSafe];  
-                        INFO_2("hill: %1, safe position: %2",configName _location,_positionSafe);
+                        TRACE_2("hill safe position",configName _location,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
                         WARNING_1("removing unsafe hill: %1",configName _location);
@@ -139,7 +144,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     
                     if !(_positionSafe isEqualTo _position) then {
                         _ret#INDEX_VALUE set [0,_positionSafe];    
-                        INFO_2("marine: %1, safe position: %2",_name,_positionSafe);
+                        TRACE_2("marine safe position",_name,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
                         WARNING_1("removing unsafe marine: %1",_name);
@@ -164,6 +169,8 @@ GVAR(locations) = [GVAR(locations), []] call CBA_fnc_hashCreate;
 GVAR(locals) = [GVAR(locals), []] call CBA_fnc_hashCreate;
 GVAR(hills) = [GVAR(hills), []] call CBA_fnc_hashCreate;
 GVAR(marines) = [GVAR(marines), []] call CBA_fnc_hashCreate;
+
+if (!isMultiplayer && {!is3DEN}) exitWith {}; // exit if not in multiplayer or editor
 
 // create voronoi diagram
 private _sites = [];
@@ -198,6 +205,7 @@ GVAR(locationPolygons) = [GVAR(locationPolygons)] call CBA_fnc_hashCreate;
     _edgeEnd =+ _x#1;
     _edgeEnd pushBack 0;
 
+    // @todo find better way to get locations associated with edge
     // get locations to the left and right of voronoi edge
     _locationL = [(nearestLocations [_x#2,_typeLocations,VORONOI_SEARCH_RADIUS])#0,locationNull] select (_x#2 isEqualTo objNull);
     _locationR = [(nearestLocations [_x#3,_typeLocations,VORONOI_SEARCH_RADIUS])#0,locationNull] select (_x#3 isEqualTo objNull);
