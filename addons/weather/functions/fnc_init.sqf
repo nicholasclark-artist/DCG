@@ -34,7 +34,7 @@ if !(_data isEqualTo []) then {
     [QGVAR(updateMeasurements), []] call CBA_fnc_localEvent;
 } else {
     if (GVAR(month) < 0) then {GVAR(month) = ceil random 12};
-    if (GVAR(hour) < 0) then {GVAR(hour) = round random 23};
+    if (GVAR(hour) < 0) then {GVAR(hour) = floor random 24};
 
     // set date before getting forecast
     GVAR(date) = [2019, GVAR(month), ceil random 27, GVAR(hour), floor random 30];
