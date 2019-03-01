@@ -50,38 +50,34 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(playerSide),
+    QGVAR(sides),
     "LIST",
-    ["Player Side","Cannot be the same as enemy side and must be equal to the side of playable units. It's recommended to force this setting in the EDEN editor."],
+    ["Player and Enemy Sides","Player side should be equal to the side of playable units."],
     COMPONENT_NAME,
     [
-        [EAST,WEST,INDEPENDENT],
-        ["EAST","WEST","INDEPENDENT"],
-        1
-    ],
-    true,
-    {[QGVAR(playerSide),_this] call FUNC(handleSettingChange)},
-    true
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(enemySide),
-    "LIST",
-    ["Enemy Side","Cannot be the same as player side."],
-    COMPONENT_NAME,
-    [
-        [EAST,WEST,INDEPENDENT],
-        ["EAST","WEST","INDEPENDENT"],
+        [
+            [WEST,EAST],
+            [WEST,INDEPENDENT],
+            [EAST,WEST],
+            [EAST,INDEPENDENT],
+            [INDEPENDENT,WEST],
+            [INDEPENDENT,EAST]
+        ],
+        [
+            "West, East",
+            "West, Independent",
+            "East, West",
+            "East, Independent",
+            "Independent, West",
+            "Independent, East"
+        ],
         0
     ],
     true,
     {
-        [QGVAR(enemySide),_this] call FUNC(handleSettingChange);
-
-        if (_this isEqualTo GVAR(playerSide)) then {
-            systemChat (LOG_SYS_FORMAT("ERROR",ERROR_SAMESIDE));
-            ERROR(ERROR_SAMESIDE);
-        };
+        [QGVAR(sides),_this] call FUNC(handleSettingChange);
+        GVAR(playerSide) = _this#0;
+        GVAR(enemySide) = _this#1;
     },
     true
 ] call CBA_Settings_fnc_init;
