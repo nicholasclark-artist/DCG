@@ -13,7 +13,7 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (is3DEN || {!GVAR(safezoneEnable)}) exitWith {}; // only run in mission
+if (is3DEN || {!isServer} || {!GVAR(safezoneEnable)}) exitWith {};
 
 // run after settings init
 if (!GVAR(settingsInitFinished)) exitWith {
