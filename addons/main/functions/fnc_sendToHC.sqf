@@ -30,7 +30,6 @@ private _id = owner GVAR(HC);
         if ((units _x) findIf {owner _x isEqualTo _id || {isPlayer _x} || {(vehicle _x) getVariable [QGVAR(HCBlacklist), false]}} > -1) exitWith {};
 
         [_x,_id] call FUNC(setOwner);
-        TRACE_1("send to headless client",_x);
     };
 } forEach allGroups;
 

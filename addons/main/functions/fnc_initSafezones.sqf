@@ -20,6 +20,9 @@ if (!GVAR(settingsInitFinished)) exitWith {
     GVAR(runAtSettingsInitialized) pushBack [FUNC(initSafezones), _this];
 };
 
+// exit if main addon disabled
+if !(GVAR(enable)) exitWith {};
+
 params ["_marker"];
 
 // handle markers with bad shapes
