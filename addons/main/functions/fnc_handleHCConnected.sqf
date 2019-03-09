@@ -21,6 +21,6 @@ if (_hc isEqualTo GVAR(HC)) exitWith {};
 
 GVAR(HC) = _hc; 
 
-INFO_1("headless client: %1",GVAR(HC));
+INFO_1("headless client connected: %1",GVAR(HC));
 
 nil

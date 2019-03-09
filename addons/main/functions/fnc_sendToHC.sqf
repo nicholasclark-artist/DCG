@@ -17,8 +17,6 @@ if (!isServer) exitWith {};
 
 params ["_obj"];
 
-TRACE_1("",_obj);
-
 if (isNull GVAR(HC) || {!(_obj in allUnits)} || {isPlayer _obj} || {_obj isKindOf "UAV"}) exitWith {};
 
 private _id = owner GVAR(HC);
@@ -29,7 +27,7 @@ private _id = owner GVAR(HC);
 
         if !(_triggerWP isEqualTo []) exitWith {};
 
-        if ((units _x) findIf {owner _x isEqualTo _id || {isPlayer _x} || {(vehicle _x) getVariable [QGVAR(HCBlacklist), false]}} >= -1) exitWith {};
+        if ((units _x) findIf {owner _x isEqualTo _id || {isPlayer _x} || {(vehicle _x) getVariable [QGVAR(HCBlacklist), false]}} > -1) exitWith {};
 
         [_x,_id] call FUNC(setOwner);
         TRACE_1("send to headless client",_x);

@@ -6,7 +6,7 @@ Description:
 transfer entity to a requested owner
 
 Arguments:
-0: entity to transfer <OBJECT,ARRAY>
+0: entity to transfer <OBJECT,GROUP,ARRAY>
 1: machine id to receive entity <NUMBER>
 
 Return:
@@ -17,11 +17,11 @@ __________________________________________________________________*/
 if (!isServer) exitWith {};
 
 params [
-    ["_entity",objNull,[objNull,[]]],
+    ["_entity",objNull,[objNull,grpNull,[]]],
     ["_id",2,[0]]
 ];
 
-switch (typeName _entity) do {
+switch (toUpper typeName _entity) do {
     case "ARRAY": {
         {
             [_x,_id] call FUNC(setOwner);
@@ -30,11 +30,15 @@ switch (typeName _entity) do {
     case "OBJECT": {
         if !(isNull group _entity) then {
             group _entity setGroupOwner _id;
-            TRACE_2("",group _entity,_id);
+            TRACE_2("transfer group",group _entity,_id);
         } else {
             _entity setOwner _id;
-            TRACE_2("",_entity,_id);
+            TRACE_2("transfer object",_entity,_id);
         };
+    };
+    case "GROUP": {
+        _entity setGroupOwner _id;
+        TRACE_2("transfer group",_entity,_id);
     };
     default { };
 };
