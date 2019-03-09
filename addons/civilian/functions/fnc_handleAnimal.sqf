@@ -69,6 +69,6 @@ for "_i" from 1 to 4 do {
     if (([_position,ANIMAL_SPAWNDIST,CIV_ZDIST] call EFUNC(main,getNearPlayers)) isEqualTo []) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         GVAR(animalCount) = GVAR(animalCount) - (count _animals);
-        _animals call EFUNC(main,cleanup);
+        [QEGVAR(main,cleanup),_animals] call CBA_fnc_serverEvent;
     };
 }, 60, [_position,_animals]] call CBA_fnc_addPerFrameHandler;

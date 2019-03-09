@@ -93,7 +93,7 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
         params ["_heli","_grpPatrol","_center"];
 
         _grpPatrol leaveVehicle _heli;
-        _onComplete = format ["if ([%1,500] call %2 isEqualTo []) then {thisList call %3};",_center,QFUNC(getPlayers),QFUNC(cleanup)];
+        _onComplete = format ["if ([%1,500] call %2 isEqualTo []) then {['%3',thisList] call CBA_fnc_serverEvent};",_center,QFUNC(getPlayers),QGVAR(cleanup)];
         [_grpPatrol, [_center, 50, 50, 0, false],"AWARE","NO CHANGE","UNCHANGED","NO CHANGE",_onComplete] call CBA_fnc_taskSearchArea;
 
         INFO_2("Reinforcement dismount at %1, target is %2",getPos leader _grpPatrol,_center);
@@ -102,7 +102,7 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
             {{alive (_x select 0)} count (fullCrew [_this,"cargo",false]) isEqualTo 0},
             {
                 _this doMove [0,0,0];
-                _this call FUNC(cleanup);
+                [QGVAR(cleanup),_this] call CBA_fnc_serverEvent;
             },
             _heli
         ] call CBA_fnc_waitUntilAndExecute;
@@ -117,7 +117,7 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
 
     if (isTouchingGround _heli && {!alive _heli || !canMove _heli || fuel _heli isEqualTo 0}) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
-        _heli call FUNC(cleanup);
+        [QGVAR(cleanup),_heli] call CBA_fnc_serverEvent;
         INFO("Reinforcement vehicle destroyed");
     };
 }, 1, [_heli]] call CBA_fnc_addPerFrameHandler;

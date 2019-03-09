@@ -21,9 +21,8 @@ private _unit = getAssignedCuratorUnit GVAR(curator);
         _cost = _cost*FOB_COST_MULTIPIER;
         [FOB_POSITION,_cost*-1] call EFUNC(approval,addValue);
     };
-    _x call EFUNC(main,cleanup);
-    false
-} count (curatorEditableObjects GVAR(curator));
+    [QEGVAR(main,cleanup),_x] call CBA_fnc_serverEvent;
+} forEach (curatorEditableObjects GVAR(curator));
 
 // remove objects from editable array so objects are not part of new FOB if placed in same position
 GVAR(curator) removeCuratorEditableObjects [curatorEditableObjects GVAR(curator),true];

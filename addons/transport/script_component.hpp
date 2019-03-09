@@ -49,7 +49,7 @@
                 { \
                     if !(_this getVariable [QGVAR(signal),-1] isEqualTo 1) then { \
                         {if !(_x isEqualTo (driver _this)) then {moveOut _x}} forEach (crew _this); \
-                        _this call EFUNC(main,cleanup); \
+                        [QEGVAR(main,cleanup),_this] call CBA_fnc_serverEvent; \
                         _this doMove [0,0,0]; \
                         _this setVariable [QGVAR(status),TR_STATE_WAITING,false]; \
                     }; \
@@ -72,7 +72,7 @@
                     [ \
                         { \
                             {if !(_x isEqualTo (driver _this)) then {moveOut _x}} forEach (crew _this); \
-                            _this call EFUNC(main,cleanup); \
+                            [QEGVAR(main,cleanup),_this] call CBA_fnc_serverEvent; \
                             _this doMove [0,0,0]; \
                             _this setVariable [QGVAR(status),TR_STATE_WAITING,false]; \
                             _this animateDoor ["door_R", 0]; \

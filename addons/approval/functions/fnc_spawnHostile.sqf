@@ -74,8 +74,8 @@ switch (floor random 3) do {
                 _wp = _grp addWaypoint [_pos,0];
                 _wp setWaypointBehaviour "AWARE";
                 _wp setWaypointFormation "STAG COLUMN";
-                _wp setWaypointStatements ["!(behaviour this isEqualTo ""COMBAT"")", QUOTE(thisList call EFUNC(main,cleanup))];
-
+                _wp setWaypointStatements ["!(behaviour this isEqualTo ""COMBAT"")", format ["['%1',thisList] call CBA_fnc_serverEvent",QEGVAR(main,cleanup)]];
+                
                 INFO_1("rebels spawned at %1",getPos leader _grp);
             },
             [_grp,_pos,_vest,_weapon,_mags]
@@ -153,8 +153,8 @@ switch (floor random 3) do {
                 // send to target
                 _wp = (group _driver) addWaypoint [getPos _player, 0];
                 _wp setWaypointSpeed "FULL";
-                _wp setWaypointStatements ["true", QUOTE(this call EFUNC(main,cleanup))];
-
+                _wp setWaypointStatements ["true", format ["['%1',this] call CBA_fnc_serverEvent",QEGVAR(main,cleanup)]];
+                
                 // follow player
                 [{
                     params ["_args","_idPFH"];
@@ -228,7 +228,7 @@ switch (floor random 3) do {
         // send to target
         _wp = (group _unit) addWaypoint [_pos, 0];
         _wp setWaypointSpeed "FULL";
-        _wp setWaypointStatements ["true", QUOTE(this call EFUNC(main,cleanup))];
+        _wp setWaypointStatements ["true", format ["['%1',this] call CBA_fnc_serverEvent",QEGVAR(main,cleanup)]];
 
         // follow player
         [{

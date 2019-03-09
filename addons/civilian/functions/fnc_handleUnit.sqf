@@ -74,7 +74,7 @@ private _iterations01 = [];
         _trg setTriggerStatements [
             "this",
             _statement,
-            QUOTE(GETVAR(thisTrigger,QGVAR(ambient),[]) call EFUNC(main,cleanup))
+            format ["['%1',%2] call CBA_fnc_serverEvent",QEGVAR(main,cleanup),GETVAR(thisTrigger,GVAR(ambient),[])]
         ];
 
         // main module is immediately moved to ambient group, _grp is null after module creation

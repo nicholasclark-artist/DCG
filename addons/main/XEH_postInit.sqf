@@ -10,16 +10,14 @@ POSTINIT;
 ["CBA_settingsInitialized", {
     if !(GVAR(enable)) exitWith {LOG(MSG_EXIT)};
 
+    // headless client setup
     if (isServer) then {
-        [{if (GVAR(autoSave)) then {call FUNC(saveData)}}, 1800, []] call CBA_fnc_addPerFrameHandler;
-        call FUNC(handleLoadData);
-
         // disable if ace headless addon detected 
         if (GVAR(enableHC) && {!(CHECK_ADDON_1(acex_headless))}) then {
             ["AllVehicles", "init", FUNC(sendToHC), nil, nil, true] call CBA_fnc_addClassEventHandler;
 
             addMissionEventHandler ["HandleDisconnect", {
-                if ((_this#0 isEqualTo GVAR(HC)) then {
+                if (_this#0 isEqualTo GVAR(HC)) then {
                     GVAR(HC) = objNull;
                     INFO("headless client disconnected");
                 };
@@ -32,6 +30,7 @@ POSTINIT;
     // headless client exit 
     if (!isServer) exitWith {};
 
+    // eventhandlers
     [QGVAR(saveData), FUNC(saveData)] call CBA_fnc_addEventHandler;
 
     [QGVAR(deleteData), {
@@ -39,15 +38,25 @@ POSTINIT;
         saveProfileNamespace;   
     }] call CBA_fnc_addEventHandler;
 
-    // debug
-    [DEBUG_ADDON] call FUNC(debug);
+    [QGVAR(cleanup), {_this call FUNC(cleanup)}] call CBA_fnc_addEventHandler;
 
     [QGVAR(debugMarkers), {
         if (GVAR(debug)) then {[1] call FUNC(debug)};
     }] call CBA_fnc_addEventHandler;
 
     // per frame handlers
-    [FUNC(handleCleanup), 120, []] call CBA_fnc_addPerFrameHandler;
+    [
+        {if (GVAR(autoSave)) then {call FUNC(saveData)}}, 
+        1800
+    ] call CBA_fnc_addPerFrameHandler;
+        
+    [FUNC(handleCleanup), 60] call CBA_fnc_addPerFrameHandler;
+
+    // call debug if macro enabled
+    [DEBUG_ADDON] call FUNC(debug);
+
+    // load main addon data 
+    call FUNC(handleLoadData);
 
     // setup clients
     remoteExecCall [QFUNC(initClient),0,true];

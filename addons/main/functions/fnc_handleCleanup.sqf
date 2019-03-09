@@ -18,8 +18,15 @@ GVAR(cleanup) = GVAR(cleanup) select {!isNull _x}; // remove null elements
 if !(GVAR(cleanup) isEqualTo []) then {
     // get non object entities
     private _entities = GVAR(cleanup) select {!(_x isEqualType objNull)};
+    
     // get objects, check for force cleanup and near players
-    private _objects = GVAR(cleanup) select {(_x isEqualType objNull) && {_x getVariable [QGVAR(forceCleanup),false] || {[getPos _x,CLEAN_DIST] call EFUNC(main,getNearPlayers) isEqualTo []}}};
+    private _objects = GVAR(cleanup) select {
+        (_x isEqualType objNull) && 
+        {
+            _x getVariable [QGVAR(forceCleanup),false] || 
+            [getPos _x,CLEAN_DIST] call EFUNC(main,getNearPlayers) isEqualTo []
+        }
+    };
 
     _entities append _objects;
 

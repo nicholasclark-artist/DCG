@@ -107,7 +107,7 @@ TR_INFIL(_transport);
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         [TR_STR_KILLED,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
         _transport setVariable [QEGVAR(main,forceCleanup),true];
-        _transport call EFUNC(main,cleanup);
+        [QEGVAR(main,cleanup),_transport] call CBA_fnc_serverEvent;
     };
 }, 1, [_requestor,_transport]] call CBA_fnc_addPerFrameHandler;
 

@@ -14,7 +14,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CLEANUP QUOTE(GVAR(drivers) deleteAt (GVAR(drivers) find this); (vehicle this) call EFUNC(main,cleanup))
+#define CLEANUP format ["%1 deleteAt (%1 find this); ['%2',vehicle this] call CBA_fnc_serverEvent",GVAR(drivers),QEGVAR(main,cleanup)]
 #define TIMEOUT 300
 #define COMPLETION_RADIUS 30
 
@@ -35,7 +35,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         // eventhandlers
         _driver addEventHandler ["GetOutMan", {
             GVAR(drivers) deleteAt (GVAR(drivers) find (_this select 0));
-            [_this select 0, _this select 2] call EFUNC(main,cleanup);            
+            [QEGVAR(main,cleanup),[_this select 0,_this select 2]] call CBA_fnc_serverEvent;          
         }];
 
         // behaviors
