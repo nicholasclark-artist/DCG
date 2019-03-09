@@ -39,8 +39,8 @@ private _iterations01 = [];
 
     _position = ASLToATL _position;
 
-    // skip location if name in blacklist
-    if !((toLower _name) in GVAR(blacklist)) then {
+    // skip location if in blacklist or safezone
+    if ((GVAR(blacklist) findIf {(toLower _name) find _x > -1} < 0) && {!([_position] call EFUNC(main,inSafezones))}) then {
         // get houses in area
         private _houses = (_position nearObjects ["House", _radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
 
@@ -64,9 +64,16 @@ private _iterations01 = [];
         _trg setTriggerArea [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist), 0, false, CIV_ZDIST];
 
         // spawn ambient objects when player activates trigger
+        private _statement = format [
+            "
+                [%2,200 min %3,8 min %4,0,thisTrigger] call %1;
+            ",
+            QFUNC(spawnAmbient),_position,_radius,count _houses
+        ];
+        
         _trg setTriggerStatements [
             "this",
-            format ["[%2,200 min %3,5 min %4,0,thisTrigger] call %1",QFUNC(spawnAmbient),_position,_radius,count _houses],
+            _statement,
             QUOTE(GETVAR(thisTrigger,QGVAR(ambient),[]) call EFUNC(main,cleanup))
         ];
 
@@ -77,7 +84,7 @@ private _iterations01 = [];
         // main module does not init sometimes, even with 'BIS_fnc_initModules_disableAutoActivation'
         // force init with 'bis_fnc_initmodules_activate'
         _moduleMain setVariable ["BIS_fnc_initModules_disableAutoActivation",false]; // @todo check if public is required
-        _moduleMain setVariable ["bis_fnc_initmodules_activate",true]; // @todo check if public is required
+        // _moduleMain setVariable ["BIS_fnc_initModules_activate",true]; // @todo check if public is required
 
         // main options
         //@todo fix units getting stuck in floors
@@ -131,7 +138,7 @@ private _iterations01 = [];
                 _moduleSpawn = _grp createUnit ["ModuleCivilianPresenceUnit_F", _positionHouse, [], 0, "CAN_COLLIDE"];
                 
                 _moduleSpawn setVariable ["BIS_fnc_initModules_disableAutoActivation",false]; // @todo check if public is required
-                _moduleSpawn setVariable ["bis_fnc_initmodules_activate",true]; // @todo check if public is required
+                // _moduleSpawn setVariable ["BIS_fnc_initModules_activate",true]; // @todo check if public is required
 
                 _moduleSpawn synchronizeObjectsAdd [_trg];
             };
@@ -140,7 +147,7 @@ private _iterations01 = [];
             _moduleWaypoint = _grp createUnit ["ModuleCivilianPresenceSafeSpot_F", _positionHouse, [], 0, "CAN_COLLIDE"];
 
             _moduleWaypoint setVariable ["BIS_fnc_initModules_disableAutoActivation",false]; // @todo check if public is required
-            _moduleWaypoint setVariable ["bis_fnc_initmodules_activate",true]; // @todo check if public is required
+            // _moduleWaypoint setVariable ["BIS_fnc_initModules_activate",true]; // @todo check if public is required
 
             // waypoint options
             _moduleWaypoint setVariable ["#type",1];
