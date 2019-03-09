@@ -8,7 +8,7 @@ handle weather
 Arguments:
 
 Return:
-number
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -17,6 +17,7 @@ if (GVAR(waiting)) exitWith {};
 private _forecast = [1] call FUNC(getForecast);
 
 if (GVAR(cycle) mod 2 isEqualTo 0) then { // overcast cycle
+    INFO("overcast cycle");
     GVAR(overcastForecast) = _forecast select 0;
     WEATHER_DELAY_OVERCAST setOvercast GVAR(overcastForecast);
 
@@ -30,16 +31,17 @@ if (GVAR(cycle) mod 2 isEqualTo 0) then { // overcast cycle
             GVAR(waiting) = false;
             GVAR(cycle) = GVAR(cycle) + 1;
 
-            TRACE_3("",overcast,GVAR(overcastForecast),overcastForecast);
+            TRACE_2("overcast cycle finished",overcast,GVAR(overcastForecast));
         };
 
-        // set forecast again if engine tries to interfere
+        // set forecast again if cycle disrupted
         if !(overcastForecast isEqualTo GVAR(overcastForecast)) then {
-            WARNING("engine interference: overcast not trending towards desired forecast");
+            WARNING("external interference: overcast not trending towards desired forecast");
             WEATHER_DELAY_OVERCAST setOvercast GVAR(overcastForecast);
         };
     }, 1] call CBA_fnc_addPerFrameHandler;
 } else { // fog cycle
+    INFO("fog cycle");
     GVAR(fogForecast) = _forecast select 2;
     WEATHER_DELAY_FOG setFog GVAR(fogForecast);
 
@@ -53,13 +55,15 @@ if (GVAR(cycle) mod 2 isEqualTo 0) then { // overcast cycle
             GVAR(waiting) = false;
             GVAR(cycle) = GVAR(cycle) + 1;
 
-            TRACE_3("",fogParams,GVAR(fogForecast),fogForecast);
+            TRACE_2("fog cycle finished",fogParams,GVAR(fogForecast));
         };
 
-        // set forecast again if engine tries to interfere
+        // set forecast again if cycle disrupted
         if !(fogForecast isEqualTo (GVAR(fogForecast) select 0)) then {
-            WARNING("engine interference: fog not trending towards desired forecast");
+            WARNING("external interference: fog not trending towards desired forecast");
             WEATHER_DELAY_FOG setFog GVAR(fogForecast);
         };
     }, 1] call CBA_fnc_addPerFrameHandler;
 };
+
+nil
