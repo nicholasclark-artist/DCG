@@ -15,7 +15,7 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define CLEANUP QUOTE(GVAR(drivers) deleteAt (GVAR(drivers) find this); (vehicle this) call EFUNC(main,cleanup))
-#define TIMEOUT 600
+#define TIMEOUT 300
 #define COMPLETION_RADIUS 30
 
 params ["_start","_mid","_end"];

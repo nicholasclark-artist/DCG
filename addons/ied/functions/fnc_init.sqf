@@ -22,7 +22,7 @@ __________________________________________________________________*/
         _road = selectRandom _roads;
         private _pos = getPos _road;
 
-        if (!([_pos] call EFUNC(main,inSafezones)) && {isOnRoad _road}) then {
+        if (!([_pos] call EFUNC(main,inSafezones)) && {isOnRoad _pos}) then {
             _pos = _pos getPos [5, random 360];
             _pos set [2,0];
 
@@ -44,6 +44,7 @@ __________________________________________________________________*/
     };
 } forEach _this;
 
+// @todo optimize ied checks
 if !(CHECK_ADDON_1(ace_explosives)) then {
     [FUNC(handleIED), 2, []] call CBA_fnc_addPerFrameHandler;
 };

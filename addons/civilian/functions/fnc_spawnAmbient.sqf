@@ -70,7 +70,7 @@ switch _type do {
     default { };
 };
 
-TRACE_2("",_position,_ambientList);
+TRACE_2("spawn ambients",_position,_ambientList);
 
 // save reference to all ambient objects in trigger
 SETVAR(_trigger,GVAR(ambient),_ambientList);
