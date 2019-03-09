@@ -12,5 +12,7 @@ if (!isServer) exitWith {};
 ["CBA_settingsInitialized", {
     if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
-    [FUNC(handleCache), 30, []] call CBA_fnc_addPerFrameHandler;
+    [QGVAR(disable), {[_this] call FUNC(disable)}] call CBA_fnc_addEventHandler;
+
+    ["AllVehicles", "init", FUNC(enable), nil, nil, true] call CBA_fnc_addClassEventHandler;
 }] call CBA_fnc_addEventHandler;

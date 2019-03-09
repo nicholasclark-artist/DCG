@@ -7,8 +7,8 @@ __________________________________________________________________*/
 PREINIT;
 
 PREP(initSettings);
-PREP(handleCache);
-PREP(disableCache);
+PREP(enable);
+PREP(disable);
 
 // headless client exit 
 if (!isServer) exitWith {};

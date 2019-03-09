@@ -60,7 +60,7 @@ switch (floor random 3) do {
 
                 // set enemy side
                 _grp = [units _grp] call EFUNC(main,setSide);
-                [_grp] call EFUNC(cache,disableCache);
+                [QEGVAR(cache,disable),_grp] call CBA_fnc_serverEvent;
 
                 // equip civs with enemy loadout
                 {
@@ -126,7 +126,7 @@ switch (floor random 3) do {
 
                 // turn hostile
                 _grp = [[_driver]] call EFUNC(main,setSide);
-                [_grp] call EFUNC(cache,disableCache);
+                [QEGVAR(cache,disable),_grp] call CBA_fnc_serverEvent;
                 _driver = leader _grp;
 
                 // set loadout
@@ -201,7 +201,7 @@ switch (floor random 3) do {
         private _grp = createGroup CIVILIAN;
         (selectRandom EGVAR(main,unitsCiv)) createUnit [_hostilePos, _grp];
         _grp = [[leader _grp]] call EFUNC(main,setSide);
-        [_grp] call EFUNC(cache,disableCache);
+        [QEGVAR(cache,disable),_grp] call CBA_fnc_serverEvent;
         
         private _unit = leader _grp;
 

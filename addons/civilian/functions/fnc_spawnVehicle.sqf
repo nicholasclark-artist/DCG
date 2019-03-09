@@ -22,7 +22,7 @@ params ["_start","_mid","_end"];
 
 private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 
-[_grp] call EFUNC(cache,disableCache);
+[QEGVAR(cache,disable),_grp] call CBA_fnc_serverEvent;
 
 [
     {!(isNull (assignedVehicle leader (_this select 0)))},

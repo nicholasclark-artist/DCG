@@ -3,27 +3,27 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-disables caching for entity
+disables caching for group
 
 Arguments:
-0: entity <OBJECT,GROUP>
+0: group <GROUP>
 
 Return:
-nil
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
 if !(isServer) exitWith {};
 
 params [
-    ["_entity",objNull,[grpNull,objNull]]
+    ["_grp",grpNull,[grpNull]]
 ];
 
 // stops entity from being added to cache system by addon
-_entity setVariable [QGVAR(disable),true];
+_grp setVariable [QGVAR(disable),true];
 
-if (dynamicSimulationEnabled _entity) then {
-    _entity enableDynamicSimulation false; // @todo for given non AI object??
+if (dynamicSimulationEnabled _grp) then {
+    _grp enableDynamicSimulation false;
 };
 
 nil

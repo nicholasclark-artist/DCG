@@ -85,7 +85,7 @@ _transport lockDriver true;
 } forEach (allTurrets [_transport, false]);
 
 // disable caching on transport, can cause waypoint issues
-[group _transport] call EFUNC(cache,disableCache);
+[QEGVAR(cache,disable),group _transport] call CBA_fnc_serverEvent;
 
 // move to pick up position
 TR_EXFIL(_transport);
