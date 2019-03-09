@@ -6,17 +6,21 @@ __________________________________________________________________*/
 
 POSTINIT;
 
-[QGVAR(stop), {_this call FUNC(handleStop)}] call CBA_fnc_addEventHandler;
+["CBA_settingsInitialized", {
+    if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
-// headless client exit 
-if (!isServer) exitWith {};
+    [QGVAR(stop), {_this call FUNC(handleStop)}] call CBA_fnc_addEventHandler;
 
-[QGVAR(question), {_this call FUNC(handleQuestion)}] call CBA_fnc_addEventHandler;
-[QGVAR(hint), {_this call FUNC(handleHint)}] call CBA_fnc_addEventHandler;
-[QGVAR(add), {
-    _this call FUNC(addValue);
-    TRACE_1("Client add value",_this);
+    // headless client exit 
+    if (!isServer) exitWith {};
+
+    [QGVAR(question), {_this call FUNC(handleQuestion)}] call CBA_fnc_addEventHandler;
+    [QGVAR(hint), {_this call FUNC(handleHint)}] call CBA_fnc_addEventHandler;
+    [QGVAR(add), {
+        _this call FUNC(addValue);
+        TRACE_1("Client add value",_this);
+    }] call CBA_fnc_addEventHandler;
+
+    call FUNC(init);
+    remoteExecCall [QFUNC(initClient),0,true];
 }] call CBA_fnc_addEventHandler;
-
-call FUNC(init);
-remoteExecCall [QFUNC(initClient),0,true];

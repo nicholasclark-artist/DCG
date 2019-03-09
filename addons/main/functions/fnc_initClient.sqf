@@ -24,4 +24,15 @@ if (!hasInterface) exitWith {};
     [QGVAR(deleteSaveData),SAVE_ACTION_NAME_DELETE,{SAVE_ACTION_STATEMENT_DELETE},{SAVE_ACTION_COND_DELETE},{},[],player,1,["ACE_SelfActions",QGVARMAIN(actions),QGVARMAIN(data)]]
 ];
 
+// setting restart warning
+[
+    {
+        ["cba_settings_refreshSetting", {
+            [_this] call FUNC(handleSettingChange);
+        }] call CBA_fnc_addEventHandler; 
+    },
+    [],
+    1
+] call CBA_fnc_waitAndExecute;
+
 nil

@@ -9,9 +9,13 @@ POSTINIT;
 // headless client exit 
 if (!isServer) exitWith {};
 
-[[],{
-    call FUNC(handleLoadout);
-    call FUNC(setRadioSettings);
+["CBA_settingsInitialized", {
+    if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
-    INFO("Radio setup finished");
-}] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
+    [[],{
+        call FUNC(handleLoadout);
+        call FUNC(setRadioSettings);
+
+        INFO("Radio setup finished");
+    }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
+}] call CBA_fnc_addEventHandler;

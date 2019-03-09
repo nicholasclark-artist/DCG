@@ -112,27 +112,20 @@ GVAR(runAtSettingsInitialized) = [];
 
 // eventhandlers 
 ["CBA_settingsInitialized", {
-    TRACE_1("CBA_settingsInitialized",_this);
+    INFO("Settings initialized");
 
-    if !(SLX_XEH_MACHINE select 8) then {
+    if !(SLX_XEH_MACHINE#8) then {
         WARNING("PostInit not finished");
     };
 
-    INFO("Settings initialized");
-
-    // run event on settings init
-    [QGVARMAIN(settingsInitialized), []] call CBA_fnc_localEvent;
-
     if (isServer) then {
-        // send var to clients for handling setting changes
         GVAR(settingsInitFinished) = true;
-        publicVariable QGVAR(settingsInitFinished);
 
-        // handle delayed functions
+        // handle delayed functions, useful for functions that are not called from pre/post init scripts
         INFO_1("%1 delayed functions running",count GVAR(runAtSettingsInitialized));
         
         {
-            (_x select 1) call (_x select 0);
+            _x#1 call _x#0;
         } forEach GVAR(runAtSettingsInitialized);
         
         GVAR(runAtSettingsInitialized) = nil;
@@ -201,7 +194,6 @@ publicVariable QFUNC(handleSettingChange);
 // variables required on all machines
 publicVariable QGVAR(radius);
 publicVariable QGVAR(center);
-publicVariable QGVAR(settingsInitFinished);
 publicVariable QUOTE(MAIN_ADDON);
 
 // load current scenario data

@@ -24,7 +24,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     true,
     true,
-    {[QGVAR(enable),_this] call FUNC(handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -35,7 +35,7 @@ __________________________________________________________________*/
     CATEGORY_SAVE,
     false,
     true,
-    {[QGVAR(loadData),_this] call FUNC(handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -75,7 +75,6 @@ __________________________________________________________________*/
     ],
     true,
     {
-        [QGVAR(sides),_this] call FUNC(handleSettingChange);
         GVAR(playerSide) = _this#0;
         GVAR(enemySide) = _this#1;
     },
@@ -90,6 +89,8 @@ __________________________________________________________________*/
     "OPF_F",
     true,
     {
+        if (!isServer) exitWith {};
+        
         [0] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -102,6 +103,8 @@ __________________________________________________________________*/
     "diver,vr ,pilot,survivor,crew,rifleman (unarmed)",
     true,
     {
+        if (!isServer) exitWith {};
+        
         [0] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -114,6 +117,8 @@ __________________________________________________________________*/
     "BLU_F",
     true,
     {
+        if (!isServer) exitWith {};
+        
         [1] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -126,6 +131,8 @@ __________________________________________________________________*/
     "diver,vr ,pilot,survivor,crew,rifleman (unarmed)",
     true,
     {
+        if (!isServer) exitWith {};
+        
         [1] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -138,6 +145,8 @@ __________________________________________________________________*/
     "IND_F",
     true,
     {
+        if (!isServer) exitWith {};
+        
         [2] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -150,6 +159,8 @@ __________________________________________________________________*/
     "diver,vr ,pilot,survivor,crew,rifleman (unarmed)",
     true,
     {
+        if (!isServer) exitWith {};
+        
         [2] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -162,6 +173,8 @@ __________________________________________________________________*/
     "CIV_F",
     true,
     {
+        if (!isServer) exitWith {};
+        
         [3] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -174,6 +187,8 @@ __________________________________________________________________*/
     "driver,vr ,pilot,construction,kart",
     true,
     {
+        if (!isServer) exitWith {};
+        
         [3] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -185,7 +200,7 @@ __________________________________________________________________*/
     CATEGORY_SAFE,
     true,
     true,
-    {[QGVAR(safezoneEnable),_this] call FUNC(handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -231,6 +246,6 @@ __________________________________________________________________*/
     CATEGORY_HC,
     false,
     true,
-    {[QGVAR(enableHC),_this] call FUNC(handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;

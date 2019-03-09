@@ -14,11 +14,6 @@ __________________________________________________________________*/
 #define DEFAULT_VARIANCE AP_DEFAULT*0.333
 #define DEFAULT_POLYGON_COLOR [0,0,0,1]
 
-// run after settings init
-if (!EGVAR(main,settingsInitFinished)) exitWith {
-    EGVAR(main,runAtSettingsInitialized) pushBack [FUNC(init), _this];
-};
-
 // create region hash
 // KVP: ["",[]], value: [position, approval value, polygon, polygon color]
 GVAR(regions) = ([EGVAR(main,locations)] call CBA_fnc_hashKeys) apply {[_x,[]]};
@@ -66,6 +61,8 @@ private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
     // update region color
     [_position,0] call FUNC(addValue);
 }] call CBA_fnc_hashEachPair;
+
+TRACE_1("CHECK",GVAR(regions));
 
 // start hostile handler after one cooldown cycle
 [{

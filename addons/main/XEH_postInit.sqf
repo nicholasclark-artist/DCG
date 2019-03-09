@@ -7,7 +7,7 @@ __________________________________________________________________*/
 POSTINIT;
 
 // eventhandlers
-[QGVARMAIN(settingsInitialized), {
+["CBA_settingsInitialized", {
     if (isServer) then {
         [{if (GVAR(autoSave)) then {call FUNC(saveData)}}, 1800, []] call CBA_fnc_addPerFrameHandler;
         call FUNC(handleLoadData);

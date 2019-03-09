@@ -14,8 +14,8 @@
 #define PREP_MODULE(folder) [] call compile preprocessFileLineNumbers QPATHTOF(folder\__PREP__.sqf)
 #define MSG_EXIT QUOTE(Exiting: ADDON version: VERSION)
 
-#define PREINIT if (!isServer && {hasInterface}) exitWith {LOG(MSG_EXIT)}; LOG(MSG_INIT)
-#define POSTINIT if (!isMultiplayer || {!isServer && hasInterface} || {!EGVAR(main,enable)} || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)}
+#define PREINIT if (!isServer && {hasInterface}) exitWith {}; LOG(MSG_INIT)
+#define POSTINIT if (!isMultiplayer || {!isServer && hasInterface}) exitWith {}
 
 // variable macros
 #define GETVAR_SYS(var1,var2) getVariable [ARR_2(QUOTE(var1),var2)]
@@ -77,11 +77,12 @@
 #define CHECK_DEBUG (EGVAR(main,debug) isEqualTo 1)
 #define CHECK_MARKER(MARKER) (getMarkerColor MARKER != '')
 #define CHECK_ADDON_1(PATCH) (isClass (configfile >> QUOTE(CfgPatches) >> QUOTE(PATCH)))
-#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(GVARMAIN(VAR)) && {EGVAR(VAR,enable)})
+#define CHECK_ADDON_2(VAR) (CHECK_ADDON_1(GVARMAIN(VAR)) && EGVAR(VAR,enable))
 #define CHECK_DIST(POS1,POS2,DIST) (POS1) distance (POS2) <= (DIST)
 #define CHECK_DIST2D(POS1,POS2,DIST) (POS1) distance2D (POS2) <= (DIST)
 #define CHECK_VECTORDIST(POS1,POS2,DIST) (POS1) vectorDistance (POS2) <= (DIST)
 #define CHECK_INGAME (getClientStateNumber > 9)
+#define CHECK_HC (!hasInterface && !isServer)
 
 // compares 
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))

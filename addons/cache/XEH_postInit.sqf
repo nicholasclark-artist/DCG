@@ -9,4 +9,8 @@ POSTINIT;
 // headless client exit 
 if (!isServer) exitWith {};
 
-[FUNC(handleCache), 30, []] call CBA_fnc_addPerFrameHandler;
+["CBA_settingsInitialized", {
+    if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
+
+    [FUNC(handleCache), 30, []] call CBA_fnc_addPerFrameHandler;
+}] call CBA_fnc_addEventHandler;

@@ -20,7 +20,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     true,
     true,
-    {[QGVAR(enable),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -35,7 +35,7 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(month),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -52,8 +52,7 @@ __________________________________________________________________*/
     ],
     true,
     {
-        GVAR(hour) = floor _this; 
-        [QGVAR(hour),floor _this] call EFUNC(main,handleSettingChange);
+        GVAR(hour) = floor _this;
     },
     true
 ] call CBA_Settings_fnc_init;
@@ -85,7 +84,7 @@ __________________________________________________________________*/
         2
     ],
     true,
-    {[QGVAR(cloudsOverride),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -101,6 +100,6 @@ __________________________________________________________________*/
         2
     ],
     true,
-    {[QGVAR(precipitationOverride),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;

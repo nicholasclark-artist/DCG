@@ -19,18 +19,18 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     true,
     true,
-    {[QGVAR(enable),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
 [
     QGVAR(blacklist),
     "EDITBOX",
-    ["Blacklisted Locations","Exclude locations by listing names. Names must be separated by a comma."],
+    ["Blacklisted Locations","Exclude locations by listing names. Names must be separated by a comma and partial names are allowed."],
     COMPONENT_NAME,
-    "",
+    "pier,airbase,airfield,terminal",
     true,
-    {[QGVAR(blacklist),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -46,7 +46,7 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(spawnDist),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -62,7 +62,7 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(unitLimit),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -89,9 +89,10 @@ __________________________________________________________________*/
     [
         60,
         3600,
-        120,
+        180,
         0
     ],
     true,
-    {}
+    {},
+    true
 ] call CBA_Settings_fnc_init;

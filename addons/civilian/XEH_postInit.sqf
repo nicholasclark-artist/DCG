@@ -9,7 +9,9 @@ POSTINIT;
 // headless client exit 
 if (!isServer) exitWith {};
 
-[QGVARMAIN(settingsInitialized), {
+["CBA_settingsInitialized", {
+    if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
+
     // convert to array and format
     GVAR(blacklist) = GVAR(blacklist) splitString ",";
     GVAR(blacklist) = GVAR(blacklist) apply {toLower _x};
@@ -18,7 +20,7 @@ if (!isServer) exitWith {};
     private ["_locations","_locals","_arr"];
 
     _locations = [];
-    _locals = [];
+    // _locals = [];
 
     [
         EGVAR(main,locations),
@@ -36,19 +38,19 @@ if (!isServer) exitWith {};
             _arr = [];
             _arr pushBack _key;
             _arr append _value;
-            _locals pushBack _arr;
+            _locations pushBack _arr;
         }
     ] call CBA_fnc_hashEachPair;
 
     // remove unsuitable locals
-    _locals = _locals select {
-        toLower (_x#0) find "pier" < 0 && 
-        {toLower (_x#0) find "airbase" < 0} &&
-        {toLower (_x#0) find "airfield" < 0} &&
-        {toLower (_x#0) find "terminal" < 0}
-    };
+    // _locals = _locals select {
+    //     toLower (_x#0) find "pier" < 0 && 
+    //     {toLower (_x#0) find "airbase" < 0} &&
+    //     {toLower (_x#0) find "airfield" < 0} &&
+    //     {toLower (_x#0) find "terminal" < 0}
+    // };
  
-    _locations append _locals;
+    // _locations append _locals;
 
     [FUNC(handleVehicle), GVAR(vehCooldown)] call CBA_fnc_addPerFrameHandler;
     [FUNC(handleAnimal), 300] call CBA_fnc_addPerFrameHandler;

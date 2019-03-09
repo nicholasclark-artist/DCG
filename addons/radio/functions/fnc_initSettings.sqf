@@ -21,7 +21,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     true,
     true,
-    {[QGVAR(enable),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -32,7 +32,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "plt_pl, a_sl, b_sl",
     true,
-    {[QGVAR(commNet01),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -43,7 +43,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "plt_fo, r1_pilot, r1_copilot, r2_pilot, r2_copilot, rh1_co",
     true,
-    {[QGVAR(commNet02),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -54,7 +54,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "plt_pl, plt_sgt, plt_med, plt_fo",
     true,
-    {[QGVAR(commNet03),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -65,7 +65,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "a_sl, a_med, a1_ftl, a1_ar, a1_gr, a1_r, a2_ftl, a2_ar, a2_gr, a2_r",
     true,
-    {[QGVAR(commNet04),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -76,7 +76,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "b_sl, b_med, b1_ftl, b1_ar, b1_gr, b1_r, b2_ftl, b2_ar, b2_gr, b2_r",
     true,
-    {[QGVAR(commNet05),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -87,7 +87,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "rh1_co, rh1_driver, rh1_gunner",
     true,
-    {[QGVAR(commNet06),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -102,7 +102,7 @@ __________________________________________________________________*/
         1
     ],
     true,
-    {[QGVAR(commNet01_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -117,7 +117,7 @@ __________________________________________________________________*/
         2
     ],
     true,
-    {[QGVAR(commNet02_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -132,7 +132,7 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(commNet03_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -147,7 +147,7 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(commNet04_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -162,7 +162,7 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(commNet05_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -177,7 +177,7 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(commNet06_ACRE),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -192,7 +192,7 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(commNet01_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -207,7 +207,7 @@ __________________________________________________________________*/
         2
     ],
     true,
-    {[QGVAR(commNet02_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -222,7 +222,7 @@ __________________________________________________________________*/
         1
     ],
     true,
-    {[QGVAR(commNet03_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -237,7 +237,7 @@ __________________________________________________________________*/
         1
     ],
     true,
-    {[QGVAR(commNet04_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -252,7 +252,7 @@ __________________________________________________________________*/
         1
     ],
     true,
-    {[QGVAR(commNet05_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -267,6 +267,6 @@ __________________________________________________________________*/
         1
     ],
     true,
-    {[QGVAR(commNet06_TFAR),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;

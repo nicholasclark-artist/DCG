@@ -12,11 +12,6 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-// run after settings init
-if (!EGVAR(main,settingsInitFinished)) exitWith {
-    EGVAR(main,runAtSettingsInitialized) pushBack [FUNC(init), _this];
-};
-
 private _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
 
 // load saved data
@@ -80,8 +75,6 @@ if !(_data isEqualTo []) then {
 [
     {nextWeatherChange < 1},
     {
-        INFO("handling forecast");
-
         [FUNC(handleForecast), 1] call CBA_fnc_addPerFrameHandler;
 
         if (GVAR(rain) > 0) then {

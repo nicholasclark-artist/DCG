@@ -11,15 +11,14 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define MSG "Setting (%1) changed during mission. Mission restart required."
+#define MSG "You've changed a setting that requires a mission restart to take effect."
+#define MSG_RPT "Setting (%1) changed during session. Mission restart required."
 
-params ["_name","_value"];
+params ["_name"];
 
-// [QGVARMAIN(settingChange), [_name, _value]] call CBA_fnc_localEvent;
+if (!isMultiplayer || {CBA_missionTime < 5} ||{!(toLower _name in CBA_settings_needRestart)}) exitWith {};
 
-if (!GVAR(settingsInitFinished) || {!isMultiplayer}) exitWith {};
-
-WARNING_1(MSG,_name);
 [format [MSG,_name]] call FUNC(displayText);
+WARNING_1(MSG_RPT,_name);
 
 nil

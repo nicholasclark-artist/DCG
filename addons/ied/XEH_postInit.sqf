@@ -9,4 +9,8 @@ POSTINIT;
 // headless client exit 
 if (!isServer) exitWith {};
 
-EGVAR(main,grid) call FUNC(init);
+["CBA_settingsInitialized", {
+    if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
+
+    EGVAR(main,grid) call FUNC(init);
+}] call CBA_fnc_addEventHandler;

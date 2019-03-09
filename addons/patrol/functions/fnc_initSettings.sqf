@@ -19,7 +19,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     true,
     true,
-    {[QGVAR(enable),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
@@ -35,7 +35,7 @@ __________________________________________________________________*/
         0
     ],
     true,
-    {[QGVAR(cooldown),_this] call EFUNC(main,handleSettingChange)},
+    {},
     true
 ] call CBA_Settings_fnc_init;
 
