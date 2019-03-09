@@ -71,4 +71,6 @@ if (_air isEqualTo []) then {WARNING_1("empty aircraft pool: side %1",_side)};
 if (_officers isEqualTo []) then {WARNING_1("empty officer pool: side %1",_side)};
 if (_snipers isEqualTo []) then {WARNING_1("empty sniper pool: side %1",_side)};
 
+INFO_1("parse factions %1 complete",_side);
+
 [_units,_land,_air,_officers,_snipers]
