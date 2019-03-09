@@ -73,10 +73,17 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
 
         private ["_posRoadStart","_posRoadMid","_posRoadEnd","_eyePosRoadStart"];
 
-        _posRoadStart = getPosATL _roadStart;
+        // chance to swap start/end position
+        if (PROBABILITY(0.5)) then {
+            _posRoadStart = getPosATL _roadStart;
+            _posRoadEnd = getPosATL _roadEnd;
+        } else {
+            _posRoadStart = getPosATL _roadEnd;
+            _posRoadEnd = getPosATL _roadStart;
+        };
+
         _posRoadMid = getPosATL _roadMid;
-        _posRoadEnd = getPosATL _roadEnd;
-        _eyePosRoadStart = getPosASL _roadStart;
+        _eyePosRoadStart = ATLtoASL _posRoadStart;
         _eyePosRoadStart = _eyePosRoadStart vectorAdd [0,0,1.5];
 
         if (!(CHECK_DIST2D(_posRoadStart,_posRoadEnd,CIV_RANGE)) &&
