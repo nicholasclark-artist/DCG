@@ -16,9 +16,9 @@ __________________________________________________________________*/
 
 // delete null and lonely groups
 _groupsToDelete = GVAR(groups) select {
-    isNull _grp || 
-    {([getPosATL (leader _grp),PATROL_RANGE] call EFUNC(main,getNearPlayers) isEqualTo []) && 
-    !(behaviour (leader _grp) isEqualTo "COMBAT")}
+    isNull _x || 
+    {([getPosATL (leader _x),PATROL_RANGE] call EFUNC(main,getNearPlayers) isEqualTo []) && 
+    !(behaviour (leader _x) isEqualTo "COMBAT")}
 };
 
 {
