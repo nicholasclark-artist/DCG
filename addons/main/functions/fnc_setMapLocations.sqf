@@ -70,7 +70,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     
                     if !(_positionSafe isEqualTo _position) then {
                         _ret#INDEX_VALUE set [0,_positionSafe];  
-                        TRACE_2("location safe position",_name,_positionSafe);
+                        // TRACE_2("location safe position",_name,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
                         WARNING_1("removing unsafe location: %1",_name);
@@ -101,7 +101,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     
                     if !(_positionSafe isEqualTo _position) then {
                         _ret#INDEX_VALUE set [0,_positionSafe];  
-                        TRACE_2("local safe position",_name,_positionSafe);
+                        // TRACE_2("local safe position",_name,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
                         WARNING_1("removing unsafe local: %1",_name);
@@ -123,7 +123,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     
                     if !(_positionSafe isEqualTo _position) then {
                         _ret#INDEX_VALUE set [0,_positionSafe];  
-                        TRACE_2("hill safe position",configName _location,_positionSafe);
+                        // TRACE_2("hill safe position",configName _location,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
                         WARNING_1("removing unsafe hill: %1",configName _location);
@@ -144,7 +144,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     
                     if !(_positionSafe isEqualTo _position) then {
                         _ret#INDEX_VALUE set [0,_positionSafe];    
-                        TRACE_2("marine safe position",_name,_positionSafe);
+                        // TRACE_2("marine safe position",_name,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
                         WARNING_1("removing unsafe marine: %1",_name);
