@@ -8,7 +8,7 @@ handles civilian vehicle spawns
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define CIV_ITERATIONS 300
@@ -71,19 +71,18 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
             };
         };
 
-        private ["_posRoadStart","_posRoadMid","_posRoadEnd","_eyePosRoadStart"];
+        private ["_roadTemp","_posRoadStart","_posRoadMid","_posRoadEnd","_eyePosRoadStart"];
 
-        // chance to swap start/end position
         if (PROBABILITY(0.5)) then {
-            _posRoadStart = getPosATL _roadStart;
-            _posRoadEnd = getPosATL _roadEnd;
-        } else {
-            _posRoadStart = getPosATL _roadEnd;
-            _posRoadEnd = getPosATL _roadStart;
+            _roadTemp = _roadStart;
+            _roadStart = _roadEnd;
+            _roadEnd = _roadTemp;
         };
-
+        
+        _posRoadStart = getPosATL _roadStart;
         _posRoadMid = getPosATL _roadMid;
-        _eyePosRoadStart = ATLtoASL _posRoadStart;
+        _posRoadEnd = getPosATL _roadEnd;
+        _eyePosRoadStart = getPosASL _roadStart;
         _eyePosRoadStart = _eyePosRoadStart vectorAdd [0,0,1.5];
 
         if (!(CHECK_DIST2D(_posRoadStart,_posRoadEnd,CIV_RANGE)) &&
@@ -95,3 +94,5 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
         };
     };
 }; 
+
+nil
