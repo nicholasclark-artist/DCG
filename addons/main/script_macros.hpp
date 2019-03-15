@@ -115,7 +115,6 @@
 #define FOB_COST_SIGN 0.1
 
 // approval
-// #define AP_LOCATION_ID(LOCATION) ([QUOTE(PREFIX),"approval",LOCATION] joinString "_")
 #define AP_MIN 0
 #define AP_MAX 100
 #define AP_DEFAULT AP_MAX*0.1

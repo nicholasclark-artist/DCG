@@ -21,7 +21,7 @@ __________________________________________________________________*/
 private _side = _this select 0;
 
 if (_side isEqualTo 0) exitWith {
-    _ret = [_side, GVAR(factionsEast), GVAR(filtersEast)] call FUNC(parseFaction);
+    _ret = [_side, GVAR(factionsEast), GVAR(filtersEast)] call FUNC(parseFactions);
 
     GVAR(unitsEast) = _ret select 0;
     GVAR(vehiclesEast) = _ret select 1;
@@ -31,7 +31,7 @@ if (_side isEqualTo 0) exitWith {
 };
 
 if (_side isEqualTo 1) exitWith {
-    _ret = [_side, GVAR(factionsWest), GVAR(filtersWest)] call FUNC(parseFaction);
+    _ret = [_side, GVAR(factionsWest), GVAR(filtersWest)] call FUNC(parseFactions);
 
     GVAR(unitsWest) = _ret select 0;
     GVAR(vehiclesWest) = _ret select 1;
@@ -41,7 +41,7 @@ if (_side isEqualTo 1) exitWith {
 };
 
 if (_side isEqualTo 2) exitWith {
-    _ret = [_side, GVAR(factionsInd), GVAR(filtersInd)] call FUNC(parseFaction);
+    _ret = [_side, GVAR(factionsInd), GVAR(filtersInd)] call FUNC(parseFactions);
 
     GVAR(unitsInd) = _ret select 0;
     GVAR(vehiclesInd) = _ret select 1;
@@ -51,7 +51,7 @@ if (_side isEqualTo 2) exitWith {
 };
 
 if (_side isEqualTo 3) exitWith {
-    _ret = [_side, GVAR(factionsCiv), GVAR(filtersCiv)] call FUNC(parseFaction);
+    _ret = [_side, GVAR(factionsCiv), GVAR(filtersCiv)] call FUNC(parseFactions);
 
     GVAR(unitsCiv) = _ret select 0;
     GVAR(vehiclesCiv) = _ret select 1;

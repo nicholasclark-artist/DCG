@@ -42,7 +42,6 @@ PREP(setSurrender);
 PREP(setVehDamaged);
 PREP(setPosSafe);
 PREP(setPool);
-PREP(setMapLocations);
 PREP(setDebugMarker);
 PREP(spawnComposition);
 PREP(spawnGroup);
@@ -66,7 +65,8 @@ PREP(debug);
 PREP(splitGroup);
 PREP(landAt);
 PREP(shuffle);
-PREP(parseFaction);
+PREP(parseFactions);
+PREP(parseMapLocations);
 
 // heap functions
 PREP(heapSwap);
@@ -203,4 +203,4 @@ call FUNC(loadDataScenario);
 SETTINGS_INIT;
 
 // populate location hashes
-call FUNC(setMapLocations);
+call FUNC(parseMapLocations);
