@@ -3,50 +3,63 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-spawn base
+spawn composition
 
 Arguments:
 0: center position <ARRAY>
-1: base strength, number between 0 and 1 that defines how fortified the base will be <NUMBER>
+1: composition type <STRING>
+2: base strength, number between 0 and 1 that defines how fortified the base will be <NUMBER>
+3: base direction <NUMBER>
+4: clear position before spawning composition, this param requires function call from server <BOOL>
 
 Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CONFIG configfile >> QGVARMAIN(compositions)
-
-// @todo use parseSimpleArray instead of compile
+#define CONFIG (configfile >> QGVARMAIN(compositions) >> _type)
+#define DIR_OFFSET(OFFSET) (getDir _anchor + OFFSET)
+#define POS_RELATIVE(RELPOS) (_anchor modelToWorld RELPOS)
 
 params [
     ["_position",[],[[]]],
-    ["_strength",0.5,[0]]
+    ["_type","base",[""]],
+    ["_strength",0.5,[0]],
+    ["_dir",-1,[0]],
+    ["_clear",false,[false]]
 ];
+
+if !(isClass CONFIG) exitWith {
+    WARNING("config type does not exist");
+    []
+};
+
+_position =+ _position;
+_position set [2,0];
+
+if (_dir < 0) then {
+    _dir = random 360;
+};
 
 private _composition = [];
 private _compList = [];
 private _objects = [];
 private _nodes = [];
-private _strength = (_strength max 0) min 1;
-private _min = 0;
-private _max = 0;
+private _strength = 0 max _strength min 1;
+private _cfgStrength = [];
 private _normalized = 0;
 private _diff = 1;
 
+private ["_cfg"];
+
 // normalize base data
-for "_index" from 0 to (count (CONFIG)) - 1 do {
-    private _cfg = (CONFIG) select _index;
-    private _cfgStrength = getNumber (_cfg >> "strength");
-    if (_min isEqualTo 0 || {_cfgStrength < _min}) then {
-        _min = _cfgStrength;
-    };
-    if (_max isEqualTo 0 || {_cfgStrength > _max}) then {
-        _max = _cfgStrength;
-    };
+for "_index" from 0 to (count CONFIG) - 1 do {
+    _cfg = CONFIG select _index;
+    _cfgStrength pushBack (getNumber (_cfg >> "strength"));
 };
 
-for "_index" from 0 to (count (CONFIG)) - 1 do {
-    private _cfg = (CONFIG) select _index;
-    _normalized = linearConversion [_min, _max, getNumber (_cfg >> "strength"), 0, 1, true];
+for "_index" from 0 to (count CONFIG) - 1 do {
+    _cfg = CONFIG select _index;
+    _normalized = linearConversion [selectMin _cfgStrength, selectMax _cfgStrength, getNumber (_cfg >> "strength"), 0, 1, true];
     _compList pushBack [_index,_normalized];
 };
 
@@ -56,48 +69,74 @@ for "_index" from 0 to (count (CONFIG)) - 1 do {
 {
     if (abs ((_x select 1) - _strength) < _diff) then {
         _diff = abs ((_x select 1) - _strength);
-        _composition = (CONFIG) select (_x select 0);
+        _composition = CONFIG select (_x select 0);
         _normalized = (_x select 1);
     };
-    false
-} count _compList;
+} forEach _compList;
 
 if (_composition isEqualTo []) then {
-    _composition = (CONFIG) select ((_compList select 0) select 0);
-    _normalized = (CONFIG) select ((_compList select 0) select 1);
+    _composition = CONFIG select ((_compList select 0) select 0);
+    _normalized = CONFIG select ((_compList select 0) select 1);
 };
 
-private _anchor = "Land_HelipadEmpty_F" createVehicle DEFAULT_SPAWNPOS;
+// spawn anchor
+private _anchor = createVehicle ["Land_HelipadEmpty_F", DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
 _anchor setVectorUp [0,0,1];
-_anchor setPosATL [_position select 0,_position select 1,0];
+_anchor setDir _dir;
+_anchor setPosATL _position;
+_anchor allowDamage false;
 
-private _objData = call compile (getText (_composition >> "objects"));
+// anchor is always first object
+_objects pushBack _anchor;
+
+// clear terrain objects within composition radius
+if (_clear && {isServer}) then {
+    private _objectsTerrain = nearestTerrainObjects [_position, [], getNumber (_composition >> "radius"), false, true];
+
+    {
+        _x hideObjectGlobal true;
+        _x allowDamage false;
+    } forEach _objectsTerrain;
+
+    // save reference to terrain objects in anchor 
+    _anchor setVariable ["objectsTerrain",_objectsTerrain];
+
+    // restore objects when anchor deleted
+    _anchor addEventHandler ["Deleted", {
+        {
+            _x hideObjectGlobal false;
+            _x allowDamage true;
+        } forEach ((_this select 0) getVariable ["objectsTerrain",[]]);
+    }];  
+};
+
+// spawn objects
+private ["_obj","_pos"];
+
+private _objData = parseSimpleArray (getText (_composition >> "objects"));
 
 for "_i" from 0 to count _objData - 1 do {
-    private ["_obj","_pos"];
+    (_objData select _i) params ["_type","_relPos","_z","_dirOffset","_vectorUp","_simple"];
 
-    (_objData select _i) params ["_type","_relPos","_relDir","_vectorUp","_snap","_simple"];
-
-    _relDir = call compile _relDir;
-    _relPos = call compile _relPos;
-
-    _obj = if !(_simple) then {
-        _type createVehicle DEFAULT_SPAWNPOS;
+    _relPos = parseSimpleArray _relPos;
+    _dirOffset = parseNumber _dirOffset;
+    _z = parseNumber _z;
+    
+    _obj = if (_simple < 1) then {
+        createVehicle [_type, DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
     } else {
         createSimpleObject [_type, DEFAULT_SPAWNPOS];
     };
 
-    _obj setDir _relDir;
-    _obj setVectorUp [0,0,1];
-    _pos = getPosATL _anchor vectorAdd _relPos;
+    _obj setDir DIR_OFFSET(_dirOffset);
+    _pos = POS_RELATIVE(_relPos);
 
-    if (_snap) then {
-        _pos set [2,0];
-    };
+    // set height above terrain
+    _pos set [2,_z];
 
     _obj setPosATL _pos;
 
-    if !(_vectorUp) then {
+    if (_vectorUp < 1) then {
         _obj setVectorUp surfaceNormal getPosATL _obj;
     };
 
@@ -105,26 +144,21 @@ for "_i" from 0 to count _objData - 1 do {
     _obj enableDynamicSimulation true;
 };
 
-private _nodeData = call compile (getText (_composition >> "nodes"));
+// get node data
+private _nodeData = parseSimpleArray (getText (_composition >> "nodes"));
 
 for "_i" from 0 to count _nodeData - 1 do {
     (_nodeData select _i) params ["_relPos","_range"];
 
-    _relPos = call compile _relPos;
-    _range = call compile _range;
+    _relPos = parseSimpleArray _relPos;
+    _range = parseNumber _range;
 
-    private _pos = getPosATL _anchor vectorAdd _relPos;
+    _pos = POS_RELATIVE(_relPos);
+    
+    // snap node to terrain
+    _pos set [2,0];
 
     _nodes pushBack [_pos,_range];
 };
 
-deleteVehicle _anchor;
-
-private _ret = [
-    getNumber (_composition >> "radius"),
-    _normalized,
-    _objects,
-    _nodes
-];
-
-_ret
+[getNumber (_composition >> "radius"),_normalized,_objects,_nodes]

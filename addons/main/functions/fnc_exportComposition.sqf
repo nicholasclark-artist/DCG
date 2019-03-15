@@ -8,16 +8,31 @@ export base data from 3DEN, should be used in VR map
 Arguments:
 
 Return:
-string
+nothing
 __________________________________________________________________*/
-#include "script_component.hpp" 
-#define ATTRIBUTE_ANCHOR(ENTITY) ((ENTITY get3DENAttribute QGVARMAIN(anchor)) select 0)
-#define ATTRIBUTE_SNAP(ENTITY) ((ENTITY get3DENAttribute QGVARMAIN(snap)) select 0)
-#define ATTRIBUTE_VECTORUP(ENTITY) ((ENTITY get3DENAttribute QGVARMAIN(vectorUp)) select 0)
-#define ATTRIBUTE_SIMPLE(ENTITY) ((ENTITY get3DENAttribute "objectIsSimple") select 0)
-#define NODE_CHECK(ENTITY) ENTITY isKindOf "Land_HelipadEmpty_F"
+#include "script_component.hpp"
+#define CONFIG (configfile >> QGVARMAIN(compositions))
 #define PRINT_MSG(MSG) titleText [MSG, "PLAIN"]
-#define GET_DATA(ENTITY) _composition pushBack [typeof ENTITY, str (getPosATL ENTITY vectorDiff getPosATL _anchor), str (((getDir ENTITY) - (getDir _anchor)) mod 360), ATTRIBUTE_VECTORUP(ENTITY),ATTRIBUTE_SNAP(ENTITY),ATTRIBUTE_SIMPLE(ENTITY)]
+// #define ATTRIBUTE_SNAP(ENTITY) (parseNumber ((ENTITY get3DENAttribute QGVAR(snap)) select 0))
+#define ATTRIBUTE_VECTORUP(ENTITY) (parseNumber ((ENTITY get3DENAttribute QGVAR(vectorUp)) select 0))
+#define ATTRIBUTE_SIMPLE(ENTITY) (parseNumber ((ENTITY get3DENAttribute "objectIsSimple") select 0))
+#define ANCHOR_CHECK(ENTITY) (typeOf ENTITY isEqualTo "Sign_Arrow_F")
+#define NODE_CHECK(ENTITY) (typeOf ENTITY isEqualTo "Sign_Arrow_Blue_F")
+#define NODE_MAXDIST 51
+#define GET_POS_RELATIVE(ENTITY) (_anchor worldToModel (getPosATL ENTITY))
+#define GET_DIR_OFFSET(ENTITY) (((getDir ENTITY) - (getDir _anchor)) mod 360)
+#define GET_DATA(ENTITY) _composition pushBack [ \
+    typeOf ENTITY, \
+    str GET_POS_RELATIVE(ENTITY), \
+    str ((getPosATL ENTITY) select 2), \
+    str GET_DIR_OFFSET(ENTITY), \
+    ATTRIBUTE_VECTORUP(ENTITY), \
+    ATTRIBUTE_SIMPLE(ENTITY) \
+    ]
+
+// reset ui vars
+uiNamespace setVariable [QGVAR(compExportDisplay),displayNull];
+GVAR(compExportSel) = "";
 
 private _composition = [];
 private _selected = get3DENSelected "object";
@@ -29,32 +44,38 @@ private _anchor = objNull;
 private _br = toString [13,10];
 private _tab = toString [9];
 
+private ["_pos"];
+
+// get composition anchor
 {
-    if (ATTRIBUTE_ANCHOR(_x)) exitWith {
-        _anchor = "Land_HelipadEmpty_F" createVehicle DEFAULT_SPAWNPOS;
+    if (ANCHOR_CHECK(_x)) exitWith {
+        _anchor = _x;
+        // make sure anchor is snapped to terrain
+        _anchor setPosATL [(getPosATL _anchor) select 0,(getPosATL _anchor) select 1,0];
         _anchor setVectorUp [0,0,1];
-        _anchor setPosATL [getPosATL _x select 0,getPosATL _x select 1,0];
     };
 } forEach _selected;
 
 if (isNull _anchor) exitWith {
-    PRINT_MSG("Cannot export composition while anchor is undefined")
+    PRINT_MSG("cannot export composition while anchor is undefined");
 };
 
+// get nodes (safe areas)
 {
     if (NODE_CHECK(_x)) then {
-        for "_i" from 2 to 50 step 1 do {
+        for "_i" from 2 to NODE_MAXDIST step 1 do {
             private _near = nearestObjects [_x, [], _i];
-            if (count _near > 1) exitWith {
-                _nodes pushBack [str (getPosATL _x vectorDiff getPosATL _anchor), str (_i - 1)];
+            if (count _near > 1 || {_i isEqualTo NODE_MAXDIST}) exitWith {
+                _nodes pushBack [str GET_POS_RELATIVE(_x), str (_i - 1)];
             };
         };
     };
 } forEach _selected;
 
+// save object data
 {
-    if !(_x isKindOf "Man") then {
-        if (NODE_CHECK(_x) && {!ATTRIBUTE_ANCHOR(_x)}) exitWith {};
+    if (!NODE_CHECK(_x) && {!ANCHOR_CHECK(_x)} && {!(_x isKindOf "Man")}) then {
+        // save raw z value separately as model-space z value is inaccurate
         GET_DATA(_x);
         _count = _count + 1;
         _r = (round (_x distance2D _anchor)) max _r;
@@ -63,16 +84,65 @@ if (isNull _anchor) exitWith {
 
 _strength = round (_r + (_count * 0.5));
 
-// format command has a character limit
-// compiled entry uses string addition as workaround for long arrays
-private _className = format ["GVARMAIN(%1%2)",round random 1000,round diag_tickTime];
-private _compiledEntry = format ["class %3 {%1%2radius = %4;%1%2strength = %5;%1%2objects = ",_br,_tab,_className,_r,_strength];
-_compiledEntry = _compiledEntry + str (str _composition) + format [";%1%2nodes = ", _br,_tab];
-_compiledEntry = _compiledEntry + str (str _nodes) + format [";%2%1};", _br,_tab];
+// create type listbox
+[_br,_tab,_composition,_nodes,_r,_strength,_count] spawn {
+    params ["_br","_tab","_composition","_nodes","_r","_strength","_count"];
 
-private _msg = format ["Exporting composition to clipboard, objects: %1, radius: %2, strength: %3",_count, _r, _strength];
-PRINT_MSG(_msg);
+    closeDialog 2; 
 
-copyToClipboard _compiledEntry;
+    private _display = findDisplay 313 createDisplay "RscDisplayEmpty";
+    uiNamespace setVariable [QGVAR(compExportDisplay),_display];
 
-_compiledEntry
+    private _title = _display ctrlCreate ["RscText", 100];
+    _title ctrlSetPosition [0.7, 0.3, 0.5, 0.05];
+    _title ctrlCommit 0;
+    _title ctrlSetText "Select Composition Type";
+
+    private _dropdown = _display ctrlCreate ["CtrlCombo", 101];
+    _dropdown ctrlSetPosition [0.7, 0.37, 0.5, 0.05];
+    _dropdown ctrlCommit 0;
+
+    private ["_name","_item","_cfgName"];
+
+    for "_i" from 0 to (count CONFIG) - 1 do {
+        _name = configName (CONFIG select _i);
+        _item = _dropdown lbAdd _name;
+        _dropdown lbSetData [_item, _name];
+    };
+
+    _dropdown ctrlAddEventHandler ["LBSelChanged", {
+        params ["_control", "_selectedIndex"];
+        
+        (uiNamespace getVariable [QGVAR(compExportDisplay),displayNull]) closeDisplay 1;
+        GVAR(compExportSel) = _control lbData (lbCurSel _control);
+    }];
+
+    waitUntil {isNull _display};
+
+    // compile class text and copy to clipboard
+    for "_i" from 0 to (count CONFIG) - 1 do {
+        _cfgName = configName (CONFIG select _i);
+        if (COMPARE_STR(GVAR(compExportSel),_cfgName)) exitWith {
+            // use config count on first call, else use count var
+            ISNILS(GVAR(compExportCount),count (CONFIG select _i));
+
+            private _className = format ["GVARMAIN(DOUBLES(%1,%2))",_cfgName,[count (CONFIG select _i),GVAR(compExportCount)] select (GVAR(compExportCount) > 0)];
+            private _compiledEntry = [
+                format ["class %3 {%1%2radius = %4;%1%2strength = %5;%1%2nodes = ",_br,_tab,_className,_r,_strength],
+                str (str _nodes),
+                format [";%1%2objects = ", _br,_tab],
+                str (str _composition),
+                format [";%2%1};", _br,_tab]
+            ] joinString "";
+
+            copyToClipboard _compiledEntry;
+
+            private _msg = format ["Exporting %1 composition to clipboard: radius: %3, strength: %4, nodes: %5, objects: %2",_cfgName,_count, _r, _strength, count _nodes];
+            PRINT_MSG(_msg);  
+
+            GVAR(compExportCount) = GVAR(compExportCount) + 1;
+        };
+    };
+};
+
+nil

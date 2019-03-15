@@ -4,4 +4,5 @@
 #include "cfgPatches.hpp"
 #include "cfgEventHandlers.hpp"
 #include "cfgCompositions.hpp"
-#include "DCG_3DEN.hpp"
+#include "cfg3DEN.hpp"
+#include "display3DEN.hpp"
