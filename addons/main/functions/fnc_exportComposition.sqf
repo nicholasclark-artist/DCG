@@ -21,13 +21,7 @@ __________________________________________________________________*/
 #define NODE_MAXDIST 51
 #define GET_POS_RELATIVE(ENTITY) (_anchor worldToModel (getPosATL ENTITY))
 #define GET_DIR_OFFSET(ENTITY) (((getDir ENTITY) - (getDir _anchor)) mod 360)
-#define GET_DATA(ENTITY) _composition pushBack [ \
-    typeOf ENTITY, \
-    str GET_POS_RELATIVE(ENTITY), \
-    str ((getPosATL ENTITY) select 2), \
-    str GET_DIR_OFFSET(ENTITY), \
-    ATTRIBUTE_VECTORUP(ENTITY), \
-    ATTRIBUTE_SIMPLE(ENTITY)]
+#define GET_DATA(ENTITY) _composition pushBack [typeOf ENTITY,str GET_POS_RELATIVE(ENTITY),str ((getPosATL ENTITY) select 2),str GET_DIR_OFFSET(ENTITY),ATTRIBUTE_VECTORUP(ENTITY),ATTRIBUTE_SIMPLE(ENTITY)]
 
 // reset ui vars
 uiNamespace setVariable [QGVAR(compExportDisplay),displayNull];
