@@ -27,8 +27,7 @@ __________________________________________________________________*/
     str ((getPosATL ENTITY) select 2), \
     str GET_DIR_OFFSET(ENTITY), \
     ATTRIBUTE_VECTORUP(ENTITY), \
-    ATTRIBUTE_SIMPLE(ENTITY) \
-    ]
+    ATTRIBUTE_SIMPLE(ENTITY)]
 
 // reset ui vars
 uiNamespace setVariable [QGVAR(compExportDisplay),displayNull];
