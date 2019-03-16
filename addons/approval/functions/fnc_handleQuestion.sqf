@@ -32,6 +32,7 @@ if (diag_tickTime < (_unit getVariable [QGVAR(questioned),COOLDOWN * -1]) + COOL
 
 _unit setVariable [QGVAR(questioned), diag_tickTime, true];
 
+// @todo differentiate a civilian not having info and an unwillingness to talk
 private _text = [
     format ["%1 doesn't have any relevant information.",name _unit],
     format ["%1 doesn't know anything.",name _unit],

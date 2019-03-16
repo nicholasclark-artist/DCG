@@ -24,6 +24,7 @@ _grp setVariable [QGVAR(disable),true];
 
 if (dynamicSimulationEnabled _grp) then {
     _grp enableDynamicSimulation false;
+    TRACE_1("disable dynamic simulation",_grp);
 };
 
 nil

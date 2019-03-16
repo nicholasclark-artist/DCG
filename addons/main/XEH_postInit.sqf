@@ -8,6 +8,7 @@ POSTINIT;
 
 // eventhandlers
 ["CBA_settingsInitialized", {
+    INFO("RUNNING!!!");
     if !(GVAR(enable)) exitWith {LOG(MSG_EXIT)};
 
     // headless client setup
