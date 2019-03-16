@@ -110,7 +110,7 @@ switch (floor random 3) do {
         // remove other units in vehicle
         {
             if !(_x isEqualTo _driver) then {
-                deleteVehicle _x;
+                (objectParent _driver) deleteVehicleCrew _x;
             };
         } forEach crew (objectParent _driver);
 
