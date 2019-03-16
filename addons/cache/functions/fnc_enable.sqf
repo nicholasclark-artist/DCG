@@ -19,7 +19,7 @@ params ["_obj"];
 if (!(_obj in allUnits) || {isPlayer _obj}) exitWith {};
 
 {
-    if (!(dynamicSimulationEnabled _x) && {!(isPlayer _x)} && {!(_x getVariable [QGVAR(disable),false])}) then {
+    if (!(dynamicSimulationEnabled _x) && {((units _x) findIf {isPlayer _x}) isEqualTo -1} && {!(_x getVariable [QGVAR(disable),false])}) then { 
         _x enableDynamicSimulation true;
         TRACE_1("enable dynamic simulation",_x);
     };
