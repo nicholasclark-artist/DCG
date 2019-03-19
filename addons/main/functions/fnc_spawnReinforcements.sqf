@@ -60,7 +60,7 @@ _heli lock 3;
 
 private _grp = createGroup _side;
 private _pilot = _grp createUnit [selectRandom _unitPool, DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
-[QEGVAR(cache,disable),_grp] call CBA_fnc_serverEvent;
+[QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
 _pilot assignAsDriver _heli;
 _pilot moveInDriver _heli;
 _pilot disableAI "FSM";
@@ -68,7 +68,7 @@ _pilot setBehaviour "CARELESS";
 _pilot addEventHandler ["GetOutMan",{deleteVehicle (_this select 0)}];
 
 private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
-[QEGVAR(cache,disable),_grpPatrol] call CBA_fnc_serverEvent;
+[QEGVAR(cache,disableGroup),_grpPatrol] call CBA_fnc_serverEvent;
 
 // place patrol group in cargo
 [

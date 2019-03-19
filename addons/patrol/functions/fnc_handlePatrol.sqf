@@ -47,7 +47,7 @@ if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
 
                 if (PROBABILITY(GVAR(vehicleProbability))) then { 
                     _grp = [_pos,1,1,EGVAR(main,enemySide),1,true] call EFUNC(main,spawnGroup);
-                    [QEGVAR(cache,disable),_grp] call CBA_fnc_serverEvent;
+                    [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
 
                     [
                         {count units (_this select 0) > 0},
@@ -72,7 +72,7 @@ if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
                 } else {
                     _count = 4;
                     _grp = [_pos,0,_count,EGVAR(main,enemySide),2] call EFUNC(main,spawnGroup);
-                    [QEGVAR(cache,disable),_grp] call CBA_fnc_serverEvent;
+                    [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
                     
                     [
                         {count units (_this select 0) isEqualTo (_this select 2)},

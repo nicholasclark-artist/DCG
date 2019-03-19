@@ -3,26 +3,25 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-handle additions to dynamic simulation system
+enable caching for group
 
 Arguments:
+0: group <GROUP>
 
 Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-if (!isServer) exitWith {};
+if !(isServer) exitWith {};
 
-params ["_obj"];
+params [
+    ["_grp",grpNull,[grpNull]]
+];
 
-if (!(_obj in allUnits) || {isPlayer _obj}) exitWith {};
+_grp setVariable [QGVAR(disableGroup),false];
 
-{
-    if (!(dynamicSimulationEnabled _x) && {((units _x) findIf {isPlayer _x}) isEqualTo -1} && {!(_x getVariable [QGVAR(disable),false])}) then { 
-        _x enableDynamicSimulation true;
-        TRACE_1("enable dynamic simulation",_x);
-    };
-} forEach allGroups;
+_grp enableDynamicSimulation true;
+TRACE_1("enable dynamic simulation",_grp);
 
 nil

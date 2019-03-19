@@ -7,6 +7,7 @@ __________________________________________________________________*/
 PREINIT;
 
 PREP(initSettings);
+PREP(handleGroups);
 PREP(enable);
 PREP(disable);
 

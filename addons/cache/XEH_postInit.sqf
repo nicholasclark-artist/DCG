@@ -12,7 +12,8 @@ if (!isServer) exitWith {};
 ["CBA_settingsInitialized", {
     if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
-    [QGVAR(disable), {[_this] call FUNC(disable)}] call CBA_fnc_addEventHandler;
+    [QGVAR(enableGroup), {[_this] call FUNC(enable)}] call CBA_fnc_addEventHandler;
+    [QGVAR(disableGroup), {[_this] call FUNC(disable)}] call CBA_fnc_addEventHandler;
 
-    ["AllVehicles", "init", FUNC(enable), nil, nil, true] call CBA_fnc_addClassEventHandler;
+    ["AllVehicles", "init", FUNC(handleGroups), nil, nil, true] call CBA_fnc_addClassEventHandler;
 }] call CBA_fnc_addEventHandler;
