@@ -39,7 +39,15 @@ private _text = [
     format ["%1 isn't interested in talking right now.",name _unit]
 ];
 
-if (PROBABILITY(AP_CONVERT1(getpos _player))) then {
+private _value = AP_CONVERT1(getpos _player);
+
+// add bonus if player weapon lowered
+if (weaponLowered _player) then {
+    _value = _value + 0.1;
+    TRACE_1("weapon lowered bonus",_value);
+};
+
+if (PROBABILITY(_value)) then {
     private _type = [0, floor random 2] select (CHECK_ADDON_2(ied));
 
     if (_type isEqualTo 0) exitWith {
