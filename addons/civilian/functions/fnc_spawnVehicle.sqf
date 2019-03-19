@@ -14,7 +14,6 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CLEANUP format ["%1 deleteAt (%1 find this); ['%2',vehicle this] call CBA_fnc_serverEvent",GVAR(drivers),QEGVAR(main,cleanup)]
 #define TIMEOUT 300
 #define COMPLETION_RADIUS 30
 
@@ -22,7 +21,7 @@ params ["_start","_mid","_end"];
 
 private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 
-[QEGVAR(cache,disable),_grp] call CBA_fnc_serverEvent;
+[QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
 
 [
     {!(isNull (assignedVehicle leader (_this select 0)))},
@@ -31,6 +30,16 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 
         private _veh = vehicle (leader _grp);
         private _driver = driver _veh;
+
+        // unit must complete route before timeout
+        [
+            {
+                GVAR(drivers) deleteAt (GVAR(drivers) find _this#0); 
+                [QEGVAR(main,cleanup),vehicle _this#0] call CBA_fnc_serverEvent;
+            }, 
+            [_driver],
+            TIMEOUT
+        ] call CBA_fnc_waitAndExecute;
 
         // eventhandlers
         _driver addEventHandler ["GetOutMan", {
@@ -48,7 +57,10 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         _wp setWaypointTimeout [0,0,0];
         _wp setWaypointBehaviour "CARELESS";
         _wp setWaypointSpeed (selectRandom ["LIMITED","NORMAL"]);
-        _wp setWaypointStatements [FORMAT_1(QUOTE(CHECK_DIST2D(this,%1,COMPLETION_RADIUS)),getPosASL _end), CLEANUP];
+        _wp setWaypointStatements [
+            FORMAT_1(QUOTE(CHECK_DIST2D(this,%1,COMPLETION_RADIUS)),getPosASL _end), 
+            format ["%1 deleteAt (%1 find this); ['%2',vehicle this] call CBA_fnc_serverEvent",QGVAR(drivers),QEGVAR(main,cleanup)]
+        ];
 
         // move waypoint position to endpoint once unit is close to midpoint
         // this method solves unit hesitating at midpoint
@@ -67,13 +79,6 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         TRACE_5("spawned civilian vehicle",getPosASL _driver, typeOf _veh, getPosASL _start, getPosASL _mid, getPosASL _end);
     },
     [_grp,_start,_mid,_end]
-] call CBA_fnc_waitUntilAndExecute;
-
-// unit must complete route before timeout
-[
-    compile CLEANUP, 
-    nil,
-    TIMEOUT
-] call CBA_fnc_waitAndExecute;
+] call CBA_fnc_waitUntilAndExecute;  
 
 nil
