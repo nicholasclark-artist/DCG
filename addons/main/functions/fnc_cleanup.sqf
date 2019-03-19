@@ -9,7 +9,7 @@ Arguments:
 0: entity <ARRAY, STRING, OBJECT, LOCATION, GROUP>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -22,10 +22,12 @@ if (_entity isEqualType []) then {
         if !(_x isEqualType []) then {
             GVAR(cleanup) pushBack _x;
         } else {
-            _x spawn FUNC(cleanup);
-            WARNING_1("Multi-dimensional array passed to %1",QGVAR(cleanup))
+            _x call FUNC(cleanup);
+            WARNING_1("multi-dimensional array passed to %1",QGVAR(cleanup))
         };
     } forEach _entity;
 } else {
     GVAR(cleanup) pushBack _entity;
 };
+
+nil

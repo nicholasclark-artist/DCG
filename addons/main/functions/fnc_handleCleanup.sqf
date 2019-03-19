@@ -13,24 +13,49 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define CLEAN_DIST 300
 
-GVAR(cleanup) = GVAR(cleanup) select {!isNull _x}; // remove null elements
+private _cleanupNow = [];
+private _cleanupLater = [];
 
-if !(GVAR(cleanup) isEqualTo []) then {
-    // get non object entities
-    private _entities = GVAR(cleanup) select {!(_x isEqualType objNull)};
-    
-    // get objects, check for force cleanup and near players
-    private _objects = GVAR(cleanup) select {
-        (_x isEqualType objNull) && 
-        {
-            _x getVariable [QGVAR(forceCleanup),false] || 
-            [getPos _x,CLEAN_DIST] call EFUNC(main,getNearPlayers) isEqualTo []
-        }
+{
+    switch (typeName _x) do {
+        case "OBJECT": {
+            if !(isNull _x) then {
+                if (_x getVariable [QGVAR(forceCleanup),false] || {[getPosATL _x,CLEAN_DIST] call EFUNC(main,getNearPlayers) isEqualTo []}) then {
+                    _cleanupNow pushBack _x;
+                } else {
+                    _cleanupLater pushBack _x;
+                };
+            };
+        };
+        case "GROUP": {
+            if !(isNull _x) then {
+                if (_x getVariable [QGVAR(forceCleanup),false] || {[getPosATL leader _x,CLEAN_DIST] call EFUNC(main,getNearPlayers) isEqualTo []}) then {
+                    _cleanupNow pushBack _x;
+                } else {
+                    _cleanupLater pushBack _x;
+                };
+            };            
+        };
+        case "LOCATION": {
+            if !(isNull _x) then {
+                _cleanupNow pushBack _x;
+            };            
+        };
+        case "STRING": {
+            if (CHECK_MARKER(_x)) then {
+               _cleanupNow pushBack _x; 
+            };
+        };
+        default { 
+            WARNING_1("bad type passed to cleanup handler: %1",typeName _x);    
+        };
     };
+} forEach GVAR(cleanup);
 
-    _entities append _objects;
+TRACE_3("",count GVAR(cleanup),count _cleanupNow,count _cleanupLater);
 
-    _entities call CBA_fnc_deleteEntity;
-};
+_cleanupNow call CBA_fnc_deleteEntity;
+
+GVAR(cleanup) = _cleanupLater;
 
 nil
