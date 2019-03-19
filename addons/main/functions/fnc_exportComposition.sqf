@@ -21,11 +21,15 @@ __________________________________________________________________*/
 #define NODE_MAXDIST 51
 #define GET_POS_RELATIVE(ENTITY) (_anchor worldToModel (getPosATL ENTITY))
 #define GET_DIR_OFFSET(ENTITY) (((getDir ENTITY) - (getDir _anchor)) mod 360)
-#define GET_DATA(ENTITY) _composition pushBack [typeOf ENTITY,str GET_POS_RELATIVE(ENTITY),str ((getPosATL ENTITY) select 2),str GET_DIR_OFFSET(ENTITY),ATTRIBUTE_VECTORUP(ENTITY),ATTRIBUTE_SIMPLE(ENTITY)]
+#define GET_DATA(ENTITY) _composition pushBack [typeOf ENTITY,str GET_POS_RELATIVE(ENTITY),str (0 max ((getPosATL ENTITY) select 2)),str GET_DIR_OFFSET(ENTITY),ATTRIBUTE_VECTORUP(ENTITY),ATTRIBUTE_SIMPLE(ENTITY)]
 
 // reset ui vars
 uiNamespace setVariable [QGVAR(compExportDisplay),displayNull];
 GVAR(compExportSel) = "";
+
+if !(COMPARE_STR(worldName,"VR")) exitWith {
+    PRINT_MSG("you must export compositions from VR map");scriptN
+};
 
 private _composition = [];
 private _selected = get3DENSelected "object";
@@ -36,8 +40,6 @@ private _r = 0;
 private _anchor = objNull;
 private _br = toString [13,10];
 private _tab = toString [9];
-
-private ["_pos"];
 
 // get composition anchor
 {
@@ -70,16 +72,20 @@ if (isNull _anchor) exitWith {
     if (!NODE_CHECK(_x) && {!ANCHOR_CHECK(_x)} && {!(_x isKindOf "Man")}) then {
         // save raw z value separately as model-space z value is inaccurate
         GET_DATA(_x);
-        _count = _count + 1;
+        // adjust max radius
         _r = (round (_x distance2D _anchor)) max _r;
+        // increase count for structural types and vehicles
+        if (_x isKindOf "Building" || {_x isKindOf "AllVehicles"}) then {
+            _count = _count + 1;
+        };   
     };
 } forEach _selected;
 
 _strength = round (_r + (_count * 0.5));
 
 // create type listbox
-[_br,_tab,_composition,_nodes,_r,_strength,_count] spawn {
-    params ["_br","_tab","_composition","_nodes","_r","_strength","_count"];
+[_br,_tab,_composition,_nodes,_r,_strength] spawn {
+    params ["_br","_tab","_composition","_nodes","_r","_strength"];
 
     closeDialog 2; 
 
@@ -130,7 +136,7 @@ _strength = round (_r + (_count * 0.5));
 
             copyToClipboard _compiledEntry;
 
-            private _msg = format ["Exporting %1 composition to clipboard: radius: %3, strength: %4, nodes: %5, objects: %2",_cfgName,_count, _r, _strength, count _nodes];
+            private _msg = format ["Exporting %1 composition to clipboard: radius: %2, strength: %3, nodes: %4",_cfgName, _r, _strength, count _nodes];
             PRINT_MSG(_msg);  
 
             GVAR(compExportCount) = GVAR(compExportCount) + 1;
