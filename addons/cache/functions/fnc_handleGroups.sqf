@@ -17,13 +17,8 @@ if (!isServer) exitWith {};
 
 params ["_obj"];
 
-if (!(_obj in allUnits) || {dynamicSimulationEnabled (group _obj)} || {isPlayer leader _obj}) exitWith {};
-
-// @todo rework! loop unnecessary
-{
-    if !(_x getVariable [QGVAR(disableGroup),false]) then { 
-        [QGVAR(enableGroup),_x] call CBA_fnc_localEvent;
-    };
-} forEach allGroups;
+if (_obj in allUnits && {!(dynamicSimulationEnabled (group _obj))} && {!(_obj getVariable [QGVAR(disableGroup),false])}) then {
+    [QGVAR(enableGroup),group _obj] call CBA_fnc_localEvent;
+};
 
 nil
