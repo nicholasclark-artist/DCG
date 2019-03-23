@@ -11,7 +11,9 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CLEAN_DIST 300
+#define CLEAN_DIST 250
+
+if (GVAR(cleanup) isEqualTo []) exitWith {};
 
 private _cleanupNow = [];
 private _cleanupLater = [];
@@ -52,7 +54,7 @@ private _cleanupLater = [];
     };
 } forEach GVAR(cleanup);
 
-TRACE_3("",count GVAR(cleanup),count _cleanupNow,count _cleanupLater);
+TRACE_4("",count GVAR(cleanup),count _cleanupNow,count _cleanupLater,GVAR(cleanup));
 
 _cleanupNow call CBA_fnc_deleteEntity;
 

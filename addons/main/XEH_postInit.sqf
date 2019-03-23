@@ -8,7 +8,6 @@ POSTINIT;
 
 // eventhandlers
 ["CBA_settingsInitialized", {
-    INFO("RUNNING!!!");
     if !(GVAR(enable)) exitWith {LOG(MSG_EXIT)};
 
     // headless client setup
@@ -51,7 +50,7 @@ POSTINIT;
         1800
     ] call CBA_fnc_addPerFrameHandler;
         
-    [FUNC(handleCleanup), 60] call CBA_fnc_addPerFrameHandler;
+    [FUNC(handleCleanup), 120] call CBA_fnc_addPerFrameHandler;
 
     // call debug if macro enabled
     [DEBUG_ADDON] call FUNC(debug);
@@ -64,4 +63,6 @@ POSTINIT;
 
     MAIN_ADDON = true;
     publicVariable QUOTE(MAIN_ADDON);
+
+    TRACE_1("",MAIN_ADDON);
 }] call CBA_fnc_addEventHandler;
