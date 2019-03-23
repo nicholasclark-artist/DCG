@@ -20,10 +20,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={14498.501,39.690987,16423.455};
-		dir[]={-0.071618482,-0.34981024,-0.93419373};
-		up[]={-0.026756212,0.93674475,-0.34900466};
-		aside[]={-0.99716711,-9.3199196e-007,0.076449923};
+		pos[]={14191.61,35.194584,16260.602};
+		dir[]={0.30036619,-0.42129758,0.85588491};
+		up[]={0.13957837,0.90683556,0.39772102};
+		aside[]={0.94367325,-1.1558877e-006,-0.33117381};
 	};
 };
 binarizationWanted=0;
@@ -257,6 +257,8 @@ randomSeed=6064215;
 class ScenarioData
 {
 	author="SENSEI";
+	briefing=0;
+	debriefing=0;
 	saving=0;
 	respawnDialog=0;
 	disabledAI=1;
@@ -2541,6 +2543,25 @@ class Mission
 						};
 						class Attribute1
 						{
+							property="Enh_featureType";
+							expression="_this setFeatureType parseNumber (_value)";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"STRING"
+										};
+									};
+									value="0";
+								};
+							};
+						};
+						class Attribute2
+						{
 							property="pitch";
 							expression="_this setpitch _value;";
 							class Value
@@ -2558,7 +2579,57 @@ class Mission
 								};
 							};
 						};
-						class Attribute2
+						class Attribute3
+						{
+							property="Enh_ambientAnimParams";
+							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if (!(_value select 0 == '') && !isMultiplayer) then		{			[_unit,_value select 0,_value select 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"ARRAY"
+										};
+									};
+									class value
+									{
+										items=2;
+										class Item0
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="";
+											};
+										};
+										class Item1
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="ASIS";
+											};
+										};
+									};
+								};
+							};
+						};
+						class Attribute4
 						{
 							property="face";
 							expression="_this setface _value;";
@@ -2577,7 +2648,7 @@ class Mission
 								};
 							};
 						};
-						nAttributes=3;
+						nAttributes=5;
 					};
 				};
 				class Item1
@@ -2643,6 +2714,25 @@ class Mission
 						};
 						class Attribute1
 						{
+							property="Enh_featureType";
+							expression="_this setFeatureType parseNumber (_value)";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"STRING"
+										};
+									};
+									value="0";
+								};
+							};
+						};
+						class Attribute2
+						{
 							property="pitch";
 							expression="_this setpitch _value;";
 							class Value
@@ -2660,7 +2750,57 @@ class Mission
 								};
 							};
 						};
-						class Attribute2
+						class Attribute3
+						{
+							property="Enh_ambientAnimParams";
+							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if (!(_value select 0 == '') && !isMultiplayer) then		{			[_unit,_value select 0,_value select 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"ARRAY"
+										};
+									};
+									class value
+									{
+										items=2;
+										class Item0
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="";
+											};
+										};
+										class Item1
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="ASIS";
+											};
+										};
+									};
+								};
+							};
+						};
+						class Attribute4
 						{
 							property="face";
 							expression="_this setface _value;";
@@ -2679,7 +2819,7 @@ class Mission
 								};
 							};
 						};
-						nAttributes=3;
+						nAttributes=5;
 					};
 				};
 				class Item2
@@ -2747,6 +2887,25 @@ class Mission
 						};
 						class Attribute1
 						{
+							property="Enh_featureType";
+							expression="_this setFeatureType parseNumber (_value)";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"STRING"
+										};
+									};
+									value="0";
+								};
+							};
+						};
+						class Attribute2
+						{
 							property="pitch";
 							expression="_this setpitch _value;";
 							class Value
@@ -2764,7 +2923,57 @@ class Mission
 								};
 							};
 						};
-						nAttributes=2;
+						class Attribute3
+						{
+							property="Enh_ambientAnimParams";
+							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if (!(_value select 0 == '') && !isMultiplayer) then		{			[_unit,_value select 0,_value select 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"ARRAY"
+										};
+									};
+									class value
+									{
+										items=2;
+										class Item0
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="";
+											};
+										};
+										class Item1
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="ASIS";
+											};
+										};
+									};
+								};
+							};
+						};
+						nAttributes=4;
 					};
 				};
 				class Item3
@@ -2831,6 +3040,25 @@ class Mission
 						};
 						class Attribute1
 						{
+							property="Enh_featureType";
+							expression="_this setFeatureType parseNumber (_value)";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"STRING"
+										};
+									};
+									value="0";
+								};
+							};
+						};
+						class Attribute2
+						{
 							property="pitch";
 							expression="_this setpitch _value;";
 							class Value
@@ -2848,7 +3076,57 @@ class Mission
 								};
 							};
 						};
-						class Attribute2
+						class Attribute3
+						{
+							property="Enh_ambientAnimParams";
+							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if (!(_value select 0 == '') && !isMultiplayer) then		{			[_unit,_value select 0,_value select 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"ARRAY"
+										};
+									};
+									class value
+									{
+										items=2;
+										class Item0
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="";
+											};
+										};
+										class Item1
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="ASIS";
+											};
+										};
+									};
+								};
+							};
+						};
+						class Attribute4
 						{
 							property="face";
 							expression="_this setface _value;";
@@ -2867,15 +3145,39 @@ class Mission
 								};
 							};
 						};
-						nAttributes=3;
+						nAttributes=5;
 					};
 				};
 			};
 			class Attributes
 			{
+				init="call{if (isServer) then { " \n "    [""dcg_cache_disableGroup"",this] call CBA_fnc_localEvent; " \n "};}";
 				dynamicSimulation=1;
 			};
 			id=86;
+			class CustomAttributes
+			{
+				class Attribute0
+				{
+					property="groupID";
+					expression="[_this, _value] call CBA_fnc_setCallsign";
+					class Value
+					{
+						class data
+						{
+							class type
+							{
+								type[]=
+								{
+									"STRING"
+								};
+							};
+							value="#depots";
+						};
+					};
+				};
+				nAttributes=1;
+			};
 		};
 		class Item10
 		{
@@ -2896,7 +3198,7 @@ class Mission
 					flags=7;
 					class Attributes
 					{
-						init="this setBehaviour ""CARELESS"";   " \n "this setCaptive true;   " \n "this disableAI ""ALL"";  " \n "this setVariable [""ace_medical_allowDamage"",false];    " \n "if (isClass (configfile >> ""CfgPatches"" >> ""ace_medical"")) then {   " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{[10,[],{[objNull, player] call ace_medical_fnc_treatmentAdvanced_fullHealLocal; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{},""Providing Medical Attention...""] call ace_common_fnc_progressBar;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;   " \n "} else {      " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{player setDamage 0; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;     " \n "}; ";
+						init="call{this setBehaviour ""CARELESS"";    " \n "this setCaptive true;    " \n "this disableAI ""ALL"";   " \n "this setVariable [""ace_medical_allowDamage"",false];     " \n "if (isClass (configfile >> ""CfgPatches"" >> ""ace_medical"")) then {    " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{[10,[],{[objNull, player] call ace_medical_fnc_treatmentAdvanced_fullHealLocal; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{},""Providing Medical Attention...""] call ace_common_fnc_progressBar;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;    " \n "} else {       " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{player setDamage 0; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;      " \n "}; }";
 						class Inventory
 						{
 							class uniform
@@ -2935,6 +3237,25 @@ class Mission
 						};
 						class Attribute1
 						{
+							property="Enh_featureType";
+							expression="_this setFeatureType parseNumber (_value)";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"STRING"
+										};
+									};
+									value="0";
+								};
+							};
+						};
+						class Attribute2
+						{
 							property="speaker";
 							expression="_this setspeaker _value;";
 							class Value
@@ -2952,7 +3273,7 @@ class Mission
 								};
 							};
 						};
-						class Attribute2
+						class Attribute3
 						{
 							property="pitch";
 							expression="_this setpitch _value;";
@@ -2971,7 +3292,57 @@ class Mission
 								};
 							};
 						};
-						class Attribute3
+						class Attribute4
+						{
+							property="Enh_ambientAnimParams";
+							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if (!(_value select 0 == '') && !isMultiplayer) then		{			[_unit,_value select 0,_value select 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"ARRAY"
+										};
+									};
+									class value
+									{
+										items=2;
+										class Item0
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="";
+											};
+										};
+										class Item1
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="ASIS";
+											};
+										};
+									};
+								};
+							};
+						};
+						class Attribute5
 						{
 							property="face";
 							expression="_this setface _value;";
@@ -2990,7 +3361,7 @@ class Mission
 								};
 							};
 						};
-						nAttributes=4;
+						nAttributes=6;
 					};
 				};
 				class Item1
@@ -3005,7 +3376,7 @@ class Mission
 					flags=5;
 					class Attributes
 					{
-						init="this setBehaviour ""CARELESS"";   " \n "this setCaptive true;   " \n "this disableAI ""ALL"";  " \n "this setVariable [""ace_medical_allowDamage"",false];    " \n "if (isClass (configfile >> ""CfgPatches"" >> ""ace_medical"")) then {   " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{[10,[],{[objNull, player] call ace_medical_fnc_treatmentAdvanced_fullHealLocal; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{},""Providing Medical Attention...""] call ace_common_fnc_progressBar;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;   " \n "} else {      " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{player setDamage 0; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;     " \n "}; ";
+						init="call{this setBehaviour ""CARELESS"";    " \n "this setCaptive true;    " \n "this disableAI ""ALL"";   " \n "this setVariable [""ace_medical_allowDamage"",false];     " \n "if (isClass (configfile >> ""CfgPatches"" >> ""ace_medical"")) then {    " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{[10,[],{[objNull, player] call ace_medical_fnc_treatmentAdvanced_fullHealLocal; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{},""Providing Medical Attention...""] call ace_common_fnc_progressBar;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;    " \n "} else {       " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{player setDamage 0; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;      " \n "}; }";
 						class Inventory
 						{
 							class uniform
@@ -3044,6 +3415,25 @@ class Mission
 						};
 						class Attribute1
 						{
+							property="Enh_featureType";
+							expression="_this setFeatureType parseNumber (_value)";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"STRING"
+										};
+									};
+									value="0";
+								};
+							};
+						};
+						class Attribute2
+						{
 							property="speaker";
 							expression="_this setspeaker _value;";
 							class Value
@@ -3061,7 +3451,7 @@ class Mission
 								};
 							};
 						};
-						class Attribute2
+						class Attribute3
 						{
 							property="pitch";
 							expression="_this setpitch _value;";
@@ -3080,17 +3470,90 @@ class Mission
 								};
 							};
 						};
-						nAttributes=3;
+						class Attribute4
+						{
+							property="Enh_ambientAnimParams";
+							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if (!(_value select 0 == '') && !isMultiplayer) then		{			[_unit,_value select 0,_value select 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
+							class Value
+							{
+								class data
+								{
+									class type
+									{
+										type[]=
+										{
+											"ARRAY"
+										};
+									};
+									class value
+									{
+										items=2;
+										class Item0
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="";
+											};
+										};
+										class Item1
+										{
+											class data
+											{
+												class type
+												{
+													type[]=
+													{
+														"STRING"
+													};
+												};
+												value="ASIS";
+											};
+										};
+									};
+								};
+							};
+						};
+						nAttributes=5;
 					};
 				};
 			};
 			class Attributes
 			{
-				init="this setVariable [""dcg_cache_disableCaching"",true];";
+				init="call{if (isServer) then { " \n "    [""dcg_cache_disableGroup"",this] call CBA_fnc_localEvent; " \n "};}";
 				dynamicSimulation=1;
 			};
 			id=928;
 			atlOffset=7.6293945e-005;
+			class CustomAttributes
+			{
+				class Attribute0
+				{
+					property="groupID";
+					expression="[_this, _value] call CBA_fnc_setCallsign";
+					class Value
+					{
+						class data
+						{
+							class type
+							{
+								type[]=
+								{
+									"STRING"
+								};
+							};
+							value="#medics";
+						};
+					};
+				};
+				nAttributes=1;
+			};
 		};
 		class Item11
 		{
@@ -3470,25 +3933,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="Enh_featureType";
-					expression="_this setFeatureType parseNumber (_value)";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"STRING"
-								};
-							};
-							value="0";
-						};
-					};
-				};
-				class Attribute1
-				{
 					property="allowDamage";
 					expression="_this allowdamage _value;";
 					class Value
@@ -3506,7 +3950,7 @@ class Mission
 						};
 					};
 				};
-				nAttributes=2;
+				nAttributes=1;
 			};
 		};
 		class Item24
@@ -3866,25 +4310,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="Enh_featureType";
-					expression="_this setFeatureType parseNumber (_value)";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"STRING"
-								};
-							};
-							value="0";
-						};
-					};
-				};
-				class Attribute1
-				{
 					property="allowDamage";
 					expression="_this allowdamage _value;";
 					class Value
@@ -3902,7 +4327,7 @@ class Mission
 						};
 					};
 				};
-				nAttributes=2;
+				nAttributes=1;
 			};
 		};
 		class Item33
@@ -3928,25 +4353,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="Enh_featureType";
-					expression="_this setFeatureType parseNumber (_value)";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"STRING"
-								};
-							};
-							value="0";
-						};
-					};
-				};
-				class Attribute1
-				{
 					property="allowDamage";
 					expression="_this allowdamage _value;";
 					class Value
@@ -3964,7 +4370,7 @@ class Mission
 						};
 					};
 				};
-				nAttributes=2;
+				nAttributes=1;
 			};
 		};
 		class Item34
@@ -4745,25 +5151,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="Enh_featureType";
-					expression="_this setFeatureType parseNumber (_value)";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"STRING"
-								};
-							};
-							value="0";
-						};
-					};
-				};
-				class Attribute1
-				{
 					property="allowDamage";
 					expression="_this allowdamage _value;";
 					class Value
@@ -4781,7 +5168,7 @@ class Mission
 						};
 					};
 				};
-				nAttributes=2;
+				nAttributes=1;
 			};
 		};
 		class Item54
@@ -4847,25 +5234,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="Enh_featureType";
-					expression="_this setFeatureType parseNumber (_value)";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"STRING"
-								};
-							};
-							value="0";
-						};
-					};
-				};
-				class Attribute1
-				{
 					property="allowDamage";
 					expression="_this allowdamage _value;";
 					class Value
@@ -4883,7 +5251,7 @@ class Mission
 						};
 					};
 				};
-				nAttributes=2;
+				nAttributes=1;
 			};
 		};
 		class Item56
@@ -5567,44 +5935,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="allowDamage";
-					expression="_this allowdamage _value;";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"BOOL"
-								};
-							};
-							value=0;
-						};
-					};
-				};
-				class Attribute1
-				{
-					property="Enh_featureType";
-					expression="_this setFeatureType parseNumber (_value)";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"STRING"
-								};
-							};
-							value="0";
-						};
-					};
-				};
-				class Attribute2
-				{
 					property="ammoBox";
 					expression="[_this,_value] call bis_fnc_initAmmoBox;";
 					class Value
@@ -5622,7 +5952,26 @@ class Mission
 						};
 					};
 				};
-				nAttributes=3;
+				class Attribute1
+				{
+					property="allowDamage";
+					expression="_this allowdamage _value;";
+					class Value
+					{
+						class data
+						{
+							class type
+							{
+								type[]=
+								{
+									"BOOL"
+								};
+							};
+							value=0;
+						};
+					};
+				};
+				nAttributes=2;
 			};
 		};
 		class Item70
@@ -5647,44 +5996,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="allowDamage";
-					expression="_this allowdamage _value;";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"BOOL"
-								};
-							};
-							value=0;
-						};
-					};
-				};
-				class Attribute1
-				{
-					property="Enh_featureType";
-					expression="_this setFeatureType parseNumber (_value)";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"STRING"
-								};
-							};
-							value="0";
-						};
-					};
-				};
-				class Attribute2
-				{
 					property="ammoBox";
 					expression="[_this,_value] call bis_fnc_initAmmoBox;";
 					class Value
@@ -5702,7 +6013,26 @@ class Mission
 						};
 					};
 				};
-				nAttributes=3;
+				class Attribute1
+				{
+					property="allowDamage";
+					expression="_this allowdamage _value;";
+					class Value
+					{
+						class data
+						{
+							class type
+							{
+								type[]=
+								{
+									"BOOL"
+								};
+							};
+							value=0;
+						};
+					};
+				};
+				nAttributes=2;
 			};
 		};
 		class Item71
@@ -6247,25 +6577,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="Enh_featureType";
-					expression="_this setFeatureType parseNumber (_value)";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"STRING"
-								};
-							};
-							value="0";
-						};
-					};
-				};
-				class Attribute1
-				{
 					property="allowDamage";
 					expression="_this allowdamage _value;";
 					class Value
@@ -6283,7 +6594,7 @@ class Mission
 						};
 					};
 				};
-				nAttributes=2;
+				nAttributes=1;
 			};
 		};
 		class Item84
@@ -6375,7 +6686,7 @@ class Mission
 			type="ellipse";
 			a=1533.563;
 			b=807.44202;
-			angle=314.80585;
+			angle=314.80588;
 			id=2714;
 			atlOffset=3.7381926;
 			class CustomAttributes
@@ -7461,6 +7772,7 @@ class Mission
 			};
 			class Attributes
 			{
+				init="call{if (isServer) then { " \n "    [""dcg_cache_disableGroup"",this] call CBA_fnc_localEvent; " \n "};}";
 				dynamicSimulation=1;
 			};
 			id=2746;
@@ -7481,7 +7793,7 @@ class Mission
 									"STRING"
 								};
 							};
-							value="_ai_defense";
+							value="#base_defense";
 						};
 					};
 				};
@@ -7515,28 +7827,10 @@ class Mission
 			};
 			id=2775;
 			type="C_Van_02_medevac_F";
+			atlOffset=-7.6293945e-006;
 			class CustomAttributes
 			{
 				class Attribute0
-				{
-					property="Enh_featureType";
-					expression="_this setFeatureType parseNumber (_value)";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"STRING"
-								};
-							};
-							value="0";
-						};
-					};
-				};
-				class Attribute1
 				{
 					property="allowDamage";
 					expression="_this allowdamage _value;";
@@ -7555,7 +7849,7 @@ class Mission
 						};
 					};
 				};
-				nAttributes=2;
+				nAttributes=1;
 			};
 		};
 		class Item91
@@ -8155,25 +8449,6 @@ class Mission
 			{
 				class Attribute0
 				{
-					property="Enh_featureType";
-					expression="_this setFeatureType parseNumber (_value)";
-					class Value
-					{
-						class data
-						{
-							class type
-							{
-								type[]=
-								{
-									"STRING"
-								};
-							};
-							value="0";
-						};
-					};
-				};
-				class Attribute1
-				{
 					property="allowDamage";
 					expression="_this allowdamage _value;";
 					class Value
@@ -8191,7 +8466,7 @@ class Mission
 						};
 					};
 				};
-				nAttributes=2;
+				nAttributes=1;
 			};
 		};
 	};
