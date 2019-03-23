@@ -66,7 +66,7 @@ private _iterations01 = [];
         // spawn ambient objects when player activates trigger
         private _statement = format [
             "
-                [%2,200 min %3,8 min %4,0,thisTrigger] call %1;
+                [%2,200 min %3,6 min %4,0,thisTrigger] call %1;
             ",
             QFUNC(spawnAmbient),_position,_radius,count _houses
         ];
