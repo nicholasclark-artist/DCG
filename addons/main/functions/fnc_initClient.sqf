@@ -29,10 +29,11 @@ if (!hasInterface) exitWith {};
     {
         ["cba_settings_refreshSetting", {
             [_this] call FUNC(handleSettingChange);
+            INFO("handle settings change");
         }] call CBA_fnc_addEventHandler; 
     },
     [],
-    1
+    5 
 ] call CBA_fnc_waitAndExecute;
 
 nil
