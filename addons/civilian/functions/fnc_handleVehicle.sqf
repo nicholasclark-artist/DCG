@@ -11,67 +11,36 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CIV_ITERATIONS 300
-#define CIV_BUFFER 100
-#define CIV_RANGE 999
+#define BUFFER 50
+#define ROAD_SEARCH_DIST 250
+#define ROUTE_DIST 3000
 
-// @todo remove mid waypoint if 'forceFollowRoad' is usable
-private ["_player","_roads","_roadStart","_roadEnd","_roadMid","_road","_roadConnect"];
+GVAR(drivers) =  GVAR(drivers) select {!isNull _x};
 
 if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
-    _player = selectRandom ((call CBA_fnc_players) select {((getPos _x) select 2) < 10});
+    private _player = selectRandom ((call CBA_fnc_players) select {((getPos _x) select 2) < 10});
 
     if (isNil "_player" || {[_player] call EFUNC(main,inSafezones)}) exitWith {};
 
-    _roads = _player nearRoads 200;
+    private _roads = _player nearRoads ROAD_SEARCH_DIST;
 
     // get start and end point for vehicle that passes by target player
     if !(_roads isEqualTo []) then {
-        _roadStart = objNull;
-        _roadEnd = objNull;
+        private _roadMid = selectRandom _roads;
 
-        // get midpoint road
-        _roadMid = _roads select 0;
-        _road = _roadMid;
+        if (isNil "_roadMid") exitWith {};
 
-        // get roads in start direction
-        for "_i" from 1 to CIV_ITERATIONS do {
-            _roadConnect = roadsConnectedTo _road;
+        private _direction = random 360;
 
-            // if next road doesn't exist, exit with last road
-            if (isNil {_roadConnect select 0}) exitWith {
-                _roadStart = _road;
-            };
+        private _roadStart = selectRandom ((_player getPos [ROUTE_DIST*0.5,_direction]) nearRoads ROAD_SEARCH_DIST);
 
-            _road = _roadConnect select 0;
+        if (isNil "_roadStart") exitWith {};
 
-            // if loop is done or road is far enough
-            if (_i isEqualTo CIV_ITERATIONS || {!(CHECK_DIST2D(getPosATL _road,getPosATL _roadMid,CIV_RANGE))}) exitWith {
-                _roadStart = _road;
-            };
-        };
+        private _roadEnd = selectRandom ((_player getPos [ROUTE_DIST*0.5,(_direction + 180) mod 360]) nearRoads ROAD_SEARCH_DIST);
 
-        _road = _roadMid;
+        if (isNil "_roadEnd") exitWith {};
 
-        // get roads in end direction
-        for "_i" from 1 to CIV_ITERATIONS do {
-            _roadConnect = roadsConnectedTo _road;
-
-            // if next road doesn't exist, exit with last road
-            // also check if array is empty, 'select' will throw error when checking for an element more than one index out of range
-            if (_roadConnect isEqualTo [] || {isNil {_roadConnect select 1}}) exitWith {
-                _roadEnd = _road;
-            };
-
-            _road = _roadConnect select 1;
-
-            // if loop is done or road is far enough
-            if (_i isEqualTo CIV_ITERATIONS || {!(CHECK_DIST2D(getPosATL _road,getPosATL _roadMid,CIV_RANGE))}) exitWith {
-                _roadEnd = _road;
-            };
-        };
-
-        private ["_roadTemp","_posRoadStart","_posRoadMid","_posRoadEnd","_eyePosRoadStart"];
+        private ["_roadTemp","_posRoadStart","_posRoadEnd"];
 
         if (PROBABILITY(0.5)) then {
             _roadTemp = _roadStart;
@@ -80,17 +49,22 @@ if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
         };
         
         _posRoadStart = getPosATL _roadStart;
-        _posRoadMid = getPosATL _roadMid;
         _posRoadEnd = getPosATL _roadEnd;
-        _eyePosRoadStart = getPosASL _roadStart;
-        _eyePosRoadStart = _eyePosRoadStart vectorAdd [0,0,1.5];
 
-        if (!(CHECK_DIST2D(_posRoadStart,_posRoadEnd,CIV_RANGE)) &&
-            {!([_eyePosRoadStart,eyePos _player] call EFUNC(main,inLOS))} &&
-            {([_posRoadStart,CIV_BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
-            {([_posRoadEnd,CIV_BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
+        if (([_posRoadStart,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo [] &&
+            {([_posRoadEnd,BUFFER] call EFUNC(main,getNearPlayers)) isEqualTo []} &&
             {!([_roadStart,_roadEnd] call EFUNC(main,inSafezones))}) then {
                 [_roadStart,_roadMid,_roadEnd] call FUNC(spawnVehicle);
+                // {
+                //     deleteMarker _x
+                // } forEach TEST_MARKERS;
+                // TEST_MARKERS = [];
+                // {
+                //     _m = createMarker [[diag_frameNo,_forEachIndex] joinString "",getPosATL _x];
+                //     _m setMarkerType "mil_dot";
+                //     _m setMarkerText str _forEachIndex;
+                //     TEST_MARKERS pushBack _m;
+                // } forEach [_roadStart,_roadMid,_roadEnd];
         };
     };
 }; 

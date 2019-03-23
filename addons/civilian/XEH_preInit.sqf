@@ -12,6 +12,7 @@ PREP(handleVehicle);
 PREP(handleAnimal);
 PREP(spawnVehicle);
 PREP(spawnAmbient);
+PREP(commandeer);
 
 GVAR(drivers) = [];
 GVAR(animalCount) = 0;
