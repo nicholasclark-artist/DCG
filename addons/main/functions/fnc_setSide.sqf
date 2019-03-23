@@ -6,18 +6,20 @@ Description:
 switches an array of units to another side and groups them
 
 Arguments:
+0: array of units <ARRAY>
+1: side of new group <SIDE>
 
 Return:
 group
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_side","_newgrp"];
+params [
+    ["_units",[],[[]]],
+    ["_side",GVAR(enemySide),[sideUnknown]]
+];
 
-_units = param [0,[],[[]]];
-_side = param [1,GVAR(enemySide)];
-
-_newgrp = createGroup _side;
+private _newgrp = createGroup _side;
 _newgrp deleteGroupWhenEmpty true;
 
 {
