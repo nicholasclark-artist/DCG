@@ -64,7 +64,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         _driver disableAI "FSM";
         _driver disableAI "TARGET";
         _driver disableAI "AUTOTARGET";
-        _driver setSkill 0;	
+        _driver setSkill 0;
         
         // set waypoint to midpoint
         private _wp = _grp addWaypoint [_mid,-1];
@@ -94,7 +94,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
                 if (_veh getVariable [QGVAR(complete),false] || {_veh getVariable [QGVAR(commandeer),false]}) exitWith {};
 
                 WARNING_1("%1 did not complete route in time",_driver);
-                
+
                 if !(isNull _driver) then {
                     GVAR(drivers) deleteAt (GVAR(drivers) find _driver); 
                     [QEGVAR(main,cleanup),_driver] call CBA_fnc_serverEvent;
