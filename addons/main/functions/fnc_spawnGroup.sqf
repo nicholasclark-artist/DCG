@@ -34,6 +34,9 @@ private _unitPool = [_side,0] call FUNC(getPool);
 private _vehPool = [_side,1] call FUNC(getPool);
 private _airPool = [_side,2] call FUNC(getPool);
 
+// add group to cache system
+[QEGVAR(cache,enableGroup),_grp] call CBA_fnc_serverEvent;
+
 // don't consider height to simplify spawning
 _pos =+ _pos;
 _pos resize 2;
@@ -72,10 +75,15 @@ if (_type isEqualTo 0) exitWith {
         _veh = createVehicle [selectRandom _airPool, _pos, [], 100, "FLY"];
     };
 
+    /*
+        a temporary group is created with 'createVehicleCrew'
+        any event that triggers on group creation will run twice
+    */
+    
     // use createVehicleCrew to populate vehicles, so DCG's faction/filter settings do not interfere
-    _grp addVehicle _veh;
     createVehicleCrew _veh;
     crew _veh joinSilent _grp;
+    _grp addVehicle _veh;
     _veh setUnloadInCombat [true,true];
     
     // save reference to vehicle
