@@ -20,6 +20,10 @@ params [
 ];
 
 private _region = [_position] call FUNC(getRegion);
+
+// debug empty values
+if (_region isEqualTo []) exitWith {};
+
 private _value = _region#1;
 
 // calculate new value

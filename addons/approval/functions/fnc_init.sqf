@@ -31,7 +31,7 @@ private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
     // get region position from location hash
     _position = ([EGVAR(main,locations),_key] call CBA_fnc_hashGet)#0;
     _newValue pushBack _position;
-
+    
     // get approval value from saved data
     if !(_data isEqualTo []) then {
         _index = ([GVAR(regions)] call CBA_fnc_hashKeys) find _key; 
@@ -61,8 +61,6 @@ private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
     // update region color
     [_position,0] call FUNC(addValue);
 }] call CBA_fnc_hashEachPair;
-
-TRACE_1("CHECK",GVAR(regions));
 
 // start hostile handler after one cooldown cycle
 [{
