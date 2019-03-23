@@ -11,11 +11,12 @@ Arguments:
 2: action statement <CODE>
 3: action condition <STRING>
 4: child action <CODE>
-5: action parameters <ARRAY>
+5: action arguments <ARRAY>
 6: object to receive action <OBJECT>
 7: ACE action type <NUMBER>
 8: ACE action path <ARRAY>
 9: ACE action position <ARRAY>
+10: action activation distance <NUMBER>
 
 Return:
 array
@@ -24,6 +25,7 @@ VANILLA: [Action Index, Child Action Indices, EH Index]
 ACE: [Action]
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define CODE_TO_STRING(CODE) (CODE select [1,(count CODE) - 2])
 
 params [
     ["_id","",[""]],
@@ -31,37 +33,44 @@ params [
     ["_statement",{},[{}]],
     ["_condition",{true},[{}]],
     ["_child",{},[{}]],
-    ["_params",[],[[]]],
+    ["_arguments",[],[[]]],
     ["_obj",player,[objNull]],
     ["_type",1,[0]],
     ["_path",["ACE_SelfActions",QGVARMAIN(actions)],[[]]],
-    ["_pos",[0,0,0],[[]]]
+    ["_pos",[0,0,0],[[]]],
+    ["_distance",10,[0]]
 ];
 
 private _actions = [];
 
+// @todo test adding ace_common_fnc_canInteractWith check to ace condition
 if (CHECK_ADDON_1(ace_interact_menu)) then {
-    private _addAction = [_id,_name,"",_statement,_condition,_child,_params,_pos] call ace_interact_menu_fnc_createAction;
+    private _addAction = [_id,_name,"",_statement,_condition,_child,_arguments,_pos,_distance] call ace_interact_menu_fnc_createAction;
     _path = [_obj, _type, _path, _addAction] call ace_interact_menu_fnc_addActionToObject;
     _actions append _path;
 } else {
-    if (_name isEqualTo "") exitWith {
+    if (COMPARE_STR(_name,"")) exitWith {
         _actions = [-1,[-1],-1];
     };
 
-    // convert cond code to string
+    // convert condition code to string
     _condition = str _condition;
-    _condition = _condition select [1,(count _condition) - 2];
-
+    _condition = CODE_TO_STRING(_condition);
+    
     if !(_statement isEqualTo {}) then {
-        private _addAction = _obj addAction [_name,_statement,_params,0,false,true,"",_condition,10];
+        // convert statement code to string and define action params
+        _statement = str _statement;
+        _statement = CODE_TO_STRING(_statement);
+        _statement = ["params ['_target', '_caller', '_actionId', '_arguments'];",_statement] joinString "";
+
+        private _addAction = _obj addAction [_name,_statement,_arguments,0,false,true,"",_condition,_distance];
         _actions pushBack _addAction;
     } else {
         _actions pushBack -1;
     };
 
     if !(_child isEqualTo {}) then {
-        private _childActions = _params call _child;
+        private _childActions = _arguments call _child;
         _actions pushBack _childActions;
     } else {
         _actions pushBack [-1];
@@ -77,7 +86,7 @@ if (CHECK_ADDON_1(ace_interact_menu)) then {
             if !(%5 isEqualTo {}) then {
                 %3 call %5;
             };
-        ",_name,_statement,_params,_condition,_child
+        ",_name,_statement,_arguments,_condition,_child
     ];
 
     if (local _obj) then {
