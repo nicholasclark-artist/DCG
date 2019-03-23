@@ -1,4 +1,4 @@
-class GVARMAIN(compositions) {
+class GVARMAIN(compositions) { 
     class base {
         class GVARMAIN(DOUBLES(base,0)) {
             radius = 40;
