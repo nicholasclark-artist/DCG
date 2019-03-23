@@ -39,7 +39,7 @@ private _count = 0;
 private _r = 0;
 private _anchor = objNull;
 private _br = toString [13,10];
-private _tab = toString [9];
+private _tab = "    ";
 
 // get composition anchor
 {
