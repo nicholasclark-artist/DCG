@@ -2,7 +2,7 @@
 Nicholas Clark (SENSEI)
 
 # CONTRIBUTORS
-mrCurry
+MrCurry
 Radeni
 Dan
 Nate63
