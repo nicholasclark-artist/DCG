@@ -22,12 +22,10 @@ if (isNull GVAR(HC) || {!(_obj in allUnits)} || {isPlayer _obj} || {_obj isKindO
 private _id = owner GVAR(HC);
 
 {
-    if (!(units _x isEqualTo []) && {!(_x getVariable [QGVAR(HCBlacklist), false])}) then {
+    if (!(_x getVariable [QGVAR(HCBlacklist), false]) && {!(owner _x isEqualTo _id)}) then {
         private _triggerWP = (waypoints _x) select {!((synchronizedTriggers _x) isEqualTo [])};
 
         if !(_triggerWP isEqualTo []) exitWith {};
-
-        if ((units _x) findIf {owner _x isEqualTo _id || {isPlayer _x} || {(vehicle _x) getVariable [QGVAR(HCBlacklist), false]}} > -1) exitWith {};
 
         [_x,_id] call FUNC(setOwner);
     };
