@@ -29,17 +29,17 @@ private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
     _newValue = [];
 
     // get region position from location hash
-    _position = ([EGVAR(main,locations),_key] call CBA_fnc_hashGet)#0;
+    _position = ([EGVAR(main,locations),_key] call CBA_fnc_hashGet) select 0;
     _newValue pushBack _position;
     
     // get approval value from saved data
     if !(_data isEqualTo []) then {
         _index = ([GVAR(regions)] call CBA_fnc_hashKeys) find _key; 
-        _dataKey = _data#_index#0;
+        _dataKey = (_data select _index select 0);
 
         // data key and region key must be the same
         if ([GVAR(regions),_dataKey] call CBA_fnc_hashHasKey) then {
-            _newValue pushBack _data#_index#1;
+            _newValue pushBack (_data select _index select 1);
         };
     } else {
         _min = AP_DEFAULT - DEFAULT_VARIANCE;

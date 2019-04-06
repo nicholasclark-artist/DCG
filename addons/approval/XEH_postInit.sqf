@@ -9,6 +9,11 @@ POSTINIT;
 ["CBA_settingsInitialized", {
     if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
+    // debug 
+    if !([EGVAR(main,locations)] call CBA_fnc_isHash) exitWith {
+        ERROR_MSG("hash does not exist!!!");
+    };
+
     [QGVAR(stop), {_this call FUNC(handleStop)}] call CBA_fnc_addEventHandler;
 
     // headless client exit 

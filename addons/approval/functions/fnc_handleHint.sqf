@@ -23,11 +23,11 @@ params [
 
 private _position = getPosATL _player;
 private _region = [_position] call FUNC(getRegion);
-private _name = _region#0;
-private _value = _region#1;
-private _altitude = round (_value#0#2);
-private _distance = round (_value#0 distance2D _position);
-private _type = ([EGVAR(main,locations),_name] call CBA_fnc_hashGet)#2;
+private _name = _region select 0;
+private _value = _region select 1;
+private _altitude = round (_value select 0 select 2);
+private _distance = round (_value select 0 distance2D _position);
+private _type = ([EGVAR(main,locations),_name] call CBA_fnc_hashGet) select 2;
 
 _type = switch (toLower _type) do {
     case "namevillage": {"Village"};
@@ -43,7 +43,7 @@ private _text = [AP_HINT_TITLE(mapGridPosition (_value select 0)),AP_HINT_SUBTIT
     {
         params ["_value","_text"];
         
-        private _statement = format ["_this#0 drawPolygon [%1,%2];",_value#2,_value#3];
+        private _statement = format ["(_this select 0) drawPolygon [%1,%2];",_value select 2,_value select 3];
         private _map = findDisplay 12 displayCtrl 51;
         private _id = _map ctrlAddEventHandler ["Draw",_statement];
 
@@ -54,18 +54,18 @@ private _text = [AP_HINT_TITLE(mapGridPosition (_value select 0)),AP_HINT_SUBTIT
         [_text,true] call EFUNC(main,displayText);
 
         [
-            {!(GVAR(regionMapID) isEqualTo _this#1) || {CBA_missionTime > (_this#2 + MAP_DRAWTIME)}},
+            {!(GVAR(regionMapID) isEqualTo (_this select 1)) || {CBA_missionTime > ((_this select 2) + MAP_DRAWTIME)}},
             {
                 // only overwrite hint if client has not requested another hint
-                if (GVAR(regionMapID) isEqualTo _this#1) then {
+                if (GVAR(regionMapID) isEqualTo (_this select 1)) then {
                     ["",false] call EFUNC(main,displayText);
                 };
 
-                _this#0 ctrlRemoveEventHandler ["Draw",_this#1];
+                (_this select 0) ctrlRemoveEventHandler ["Draw",(_this select 1)];
             },
             [_map,_id,CBA_missionTime]
         ] call CBA_fnc_waitUntilAndExecute; 
     }
-] remoteExecCall [QUOTE(BIS_fnc_call), owner _player, false];
+] remoteExecCall [QUOTE(call), owner _player, false];
 
 nil

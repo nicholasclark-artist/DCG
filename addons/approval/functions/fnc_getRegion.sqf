@@ -30,7 +30,7 @@ _ret = [];
         TRACE_1("empty value",_x);
     };
 
-    if (!(_value isEqualTo []) && {_position inPolygon _value#2}) exitWith {
+    if (!(_value isEqualTo []) && {ASLtoAGL _position inPolygon (_value select 2)}) exitWith {
         _ret = [_x,_value];
     }; 
 } forEach ([GVAR(regions)] call CBA_fnc_hashKeys);

@@ -24,10 +24,10 @@ private _region = [_position] call FUNC(getRegion);
 // debug empty values
 if (_region isEqualTo []) exitWith {};
 
-private _value = _region#1;
+private _value = _region select 1;
 
 // calculate new value
-private _newValue = _value#1 + _add;
+private _newValue = (_value select 1) + _add;
 _value set [1,_newValue];
 
 // calculate new color, [R,G,B,A]
@@ -35,6 +35,6 @@ private _colorValue = linearConversion [AP_MIN,AP_MAX,_newValue,0,1,true];
 private _newColor = [1 - _colorValue,_colorValue,0,1];
 _value set [3,_newColor];
 
-[GVAR(regions),_region#0,_value] call CBA_fnc_hashSet;
+[GVAR(regions),_region select 0,_value] call CBA_fnc_hashSet;
 
 nil
