@@ -69,7 +69,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
                     
                     if !(_positionSafe isEqualTo _position) then {
-                        _ret#INDEX_VALUE set [0,_positionSafe];  
+                        (_ret select INDEX_VALUE) set [0,_positionSafe];  
                         // TRACE_2("location safe position",_name,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
@@ -78,11 +78,11 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                 };
                 
                 // overwrite radius
-                if !(_ret#INDEX_VALUE isEqualTo []) then {
-                    _radius = [_ret#INDEX_VALUE#0] call FUNC(findLocationRadius);
+                if !((_ret select INDEX_VALUE) isEqualTo []) then {
+                    _radius = [_ret select INDEX_VALUE select 0] call FUNC(findLocationRadius);
 
                     if (_radius > 0) then {
-                        _ret#INDEX_VALUE set [1,_radius]; 
+                        (_ret select INDEX_VALUE) set [1,_radius]; 
                     };
                 };
 
@@ -100,7 +100,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
                     
                     if !(_positionSafe isEqualTo _position) then {
-                        _ret#INDEX_VALUE set [0,_positionSafe];  
+                        (_ret select INDEX_VALUE) set [0,_positionSafe];  
                         // TRACE_2("local safe position",_name,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
@@ -122,7 +122,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
                     
                     if !(_positionSafe isEqualTo _position) then {
-                        _ret#INDEX_VALUE set [0,_positionSafe];  
+                        (_ret select INDEX_VALUE) set [0,_positionSafe];  
                         // TRACE_2("hill safe position",configName _location,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
@@ -143,7 +143,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,2,-1,[0,360],_position] call FUNC(findPosSafe);
                     
                     if !(_positionSafe isEqualTo _position) then {
-                        _ret#INDEX_VALUE set [0,_positionSafe];    
+                        (_ret select INDEX_VALUE) set [0,_positionSafe];    
                         // TRACE_2("marine safe position",_name,_positionSafe);
                     } else {
                         _ret set [INDEX_VALUE,[]];
@@ -158,10 +158,10 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
 };
 
 // remove unsafe positions 
-GVAR(locations) = GVAR(locations) select {!(_x#INDEX_VALUE isEqualTo [])};
-GVAR(locals) = GVAR(locals) select {!(_x#INDEX_VALUE isEqualTo [])};
-GVAR(hills) = GVAR(hills) select {!(_x#INDEX_VALUE isEqualTo [])};
-GVAR(marines) = GVAR(marines) select {!(_x#INDEX_VALUE isEqualTo [])};
+GVAR(locations) = GVAR(locations) select {!((_x select INDEX_VALUE) isEqualTo [])};
+GVAR(locals) = GVAR(locals) select {!((_x select INDEX_VALUE) isEqualTo [])};
+GVAR(hills) = GVAR(hills) select {!((_x select INDEX_VALUE) isEqualTo [])};
+GVAR(marines) = GVAR(marines) select {!((_x select INDEX_VALUE) isEqualTo [])};
 
 // convert to hashes
 // KVP: ["",[]]
@@ -177,7 +177,7 @@ private _sites = [];
 
 // get sites from location hash
 [GVAR(locations),{
-    _sites pushBack _value#0;
+    _sites pushBack (_value select 0);
 }] call CBA_fnc_hashEachPair;
 
 // set as position2D
@@ -199,16 +199,16 @@ GVAR(locationPolygons) = ([GVAR(locations)] call CBA_fnc_hashKeys) apply {[_x,[]
 GVAR(locationPolygons) = [GVAR(locationPolygons)] call CBA_fnc_hashCreate;
 
 {
-    _edgeStart =+ _x#0;
+    _edgeStart =+ _x select 0;
     _edgeStart pushBack 0;
 
-    _edgeEnd =+ _x#1;
+    _edgeEnd =+ _x select 1;
     _edgeEnd pushBack 0;
 
     // @todo find better way to get locations associated with edge
     // get locations to the left and right of voronoi edge
-    _locationL = [(nearestLocations [_x#2,_typeLocations,VORONOI_SEARCH_RADIUS])#0,locationNull] select (_x#2 isEqualTo objNull);
-    _locationR = [(nearestLocations [_x#3,_typeLocations,VORONOI_SEARCH_RADIUS])#0,locationNull] select (_x#3 isEqualTo objNull);
+    _locationL = [(nearestLocations [_x select 2,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 2) isEqualTo objNull);
+    _locationR = [(nearestLocations [_x select 3,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 3) isEqualTo objNull);
     
     // get name's of locations, same as hash key
     _keyL = text _locationL;
@@ -244,7 +244,7 @@ private ["_center","_dirToArr","_polygonIndices","_newValue"];
         _center = _center vectorAdd _x;
     } forEach _value;
 
-    _center = [_center#0 / ((count _value) max 1),_center#1 / ((count _value) max 1),0];
+    _center = [(_center select 0) / ((count _value) max 1),(_center select 1) / ((count _value) max 1),0];
 
     // sort by position direction from center
     {
@@ -254,11 +254,11 @@ private ["_center","_dirToArr","_polygonIndices","_newValue"];
     _dirToArr sort true;
 
     // sort value based on direction order
-    _polygonIndices = _dirToArr apply {_x#1};
+    _polygonIndices = _dirToArr apply {_x select 1};
     _newValue resize (count _value);
 
     for "_i" from 0 to (count _value) - 1 do {
-        _newValue set [_i,_value#(_polygonIndices#_i)];
+        _newValue set [_i,_value select (_polygonIndices select _i)];
     };
     
     [GVAR(locationPolygons),_key,_newValue] call CBA_fnc_hashSet;

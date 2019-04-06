@@ -17,5 +17,5 @@ if (!isServer) exitWith {};
         call FUNC(setRadioSettings);
 
         INFO("Radio setup finished");
-    }] remoteExecCall [QUOTE(BIS_fnc_call), 0, true];
+    }] remoteExecCall [QUOTE(call), 0, true];
 }] call CBA_fnc_addEventHandler;

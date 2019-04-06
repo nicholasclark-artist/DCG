@@ -32,7 +32,7 @@ GVAR(curator) removeCuratorEditableObjects [curatorEditableObjects GVAR(curator)
 GVAR(respawnPos) call BIS_fnc_removeRespawnPosition;
 deleteVehicle GVAR(anchor);
 
-{deleteLocation GVAR(location)} remoteExecCall [QUOTE(BIS_fnc_call), 0, false];
+{deleteLocation GVAR(location)} remoteExecCall [QUOTE(call), 0, false];
 
 // reassign previous curator
 if !(isNull GVAR(curatorExternal)) then {

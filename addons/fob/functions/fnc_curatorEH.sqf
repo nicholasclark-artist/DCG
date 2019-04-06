@@ -15,7 +15,7 @@ __________________________________________________________________*/
 INFO_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
 
 // save event code to variable, give eventhandler less code to compile, https://feedback.bistudio.com/T123355
-GVAR(curatorRegistered) = {
+FUNC(curatorRegistered) = {
     _costs = [];
     {
         _side = getNumber (configFile >> "CfgVehicles" >> _x >> "side");
@@ -33,7 +33,7 @@ GVAR(curatorRegistered) = {
     _costs
 };
 
-GVAR(curatorPlaced) = {
+FUNC(curatorPlaced) = {
     if (typeOf (_this select 1) in FOB_MED) then {
         (_this select 1) setVariable ["ace_medical_isMedicalFacility",true,true];
     };
@@ -46,7 +46,7 @@ GVAR(curatorPlaced) = {
     };
 };
 
-GVAR(curatorDeleted) = {
+FUNC(curatorDeleted) = {
     if (EGVAR(approval,enable) isEqualTo 1) then {
         _cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
         _cost = _cost*FOB_COST_MULTIPIER;
@@ -56,12 +56,12 @@ GVAR(curatorDeleted) = {
 };
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectRegistered";
-GVAR(curator) addEventHandler ["CuratorObjectRegistered",{call GVAR(curatorRegistered)}];
+GVAR(curator) addEventHandler ["CuratorObjectRegistered",{call FUNC(curatorRegistered)}];
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectPlaced";
-GVAR(curator) addEventHandler ["CuratorObjectPlaced",{call GVAR(curatorPlaced)}];
+GVAR(curator) addEventHandler ["CuratorObjectPlaced",{call FUNC(curatorPlaced)}];
 
 GVAR(curator) removeAllEventHandlers "CuratorObjectDeleted";
-GVAR(curator) addEventHandler ["CuratorObjectDeleted",{call GVAR(curatorDeleted)}];
+GVAR(curator) addEventHandler ["CuratorObjectDeleted",{call FUNC(curatorDeleted)}];
 
 nil

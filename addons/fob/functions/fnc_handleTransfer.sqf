@@ -41,7 +41,7 @@ params [
 
                 [_format,true] call EFUNC(main,displayText);
             }
-        ] remoteExecCall [QUOTE(BIS_fnc_call),owner (_this select 0), false];
+        ] remoteExecCall [QUOTE(call),owner (_this select 0), false];
     },
     [_new,_old,_handleNew]
 ] call CBA_fnc_waitUntilAndExecute;
