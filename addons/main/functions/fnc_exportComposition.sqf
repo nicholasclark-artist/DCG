@@ -13,7 +13,6 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define CONFIG (configfile >> QGVARMAIN(compositions))
 #define PRINT_MSG(MSG) titleText [MSG, "PLAIN"]
-// #define ATTRIBUTE_SNAP(ENTITY) (parseNumber ((ENTITY get3DENAttribute QGVAR(snap)) select 0))
 #define ATTRIBUTE_VECTORUP(ENTITY) (parseNumber ((ENTITY get3DENAttribute QGVAR(vectorUp)) select 0))
 #define ATTRIBUTE_SIMPLE(ENTITY) (parseNumber ((ENTITY get3DENAttribute "objectIsSimple") select 0))
 #define ANCHOR_CHECK(ENTITY) (typeOf ENTITY isEqualTo "Sign_Arrow_F")
@@ -21,23 +20,24 @@ __________________________________________________________________*/
 #define NODE_MAXDIST 51
 #define GET_POS_RELATIVE(ENTITY) (_anchor worldToModel (getPosATL ENTITY))
 #define GET_DIR_OFFSET(ENTITY) (((getDir ENTITY) - (getDir _anchor)) mod 360)
-#define GET_DATA(ENTITY) _composition pushBack [typeOf ENTITY,str GET_POS_RELATIVE(ENTITY),str (0 max ((getPosATL ENTITY) select 2)),str GET_DIR_OFFSET(ENTITY),ATTRIBUTE_VECTORUP(ENTITY),ATTRIBUTE_SIMPLE(ENTITY)]
+#define GET_DATA(ENTITY) _composition pushBack [typeOf ENTITY,str GET_POS_RELATIVE(ENTITY),(0 max ((getPosATL ENTITY) select 2)) call CBA_fnc_floatToString,GET_DIR_OFFSET(ENTITY) call CBA_fnc_floatToString,ATTRIBUTE_VECTORUP(ENTITY),ATTRIBUTE_SIMPLE(ENTITY)]
 
 // reset ui vars
 uiNamespace setVariable [QGVAR(compExportDisplay),displayNull];
 GVAR(compExportSel) = "";
 
 if !(COMPARE_STR(worldName,"VR")) exitWith {
-    PRINT_MSG("you must export compositions from VR map");scriptN
+    PRINT_MSG("you must export compositions from VR map");
 };
 
 private _composition = [];
-private _selected = get3DENSelected "object";
 private _nodes = [];
+private _selected = get3DENSelected "object";
 private _strength = 0;
 private _count = 0;
 private _r = 0;
 private _anchor = objNull;
+private _id = "";
 private _br = toString [13,10];
 private _tab = "    ";
 
@@ -48,6 +48,23 @@ private _tab = "    ";
         // make sure anchor is snapped to terrain
         _anchor setPosATL [(getPosATL _anchor) select 0,(getPosATL _anchor) select 1,0];
         _anchor setVectorUp [0,0,1];
+
+        // get composition id, ids may overlap if compositions are exported from more than one mission
+        private _idStart = ((str _anchor) find "# ") + 2;
+        private _idEnd = (str _anchor) find ": ";
+        
+        _id = [count missionName,(str _anchor) select [_idStart,_idEnd - _idStart]] joinString "";
+
+        // limit id to 6 characters for parseNumber check
+        _id = _id select [0,6];
+
+        // only allow numeric characters
+        if (parseNumber _id <= 0 || {!(count _id isEqualTo (count str parseNumber _id))}) then {
+            _id = [count missionName,ceil random 9999] joinString "";
+            _id = _id select [0,6];
+
+            WARNING("generating random id");   
+        };
     };
 } forEach _selected;
 
@@ -58,10 +75,10 @@ if (isNull _anchor) exitWith {
 // get nodes (safe areas)
 {
     if (NODE_CHECK(_x)) then {
-        for "_i" from 2 to NODE_MAXDIST step 1 do {
+        for "_i" from 1 to NODE_MAXDIST step 1 do {
             private _near = nearestObjects [_x, [], _i];
             if (count _near > 1 || {_i isEqualTo NODE_MAXDIST}) exitWith {
-                _nodes pushBack [str GET_POS_RELATIVE(_x), str (_i - 1)];
+                _nodes pushBack [str GET_POS_RELATIVE(_x),(0 max ((getPosATL _x) select 2)) call CBA_fnc_floatToString,str (_i - 1)];
             };
         };
     };
@@ -73,7 +90,7 @@ if (isNull _anchor) exitWith {
         // save raw z value separately as model-space z value is inaccurate
         GET_DATA(_x);
         // adjust max radius
-        _r = (round (_x distance2D _anchor)) max _r;
+        _r = (ceil (_x distance2D _anchor)) max _r;
         // increase count for structural types and vehicles
         if (_x isKindOf "Building" || {_x isKindOf "AllVehicles"}) then {
             _count = _count + 1;
@@ -84,8 +101,8 @@ if (isNull _anchor) exitWith {
 _strength = round (_r + (_count * 0.5));
 
 // create type listbox
-[_br,_tab,_composition,_nodes,_r,_strength] spawn {
-    params ["_br","_tab","_composition","_nodes","_r","_strength"];
+[_br,_tab,_composition,_nodes,_r,_strength,_id] spawn {
+    params ["_br","_tab","_composition","_nodes","_r","_strength","_id"];
 
     closeDialog 2; 
 
@@ -119,13 +136,11 @@ _strength = round (_r + (_count * 0.5));
     waitUntil {isNull _display};
 
     // compile class text and copy to clipboard
+
     for "_i" from 0 to (count CONFIG) - 1 do {
         _cfgName = configName (CONFIG select _i);
         if (COMPARE_STR(GVAR(compExportSel),_cfgName)) exitWith {
-            // use config count on first call, else use count var
-            ISNILS(GVAR(compExportCount),count (CONFIG select _i));
-
-            private _className = format ["GVARMAIN(DOUBLES(%1,%2))",_cfgName,[count (CONFIG select _i),GVAR(compExportCount)] select (GVAR(compExportCount) > 0)];
+            private _className = format ["GVARMAIN(DOUBLES(%1,%2))",_cfgName,_id];
             private _compiledEntry = [
                 format ["class %3 {%1%2radius = %4;%1%2strength = %5;%1%2nodes = ",_br,_tab,_className,_r,_strength],
                 str (str _nodes),
@@ -136,10 +151,8 @@ _strength = round (_r + (_count * 0.5));
 
             copyToClipboard _compiledEntry;
 
-            private _msg = format ["Exporting %1 composition to clipboard: radius: %2, strength: %3, nodes: %4",_cfgName, _r, _strength, count _nodes];
+            private _msg = format ["Exporting %1 composition (%2) to clipboard: radius: %3, strength: %4, nodes: %5",_cfgName,_id,_r,_strength,count _nodes];
             PRINT_MSG(_msg);  
-
-            GVAR(compExportCount) = GVAR(compExportCount) + 1;
         };
     };
 };

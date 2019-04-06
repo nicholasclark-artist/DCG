@@ -148,15 +148,15 @@ for "_i" from 0 to count _objData - 1 do {
 private _nodeData = parseSimpleArray (getText (_composition >> "nodes"));
 
 for "_i" from 0 to count _nodeData - 1 do {
-    (_nodeData select _i) params ["_relPos","_range"];
+    (_nodeData select _i) params ["_relPos","_z","_range"];
 
     _relPos = parseSimpleArray _relPos;
     _range = parseNumber _range;
 
     _pos = POS_RELATIVE(_relPos);
     
-    // snap node to terrain
-    _pos set [2,0];
+    // set height above terrain
+    _pos set [2,_z];
 
     _nodes pushBack [_pos,_range];
 };
