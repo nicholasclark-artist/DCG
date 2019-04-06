@@ -14,7 +14,6 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define TIMER 300
 #define COMPLETION_DIST 100
 #define SPEED_LIMIT 65
 
@@ -53,7 +52,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
                     30
                 ] call EFUNC(main,setAction);
             };
-        }] remoteExecCall [QUOTE(BIS_fnc_call),0];
+        }] remoteExecCall [QUOTE(call),0];
 
         // driver will never exit vehicle unless commandeered
         _veh allowCrewInImmobile true;
@@ -72,7 +71,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         // _wp setWaypointSpeed (selectRandom ["LIMITED","NORMAL"]);
         _wp setWaypointStatements [
             FORMAT_1(QUOTE(CHECK_DIST2D(this,%1,COMPLETION_DIST)),getPosASL _end), 
-            format ["%1 deleteAt (%1 find this); ['%2',vehicle this] call CBA_fnc_serverEvent; (vehicle this) setVariable ['%3',true];",QGVAR(drivers),QEGVAR(main,cleanup),QGVAR(complete)]
+            format ["%1 deleteAt (%1 find this); ['%2',vehicle this] call CBA_fnc_serverEvent; (vehicle this) setVariable ['%3',true]; diag_log 'route complete!';",QGVAR(drivers),QEGVAR(main,cleanup),QGVAR(complete)]
         ];
 
         // move waypoint position to endpoint once driver is close to midpoint
@@ -106,7 +105,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
                 };
             }, 
             [_veh,_driver],
-            ((((_start distance2D _end)/1000)/SPEED_LIMIT)*3600)*1.5
+            ((((_start distanceSqr _end)/1000)/SPEED_LIMIT)*3600)*2
         ] call CBA_fnc_waitAndExecute;
 
         // add to driver array

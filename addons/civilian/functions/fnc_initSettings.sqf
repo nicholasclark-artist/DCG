@@ -28,7 +28,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["Blacklisted Locations","Exclude locations by listing names. Names must be separated by a comma and partial names are allowed."],
     COMPONENT_NAME,
-    "pier,airbase,airfield,terminal",
+    "pier,airbase,air base,airfield,terminal",
     true,
     {},
     true

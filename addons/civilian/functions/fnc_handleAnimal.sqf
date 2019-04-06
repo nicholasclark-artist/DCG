@@ -11,7 +11,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define ANIMAL_SPAWNDIST 150
+#define ANIMAL_SPAWNDIST 120
 
 if (GVAR(animalCount) >= 32) exitWith {};
 

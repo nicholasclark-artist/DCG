@@ -7,13 +7,18 @@ __________________________________________________________________*/
 PREINIT;
 
 PREP(initSettings);
-PREP(handleUnit);
+PREP(parseLocations);
+PREP(handleLocation);
 PREP(handleVehicle);
 PREP(handleAnimal);
+PREP(handlePatrol);
+PREP(spawnUnit);
 PREP(spawnVehicle);
 PREP(spawnAmbient);
 PREP(commandeer);
+PREP(getAnimData);
 
+GVAR(locations) = [];
 GVAR(drivers) = [];
 GVAR(animalCount) = 0;
 
