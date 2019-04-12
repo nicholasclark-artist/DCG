@@ -13,6 +13,8 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define WAIT_POSEVENT 180
+#define MOVETO_COMPLETE(AGENT) AGENT moveTo (getPos AGENT)
 
 params ["_args","_idPFH"];
 _args params [
@@ -20,29 +22,27 @@ _args params [
     ["_location",locationNull,[locationNull]]
 ];
 
-// @todo fix unit getting stuck
+// @todo add check for unit getting stuck at random positions
 private _position = getPos _location;
 private _radius = (size _location) select 0;
 private _buildingPositions = _location getVariable [QGVAR(buildingPositions),[]];
-// private _prefabPositions = _location getVariable [QGVAR(prefabPositions),[]];
+private _prefabPositions = _location getVariable [QGVAR(prefabPositions),[]];
 private _animObjects = _location getVariable [QGVAR(animObjects),[]];
-private _typeMove = 1;
+private _types = ["random"];
 
-if !(_buildingPositions isEqualTo []) then {
-    _typeMove = _typeMove + 1;
-};
-
-if !(_animObjects isEqualTo []) then {
-    _typeMove = _typeMove + 1;
-};
-
-// if !(_prefabPositions isEqualTo []) then {
-//     _typeMove = _typeMove + 1;
-// };
+{
+    if (_x select 1) then {
+        _types pushBack (_x select 0);
+    };
+} forEach [
+    ["building",!(_buildingPositions isEqualTo [])],
+    ["prefab",!(_prefabPositions isEqualTo []) && rain < 0.25],
+    ["anim",!(_animObjects isEqualTo []) && rain < 0.25]
+];
 
 // reset moveToCompleted on first cycle
 if !(_agent getVariable [QGVAR(patrol),false]) then {
-    _agent moveTo (getPosATL _agent);
+    MOVETO_COMPLETE(_agent);
     _agent setVariable [QGVAR(patrol),true];
 };
 
@@ -60,42 +60,100 @@ if (moveToCompleted _agent && {!(_agent getVariable [QGVAR(panic),false])} && {!
     _location setVariable [QGVAR(moveToPositions),_moveToPositions];
 
     // select position to move to
-    switch (floor random _typeMove) do {
-        case 0: { // random position
+    switch (selectRandom _types) do {
+        case "random": { // random position
             _posMove = _position getPos [(random (_radius - (_radius * 0.2))) + (_radius * 0.2), random 360];
             _posMove = [_posMove,nil] select (surfaceIsWater _posMove);
 
             if !(isNil "_posMove") then {
-                _posMove set [2,ASLToATL (getTerrainHeightASL _posMove)];
+                _posMove = ASLToATL (AGLToASL _posMove);
             };
 
             TRACE_2("select random pos",_agent,_posMove);
         };
-        case 1: { // building position
+        case "building": { // building position
             _posMove = selectRandom (selectRandom _buildingPositions);
+            _posMove = ASLToATL (AGLToASL _posMove);
 
             TRACE_2("select building pos",_agent,_posMove);
         };
-        case 2: { // anim object position
+        case "anim": { // anim object position
             _obj = selectRandom _animObjects;
             _posMove = getPosATL _obj;
-            _agent setVariable [QGVAR(waiting),true];
+
+            // position event
+            _agent setVariable [QGVAR(positionEventCondition),{CHECK_DIST(getPosATL (_this select 0),_this select 2,5) && {moveToCompleted (_this select 0)}}];
+            _agent setVariable [QGVAR(positionEventParams),[_agent,_obj,_posMove]];
 
             _posEvent = {
                 params ["_agent","_obj"];
 
                 TRACE_1("pos event",_this);
 
-                _agent stop true;
-                _agent moveTo (getPosATL _agent);
+                _agent setVariable [QGVAR(waiting),true];
 
+                detach _agent;
+                {_agent disableAI _x} forEach ["ANIM","MOVE"];
+                
+                // avoid unit sliding in seat
+                _agent disableCollisionWith _obj;
+                _agent setVelocity [0,0,0];
+                
                 private _animData = [getModelInfo _obj] call FUNC(getAnimData);
+
                 [_agent,"amovpknlmstpsraswrfldnon",2] call EFUNC(main,setAnim);
                 [_agent,selectRandom (_animData select 2),2] call EFUNC(main,setAnim);
 
                 _agent setDir (getDir _obj + (_animData select 1));
                 _agent setPosASL (AGLtoASL (_obj modelToWorld (_animData select 0)));
 
+                // stand up
+                [
+                    {
+                        params ["_agent","_obj"];
+
+                        if (alive _agent && {_agent getVariable [QGVAR(waiting),false]}) then {
+                            _agent setVariable [QGVAR(waiting),false];
+
+                            if !(_agent getVariable [QGVAR(panic),false]) then {
+                                [_agent,"",2] call EFUNC(main,setAnim);
+                                _agent setVehiclePosition [getPosATL _agent,[],0,"NONE"];
+                                {_agent enableAI _x} forEach ["ANIM","MOVE"];
+                                _agent enableCollisionWith _obj;
+                                MOVETO_COMPLETE(_agent);
+                            };
+                        };  
+                    },
+                    [_agent,_obj],
+                    WAIT_POSEVENT
+                ] call CBA_fnc_waitandExecute;
+            };
+
+            TRACE_2("select anim pos",_agent,_posMove);
+        };
+        case "prefab": { // prefab node position
+            _posMove = (selectRandom _prefabPositions) select 0;
+
+            // position event
+            _agent setVariable [QGVAR(positionEventCondition),{CHECK_DIST(getPosATL (_this select 0),_this select 1,5) && {moveToCompleted (_this select 0)}}];
+            _agent setVariable [QGVAR(positionEventParams),[_agent,_posMove]];
+
+            _posEvent = {
+                params ["_agent"];
+
+                TRACE_1("pos event",_this);
+
+                _agent setVariable [QGVAR(waiting),true];
+
+                detach _agent;
+                {_agent disableAI _x} forEach ["ANIM","MOVE"];
+                
+                // avoid unit sliding in seat
+                _agent setVelocity [0,0,0];
+
+                [_agent,"amovpknlmstpsraswrfldnon",2] call EFUNC(main,setAnim);
+
+                // release from prefab
                 [
                     {
                         params ["_agent"];
@@ -105,52 +163,37 @@ if (moveToCompleted _agent && {!(_agent getVariable [QGVAR(panic),false])} && {!
 
                             if !(_agent getVariable [QGVAR(panic),false]) then {
                                 [_agent,"",2] call EFUNC(main,setAnim);
-                                _agent stop false;
-                                _agent moveTo (getPosATL _agent);
+                                {_agent enableAI _x} forEach ["ANIM","MOVE"];
+                                MOVETO_COMPLETE(_agent);
                             };
                         };  
                     },
                     [_agent],
-                    300
+                    WAIT_POSEVENT
                 ] call CBA_fnc_waitandExecute;
             };
 
-            TRACE_2("select anim pos",_agent,_posMove);
-        };
-        case 2: { // prefab node position
-            _posMove = (selectRandom _prefabPositions) select 0;
-            _agent setVariable [QGVAR(waiting),true];
-
-            [
-                {
-                    if (alive (_this select 0) && {(_this select 0) getVariable [QGVAR(waiting),false]}) then {
-                        (_this select 0) setVariable [QGVAR(waiting),false];
-                    };  
-                },
-                [_agent],
-                300
-            ] call CBA_fnc_waitandExecute;
-
             TRACE_2("select prefab pos",_agent,_posMove);
         };
-        default {};
+        default {WARNING("unknown patrol type")};
     };
 
     if !(isNil "_posMove") then {
         // move to position if available
-        if ((_posMove nearEntities [["Man"],0.5]) isEqualTo [] && {!(_posMove in (_location getVariable [QGVAR(moveToPositions),[]]))}) then {
+        if !(_posMove in (_location getVariable [QGVAR(moveToPositions),[]])) then {
             _agent moveTo _posMove;
 
             TRACE_2("moving",_agent,_posMove);
 
+            // run event at position if available
             if !(isNil "_posEvent") then {
                 [
-                    {CHECK_DIST(getPosATL (_this select 0),_this select 2,2)},
+                    _agent getVariable [QGVAR(positionEventCondition),{false}],
                     _posEvent,
-                    [_agent,_obj,_posMove],
+                    _agent getVariable [QGVAR(positionEventParams),[]],
                     (((((getPosATL _agent) distanceSqr _posMove)/1000)/5)*3600)*2,
                     {
-                        WARNING_1("%1 timeout. skip position event",_this select 0);
+                        WARNING_1("timeout. skip position event %1",_this);
                     }
                 ] call CBA_fnc_waitUntilAndExecute;
             }; 

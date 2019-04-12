@@ -58,17 +58,14 @@ for "_i" from 0 to (count _locations - 1) do {
     _buildingPositions = (ASLToAGL _position nearObjects ["House", _radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
 
     if (count _buildingPositions > 1) then {
-        // AGLToATL
-        {
-            _x set [2, ASLToATL (getTerrainHeightASL _x)];
-        } forEach _buildingPositions;
-        
         // create location
         _location = createLocation ["Invisible",ASLToAGL _position,_radius,_radius];
         _location setText _name;
 
         // onCreated / onDeleted unit code
         _onCreate = {
+            TRACE_1("spawn",_this);
+
             // headless client / cache support
             _this setVariable [QEGVAR(main,HCBlacklist), true];
             _this setVariable ["acex_headless_blacklist", true];
@@ -79,11 +76,13 @@ for "_i" from 0 to (count _locations - 1) do {
             _this forceSpeed (_this getSpeed "SLOW");
             _this setBehaviour "CARELESS";
 
+            {_this disableAI _x} forEach ["FSM","AUTOTARGET","TARGET","WEAPONAIM","AIMINGERROR","SUPPRESSION","CHECKVISIBLE","COVER","AUTOCOMBAT","MINEDETECTION"];
+            
             // animations
             _this setAnimSpeedCoef (0.8 + random 0.2);
 
             // loadout
-            // @todo unequip weapons
+            removeAllWeapons _this;
         };
 
         _onDelete = {
@@ -93,6 +92,8 @@ for "_i" from 0 to (count _locations - 1) do {
         // get ambient anim objects 
         private _animObjects = nearestTerrainObjects [ASLToAGL _position, ["HIDE"],_radius,false];
         _animObjects = _animObjects select {((getModelInfo _x) select 0) find "chair" > -1 || ((getModelInfo _x) select 0) find "bench" > -1};
+        
+        _animObjects = _animObjects select {round (vectorUp _x select 0) isEqualTo 0 && {round (vectorUp _x select 1) isEqualTo 0} && {round (vectorUp _x select 2) isEqualTo 1}};
 
         // set variables
         _location setVariable [QGVAR(animObjects),_animObjects];

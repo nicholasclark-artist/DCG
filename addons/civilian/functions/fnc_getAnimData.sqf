@@ -26,7 +26,7 @@ switch (_modelInfo select 0) do {
         [[0,-0.1,-0.45],180,ANIMS_SEAT]
     };
     case "chairplastic_f.p3d": {
-        [[0,-0,-0.5],90,ANIMS_SEAT]
+        [[0,0,-0.5],90,ANIMS_SEAT]
     };
     case "chairwood_f.p3d": {
         [[0,-0.05,0],180,ANIMS_SEAT]

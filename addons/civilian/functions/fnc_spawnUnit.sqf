@@ -24,12 +24,10 @@ _units = [];
 // setup patrols 
 for "_i" from 0 to ((_location getVariable [QGVAR(unitCount),0]) - 1) do {
     // get random house position
-    _position = selectRandom ((_location getVariable [QGVAR(buildingPositions),[]]) select _i);
+    _position = selectRandom (selectRandom (_location getVariable [QGVAR(buildingPositions),[]]));
 
     _agent = createAgent [selectRandom EGVAR(main,unitsCiv),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
     _agent setPosATL _position;
-    _agent disableAI "FSM"; // required for agents to obey patrol commands
-    // _agent setVariable ["BIS_fnc_animalBehaviour_disable", true];
 
     // init code
     _agent call (_location getVariable [QGVAR(onCreate),{}]);
@@ -43,7 +41,7 @@ for "_i" from 0 to ((_location getVariable [QGVAR(unitCount),0]) - 1) do {
         if !(_unit getVariable [QGVAR(panic),false]) then {
             _unit setVariable [QGVAR(panic),true];
             _unit forceSpeed (_unit getSpeed "FAST");
-            _unit playAction "Crouch";
+            // _unit playAction "Crouch";
 
             _buildingPositions = nearestBuilding _unit buildingPos -1;
 
