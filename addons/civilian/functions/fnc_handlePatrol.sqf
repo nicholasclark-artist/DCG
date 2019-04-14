@@ -16,8 +16,7 @@ __________________________________________________________________*/
 #define WAIT_POSEVENT 180
 #define MOVETO_COMPLETE(AGENT) AGENT moveTo (getPos AGENT)
 
-params ["_args","_idPFH"];
-_args params [
+(_this select 0) params [
     ["_agent",objNull,[objNull]],
     ["_location",locationNull,[locationNull]]
 ];
@@ -28,17 +27,22 @@ private _radius = (size _location) select 0;
 private _buildingPositions = _location getVariable [QGVAR(buildingPositions),[]];
 private _prefabPositions = _location getVariable [QGVAR(prefabPositions),[]];
 private _animObjects = _location getVariable [QGVAR(animObjects),[]];
-private _types = ["random"];
+private _types = [];
 
 {
     if (_x select 1) then {
         _types pushBack (_x select 0);
     };
 } forEach [
+    ["random",rain < 0.25],
     ["building",!(_buildingPositions isEqualTo [])],
     ["prefab",!(_prefabPositions isEqualTo []) && rain < 0.25],
     ["anim",!(_animObjects isEqualTo []) && rain < 0.25]
 ];
+
+if (_types isEqualTo []) exitWith {
+    WARNING_1("no patrol types for %1",_agent);
+};
 
 // reset moveToCompleted on first cycle
 if !(_agent getVariable [QGVAR(patrol),false]) then {
@@ -48,7 +52,7 @@ if !(_agent getVariable [QGVAR(patrol),false]) then {
 
 // exit code
 if (!alive _agent || {!(_agent getVariable [QGVAR(patrol),false])}) exitWith {
-    [_idPFH] call CBA_fnc_removePerFrameHandler;
+    [_this select 1] call CBA_fnc_removePerFrameHandler;
 };
 
 if (moveToCompleted _agent && {!(_agent getVariable [QGVAR(panic),false])} && {!(_agent getVariable [QGVAR(waiting),false])}) then {
@@ -88,7 +92,7 @@ if (moveToCompleted _agent && {!(_agent getVariable [QGVAR(panic),false])} && {!
             _posEvent = {
                 params ["_agent","_obj"];
 
-                TRACE_1("pos event",_this);
+                TRACE_2("pos event",_this,WAIT_POSEVENT);
 
                 _agent setVariable [QGVAR(waiting),true];
 
