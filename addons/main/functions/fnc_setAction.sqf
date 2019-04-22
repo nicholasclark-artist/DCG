@@ -80,22 +80,30 @@ if (CHECK_ADDON_1(ace_interact_menu)) then {
     };
     
     private _event = -1;
-    _statement = format ["
-        if !('%2' isEqualTo '') then {
-            (_this select 1) removeAction %7;
-            (_this select 0) addAction ['%1','%2',%4,0,false,true,'','%3',%6];
+    private _statement = format ["
+        private _params = (_this select 1) actionParams %1;
+        _params resize 10;
+
+        if !((_params select 1) isEqualTo '') then {
+            (_this select 0) addAction _params;
+            (_this select 1) removeAction %1;
         };
 
-        if !(%5 isEqualTo {}) then {
-            {(_this select 1) removeAction _x;} forEach %8;
-            %4 call %5;
-        };     
-    ",_name,_statement,_condition,_arguments,_child,_distance,_addAction,_childActions];
+        if !((%2 select 0) isEqualTo -1) then {
+            {
+                _params = (_this select 1) actionParams _x;
+                _params resize 10;
+
+                (_this select 0) addAction _params;
+                (_this select 1) removeAction _x;
+            } forEach %2;
+        }; 
+    ",_addAction,_childActions];
 
     if (local _obj) then {
-        _event = _obj addEventHandler ["Respawn", _statement];
+        _event = _obj addEventHandler ["Respawn",_statement];
     } else {
-        ["Respawn", _statement] remoteExecCall [QUOTE(addEventHandler), _obj, false];
+        ["Respawn",_statement] remoteExecCall [QUOTE(addEventHandler),_obj,false];
         WARNING_1("adding respawn eventhandler to %1 over network.",_obj);
     };
 
