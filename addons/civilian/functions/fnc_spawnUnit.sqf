@@ -21,13 +21,12 @@ private ["_units","_position"];
 
 _units = [];
 
-// setup patrols 
 for "_i" from 0 to ((_location getVariable [QGVAR(unitCount),0]) - 1) do {
     // get random house position
     _position = selectRandom (selectRandom (_location getVariable [QGVAR(buildingPositions),[]]));
 
     _agent = createAgent [selectRandom EGVAR(main,unitsCiv),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
-    _agent setPosATL _position;
+    _agent setPosASL (AGLToASL _position); 
 
     // init code
     _agent call (_location getVariable [QGVAR(onCreate),{}]);
@@ -39,33 +38,9 @@ for "_i" from 0 to ((_location getVariable [QGVAR(unitCount),0]) - 1) do {
         params ["_unit", "_firer", "_distance"];
 
         if !(_unit getVariable [QGVAR(panic),false]) then {
-            _unit setVariable [QGVAR(panic),true];
-            _unit forceSpeed (_unit getSpeed "FAST");
-            // _unit playAction "Crouch";
-
-            _buildingPositions = nearestBuilding _unit buildingPos -1;
-
-            if !(_buildingPositions isEqualTo []) then {
-                _unit moveTo (selectRandom _buildingPositions);
-            } else {
-                _unit moveTo (_position getPos [_radius, random 360]);
-            };
-
-            [
-                {
-                    if (alive (_this select 0)) then {
-                        (_this select 0) setVariable [QGVAR(panic),false];
-                    };  
-                },
-                [_unit],
-                180
-            ] call CBA_fnc_waitandExecute;
+            [QGVAR(panic),[_unit,1]] call CBA_fnc_localEvent;
         };  
     }];
-
-    // patrol units
-    [FUNC(handlePatrol), 60, [_agent,_location]] call CBA_fnc_addPerFrameHandler;
-
     _units pushBack _agent;
 };
 

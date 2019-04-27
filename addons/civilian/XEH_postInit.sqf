@@ -14,6 +14,7 @@ if (!isServer) exitWith {};
 
     // eventhandlers
     [QGVAR(commandeer), {[_this] call FUNC(commandeer)}] call CBA_fnc_addEventHandler;
+    [QGVAR(panic), {_this call FUNC(setPanic)}] call CBA_fnc_addEventHandler;
     
     // must run before handlers
     call FUNC(parseLocations);

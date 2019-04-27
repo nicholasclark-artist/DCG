@@ -55,6 +55,7 @@ for "_i" from 0 to (count _locations - 1) do {
     (_locations select _i) params ["_name","_position","_radius"];
 
     // find houses with building positions 
+    // @todo add eventhandler to buildings to remove house from buildingPos array when destroyed
     _buildingPositions = (ASLToAGL _position nearObjects ["House", _radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
 
     if (count _buildingPositions > 1) then {
@@ -91,14 +92,13 @@ for "_i" from 0 to (count _locations - 1) do {
 
         // get ambient anim objects 
         private _animObjects = nearestTerrainObjects [ASLToAGL _position, ["HIDE"],_radius,false];
-        _animObjects = _animObjects select {((getModelInfo _x) select 0) find "chair" > -1 || ((getModelInfo _x) select 0) find "bench" > -1};
-        
+        _animObjects = _animObjects select {((getModelInfo _x) select 0) find "chair" > -1 || ((getModelInfo _x) select 0) find "bench" > -1};   
         _animObjects = _animObjects select {round (vectorUp _x select 0) isEqualTo 0 && {round (vectorUp _x select 1) isEqualTo 0} && {round (vectorUp _x select 2) isEqualTo 1}};
 
         // set variables
         _location setVariable [QGVAR(animObjects),_animObjects];
         _location setVariable [QGVAR(buildingPositions),_buildingPositions];
-        _location setVariable [QGVAR(prefabCount),ceil (count _buildingPositions * 0.08)];
+        _location setVariable [QGVAR(prefabCount),ceil (count _buildingPositions * 0.1)];
         _location setVariable [QGVAR(unitCount),((ceil (count _buildingPositions * 0.25)) + 1) min GVAR(unitLimit)];
         _location setVariable [QGVAR(vehicleCount),ceil random 6];
         _location setVariable [QGVAR(onCreate),_onCreate];

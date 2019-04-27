@@ -28,6 +28,7 @@ PREP(inBuilding);
 PREP(inLOS);
 PREP(inSafezones);
 PREP(isPosSafe);
+PREP(getAnimModelData);
 PREP(getNearPlayers);
 PREP(getPool);
 PREP(getUnitCount);
@@ -36,6 +37,7 @@ PREP(setAction);
 PREP(setOwner);
 PREP(setSide);
 PREP(setAnim);
+PREP(setAmbientAnim);
 PREP(setTimer);
 PREP(setUnitDamaged);
 PREP(setSurrender);
@@ -56,6 +58,7 @@ PREP(replaceString);
 PREP(removeAction);
 PREP(removeDebugMarker);
 PREP(removeParticle);
+PREP(removeAmbientAnim);
 PREP(saveData);
 PREP(loadDataScenario);
 PREP(loadDataAddon);
@@ -125,7 +128,7 @@ GVAR(runAtSettingsInitialized) = [];
         INFO_1("%1 delayed functions running",count GVAR(runAtSettingsInitialized));
         
         {
-            _x#1 call _x#0;
+            (_x select 1) call (_x select 0);
         } forEach GVAR(runAtSettingsInitialized);
         
         GVAR(runAtSettingsInitialized) = nil;

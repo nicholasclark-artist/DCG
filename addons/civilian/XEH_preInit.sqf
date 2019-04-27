@@ -15,8 +15,8 @@ PREP(handlePatrol);
 PREP(spawnUnit);
 PREP(spawnVehicle);
 PREP(spawnAmbient);
+PREP(setPanic);
 PREP(commandeer);
-PREP(getAnimData);
 
 GVAR(locations) = [];
 GVAR(drivers) = [];
