@@ -55,8 +55,10 @@ __________________________________________________________________*/
         _agent = _x;
         
         // reset moveToCompleted on first cycle
-        if !(_agent getVariable [QGVAR(patrol),false]) then {
+        if !(_agent getVariable [QGVAR(active),false]) then {
             CIV_MOVETO_COMPLETE(_agent);
+            
+            _agent setVariable [QGVAR(active),true];
             _agent setVariable [QGVAR(patrol),true];
         };
 
@@ -88,10 +90,10 @@ __________________________________________________________________*/
                 };
                 case "anim": { // anim object position
                     _obj = selectRandom _animObjects;
-                    _posMove = getPosATL _obj;
+                    _posMove = getPos _obj;
 
                     // position event
-                    _agent setVariable [QGVAR(positionEventCondition),{CHECK_DIST2D(getPosATL (_this select 0),_this select 2,5) && {moveToCompleted (_this select 0)}}];
+                    _agent setVariable [QGVAR(positionEventCondition),{CHECK_DIST2D(getPos (_this select 0),_this select 2,5) && {moveToCompleted (_this select 0)}}];
                     _agent setVariable [QGVAR(positionEventParams),[_agent,_obj,_posMove]];
 
                     // @todo fix unsuitable anim objects being selected
@@ -129,7 +131,7 @@ __________________________________________________________________*/
                     _posMove = (selectRandom _prefabPositions) select 0;
 
                     // position event
-                    _agent setVariable [QGVAR(positionEventCondition),{CHECK_DIST2D(getPosATL (_this select 0),_this select 1,5) && {moveToCompleted (_this select 0)}}];
+                    _agent setVariable [QGVAR(positionEventCondition),{CHECK_DIST2D(getPos (_this select 0),_this select 1,5) && {moveToCompleted (_this select 0)}}];
                     _agent setVariable [QGVAR(positionEventParams),[_agent,_posMove]];
 
                     _posEvent = {
@@ -178,7 +180,7 @@ __________________________________________________________________*/
                             _agent getVariable [QGVAR(positionEventCondition),{false}],
                             _posEvent,
                             _agent getVariable [QGVAR(positionEventParams),[]],
-                            (((((getPosATL _agent) distanceSqr _posMove)/1000)/5)*3600)*2,
+                            (((((getPos _agent) distanceSqr _posMove)/1000)/5)*3600)*2,
                             {
                                 WARNING_1("timeout. skip position event %1",_this);
                             }
