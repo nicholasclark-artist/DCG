@@ -91,7 +91,7 @@ for "_i" from 0 to (count _locations - 1) do {
         };
 
         // get ambient anim objects 
-        private _animObjects = nearestTerrainObjects [ASLToAGL _position, ["HIDE"],_radius,false];
+        private _animObjects = nearestTerrainObjects [ASLToAGL _position,["HIDE"],_radius,false];
         _animObjects = _animObjects select {((getModelInfo _x) select 0) find "chair" > -1 || ((getModelInfo _x) select 0) find "bench" > -1};   
         _animObjects = _animObjects select {round (vectorUp _x select 0) isEqualTo 0 && {round (vectorUp _x select 1) isEqualTo 0} && {round (vectorUp _x select 2) isEqualTo 1}};
 
