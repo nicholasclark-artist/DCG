@@ -18,7 +18,7 @@ params ["_player","_target"];
 
 _target moveTo (getPos _target);
 
-if (_target getVariable [QGVAR(patrol),true]) then {
+if (_target getVariable [QEGVAR(civilian,patrol),true]) then {
     _target lookAt _player;
 };
 
