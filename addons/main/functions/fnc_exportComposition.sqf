@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-export base data from 3DEN, should be used in VR map
+export composition data from 3DEN, must be used in VR map
 
 Arguments:
 
