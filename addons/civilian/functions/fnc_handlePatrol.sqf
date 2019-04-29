@@ -39,10 +39,10 @@ __________________________________________________________________*/
             _types pushBack (_x select 0);
         };
     } forEach [
-        ["random",rain < 0.25],
+        ["random",rain < CIV_RAIN_THRESHOLD],
         ["building",!(_buildingPositions isEqualTo [])],
-        ["prefab",!(_prefabPositions isEqualTo []) && rain < 0.25],
-        ["anim",!(_animObjects isEqualTo []) && rain < 0.25]
+        ["prefab",!(_prefabPositions isEqualTo []) && rain < CIV_RAIN_THRESHOLD],
+        ["anim",!(_animObjects isEqualTo []) && rain < CIV_RAIN_THRESHOLD]
     ];
 
     if (_types isEqualTo []) exitWith {

@@ -8,5 +8,6 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
+#define CIV_RAIN_THRESHOLD 0.25
 #define CIV_ZDIST 200
 #define CIV_MOVETO_COMPLETE(AGENT) (AGENT) moveTo (getPos (AGENT))
