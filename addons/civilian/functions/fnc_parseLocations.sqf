@@ -83,7 +83,9 @@ for "_i" from 0 to (count _locations - 1) do {
             _this setAnimSpeedCoef (0.8 + random 0.2);
 
             // loadout
-            removeAllWeapons _this;
+            if !((weapons _this) isEqualTo []) then {
+                removeAllWeapons _this;
+            };
         };
 
         _onDelete = {
@@ -100,7 +102,7 @@ for "_i" from 0 to (count _locations - 1) do {
         _location setVariable [QGVAR(buildingPositions),_buildingPositions];
         _location setVariable [QGVAR(prefabCount),ceil (count _buildingPositions * 0.1)];
         _location setVariable [QGVAR(unitCount),((ceil (count _buildingPositions * 0.25)) + 1) min GVAR(unitLimit)];
-        _location setVariable [QGVAR(vehicleCount),ceil random 6];
+        _location setVariable [QGVAR(vehicleCount),ceil (count _buildingPositions * 0.15) min 8];
         _location setVariable [QGVAR(onCreate),_onCreate];
         _location setVariable [QGVAR(onDelete),_onDelete];
         _location setVariable [QGVAR(zdist),CIV_ZDIST];

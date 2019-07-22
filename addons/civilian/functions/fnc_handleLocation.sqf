@@ -21,7 +21,7 @@ __________________________________________________________________*/
         // set location as active
         _value setVariable [QGVAR(active),true];
 
-        [_value,"prefabs"] call FUNC(spawnAmbient);
+        // [_value,"prefabs"] call FUNC(spawnAmbient);
         [_value,"parked"] call FUNC(spawnAmbient);
 
         // spawn units

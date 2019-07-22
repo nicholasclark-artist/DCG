@@ -12,7 +12,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define POSEVENT_WAIT 60
+#define POSEVENT_WAIT (200 + (random 100))
 
 // agent will complete moveTo commands in order of execution
 // moveTo commands do not overwrite each other unless CIV_MOVETO_COMPLETE is used
@@ -76,15 +76,15 @@ __________________________________________________________________*/
                     _posMove = _position getPos [(random (_radius - (_radius * 0.2))) + (_radius * 0.2), random 360];
                     _posMove = [_posMove,nil] select (surfaceIsWater _posMove);
 
-                    if !(isNil "_posMove") then {
-                        _posMove = ASLToATL (AGLToASL _posMove);
-                    };
+                    // if !(isNil "_posMove") then {
+                    //     _posMove = ASLToATL (AGLToASL _posMove);
+                    // };
 
                     TRACE_2("select random pos",_agent,_posMove);
                 };
                 case "building": { // building position
                     _posMove = selectRandom (selectRandom _buildingPositions);
-                    _posMove = ASLToATL (AGLToASL _posMove);
+                    // _posMove = ASLToATL (AGLToASL _posMove);
 
                     TRACE_2("select building pos",_agent,_posMove);
                 };
@@ -93,7 +93,7 @@ __________________________________________________________________*/
                     _posMove = getPos _obj;
 
                     // position event
-                    _agent setVariable [QGVAR(positionEventCondition),{CHECK_DIST2D(getPos (_this select 0),_this select 2,5) && {moveToCompleted (_this select 0)}}];
+                    _agent setVariable [QGVAR(positionEventCondition),{CHECK_VECTORDIST(getPosASL (_this select 0),AGLtoASL (_this select 2),5) && {moveToCompleted (_this select 0)}}];
                     _agent setVariable [QGVAR(positionEventParams),[_agent,_obj,_posMove]];
 
                     // @todo fix unsuitable anim objects being selected
@@ -131,7 +131,7 @@ __________________________________________________________________*/
                     _posMove = (selectRandom _prefabPositions) select 0;
 
                     // position event
-                    _agent setVariable [QGVAR(positionEventCondition),{CHECK_DIST2D(getPos (_this select 0),_this select 1,5) && {moveToCompleted (_this select 0)}}];
+                    _agent setVariable [QGVAR(positionEventCondition),{CHECK_VECTORDIST(getPosASL (_this select 0),AGLtoASL (_this select 1),5) && {moveToCompleted (_this select 0)}}];
                     _agent setVariable [QGVAR(positionEventParams),[_agent,_posMove]];
 
                     _posEvent = {
@@ -180,7 +180,7 @@ __________________________________________________________________*/
                             _agent getVariable [QGVAR(positionEventCondition),{false}],
                             _posEvent,
                             _agent getVariable [QGVAR(positionEventParams),[]],
-                            (((((getPos _agent) distanceSqr _posMove)/1000)/5)*3600)*2,
+                            (((((getPosASL _agent) vectorDistance (AGLtoASL _posMove))/1000)/5)*3600)*2,
                             {
                                 WARNING_1("timeout. skip position event %1",_this);
                             }
