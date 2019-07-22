@@ -1,0 +1,1 @@
+#include "\d\dcg\addons\outpost\script_component.hpp"
