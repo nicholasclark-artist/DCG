@@ -70,6 +70,9 @@ PREP(landAt);
 PREP(shuffle);
 PREP(parseFactions);
 PREP(parseMapLocations);
+PREP(polygonArea);
+PREP(polygonFill);
+PREP(polygonSort);
 
 // heap functions
 PREP(heapSwap);
