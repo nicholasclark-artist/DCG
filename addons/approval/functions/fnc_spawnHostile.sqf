@@ -86,7 +86,7 @@ switch (floor random 3) do {
     case 1: { // hostile vehicle
         // get civ driver
         private _drivers = (allUnits select {side _x isEqualTo CIVILIAN}) select {!isNull (objectParent _x)};
-        private _driver = _drivers findIf {CHECK_DIST2D(getPosATL _x,_pos,2000) && {!(CHECK_DIST2D(getPosATL _x,_pos,50))}};
+        private _driver = _drivers findIf {CHECK_VECTORDIST(getPosASL _x,AGLtoASL _pos,2000) && {!(CHECK_VECTORDIST(getPosASL _x,AGLtoASL _pos,50))}};
 
         if (_driver < 0) exitWith {
             WARNING("cannot find suitable vehicle to turn hostile");
@@ -168,7 +168,7 @@ switch (floor random 3) do {
 
                 // detonate hostile if close to target
                 [
-                    {CHECK_DIST(_this select 0,_this select 1,BOMB_RANGE)},
+                    {CHECK_VECTORDIST(getPosASL (_this select 0),getPosASL (_this select 1),BOMB_RANGE)},
                     {
                         (selectRandom BOMBS) createVehicle (getPosATL (_this select 0));
                         (_this select 0) setDamage [1,false];
@@ -243,7 +243,7 @@ switch (floor random 3) do {
 
         // detonate hostile if close to target
         [
-            {CHECK_DIST(_this select 0,_this select 1,BOMB_RANGE)},
+            {CHECK_VECTORDIST(getPosASL (_this select 0),getPosASL (_this select 1),BOMB_RANGE)},
             {
                 (selectRandom BOMBS) createVehicle (getPosATL (_this select 0));
                 (_this select 0) call CBA_fnc_deleteEntity;

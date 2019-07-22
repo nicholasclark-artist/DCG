@@ -90,7 +90,7 @@ if (isNull _anchor) exitWith {
         // save raw z value separately as model-space z value is inaccurate
         GET_DATA(_x);
         // adjust max radius
-        _r = (ceil (_x distance2D _anchor)) max _r;
+        _r = (ceil ((getPosASL _x) vectorDistance (getPosASL _anchor))) max _r;
         // increase count for structural types and vehicles
         if (_x isKindOf "Building" || {_x isKindOf "AllVehicles"}) then {
             _count = _count + 1;

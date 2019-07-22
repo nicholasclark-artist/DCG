@@ -70,14 +70,14 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         _wp setWaypointTimeout [0,0,0];
         // _wp setWaypointSpeed (selectRandom ["LIMITED","NORMAL"]);
         _wp setWaypointStatements [
-            FORMAT_1(QUOTE(CHECK_DIST2D(this,%1,COMPLETION_DIST)),getPosASL _end), 
+            FORMAT_1(QUOTE(CHECK_VECTORDIST(getPosASL this,%1,COMPLETION_DIST)),getPosASL _end), 
             format ["%1 deleteAt (%1 find this); ['%2',vehicle this] call CBA_fnc_serverEvent; (vehicle this) setVariable ['%3',true]; diag_log 'route complete!';",QGVAR(drivers),QEGVAR(main,cleanup),QGVAR(complete)]
         ];
 
         // move waypoint position to endpoint once driver is close to midpoint
         // this method solves driver hesitating at midpoint
         [
-            {CHECK_DIST2D(_this select 0,_this select 2,COMPLETION_DIST)},
+            {CHECK_VECTORDIST(getPosASL (_this select 0),getPosASL (_this select 2),COMPLETION_DIST)},
             {
                 // exact placement
                 (_this select 1) setWaypointPosition [getPosASL(_this select 3), -1];
@@ -105,7 +105,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
                 };
             }, 
             [_veh,_driver],
-            ((((_start distanceSqr _end)/1000)/SPEED_LIMIT)*3600)*2
+            (((((getPosASL _start) vectorDistance (getPosASL _end))/1000)/SPEED_LIMIT)*3600)*2
         ] call CBA_fnc_waitAndExecute;
 
         // add to driver array

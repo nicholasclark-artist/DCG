@@ -122,7 +122,7 @@ TR_INFIL(_transport);
 
     _stuckPos = _transport getVariable [QGVAR(stuckPos),[0,0,0]];
 
-    if (!isTouchingGround _transport && {unitReady _transport} && {CHECK_DIST2D(getPosWorld _transport,_stuckPos,3)}) then {
+    if (!isTouchingGround _transport && {unitReady _transport} && {CHECK_VECTORDIST(getPosWorld _transport,_stuckPos,3)}) then {
         _transport setVariable [QUOTE(DOUBLES(MAIN_ADDON,cancelLandAt)),true];
 
         if !(_transport getVariable [QGVAR(signal),-1] isEqualTo 1) then {
