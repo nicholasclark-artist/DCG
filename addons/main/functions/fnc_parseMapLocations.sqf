@@ -19,6 +19,8 @@ __________________________________________________________________*/
 #define LOCAL_KVP [_name,[_position,_radius]]
 #define HILL_KVP [configName _location, [_position,_radius]]
 #define MARINE_KVP [_name,[_position,_radius]]
+#define VORONOI_DEBUG 1
+#define VORONOI_DEBUG_CTRL (findDisplay 12 displayCtrl 51)
 #define VORONOI_SEARCH_RADIUS 300
 
 // get map locations from config
@@ -163,6 +165,30 @@ GVAR(locals) = GVAR(locals) select {!((_x select INDEX_VALUE) isEqualTo [])};
 GVAR(hills) = GVAR(hills) select {!((_x select INDEX_VALUE) isEqualTo [])};
 GVAR(marines) = GVAR(marines) select {!((_x select INDEX_VALUE) isEqualTo [])};
 
+// // sort locations by xpos
+// private ["_locationsXPosSort","_polygonIndices","_newValue"];
+
+// _locationsXPosSort = [];
+// _polygonIndices = [];
+// _newValue = [];
+
+// // sort by xpos
+// {
+//     _locationsXPosSort pushBack [_x select 1 select 0 select 0,_forEachIndex];
+// } forEach GVAR(locations);
+
+// _locationsXPosSort sort true;
+
+// // create new sorted array
+// _polygonIndices = _locationsXPosSort apply {_x select 1};
+// _newValue resize (count GVAR(locations));
+
+// for "_i" from 0 to (count GVAR(locations)) - 1 do {
+//     _newValue set [_i,GVAR(locations) select (_polygonIndices select _i)];
+// };
+
+// GVAR(locations) = _newValue;
+
 // convert to hashes
 // KVP: ["",[]]
 GVAR(locations) = [GVAR(locations), []] call CBA_fnc_hashCreate;
@@ -191,6 +217,49 @@ private _execTime = diag_tickTime - _dT;
 
 TRACE_3("",count _sites,count _voronoi,_execTime);
 
+// draw debug
+if (VORONOI_DEBUG > 0) then {
+    GVAR(voronoiDebugDraw) = _voronoi;
+
+    [] spawn {
+        waitUntil {!isNull VORONOI_DEBUG_CTRL};
+        VORONOI_DEBUG_CTRL ctrlAddEventHandler [
+            "Draw",
+            {
+                GVAR(voronoiDebugDraw) apply {
+                    _x params ["_start", "_end"];
+
+                    private _d = _end getDir _start;
+                    private _l = 0.5*(_start distance2D _end);
+                    private _a1 = _end getPos [_l min 75, _d+25];
+                    private _a2 = _end getPos [_l min 75, _d-25];
+
+                    (_this select 0) drawLine [
+                        _start,
+                        _end,
+                        [1,0,0,1]
+                    ];
+                    (_this select 0) drawLine [
+                        _end,
+                        _a1,
+                        [1,0,0,1]
+                    ];
+                    (_this select 0) drawLine [
+                        _end,
+                        _a2,
+                        [1,0,0,1]
+                    ];
+                    (_this select 0) drawLine [
+                        _a1,
+                        _a2,
+                        [1,0,0,1]
+                    ];
+                };
+            }
+        ];
+    };
+};
+
 // create polygon hash from voronoi diagram
 private ["_edgeStart","_edgeEnd","_locationL","_locationR","_keyL","_keyR","_valueL","_valueR"];
 
@@ -205,7 +274,7 @@ GVAR(locationPolygons) = [GVAR(locationPolygons)] call CBA_fnc_hashCreate;
     _edgeEnd =+ _x select 1;
     _edgeEnd pushBack 0;
 
-    // @todo find better way to get locations associated with edge
+    // @todo find faster way to get locations associated with edge
     // get locations to the left and right of voronoi edge
     _locationL = [(nearestLocations [_x select 2,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 2) isEqualTo objNull);
     _locationR = [(nearestLocations [_x select 3,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 3) isEqualTo objNull);
@@ -230,37 +299,11 @@ GVAR(locationPolygons) = [GVAR(locationPolygons)] call CBA_fnc_hashCreate;
     };
 } forEach _voronoi;
 
-// sort polygon positions
-private ["_center","_dirToArr","_polygonIndices","_newValue"];
+// sort polygon vertices
+private ["_newValue"];
 
 [GVAR(locationPolygons),{
-    _center = [0,0,0];
-    _dirToArr = [];
-    _polygonIndices = [];
-    _newValue = [];
-
-    // get center of positions
-    {
-        _center = _center vectorAdd _x;
-    } forEach _value;
-
-    _center = [(_center select 0) / ((count _value) max 1),(_center select 1) / ((count _value) max 1),0];
-
-    // sort by position direction from center
-    {
-        _dirToArr pushBack [_center getDir _x,_forEachIndex];
-    } forEach _value;
-
-    _dirToArr sort true;
-
-    // sort value based on direction order
-    _polygonIndices = _dirToArr apply {_x select 1};
-    _newValue resize (count _value);
-
-    for "_i" from 0 to (count _value) - 1 do {
-        _newValue set [_i,_value select (_polygonIndices select _i)];
-    };
-    
+    _newValue = [_value] call FUNC(polygonSort);
     [GVAR(locationPolygons),_key,_newValue] call CBA_fnc_hashSet;
 }] call CBA_fnc_hashEachPair;
 
