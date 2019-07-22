@@ -19,9 +19,9 @@ private _ret = [];
 
 if (GVAR(loadData)) then {
     {
-        if (_forEachIndex > 0 && {COMPARE_STR(_x#0,_this#0)}) exitWith {
+        if (_forEachIndex > 0 && {COMPARE_STR(_x select 0,_this select 0)}) exitWith {
             _ret = _x#1;
-            INFO_2("Loading data for %1: %2.",_this#0,_ret);
+            INFO_2("Loading data for %1: %2.",_this select 0,_ret);
         };
     } forEach GVAR(saveDataScenario);
 };

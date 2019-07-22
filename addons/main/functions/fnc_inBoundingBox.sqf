@@ -6,7 +6,7 @@ Description:
 check for bounding box intersection between two objects
 
 Arguments:
-0: object or array containing _obj1 and position to check (array required if _obj1 is not at desired position) <OBJECT, ARRAY>
+0: object or array containing object and position to check (array required if object is not at desired position) <OBJECT, ARRAY>
 1: object to check against <OBJECT>
 
 Return:

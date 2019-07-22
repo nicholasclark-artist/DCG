@@ -75,8 +75,8 @@ __________________________________________________________________*/
     ],
     true,
     {
-        GVAR(playerSide) = _this#0;
-        GVAR(enemySide) = _this#1;
+        GVAR(playerSide) = _this select 0;
+        GVAR(enemySide) = _this select 1;
     },
     true
 ] call CBA_Settings_fnc_init;

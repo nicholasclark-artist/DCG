@@ -44,7 +44,7 @@ private _act = format ["
 _trg = createTrigger ["EmptyDetector", getMarkerPos _marker];
 _trg setTriggerActivation [format["%1",GVAR(enemySide)], "PRESENT", true];
 _trg setTriggerStatements ["this", _act, ""];  
-_trg setTriggerArea [(getMarkerSize _marker)#0, (getMarkerSize _marker)#1, markerDir _marker, COMPARE_STR(markerShape _marker,"RECTANGLE")];
+_trg setTriggerArea [(getMarkerSize _marker) select 0, (getMarkerSize _marker) select 1, markerDir _marker, COMPARE_STR(markerShape _marker,"RECTANGLE")];
 
 GVAR(safezoneTriggers) pushBack _trg;
 GVAR(safezoneMarkers) pushBack _marker;

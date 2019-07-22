@@ -17,7 +17,7 @@ POSTINIT;
             ["AllVehicles", "init", FUNC(sendToHC), nil, nil, true] call CBA_fnc_addClassEventHandler;
 
             addMissionEventHandler ["HandleDisconnect", {
-                if (_this#0 isEqualTo GVAR(HC)) then {
+                if ((_this select 0) isEqualTo GVAR(HC)) then {
                     GVAR(HC) = objNull;
                     INFO("headless client disconnected");
                 };

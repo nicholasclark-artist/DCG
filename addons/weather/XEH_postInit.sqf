@@ -23,9 +23,9 @@ if (!isServer) exitWith {};
         
         private _forecast = [0] call FUNC(getForecast);
 
-        GVAR(overcast) = _forecast#0;
-        GVAR(rain) = _forecast#1;
-        GVAR(fog) = _forecast#2;
+        GVAR(overcast) = _forecast select 0;
+        GVAR(rain) = _forecast select 1;
+        GVAR(fog) = _forecast select 2;
     }] call CBA_fnc_addEventHandler;
 
     [QGVAR(updateMeasurements), {
