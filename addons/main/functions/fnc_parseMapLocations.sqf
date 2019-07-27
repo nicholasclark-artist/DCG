@@ -265,7 +265,7 @@ private ["_edgeStart","_edgeEnd","_locationL","_locationR","_keyL","_keyR","_val
 
 // KVP: ["",[]]
 GVAR(locationPolygons) = ([GVAR(locations)] call CBA_fnc_hashKeys) apply {[_x,[]]};
-GVAR(locationPolygons) = [GVAR(locationPolygons)] call CBA_fnc_hashCreate;
+GVAR(locationPolygons) = [GVAR(locationPolygons),[]] call CBA_fnc_hashCreate;
 
 {
     _edgeStart =+ _x select 0;

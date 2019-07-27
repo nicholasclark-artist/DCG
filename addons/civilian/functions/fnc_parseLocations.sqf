@@ -130,6 +130,6 @@ for "_i" from 0 to (count _locations - 1) do {
 };
 
 // create location hash
-GVAR(locations) = [_hash] call CBA_fnc_hashCreate;
+GVAR(locations) = [_hash,[]] call CBA_fnc_hashCreate;
 
 nil
