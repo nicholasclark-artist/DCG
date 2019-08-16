@@ -15,7 +15,6 @@ __________________________________________________________________*/
 #define RADIUS_MIN 50
 #define RADIUS_MAX 500
 #define RADIUS_STEP 50
-#define BLACKLIST []
 
 params [
     ["_position",[],[[]]]
