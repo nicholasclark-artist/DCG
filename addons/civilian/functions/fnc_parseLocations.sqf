@@ -89,7 +89,7 @@ for "_i" from 0 to (count _locations - 1) do {
         };
 
         _onDelete = {
-
+            private _entity = _this;
         };
 
         // get ambient anim objects 
