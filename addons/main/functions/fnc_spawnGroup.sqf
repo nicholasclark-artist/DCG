@@ -47,6 +47,7 @@ if (_type isEqualTo 0) exitWith {
         _args params ["_pos","_grp","_unitPool","_count","_check"];
 
         if (count _check isEqualTo _count) exitWith {
+            _grp setVariable [QGVAR(ready),true,false];
             [_idPFH] call CBA_fnc_removePerFrameHandler;
         };
 
@@ -63,6 +64,11 @@ if (_type isEqualTo 0) exitWith {
     _args params ["_pos","_grp","_type","_count","_unitPool","_vehPool","_airPool","_check","_cargo","_delay"];
 
     if (count _check isEqualTo _count) exitWith {
+        // if cargo spawned, set ready in cargo handler 
+        if !(_cargo) then {
+            _grp setVariable [QGVAR(ready),true,false];
+        };
+        
         [_idPFH] call CBA_fnc_removePerFrameHandler;
     };
 
@@ -95,6 +101,7 @@ if (_type isEqualTo 0) exitWith {
             _args params ["_grp","_unitPool","_veh","_count"];
 
             if (!(alive _veh) || {count crew _veh >= _count}) exitWith {
+                _grp setVariable [QGVAR(ready),true,false];
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
             };
 
