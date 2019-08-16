@@ -1,0 +1,1 @@
+#include "\d\dcg\addons\garrison\script_component.hpp"
