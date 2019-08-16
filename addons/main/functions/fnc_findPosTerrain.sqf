@@ -52,10 +52,8 @@ if (COMPARE_STR(_terrain,"") || {COMPARE_STR(_expression,"")}) exitWith {
 
 private _places = selectBestPlaces [_anchor,_range,_expression,100,20];
 
-_places = if !(_rural) then {
-    _places select {(_x select 1) > 0 && {!([_x select 0] call FUNC(inSafezones))}};
-} else {
-    _places select {(_x select 1) > 0 && {((nearestLocations [(_x select 0), ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo [])} && {!([_x select 0] call FUNC(inSafezones))}};
+if (_rural) then {
+    _places = _places select {(_x select 1) > 0 && {((nearestLocations [(_x select 0), ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo [])} && {!([_x select 0] call FUNC(inSafezones))}};
 };
 
 {
