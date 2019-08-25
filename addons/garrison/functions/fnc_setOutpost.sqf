@@ -25,9 +25,9 @@ private _outposts = [];
 
         TRACE_1("",_i);
 
-        private _type = selectRandom ["meadow", "hill"/* , "forest" */];
+        private _type = selectRandom ["meadow", "hill", "forest"];
 
-        _pos = [getPos _value, _value getVariable [QGVAR(polygonRadius), 0], _type, 0, true] call EFUNC(main,findPosTerrain);
+        _pos = [getPos _value, _value getVariable [QGVAR(polygonRadius), 0], _type, 1, 0, true] call EFUNC(main,findPosTerrain);
 
         if !(_pos isEqualTo []) then {
             // check if position in polygon and check distance to other outposts and comms array
@@ -42,7 +42,16 @@ private _outposts = [];
             if (_distCheck && {_pos inPolygon (_value getVariable [QGVAR(polygon),[]])}) then {
                 // create outpost location
                 _location = createLocation ["Invisible",_pos,1,1];
-                _location setText _key;
+                
+                // select outpost alias
+                private _alias = call EFUNC(main,getAlias);
+
+                // try getting a new alias if same as AO
+                if (COMPARE_STR(_alias, name _value)) then {
+                    _alias = call EFUNC(main,getAlias);
+                }; 
+
+                _location setText _alias;
 
                 // setvars
                 _location setVariable [QGVAR(terrain),_type];
@@ -50,6 +59,7 @@ private _outposts = [];
                 _location setVariable [QGVAR(unitCount),OP_UNITCOUNT]; // intended unit count, may differ
                 _location setVariable [QGVAR(unitCountCurrent),OP_UNITCOUNT]; // actual unit count
                 _location setVariable [QGVAR(officer),objNull];
+                // _location setVariable [QGVAR(alias),_alias];
                 _location setVariable [QGVAR(onKilled),{
                     private _count = _this getVariable [QGVAR(unitCountCurrent),-1];
                     _this setVariable [QGVAR(unitCountCurrent),_count - 1];

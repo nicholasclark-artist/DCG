@@ -28,9 +28,11 @@ PREP(inBuilding);
 PREP(inLOS);
 PREP(inSafezones);
 PREP(isPosSafe);
+PREP(getDirCardinal);
 PREP(getAnimModelData);
 PREP(getNearPlayers);
 PREP(getPool);
+PREP(getAlias);
 PREP(getUnitCount);
 PREP(sendToHC);
 PREP(setAction);
@@ -73,6 +75,7 @@ PREP(parseMapLocations);
 PREP(polygonArea);
 PREP(polygonFill);
 PREP(polygonSort);
+PREP(taskOPORD);
 
 // heap functions
 PREP(heapSwap);

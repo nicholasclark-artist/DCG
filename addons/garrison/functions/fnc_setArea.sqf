@@ -70,7 +70,7 @@ if !(_data isEqualTo []) then {
 {
     // create area location
     _location = createLocation ["Invisible",getPos _x,1,1];
-    _location setText (text _x);
+    _location setText (call EFUNC(main,getAlias));
 
     // get radius of polygon
     private _polygonRadii =+ _polygons select _forEachIndex;
@@ -81,6 +81,7 @@ if !(_data isEqualTo []) then {
     _location setVariable [QGVAR(polygon),_polygons select _forEachIndex];
     _location setVariable [QGVAR(polygonRadius),selectMax _polygonRadii];
     _location setVariable [QGVAR(nearestLocation),_x];
+    // _location setVariable [QGVAR(alias),_alias];
     // _location setVariable [QGVAR(rural),0];
     // _location setVariable [QGVAR(unitCount),GAR_UNITCOUNT];
     // _location setVariable [QGVAR(unitCountCurrent),GAR_UNITCOUNT];
@@ -95,6 +96,8 @@ if !(_data isEqualTo []) then {
 // create ao hash
 GVAR(areas) = [_hash,[]] call CBA_fnc_hashCreate;
 
+// get dynamic task 
+
 // get outposts
 private _outpost = call FUNC(setOutpost);
 
@@ -104,11 +107,7 @@ private _outpost = call FUNC(setOutpost);
 if (!_outpost /* || {!_garrison} */) exitWith {false};
 
 // spawn outposts and garrison
-_outpost = call FUNC(spawnOutpost);
-
-if (!_outpost /* || {!_garrison} */) exitWith {false};
-
-// spawn tasks
+[] call FUNC(spawnOutpost);
 
 // draw ao on map
 [

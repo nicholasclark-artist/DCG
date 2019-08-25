@@ -9,6 +9,7 @@ Arguments:
 0: center position <ARRAY>
 1: search distance <NUMBER>
 2: terrain type <STRING>
+3: number of positions to find <NUMBER>
 3: safe position distance check <NUMBER>
 4: find rural position <BOOL>
 
@@ -18,12 +19,13 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define DIST 500
 #define DIST_HOUSE 100
-#define GRAD 0.275
+#define GRAD 0.27
 
 params [
     ["_anchor",[],[[]]],
     ["_range",100,[0]],
     ["_terrain","",[""]],
+    ["_count",1,[0]],
     ["_check",0,[0]],
     ["_rural",false,[false]]
 ];
@@ -47,13 +49,14 @@ call {
 };
 
 if (COMPARE_STR(_terrain,"") || {COMPARE_STR(_expression,"")}) exitWith {
-    WARNING("Cannot find position, expression is empty");
+    WARNING("cannot find position, expression is empty");
 };
 
-private _places = selectBestPlaces [_anchor,_range,_expression,100,20];
+private _places = selectBestPlaces [_anchor,_range,_expression,100,_count];
+_places = _places select {(_x select 1) > 0};
 
 if (_rural) then {
-    _places = _places select {(_x select 1) > 0 && {((nearestLocations [(_x select 0), ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo [])} && {!([_x select 0] call FUNC(inSafezones))}};
+    _places = _places select {(nearestLocations [(_x select 0), ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo []};
 };
 
 {

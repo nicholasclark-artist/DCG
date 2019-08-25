@@ -22,14 +22,14 @@ __________________________________________________________________*/
 
 params [
     ["_position",[],[[]]],
-    ["_type","base",[""]],
+    ["_type","mil_base",[""]],
     ["_strength",0.5,[0]],
     ["_dir",-1,[0]],
     ["_clear",false,[false]]
 ];
 
-if !(isClass CONFIG) exitWith {
-    WARNING("config type does not exist");
+if (!isClass CONFIG || {count CONFIG isEqualTo 0}) exitWith {
+    WARNING("config type is empty");
     []
 };
 
