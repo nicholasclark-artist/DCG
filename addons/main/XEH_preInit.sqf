@@ -73,8 +73,11 @@ PREP(shuffle);
 PREP(parseFactions);
 PREP(parseMapLocations);
 PREP(polygonArea);
+PREP(polygonCentroid);
 PREP(polygonFill);
 PREP(polygonSort);
+PREP(polygonTriangulate);
+PREP(polygonRandomPos);
 PREP(taskOPORD);
 
 // heap functions

@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-calculate polygon's area in km^2
+calculate convex polygon area in km²
 
 Arguments:
 0: polygon vertices <ARRAY>
@@ -14,7 +14,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_polygon",[],[[]]]
+    ["_polygon",[[0,0,0],[0,0,0],[0,0,0]],[[]]]
 ];
 
 private _area = 0;

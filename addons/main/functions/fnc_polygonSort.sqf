@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-sort polygon vertices in clockwise order
+sort convex polygon vertices in clockwise order
 
 Arguments:
 0: polygon vertices <ARRAY>
@@ -14,30 +14,24 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_polygon",[],[[]]]
+    ["_polygon",[[0,0,0],[0,0,0],[0,0,0]],[[]]]
 ];
 
-// order polygon vertices 
-private _center = [0,0,0];
 private _dirToArr = [];
 private _polygonIndices = [];
 private _polygonSorted = [];
 
-// get center of polygon
-{
-    _center = _center vectorAdd _x;
-} forEach _polygon;
+// get centroid of polygon
+private _centroid = [_polygon] call FUNC(polygonCentroid);
 
-_center = [(_center select 0) / ((count _polygon) max 1),(_center select 1) / ((count _polygon) max 1),0];
-
-// sort by vert direction from center
+// sort by vertex direction from centroid
 {
-    _dirToArr pushBack [_center getDir _x,_forEachIndex];
+    _dirToArr pushBack [_centroid getDir _x,_forEachIndex];
 } forEach _polygon;
 
 _dirToArr sort true;
 
-// sort value based on direction order
+// sort vertex indices based on direction array order
 _polygonIndices = _dirToArr apply {_x select 1};
 _polygonSorted resize (count _polygon);
 
