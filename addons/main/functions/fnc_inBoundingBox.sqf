@@ -19,7 +19,7 @@ params [
     ["_obj2",objNull,[objNull]]
 ];
 
-private _bb2 = boundingBoxReal _obj2;
+private _bb2 = 0 boundingBoxReal _obj2;
 
 private _width = (abs (((_bb2 select 1) select 0) - ((_bb2 select 0) select 0))) * 0.5;
 private _length = (abs (((_bb2 select 1) select 1) - ((_bb2 select 0) select 1))) * 0.5;
@@ -37,7 +37,7 @@ if (_obj1 isEqualType objNull) then {
 // exit if center is not safe
 if (_pos inArea [_obj2,_width,_length,getDir _obj2,true,-1]) exitWith {true};
 
-private _bb1 = boundingBoxReal _obj1;
+private _bb1 = 0 boundingBoxReal _obj1;
 
 private _getBoundingBox = {
     _bbr = _this select 1;

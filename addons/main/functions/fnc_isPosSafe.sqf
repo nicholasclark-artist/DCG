@@ -16,7 +16,7 @@ Return:
 boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CHECK_MULTIPLIER 2
+#define CHECK_MULTIPLIER 1.3
 #define BBR_HEIGHT_MIN 1.5
 
 params [
@@ -37,19 +37,19 @@ private _bbCheck = objNull;
 
 if (_check isEqualType objNull) then {
     _bbCheck = _check;
-    private _bb = boundingBoxReal _check;
+    private _bb = 0 boundingBoxReal _check;
     private _maxWidth = abs ((_bb select 1 select 0) - (_bb select 0 select 0));
     private _maxLength = abs ((_bb select 1 select 1) - (_bb select 0 select 1));
 
     // get radius from object bounding box
-    _check = (_maxWidth max _maxLength) * CHECK_MULTIPLIER;
+    _check = (_bb select (count _bb - 1)) * CHECK_MULTIPLIER;
 };
 
 // cap radius at 50m
 _check = _check min 50; 
 
 // check gradient and water, water accepts -1, 0 or 2
-if (_pos isFlatEmpty [-1, -1, _gradient, 1 max _check * 0.1, _water, false, _ignore] isEqualTo []) exitWith {false};
+if (_pos isFlatEmpty [-1, -1, _gradient, 5 max (_check * 0.1), _water, false, _ignore] isEqualTo []) exitWith {false};
 
 // in order for an object to be detected by nearObjects and nearestTerrainObjects, the object's pivot (not bounding box) must be in search radius
 
@@ -66,7 +66,7 @@ _objs append (nearestTerrainObjects [_pos, [], _check, false, true]);
 
 // filter out thin objects that should not realistically harm position safety, not ideal
 _objs = _objs select {
-    (abs (((boundingBoxReal _x) select 1 select 2) - ((boundingBoxReal _x) select 0 select 2))) >= BBR_HEIGHT_MIN
+    (abs (((0 boundingBoxReal _x) select 1 select 2) - ((0 boundingBoxReal _x) select 0 select 2))) >= BBR_HEIGHT_MIN
 };
 
 // check if under surface
