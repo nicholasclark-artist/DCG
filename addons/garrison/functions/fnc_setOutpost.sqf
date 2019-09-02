@@ -8,74 +8,66 @@ set outpost locations
 Arguments:
 
 Return:
-bool
+number
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define ITERATIONS 100
-#define OP_DIST 500
+#define SCOPE "setOutpost"
+
+// define scope to break hash loop
+scopeName SCOPE;
 
 private _outposts = [];
 
 [GVAR(areas),{
     private _pos = [];
+    private _polygonPositions = [];
+    private _type = "";
 
-    // get terrain type and outpost position
-    for "_i" from 0 to ITERATIONS do {
-        scopeName "loop";
+    // get random positions in polygon
+    for "_i" from 0 to 4 do {
+        _pos = [_value getVariable [QGVAR(polygon),[]]] call EFUNC(main,polygonRandomPos);
+        _polygonPositions pushBack _pos;
+    };
+    
+    // find position based on terrain type
+    { 
+        _type = selectRandom ["meadow", "hill", "forest"];
+        _pos = [_x,500,_type,1,0,true] call EFUNC(main,findPosTerrain);
 
-        TRACE_1("",_i);
+        // exit when position found
+        if !(_pos isEqualTo []) exitWith {TRACE_2("",_key,_type)}; 
+    } forEach _polygonPositions;
 
-        private _type = selectRandom ["meadow", "hill", "forest"];
+    if (!(_pos isEqualTo []) && {_pos inPolygon (_value getVariable [QGVAR(polygon),[]])}) then {
+        // create outpost location
+        _location = createLocation ["Invisible",ASLtoAGL _pos,1,1];
+        
+        // select outpost alias
+        private _alias = call EFUNC(main,getAlias);
 
-        _pos = [getPos _value, _value getVariable [QGVAR(polygonRadius), 0], _type, 1, 0, true] call EFUNC(main,findPosTerrain);
+        // try getting a new alias if same as AO
+        if (COMPARE_STR(_alias, name _value)) then {
+            _alias = call EFUNC(main,getAlias);
+        }; 
 
-        if !(_pos isEqualTo []) then {
-            // check if position in polygon and check distance to other outposts and comms array
-            private _distCheck = true;
+        _location setText _alias;
 
-            {
-                if (CHECK_DIST2D(_pos,getPos (_x select 1),OP_DIST)) exitWith {_distCheck = false};
-            } forEach _outposts;
+        // setvars
+        _location setVariable [QGVAR(terrain),_type];
+        _location setVariable [QGVAR(radius),100]; // will be adjusted based on composition size
+        _location setVariable [QGVAR(groups),[]]; // groups assigned to outpost
+        _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
+        _location setVariable [QGVAR(officer),objNull];
+        _location setVariable [QGVAR(onKilled),{ // update unit count on killed event
+            _this setVariable [QGVAR(unitCountCurrent),(_this getVariable [QGVAR(unitCountCurrent),-1]) - 1];
+        }];
 
-            if (CHECK_DIST2D(_pos,getPos GVAR(commsArray),OP_DIST)) then {_distCheck = false};
-
-            if (_distCheck && {_pos inPolygon (_value getVariable [QGVAR(polygon),[]])}) then {
-                // create outpost location
-                _location = createLocation ["Invisible",_pos,1,1];
-                
-                // select outpost alias
-                private _alias = call EFUNC(main,getAlias);
-
-                // try getting a new alias if same as AO
-                if (COMPARE_STR(_alias, name _value)) then {
-                    _alias = call EFUNC(main,getAlias);
-                }; 
-
-                _location setText _alias;
-
-                // setvars
-                _location setVariable [QGVAR(terrain),_type];
-                _location setVariable [QGVAR(radius),100]; // will be adjusted based on composition size
-                _location setVariable [QGVAR(unitCount),OP_UNITCOUNT]; // intended unit count, may differ
-                _location setVariable [QGVAR(unitCountCurrent),OP_UNITCOUNT]; // actual unit count
-                _location setVariable [QGVAR(officer),objNull];
-                // _location setVariable [QGVAR(alias),_alias];
-                _location setVariable [QGVAR(onKilled),{
-                    private _count = _this getVariable [QGVAR(unitCountCurrent),-1];
-                    _this setVariable [QGVAR(unitCountCurrent),_count - 1];
-                }];
-
-                // setup hash
-                _outposts pushBack [_key,_location];
-
-                breakOut "loop";
-            };
-        };
+        // setup hash
+        _outposts pushBack [_key,_location];
     };
 }] call CBA_fnc_hashEachPair;
 
 // create outpost hash
 GVAR(outposts) = [_outposts,[]] call CBA_fnc_hashCreate;
 
-// return true if all outpost locations set
-count ([GVAR(outposts)] call CBA_fnc_hashKeys) isEqualTo OP_COUNT
+count ([GVAR(outposts)] call CBA_fnc_hashKeys)
