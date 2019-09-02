@@ -59,7 +59,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         
         // behaviors
         _veh limitSpeed SPEED_LIMIT;
-        _grp setBehaviour "CARELESS";
+        _grp setBehaviourStrong "CARELESS";
         _driver disableAI "FSM";
         _driver disableAI "TARGET";
         _driver disableAI "AUTOTARGET";

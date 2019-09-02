@@ -75,7 +75,7 @@ _transport setUnloadInCombat [false,false];
 
 _pilot = driver _transport;
 _pilot disableAI "FSM";
-_pilot setBehaviour "CARELESS";
+_pilot setBehaviourStrong "CARELESS";
 
 // lock vehicle except cargo
 _transport lockDriver true;

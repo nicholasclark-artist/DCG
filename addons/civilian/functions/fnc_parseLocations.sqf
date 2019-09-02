@@ -75,7 +75,7 @@ for "_i" from 0 to (count _locations - 1) do {
             _this setSkill 0.1;
             _this setUnitPos "UP";
             _this forceSpeed (_this getSpeed "SLOW");
-            _this setBehaviour "CARELESS";
+            _this setBehaviourStrong "CARELESS";
 
             {_this disableAI _x} forEach ["FSM","AUTOTARGET","TARGET","WEAPONAIM","AIMINGERROR","SUPPRESSION","CHECKVISIBLE","COVER","AUTOCOMBAT","MINEDETECTION"];
             

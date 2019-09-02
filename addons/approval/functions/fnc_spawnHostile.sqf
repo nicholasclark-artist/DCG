@@ -145,7 +145,7 @@ switch (floor random 3) do {
                 }];
                 
                 // set behaviors
-                _driver setBehaviour "CARELESS";
+                _driver setBehaviourStrong "CARELESS";
                 _driver disableAI "FSM";
                 _driver allowFleeing 0;
                 (objectParent _driver) allowCrewInImmobile true;
@@ -222,7 +222,7 @@ switch (floor random 3) do {
 
         // set behaviors 
         _unit enableStamina false;
-        _unit setBehaviour "CARELESS";
+        _unit setBehaviourStrong "CARELESS";
         _unit allowFleeing 0;
         
         // send to target

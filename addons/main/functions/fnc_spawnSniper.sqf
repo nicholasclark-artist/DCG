@@ -26,6 +26,7 @@ params [
     ["_side",GVAR(enemySide),[sideUnknown]]
 ];
 
+// @todo add spotter to sniper group 
 private _return = [];
 private _overwatch = [_pos,_count,_min,_max] call FUNC(findPosOverwatch);
 
@@ -38,7 +39,7 @@ private ["_grp", "_unit", "_mrk"];
     _unit setSkill ["spotDistance",0.97];
     units _grp doWatch _pos;
     _return pushBack _grp;
-    _grp setBehaviour "COMBAT";
+    _grp setBehaviourStrong "COMBAT";
 
     _mrk = createMarker [FORMAT_2("%1_sniper_%2",QUOTE(PREFIX),_unit),getposATL leader _grp];
     _mrk setMarkerType "o_recon";

@@ -64,7 +64,7 @@ private _pilot = _grp createUnit [selectRandom _unitPool, DEFAULT_SPAWNPOS, [], 
 _pilot assignAsDriver _heli;
 _pilot moveInDriver _heli;
 _pilot disableAI "FSM";
-_pilot setBehaviour "CARELESS";
+_pilot setBehaviourStrong "CARELESS";
 _pilot addEventHandler ["GetOutMan",{deleteVehicle (_this select 0)}];
 
 private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);

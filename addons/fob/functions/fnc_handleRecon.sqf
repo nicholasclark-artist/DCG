@@ -36,7 +36,7 @@ if (_ifRecon) then {
 
     {
         _x setCaptive true;
-        _x setBehaviour "CARELESS"; // should fix uav ai firing on enemies 
+        _x setBehaviourStrong "CARELESS"; // should fix uav ai firing on enemies 
     } forEach crew GVAR(uav);
 
     GVAR(uav) lockDriver true;
