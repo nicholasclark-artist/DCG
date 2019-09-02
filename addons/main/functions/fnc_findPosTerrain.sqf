@@ -17,9 +17,9 @@ Return:
 array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define DIST 500
+#define DIST 400
 #define DIST_HOUSE 100
-#define GRAD 0.27
+#define GRAD 0.273
 
 params [
     ["_anchor",[],[[]]],
