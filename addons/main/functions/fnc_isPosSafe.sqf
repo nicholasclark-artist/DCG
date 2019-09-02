@@ -16,8 +16,8 @@ Return:
 boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CHECK_MULTIPLIER 1.3
-#define BBR_HEIGHT_MIN 1.5
+#define CHECK_MULTIPLIER 2
+#define BBR_HEIGHT_MIN 0.55
 
 params [
     ["_pos",[],[[]]],
@@ -64,7 +64,7 @@ _objs = _objs select {
 // get terrain objects, 2d search radius
 _objs append (nearestTerrainObjects [_pos, [], _check, false, true]);
 
-// filter out thin objects that should not realistically harm position safety, not ideal
+// filter out thin objects that should not realistically harm position safety, not ideal solution
 _objs = _objs select {
     (abs (((0 boundingBoxReal _x) select 1 select 2) - ((0 boundingBoxReal _x) select 0 select 2))) >= BBR_HEIGHT_MIN
 };
@@ -73,6 +73,8 @@ _objs = _objs select {
 private _z = lineIntersectsSurfaces [AGLToASL _pos, (AGLToASL _pos) vectorAdd [0, 0, 50], _ignore, objNull, false, 1, "GEOM", "NONE"] isEqualTo [];
 
 if (isNull _bbCheck) exitWith {_z && {_objs isEqualTo []}};
+
+TRACE_1("",_objs);
 
 // check bounding box intersections if object provided
 _z && {_objs findIf {[[_bbCheck,_pos],_x] call FUNC(inBoundingBox)} < 0}
