@@ -198,6 +198,8 @@ GVAR(marines) = [GVAR(marines), []] call CBA_fnc_hashCreate;
 
 if (!isMultiplayer && {!is3DEN}) exitWith {}; // exit if not in multiplayer or editor
 
+// @todo check if voronoi failed by checking for overlapping polygons
+
 // create voronoi diagram
 private _sites = [];
 

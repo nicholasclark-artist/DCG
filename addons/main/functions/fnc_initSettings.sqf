@@ -100,7 +100,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["East Filters","Exclude entities by listing display names. Names must be separated by a comma and partial names are allowed."],
     CATEGORY_FACTION,
-    "diver,vr ,pilot,survivor,crew,rifleman (unarmed),competitor",
+    "diver,vr ,pilot,survivor,crew,rifleman (unarmed),competitor,spotter",
     true,
     {
         if (!isServer) exitWith {};
@@ -128,7 +128,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["West Filters","Exclude entities by listing display names. Names must be separated by a comma and partial names are allowed."],
     CATEGORY_FACTION,
-    "diver,vr ,pilot,survivor,crew,rifleman (unarmed),competitor",
+    "diver,vr ,pilot,survivor,crew,rifleman (unarmed),competitor,rangemaster,spotter",
     true,
     {
         if (!isServer) exitWith {};
@@ -156,7 +156,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["Independent Filters","Exclude entities by listing display names. Names must be separated by a comma and partial names are allowed."],
     CATEGORY_FACTION,
-    "diver,vr ,pilot,survivor,crew,rifleman (unarmed),competitor",
+    "diver,vr ,pilot,survivor,crew,rifleman (unarmed),competitor,spotter",
     true,
     {
         if (!isServer) exitWith {};
