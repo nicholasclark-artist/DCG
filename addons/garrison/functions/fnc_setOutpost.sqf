@@ -11,7 +11,7 @@ Return:
 number
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SCOPE "setOutpost"
+#define SCOPE _fnc_scriptName
 
 // define scope to break hash loop
 scopeName SCOPE;
@@ -46,8 +46,9 @@ private _outposts = [];
         private _alias = call EFUNC(main,getAlias);
 
         // try getting a new alias if same as AO
-        if (COMPARE_STR(_alias, name _value)) then {
+        if (COMPARE_STR(_alias, text _value)) then {
             _alias = call EFUNC(main,getAlias);
+            WARNING_1("outpost and area alias are the same. selecting new alias")
         }; 
 
         _location setText _alias;

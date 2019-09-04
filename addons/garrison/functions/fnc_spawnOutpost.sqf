@@ -11,7 +11,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SCOPE "spawnOutpost"
+#define SCOPE _fnc_scriptName
 #define SPAWN_DELAY 0.15
 
 // @todo add mil_camp compositions 
@@ -29,6 +29,7 @@ scopeName SCOPE;
 
     // get patrol unit count based on player count
     private _unitCount = [10,32,5] call EFUNC(main,getUnitCount);
+    TRACE_1("",_unitCount);
 
     // simplify outpost position 
     private _posOutpost = getPos _value;
@@ -67,7 +68,7 @@ scopeName SCOPE;
                 [QGVAR(updateGroups),[_location,_grp]] call CBA_fnc_localEvent;
 
                 // set group on patrol
-                [_grp, getPos _location, (50 max (_location getVariable [QGVAR(radius),100])) * (random [1,1.5,2]), 4, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}", [5,16,15]] call CBA_fnc_taskPatrol;
+                [_grp, getPos _location, (50 max (_location getVariable [QGVAR(radius),100])) * (random [1,2,3]), 4, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}", [5,16,15]] call CBA_fnc_taskPatrol;
             },
             [_grp,_value],
             (SPAWN_DELAY * _unitCount) * 2
@@ -142,9 +143,23 @@ scopeName SCOPE;
     // check dynamic task params
 
     // spawn outpost task
-    // private _locationAO = [GVAR(areas),_key] call CBA_fnc_hashGet;
-    // private _taskNearest = _locationAO getVariable [QGVAR(nearestLocation),locationNull];
+    private _taskID = [_key,diag_tickTime] joinString "_";
+    private _taskAO = [GVAR(areas),_key] call CBA_fnc_hashGet;
+    private _taskNearest = _taskAO getVariable [QGVAR(nearestLocation),locationNull];
+    private _taskSituationTime = selectRandom ["About one hour ago", "Some time ago", "Yesterday"];
+    private _taskSituationOrientation = [[(getPos _taskNearest) getDir (getPos _value)] call EFUNC(main,getDirCardinal),text _taskNearest] joinString " of ";
 
+    private _taskSituation = format ["%1, a small group of enemy combatants was spotted constructing an outpost %2. The enemy force is composed of dismounted patrols and potentially, static emplacements. They are expected to defend upon contact.",_taskSituationTime,_taskSituationOrientation];
+
+    private _taskMission = format ["Friendly forces will conduct an attack in AO %1 on OBJ %2 to secure the enemy outpost in order to prevent anti-coalition forces from gaining momentum and swaying civilian approval.",text _taskAO, text _value];
+
+    private _taskSustainment = ["","","","","Each Soldier will carry his/her full basic load.","","","All squads will maintain necessary medical equipment and will ensure it is replenished prior to each movement.","",""];
+
+    _taskStr = [_value,_taskAO,_taskSituation,_taskMission,_taskSustainment] call EFUNC(main,taskOPORD);
+
+    [true,_taskID,[_taskStr select 1,_taskStr select 0,""],[[EGVAR(main,locationPolygons),_key] call CBA_fnc_hashGet] call EFUNC(main,polygonCentroid),"CREATED",0,true,"attack"] call BIS_fnc_taskCreate;
+
+    TRACE_2("outpost task",_key,_taskID);
 }] call CBA_fnc_hashEachPair;
 
 nil
