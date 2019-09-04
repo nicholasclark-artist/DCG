@@ -3,37 +3,45 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-format task description into operation order (OPORD)
+format task title and description into operation order (OPORD)
 
 Arguments:
 0: task location <LOCATION>
-1: OPORD situation paragraph<STRING>
-2: OPORD mission paragraph<STRING>
-3: OPORD sustainment paragraph <STRING>
+1: ao location <LOCATION>
+2: OPORD situation paragraph <STRING>
+3: OPORD mission paragraph <STRING>
+4: OPORD sustainment paragraph <STRING>
 
 Return:
-string
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define TAB toString [9]
-#define NEWLINE toString [10]
+#define TAB "    "
+#define NEWLINE "<br/>"
 
 params [
-    ["_location",locationNull,[locationNull]],
+    ["_locationTask",locationNull,[locationNull]],
+    ["_locationAO",locationNull,[locationNull]],
     ["_situation","",[""]],
     ["_mission","",[""]],
-    ["_sustainment",["","","","","","","","","",""],[""]]
+    ["_sustainment",["","","","","","","","","",""],[[]]]
 ];
 
-if (isNull _location) exitWith {};
+if (isNull _locationTask) exitWith {};
 
-private _name = text _location; 
+private _name = text _locationTask; 
 
 // @todo change terrain str to (flat/mountainous/urban)
-private _type = (_location getVariable [QEGVAR(garrison,terrain),""]) call {
+private _type = (_locationTask getVariable [QEGVAR(garrison,terrain),""]) call {
     if (COMPARE_STR(_this,"meadow")) exitWith {"flat"};
-    if (COMPARE_STR(_this,"hill")) exitWith {"mountainous"};
     if (COMPARE_STR(_this,"forest")) exitWith {"forested"};
+    if (COMPARE_STR(_this,"hill")) exitWith {
+        if (getTerrainHeightASL (getPos _locationTask) >= 150) then {
+            "mountainous"
+        } else {
+            "uneven with intermittent hills"
+        };
+    };
 };
 
 private _weather = if (CHECK_ADDON_2(weather)) then {
@@ -52,7 +60,7 @@ private _sustainmentFormatted = [];
 
 {
     if (COMPARE_STR(_x,"")) then {
-        _sustainmentFormatted pushBack "None";
+        _sustainmentFormatted pushBack "None.";
     } else {
         _sustainmentFormatted pushBack _x;
     };
@@ -60,8 +68,8 @@ private _sustainmentFormatted = [];
 
 private _para1 = [
     "1. ORIENTATION",
-    format ["%1OBJ %2 (%3).",TAB,_name,mapGridPosition getPos _location],
-    format ["%1Terrain: %2m Altitude. Terrain is predominantly %3.",TAB,round getTerrainHeightASL (getPos _location),_type],
+    format ["%1OBJ %2 (%3).",TAB,_name,mapGridPosition getPos _locationTask],
+    format ["%1Terrain: %2m Altitude. Terrain is predominantly %3.",TAB,round getTerrainHeightASL (getPos _locationTask),_type],
     format ["%1Weather: %2",TAB,_weather]
 ] joinString (NEWLINE); 
 
@@ -80,7 +88,7 @@ private _para4 = [
     format ["%1a. Logistics.",TAB],
     format ["%1%1 1. Classes of supply.",TAB],
     format ["%1%1%1a. Class I - Rations - %2",TAB,_sustainmentFormatted select 0],
-    format ["%1%1%1b. Class II - Clothing and individual/Non-expendable equipment - %2",TAB,_sustainmentFormatted select 1],
+    format ["%1%1%1b. Class II - Clothing / equipment - %2",TAB,_sustainmentFormatted select 1],
     format ["%1%1%1c. Class III - POL - %2",TAB,_sustainmentFormatted select 2],
     format ["%1%1%1d. Class IV - Construction materials - %2",TAB,_sustainmentFormatted select 3],
     format ["%1%1%1e. Class V - Ammunition - %2",TAB,_sustainmentFormatted select 4],
@@ -88,9 +96,10 @@ private _para4 = [
     format ["%1%1%1g. Class VII - Major end items - %2",TAB,_sustainmentFormatted select 6],
     format ["%1%1%1h. Class VIII - Medical material - %2",TAB,_sustainmentFormatted select 7],
     format ["%1%1%1i. Class IX - Repair parts - %2",TAB,_sustainmentFormatted select 8],
-    format ["%1%1%1j. Class X - Miscellaneous supplies - %2",TAB,_sustainmentFormatted select 9],
+    format ["%1%1%1j. Class X - Misc. supplies - %2",TAB,_sustainmentFormatted select 9],
     format ["%1b. Personnel.",TAB],
     format ["%1%1 1. Transport - %2",TAB,_transport]
 ] joinString (NEWLINE); 
 
-[_para1,_para2,_para3,_para4] joinString ((NEWLINE) + (NEWLINE))
+[format ["AO %1: OBJ %2",text _locationAO,_name],[_para1,_para2,_para3,_para4] joinString ((NEWLINE) + (NEWLINE))]
+
