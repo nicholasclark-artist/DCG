@@ -49,22 +49,8 @@ private _tab = "    ";
         _anchor setPosATL [(getPosATL _anchor) select 0,(getPosATL _anchor) select 1,0];
         _anchor setVectorUp [0,0,1];
 
-        // get composition id, ids may overlap if compositions are exported from more than one mission
-        private _idStart = ((str _anchor) find "# ") + 2;
-        private _idEnd = (str _anchor) find ": ";
-        
-        _id = [count missionName,(str _anchor) select [_idStart,_idEnd - _idStart]] joinString "";
-
-        // limit id to 6 characters for parseNumber check
-        _id = _id select [0,6];
-
-        // only allow numeric characters
-        if (parseNumber _id <= 0 || {!(count _id isEqualTo (count str parseNumber _id))}) then {
-            _id = [count missionName,ceil random 9999] joinString "";
-            _id = _id select [0,6];
-
-            WARNING("generating random id");   
-        };
+        // get composition id, ids may overlap if compositions are exported from multiple missions 
+        _id = get3DENEntityID _anchor;
     };
 } forEach _selected;
 
