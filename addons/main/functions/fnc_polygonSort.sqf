@@ -29,6 +29,7 @@ private _centroid = [_polygon] call FUNC(polygonCentroid);
     _dirToArr pushBack [_centroid getDir _x,_forEachIndex];
 } forEach _polygon;
 
+// boolean determines sorting direction
 _dirToArr sort true;
 
 // sort vertex indices based on direction array order

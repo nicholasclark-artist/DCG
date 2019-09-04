@@ -78,6 +78,7 @@ PREP(polygonFill);
 PREP(polygonSort);
 PREP(polygonTriangulate);
 PREP(polygonRandomPos);
+PREP(polygonIsConvex);
 PREP(taskOPORD);
 
 // heap functions
@@ -92,28 +93,28 @@ PREP(heapSize);
 PREP(heapNew);
 
 // voronoi functions
+PREP_VOR(boundEdge);
 PREP_VOR(getEdges);
+PREP_VOR(getXOfEdge);
+PREP_VOR(getParabolaByX);
+PREP_VOR(getY);
+PREP_VOR(getEdgeIntersection);
 PREP_VOR(newEdge);
 PREP_VOR(newEvent);
 PREP_VOR(newParabola);
 PREP_VOR(treeSetChild);
 PREP_VOR(treeGetParent);
 PREP_VOR(treeGetLeafChild);
-PREP_VOR(insertParabola);
-PREP_VOR(removeParabola);
-PREP_VOR(finishEdge);
-PREP_VOR(getXOfEdge);
-PREP_VOR(getParabolaByX);
-PREP_VOR(getY);
-PREP_VOR(checkCircle);
-PREP_VOR(getEdgeIntersection);
 PREP_VOR(printTree);
 PREP_VOR(pointerNewContainer);
 PREP_VOR(pointerDelContainer);
 PREP_VOR(pointerNew);
 PREP_VOR(pointerSet);
 PREP_VOR(pointerGet);
-PREP_VOR(boundEdge);
+PREP_VOR(insertParabola);
+PREP_VOR(removeParabola);
+PREP_VOR(finishEdge);
+PREP_VOR(checkCircle);
 
 // headless client variables 
 GVAR(HC) = objNull;

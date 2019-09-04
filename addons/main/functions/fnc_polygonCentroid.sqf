@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-calculate convex polygon centroid
+calculate convex polygon centroid, not necessarily the same as the visual center
 
 Arguments:
 0: polygon vertices <ARRAY>
