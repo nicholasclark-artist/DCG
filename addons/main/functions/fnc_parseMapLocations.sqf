@@ -11,6 +11,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define SCOPE _fnc_scriptName
 #define SAFE_DIST 2
 #define SAFE_RADIUS 50
 #define INDEX_KEY 0
@@ -19,9 +20,11 @@ __________________________________________________________________*/
 #define LOCAL_KVP [_name,[_position,_radius]]
 #define HILL_KVP [configName _location, [_position,_radius]]
 #define MARINE_KVP [_name,[_position,_radius]]
-#define VORONOI_DEBUG 1
+#define VORONOI_DEBUG 0
 #define VORONOI_DEBUG_CTRL (findDisplay 12 displayCtrl 51)
 #define VORONOI_SEARCH_RADIUS 300
+
+scopeName SCOPE;
 
 // get map locations from config
 private _cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";
@@ -198,8 +201,6 @@ GVAR(marines) = [GVAR(marines), []] call CBA_fnc_hashCreate;
 
 if (!isMultiplayer && {!is3DEN}) exitWith {}; // exit if not in multiplayer or editor
 
-// @todo check if voronoi failed by checking for overlapping polygons
-
 // create voronoi diagram
 private _sites = [];
 
@@ -221,14 +222,14 @@ TRACE_3("",count _sites,count _voronoi,_execTime);
 
 // draw debug
 if (VORONOI_DEBUG > 0) then {
-    GVAR(voronoiDebugDraw) = _voronoi;
+    GVAR(voronoi) = _voronoi;
 
     [] spawn {
         waitUntil {!isNull VORONOI_DEBUG_CTRL};
-        VORONOI_DEBUG_CTRL ctrlAddEventHandler [
+        GVAR(voronoiDebugDraw) = VORONOI_DEBUG_CTRL ctrlAddEventHandler [
             "Draw",
             {
-                GVAR(voronoiDebugDraw) apply {
+                GVAR(voronoi) apply {
                     _x params ["_start", "_end"];
 
                     private _d = _end getDir _start;
@@ -307,6 +308,15 @@ private ["_newValue"];
 [GVAR(locationPolygons),{
     _newValue = [_value] call FUNC(polygonSort);
     [GVAR(locationPolygons),_key,_newValue] call CBA_fnc_hashSet;
+}] call CBA_fnc_hashEachPair;
+
+// check convexity
+[GVAR(locationPolygons),{
+    if !([_value] call FUNC(polygonIsConvex)) then {
+        ERROR_1("%1 polygon is not convex",_key);
+
+        // breakTo SCOPE;
+    };
 }] call CBA_fnc_hashEachPair;
 
 nil
