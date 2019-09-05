@@ -122,11 +122,10 @@ scopeName SCOPE;
     _officer setDir _dir;
     
     if (_buildings isEqualTo []) then {
-        _officer setPos (_posOutpost getPos [(_composition select 0) * 0.5,random 360]);
+        _officer setPosASL ([_posOutpost,0,(_composition select 0) * 0.5,1,-1,-1,[0,360],[_posOutpost select 0,_posOutpost select 1,getTerrainHeightASL _posOutpost]] call EFUNC(main,findPosSafe));
     } else {
         _officer setPosATL selectRandom ((selectRandom _buildings) buildingPos -1);
     };
-
 
     // add eventhandlers and vars
     _value setVariable [QGVAR(officer),_officer];
