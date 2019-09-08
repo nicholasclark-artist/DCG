@@ -7,15 +7,11 @@ __________________________________________________________________*/
 PREINIT;
 
 PREP(initSettings);
-PREP(handleOutpost);
+PREP(handleArea);
 PREP(setArea);
+PREP(removeArea);
 PREP(setOutpost);
 PREP(spawnOutpost);
-
-GVAR(garrison) = locationNull;
-GVAR(commsArray) = locationNull;
-GVAR(task) = 0;
-// GVAR(cleared) = -1;
 
 // headless client exit 
 if (!isServer) exitWith {};
