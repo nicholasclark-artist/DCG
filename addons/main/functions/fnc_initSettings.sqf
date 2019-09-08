@@ -11,7 +11,6 @@ Return:
 bool
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define ERROR_SAMESIDE format ["%1 cannot be equal to %2!",QGVAR(enemySide),QGVAR(playerSide)]
 #define CATEGORY_FACTION [COMPONENT_NAME,"Faction Settings"]
 #define CATEGORY_SAVE [COMPONENT_NAME,"Save System Settings"]
 #define CATEGORY_SAFE [COMPONENT_NAME,"Safezone Settings"]

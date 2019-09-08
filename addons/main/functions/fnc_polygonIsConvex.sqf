@@ -13,7 +13,7 @@ Return:
 bool
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SCOPE _fnc_scriptName
+#define SCOPE QGVAR(polygonIsConvex)
 
 params [
     ["_polygon",[[0,0,0],[0,0,0],[0,0,0]],[[]]]

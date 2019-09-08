@@ -6,7 +6,7 @@ Description:
 checks if positionAGL is safe
 
 Arguments:
-0: position <ARRAY>
+0: positionAGL <ARRAY>
 1: search radius, minimum distance from objects or object used to calculate search radius <NUMBER, OBJECT>
 2: allow water <NUMBER>
 3: max gradient <NUMBER>
@@ -74,7 +74,7 @@ private _z = lineIntersectsSurfaces [AGLToASL _pos, (AGLToASL _pos) vectorAdd [0
 
 if (isNull _bbCheck) exitWith {_z && {_objs isEqualTo []}};
 
-TRACE_1("",_objs);
+// TRACE_1("",_objs);
 
 // check bounding box intersections if object provided
 _z && {_objs findIf {[[_bbCheck,_pos],_x] call FUNC(inBoundingBox)} < 0}

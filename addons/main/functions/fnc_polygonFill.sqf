@@ -48,7 +48,7 @@ if (_outline) then {
 if !(_idGlobal isEqualTo "") then {
     private _value = missionNamespace getVariable [_idGlobal,[]];
     _value append _ret;
-    // missionNamespace setVariable [_idGlobal,_value,false];
+    missionNamespace setVariable [_idGlobal,_value,false];
 };
 
 _ret
