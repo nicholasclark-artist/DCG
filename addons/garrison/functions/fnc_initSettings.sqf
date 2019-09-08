@@ -22,3 +22,18 @@ __________________________________________________________________*/
     {},
     true
 ] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(cooldown),
+    "SLIDER",
+    ["AO Cooldown","Time in seconds between ao spawns."],
+    COMPONENT_NAME,
+    [
+        0,
+        3600,
+        120,
+        0
+    ],
+    true,
+    {}
+] call CBA_Settings_fnc_init;
