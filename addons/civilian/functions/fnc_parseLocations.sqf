@@ -8,18 +8,18 @@ parse location hashes for civilian handling
 Arguments:
 
 Return:
-nothing
+nil
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define LOCATION_COND GVAR(blacklist) findIf {(toLower _key) find _x > -1} < 0 && {!([_value select 0] call EFUNC(main,inSafezones))}
+#define LOCATION_COND GVAR(blacklist) findIf {(toLower _key) find _x > -1} < 0 && {!([_value] call EFUNC(main,inSafezones))}
 
 // convert blacklist to array and format
 GVAR(blacklist) = GVAR(blacklist) splitString ",";
 GVAR(blacklist) = GVAR(blacklist) apply {toLower _x};
 
-// get locations for unit spawns
 private ["_locations","_arr"];
 
+// get locations for unit spawns
 _locations = [];
 
 // get data from main location hashes
@@ -27,10 +27,7 @@ _locations = [];
     EGVAR(main,locations),
     {
         if (LOCATION_COND) then {
-            _arr = [];
-            _arr pushBack _key;
-            _arr append _value;
-            _locations pushBack _arr;
+            _locations pushBack _value;
         };
     }
 ] call CBA_fnc_hashEachPair;
@@ -39,62 +36,64 @@ _locations = [];
     EGVAR(main,locals),
     {
         if (LOCATION_COND) then {
-            _arr = [];
-            _arr pushBack _key;
-            _arr append _value;
-            _locations pushBack _arr;
+            _locations pushBack _value;
         };
     }
 ] call CBA_fnc_hashEachPair;
 
-private ["_hash","_location","_buildingPositions","_mrk"];
+private _hash = [];
 
-_hash = [];
+// onCreated / onDeleted unit code
+private _onCreate = {
+    TRACE_1("spawn",_this);
+
+    // headless client / cache support
+    _this setVariable [QEGVAR(main,HCBlacklist), true];
+    _this setVariable ["acex_headless_blacklist", true];
+
+    // behaviors 
+    _this setSkill 0.1;
+    _this setUnitPos "UP";
+    _this forceSpeed (_this getSpeed "SLOW");
+    _this setBehaviourStrong "CARELESS";
+
+    {_this disableAI _x} forEach ["FSM","AUTOTARGET","TARGET","WEAPONAIM","AIMINGERROR","SUPPRESSION","CHECKVISIBLE","COVER","AUTOCOMBAT","MINEDETECTION"];
+    
+    // animations
+    _this setAnimSpeedCoef (0.8 + random 0.2);
+
+    // loadout
+    if !((weapons _this) isEqualTo []) then {
+        removeAllWeapons _this;
+    };
+
+    nil
+};
+
+private _onDelete = {
+    _this;
+
+    nil
+};
+
+private ["_location","_name","_position","_radius","_buildingPositions","_mrk"];
 
 for "_i" from 0 to (count _locations - 1) do {
-    (_locations select _i) params ["_name","_position","_radius"];
+    _location = _locations select _i;
+    _name = _location getVariable [QEGVAR(main,name),""];
+    _position = _location getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS];
+    _radius = _location getVariable [QEGVAR(main,radius),0];
 
     // find houses with building positions 
     // @todo add eventhandler to buildings to remove house from buildingPos array when destroyed
     _buildingPositions = (ASLToAGL _position nearObjects ["House", _radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
 
     if (count _buildingPositions > 1) then {
-        // create location
-        _location = createLocation ["Invisible",ASLToAGL _position,_radius,_radius];
-        _location setText _name;
-
-        // onCreated / onDeleted unit code
-        _onCreate = {
-            TRACE_1("spawn",_this);
-
-            // headless client / cache support
-            _this setVariable [QEGVAR(main,HCBlacklist), true];
-            _this setVariable ["acex_headless_blacklist", true];
-
-            // behaviors 
-            _this setSkill 0.1;
-            _this setUnitPos "UP";
-            _this forceSpeed (_this getSpeed "SLOW");
-            _this setBehaviourStrong "CARELESS";
-
-            {_this disableAI _x} forEach ["FSM","AUTOTARGET","TARGET","WEAPONAIM","AIMINGERROR","SUPPRESSION","CHECKVISIBLE","COVER","AUTOCOMBAT","MINEDETECTION"];
-            
-            // animations
-            _this setAnimSpeedCoef (0.8 + random 0.2);
-
-            // loadout
-            if !((weapons _this) isEqualTo []) then {
-                removeAllWeapons _this;
-            };
-        };
-
-        _onDelete = {
-            private _entity = _this;
-        };
-
         // get ambient anim objects 
         private _animObjects = nearestTerrainObjects [ASLToAGL _position,["HIDE"],_radius,false];
-        _animObjects = _animObjects select {((getModelInfo _x) select 0) find "chair" > -1 || ((getModelInfo _x) select 0) find "bench" > -1};   
+        _animObjects = _animObjects select {((getModelInfo _x) select 0) find "chair" > -1 || ((getModelInfo _x) select 0) find "bench" > -1};
+
+        // only select upright objects
         _animObjects = _animObjects select {round (vectorUp _x select 0) isEqualTo 0 && {round (vectorUp _x select 1) isEqualTo 0} && {round (vectorUp _x select 2) isEqualTo 1}};
 
         // set variables
@@ -129,7 +128,7 @@ for "_i" from 0 to (count _locations - 1) do {
     };
 };
 
-// create location hash
-GVAR(locations) = [_hash,[]] call CBA_fnc_hashCreate;
+// combine map locations and map locals into one hash
+GVAR(locations) = [_hash,locationNull] call CBA_fnc_hashCreate;
 
 nil

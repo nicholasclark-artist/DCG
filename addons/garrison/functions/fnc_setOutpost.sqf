@@ -11,7 +11,7 @@ Return:
 number
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SCOPE _fnc_scriptName
+#define SCOPE QGVAR(setOutpost)
 
 // define scope to break hash loop
 scopeName SCOPE;
@@ -22,10 +22,11 @@ private _outposts = [];
     private _pos = [];
     private _polygonPositions = [];
     private _type = "";
+    private _aliasAO = _value getVariable [QGVAR(name),""];
 
     // get random positions in polygon
     for "_i" from 0 to 4 do {
-        _pos = [_value getVariable [QGVAR(polygon),[]]] call EFUNC(main,polygonRandomPos);
+        _pos = [_value getVariable [QEGVAR(main,polygon),[]]] call EFUNC(main,polygonRandomPos);
         _polygonPositions pushBack _pos;
     };
     
@@ -38,7 +39,7 @@ private _outposts = [];
         if !(_pos isEqualTo []) exitWith {TRACE_2("",_key,_type)}; 
     } forEach _polygonPositions;
 
-    if (!(_pos isEqualTo []) && {_pos inPolygon (_value getVariable [QGVAR(polygon),[]])}) then {
+    if (!(_pos isEqualTo []) && {_pos inPolygon (_value getVariable [QEGVAR(main,polygon),[]])}) then {
         // create outpost location
         _location = createLocation ["Invisible",ASLtoAGL _pos,1,1];
         
@@ -46,15 +47,19 @@ private _outposts = [];
         private _alias = call EFUNC(main,getAlias);
 
         // try getting a new alias if same as AO
-        if (COMPARE_STR(_alias, text _value)) then {
+        if (COMPARE_STR(_alias,_aliasAO)) then { 
             _alias = call EFUNC(main,getAlias);
-            WARNING_1("outpost and area alias are the same. selecting new alias")
+            WARNING("outpost and area aliases are the same. selecting new alias")
         }; 
 
         _location setText _alias;
 
         // setvars
+        _location setVariable [QGVAR(active),1];
+        _location setVariable [QGVAR(task),""];
+        _location setVariable [QGVAR(composition),[]];
         _location setVariable [QGVAR(terrain),_type];
+        _location setVariable [QGVAR(positionASL),_pos];
         _location setVariable [QGVAR(radius),100]; // will be adjusted based on composition size
         _location setVariable [QGVAR(groups),[]]; // groups assigned to outpost
         _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
@@ -69,6 +74,6 @@ private _outposts = [];
 }] call CBA_fnc_hashEachPair;
 
 // create outpost hash
-GVAR(outposts) = [_outposts,[]] call CBA_fnc_hashCreate;
+GVAR(outposts) = [_outposts,locationNull] call CBA_fnc_hashCreate;
 
 count ([GVAR(outposts)] call CBA_fnc_hashKeys)

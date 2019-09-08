@@ -98,6 +98,8 @@
 // misc
 #define ASLZ(POS) ((getTerrainHeightASL POS) max 0)
 #define DEFAULT_SPAWNPOS [0,0,worldsize]
+#define DEFAULT_POLYGON [[0,0,0],[0,0,0],[0,0,0]]
+#define DEFAULT_COLOR [0,0,0,1]
 #define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
 #define SETTINGS_INIT publicVariable QFUNC(initSettings); remoteExecCall [QFUNC(initSettings), -2, true]; call FUNC(initSettings)
@@ -128,5 +130,5 @@
 #define AP_VILLAGE ((AP_MAX*0.05)*EGVAR(approval,multiplier))
 #define AP_CITY ((AP_MAX*0.1)*EGVAR(approval,multiplier))
 #define AP_CAPITAL ((AP_MAX*0.15)*EGVAR(approval,multiplier))
-#define AP_CONVERT1(POS) (linearConversion [AP_MIN, AP_MAX, ([POS] call EFUNC(approval,getRegion)) select 1 select 1, 0, 1, true])
+#define AP_CONVERT1(POS) (linearConversion [AP_MIN, AP_MAX, ([POS] call EFUNC(approval,getRegion)) getVariable [QEGVAR(approval,value),0], 0, 1, true])
 #define AP_CONVERT2(POS) ((1 - AP_CONVERT1(POS)) * 0.5)

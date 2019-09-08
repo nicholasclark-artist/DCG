@@ -23,11 +23,15 @@ params [
 
 private _position = getPosASL _player;
 private _region = [_position] call FUNC(getRegion);
-private _name = _region select 0;
-private _value = _region select 1;
-private _altitude = round (_value select 0 select 2);
-private _distance = round ((_value select 0) vectorDistance _position); 
-private _type = ([EGVAR(main,locations),_name] call CBA_fnc_hashGet) select 2;
+
+// @todo add unknown region hint on exit
+if (isNull _region) exitWith {nil};
+
+private _posRegion = _region getVariable [QEGVAR(main,positionASL),[0,0,0]];
+private _altitude = round (_posRegion select 2);
+private _distance = round (_posRegion vectorDistance _position); 
+private _name = _region getVariable [QEGVAR(main,name),""];
+private _type = _region getVariable [QEGVAR(main,type),""];
 
 _type = switch (toLower _type) do {
     case "namevillage": {"Village"};
@@ -36,14 +40,14 @@ _type = switch (toLower _type) do {
     default {"Unknown"};
 };
 
-private _text = [AP_HINT_TITLE(mapGridPosition (_value select 0)),AP_HINT_SUBTITLE,AP_HINT_BODY(_name,_type,_altitude,_distance)] joinString "";
+private _text = [AP_HINT_TITLE(mapGridPosition (_posRegion)),AP_HINT_SUBTITLE,AP_HINT_BODY(_name,_type,_altitude,_distance)] joinString "";
 
 [
-    [_value,_text],
+    [_region getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON],_region getVariable [QGVAR(color),DEFAULT_COLOR],_text],
     {
-        params ["_value","_text"];
-        
-        private _statement = format ["(_this select 0) drawPolygon [%1,%2];",_value select 2,_value select 3];
+        params ["_polygon","_color","_text"];
+
+        private _statement = format ["(_this select 0) drawPolygon [%1,%2];",_polygon,_color];
         private _map = findDisplay 12 displayCtrl 51;
         private _id = _map ctrlAddEventHandler ["Draw",_statement];
 

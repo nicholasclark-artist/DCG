@@ -12,7 +12,7 @@ Return:
 bool
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SCOPE _fnc_scriptName
+#define SCOPE QGVAR(setArea)
 #define AO_SEARCH_RADIUS 3000
 
 if !(isServer) exitWith {false};
@@ -38,16 +38,14 @@ if !(_data isEqualTo []) then {
     // get primary location
     private _primary = [EGVAR(main,locations), selectRandom ([EGVAR(main,locations)] call CBA_fnc_hashKeys)] call CBA_fnc_hashGet;
 
-    if (_primary isEqualTo []) then {false breakOut SCOPE};
-
     // get list of locations in area, includes primary location
-    _locations = nearestLocations [_primary select 0, ["namecitycapital","namecity","namevillage"],AO_SEARCH_RADIUS];
+    _locations = nearestLocations [_primary getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS], ["namecitycapital","namecity","namevillage"],AO_SEARCH_RADIUS];
 
     // make sure locations have data
     private _rem = [];
 
     {
-        if (!([EGVAR(main,locations),text _x] call CBA_fnc_hashHasKey) || {!([EGVAR(main,locationPolygons),text _x] call CBA_fnc_hashHasKey)}) then {
+        if !([EGVAR(main,locations),text _x] call CBA_fnc_hashHasKey) then {
             _rem pushBack _x;
         };
     } forEach _locations;
@@ -60,23 +58,21 @@ if !(_data isEqualTo []) then {
 };
 
 {
+    // get hash location 
+    _location = [EGVAR(main,locations), text _x] call CBA_fnc_hashGet;
+
     // get location polygon 
-    private _polygon = [EGVAR(main,locationPolygons), text _x] call CBA_fnc_hashGet;
+    private _polygon = _location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON];
 
     // set position2D
     private _pos = getPos _x;
     _pos resize 2;
 
-    // create area location
-    _location = createLocation ["Invisible",_pos,1,1];
-    _location setText (call EFUNC(main,getAlias)); 
+    // set area variables
+    _location setVariable [QGVAR(polygonDraw),_id];
+    _location setVariable [QGVAR(name),call EFUNC(main,getAlias)]; 
 
-    // set variables
-    _location setVariable [QGVAR(id),_id];
-    _location setVariable [QGVAR(polygon),_polygon]; 
-    _location setVariable [QGVAR(nearestLocation),_x];
-
-    // setup hash
+    // setup area hash
     _hash pushBack [text _x,_location];
 
     // setup draw area
@@ -84,7 +80,7 @@ if !(_data isEqualTo []) then {
 } forEach _locations;
 
 // create area hash
-GVAR(areas) = [_hash,[]] call CBA_fnc_hashCreate;
+GVAR(areas) = [_hash,locationNull] call CBA_fnc_hashCreate;
 
 // get dynamic task 
 

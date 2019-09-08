@@ -23,7 +23,7 @@ POSTINIT;
     [QGVAR(hint), {_this call FUNC(handleHint)}] call CBA_fnc_addEventHandler;
     [QGVAR(add), {
         _this call FUNC(addValue);
-        TRACE_1("client add value",_this);
+        TRACE_1("add value",_this);
     }] call CBA_fnc_addEventHandler;
 
     call FUNC(init);

@@ -24,7 +24,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
 [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
 
 [
-    {!(isNull (assignedVehicle leader (_this select 0)))},
+    {(_this select 0) getVariable [QEGVAR(main,ready),false]},
     {
         params ["_grp","_start","_mid","_end"];
 

@@ -27,7 +27,7 @@ if (isNull _killer || {_unit isEqualTo _killer}) then {
 };
 
 if (isNull _unit || {isNull _killer} || {_killer isEqualTo _unit} || {side _killer isEqualTo CIVILIAN}) exitWith {
-    TRACE_2("Exit handleKilled",_killer,_unit);
+    TRACE_2("exit handleKilled",_killer,_unit);
     false
 };
 
@@ -47,10 +47,6 @@ if !(side group _unit isEqualTo EGVAR(main,enemySide)) then {
     _unitValue = _unitValue * -1;
 };
 
-if (isServer) then {
-    [getPos _unit, _unitValue] call FUNC(addValue);
-} else {
-    [QGVAR(hint), [getPos _unit, _unitValue]] call CBA_fnc_serverEvent;
-};
+[QGVAR(add), [getPos _unit, _unitValue]] call CBA_fnc_serverEvent;
 
 true

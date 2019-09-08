@@ -20,8 +20,8 @@ params [
     ["_type","",[""]]   
 ];
 
-private _position = getPos _location;
-private _radius = (size _location) select 0;
+private _position = _location getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS];
+private _radius = _location getVariable [QEGVAR(main,radius),0];
 private _ambientList = [];
 
 switch _type do {

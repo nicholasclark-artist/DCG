@@ -11,7 +11,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SCOPE _fnc_scriptName
+#define SCOPE QGVAR(spawnOutpost)
 #define SPAWN_DELAY 0.15
 
 // @todo add mil_camp compositions 
@@ -28,11 +28,11 @@ scopeName SCOPE;
     };
 
     // get patrol unit count based on player count
-    private _unitCount = [10,32,5] call EFUNC(main,getUnitCount);
+    private _unitCount = [10,32] call EFUNC(main,getUnitCount);
     TRACE_1("",_unitCount);
 
     // simplify outpost position 
-    private _posOutpost = getPos _value;
+    private _posOutpost =+ (_value getVariable [QGVAR(positionASL),DEFAULT_SPAWNPOS]); 
     _posOutpost resize 2;
 
     // spawn outpost for certain terrain type
@@ -42,7 +42,8 @@ scopeName SCOPE;
         breakTo SCOPE;
     };
 
-    // set new outpost radius 
+    // setvars 
+    _value setVariable [QGVAR(composition),_composition select 2];
     _value setVariable [QGVAR(radius),_composition select 0];
 
     // spawn infantry patrol
@@ -80,7 +81,7 @@ scopeName SCOPE;
     _buildings = _buildings select {!((_x buildingPos -1) isEqualTo [])};
     
     if (_buildings isEqualTo []) then {
-        WARNING("%1 outpost does not have building positions",_key);
+        WARNING_1("%1 outpost does not have building positions",_key);
     };
 
     // garrison infantry
@@ -139,12 +140,14 @@ scopeName SCOPE;
     [QGVAR(updateUnitCount),[_value,1]] call CBA_fnc_localEvent;
     [QGVAR(updateGroups),[_value,group _officer]] call CBA_fnc_localEvent;
 
+    // @todo add comms array intel to officer 
+
     // check dynamic task params
 
     // spawn outpost task
-    private _taskID = [_key,diag_tickTime] joinString "_";
+    private _taskID = [_key,diag_frameNo] joinString "_";
     private _taskAO = [GVAR(areas),_key] call CBA_fnc_hashGet;
-    private _taskNearest = _taskAO getVariable [QGVAR(nearestLocation),locationNull];
+    private _taskNearest = _taskAO getVariable [QEGVAR(main,mapLocation),locationNull];
     private _taskSituationTime = selectRandom ["About one hour ago", "Some time ago", "Yesterday"];
     private _taskSituationOrientation = [[(getPos _taskNearest) getDir (getPos _value)] call EFUNC(main,getDirCardinal),text _taskNearest] joinString " of ";
 
@@ -156,7 +159,9 @@ scopeName SCOPE;
 
     _taskStr = [_value,_taskAO,_taskSituation,_taskMission,_taskSustainment] call EFUNC(main,taskOPORD);
 
-    [true,_taskID,[_taskStr select 1,_taskStr select 0,""],[[EGVAR(main,locationPolygons),_key] call CBA_fnc_hashGet] call EFUNC(main,polygonCentroid),"CREATED",0,true,"attack"] call BIS_fnc_taskCreate;
+    [true,_taskID,[_taskStr select 1,_taskStr select 0,""],[_taskAO getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]] call EFUNC(main,polygonCentroid),"CREATED",0,true,"attack"] call BIS_fnc_taskCreate;
+
+    _value setVariable [QGVAR(task),_taskID];
 
     TRACE_2("outpost task",_key,_taskID);
 }] call CBA_fnc_hashEachPair;

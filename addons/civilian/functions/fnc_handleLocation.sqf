@@ -3,12 +3,12 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-
+handle entity spawning in civilian locations
 
 Arguments:
 
 Return:
-nothing
+nil
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -17,7 +17,7 @@ __________________________________________________________________*/
 // loop through all locations
 [GVAR(locations),{
     // spawn entities if players in radius
-    if (!(_value getVariable [QGVAR(active),false]) && {!([getPos _value,((size _value) select 0) + GVAR(spawnDist),_value getVariable [QGVAR(zdist),-1]] call EFUNC(main,getNearPlayers) isEqualTo [])}) then {
+    if (!(_value getVariable [QGVAR(active),false]) && {!([_value getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS],(_value getVariable [QEGVAR(main,radius),0]) + GVAR(spawnDist),_value getVariable [QGVAR(zdist),-1]] call EFUNC(main,getNearPlayers) isEqualTo [])}) then {
         // set location as active
         _value setVariable [QGVAR(active),true];
 
@@ -35,7 +35,7 @@ __________________________________________________________________*/
             params ["_args","_idPFH"];
             _args params ["_value"];
 
-            if ([getPos _value,((size _value) select 0) + GVAR(spawnDist),_value getVariable [QGVAR(zdist),-1]] call EFUNC(main,getNearPlayers) isEqualTo []) exitWith {
+            if ([_value getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS],(_value getVariable [QEGVAR(main,radius),0]) + GVAR(spawnDist),_value getVariable [QGVAR(zdist),-1]] call EFUNC(main,getNearPlayers) isEqualTo []) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
                 
                 // cleanup objects

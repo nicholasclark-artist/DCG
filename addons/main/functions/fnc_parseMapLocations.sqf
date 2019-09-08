@@ -11,16 +11,12 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SCOPE _fnc_scriptName
+#define SCOPE QGVAR(parseMapLocations)
 #define SAFE_DIST 2
 #define SAFE_RADIUS 50
 #define INDEX_KEY 0
 #define INDEX_VALUE 1
-#define LOCATION_KVP [_name,[_position,_radius,_type]]
-#define LOCAL_KVP [_name,[_position,_radius]]
-#define HILL_KVP [configName _location, [_position,_radius]]
-#define MARINE_KVP [_name,[_position,_radius]]
-#define VORONOI_DEBUG 0
+#define VORONOI_DEBUG 1
 #define VORONOI_DEBUG_CTRL (findDisplay 12 displayCtrl 51)
 #define VORONOI_SEARCH_RADIUS 300
 
@@ -38,15 +34,18 @@ private _typeLocals = ["namelocal"];
 private _typeHills = ["hill"];
 private _typeMarines = ["namemarine"];
 
-private ["_location","_type","_name","_position","_radius","_ret","_positionSafe","_nameNoSpace","_cityCenterA2","_cityCenterA3"];
+private ["_mapLocation","_location","_type","_name","_position","_radius","_ret","_positionSafe","_nameNoSpace","_cityCenterA2","_cityCenterA3","_check"];
 
 for "_i" from 0 to (count _cfgLocations) - 1 do {
-    _location = _cfgLocations select _i;
-    _type = getText (_location >> "type");
-    _name = getText (_location >> "name");
-    _position = getArray (_location >> "position");
+    _mapLocation = _cfgLocations select _i;
+    _type = getText (_mapLocation >> "type");
+    _name = getText (_mapLocation >> "name");
+    _position = getArray (_mapLocation >> "position");
     _position set [2,ASLZ(_position)];
-    _radius = ((getNumber (_location >> "radiusA")) + (getNumber (_location >> "radiusB")))*0.5;
+    _radius = ((getNumber (_mapLocation >> "radiusA")) + (getNumber (_mapLocation >> "radiusB")))*0.5;
+
+    _check = true;
+    _location = locationNull;
 
     call {
         if (toLower _type in _typeLocations) exitWith { 
@@ -64,9 +63,6 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     _position = getArray (_cityCenterA3 >> "position");
                     _position set [2,ASLZ(_position)];
                 }; 
-                
-                // setup return, key-value pair
-                _ret = LOCATION_KVP;
 
                 // check if config position is safe
                 if !([ASLtoAGL _position,SAFE_DIST,0] call FUNC(isPosSafe)) then {
@@ -74,130 +70,144 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
                     
                     if !(_positionSafe isEqualTo _position) then {
-                        (_ret select INDEX_VALUE) set [0,_positionSafe];  
-                        // TRACE_2("location safe position",_name,_positionSafe);
+                        _position = _positionSafe;
                     } else {
-                        _ret set [INDEX_VALUE,[]];
-                        WARNING_1("removing unsafe location: %1",_name);
+                        _check = false;
+                        WARNING_1("removing location. unsafe position: %1",_name);
                     };
                 };
                 
-                // overwrite radius
-                if !((_ret select INDEX_VALUE) isEqualTo []) then {
-                    _radius = [_ret select INDEX_VALUE select 0] call FUNC(findLocationRadius);
+                // get accurate radius from building density
+                if (_check) then {
+                    _radius = [_position] call FUNC(findLocationRadius);
 
-                    if (_radius > 0) then {
-                        (_ret select INDEX_VALUE) set [1,_radius]; 
+                    if (_radius < 1) then {
+                        _check = false;
+                        WARNING_1("removing location. bad radius: %1",_name);
                     };
                 };
 
-                GVAR(locations) pushBack _ret;
+                // create hash location
+                if (_check) then {
+                    _location = createLocation ["Invisible",ASLtoAGL _position,1,1];
+
+                    _location setVariable [QGVAR(name),_name];
+                    _location setVariable [QGVAR(configName),configName _mapLocation];
+                    _location setVariable [QGVAR(type),_type];
+                    _location setVariable [QGVAR(positionASL),_position];
+                    _location setVariable [QGVAR(radius),_radius];
+                    _location setVariable [QGVAR(mapLocation),nearestLocation [ASLtoAGL _position,_type]];
+                };
+
+                GVAR(locations) pushBack [_name,_location];
             };
         };
         if (toLower _type in _typeLocals) exitWith {
             if (!COMPARE_STR(_name,"") && {!([_position] call FUNC(inSafezones))}) then {
-                // setup return, key-value pair
-                _ret = LOCAL_KVP;
-
                 // check if config position is safe
                 if !([ASLtoAGL _position,SAFE_DIST,0] call FUNC(isPosSafe)) then {
                     // find new safe position
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
                     
                     if !(_positionSafe isEqualTo _position) then {
-                        (_ret select INDEX_VALUE) set [0,_positionSafe];  
-                        // TRACE_2("local safe position",_name,_positionSafe);
+                        _position = _positionSafe;
                     } else {
-                        _ret set [INDEX_VALUE,[]];
-                        WARNING_1("removing unsafe local: %1",_name);
+                        _check = false;
+                        WARNING_1("removing local. unsafe position: %1",_name);
                     };
                 };
 
-                GVAR(locals) pushBack _ret;
+                // create hash location
+                if (_check) then {
+                    _location = createLocation ["Invisible",ASLtoAGL _position,1,1];
+
+                    _location setVariable [QGVAR(name),_name];
+                    _location setVariable [QGVAR(configName),configName _mapLocation];
+                    _location setVariable [QGVAR(type),_type];
+                    _location setVariable [QGVAR(positionASL),_position];
+                    _location setVariable [QGVAR(radius),_radius];
+                    _location setVariable [QGVAR(mapLocation),nearestLocation [ASLtoAGL _position,_type]];
+                };
+
+                // use config name because several locals share names
+                GVAR(locals) pushBack [configName _mapLocation,_location];
             };
         };
         if (toLower _type in _typeHills) exitWith {
             if !([_position] call FUNC(inSafezones)) then {
-                // setup return, key-value pair
-                _ret = HILL_KVP;
-
                 // check if config position is safe
                 if !([ASLtoAGL _position,SAFE_DIST,0] call FUNC(isPosSafe)) then {
                     // find new safe position
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
                     
                     if !(_positionSafe isEqualTo _position) then {
-                        (_ret select INDEX_VALUE) set [0,_positionSafe];  
-                        // TRACE_2("hill safe position",configName _location,_positionSafe);
+                        _position = _positionSafe;
                     } else {
-                        _ret set [INDEX_VALUE,[]];
-                        WARNING_1("removing unsafe hill: %1",configName _location);
+                        _check = false;
+                        WARNING_1("removing hill. unsafe position: %1",configName _mapLocation);
                     };
                 };
-                GVAR(hills) pushBack _ret;
+
+                // create hash location
+                if (_check) then {
+                    _location = createLocation ["Invisible",ASLtoAGL _position,1,1];
+
+                    _location setVariable [QGVAR(name),_name];
+                    _location setVariable [QGVAR(configName),configName _mapLocation];
+                    _location setVariable [QGVAR(type),_type];
+                    _location setVariable [QGVAR(positionASL),_position];
+                    _location setVariable [QGVAR(radius),_radius];
+                    _location setVariable [QGVAR(mapLocation),nearestLocation [ASLtoAGL _position,_type]];
+                };
+
+                GVAR(hills) pushBack [configName _mapLocation,_location];
             };
         };
         if (toLower _type in _typeMarines) exitWith {
             if (!([_position] call FUNC(inSafezones)) && {!COMPARE_STR(_name,"")}) then {
-                // setup return, key-value pair
-                _ret = MARINE_KVP;
-
                 // check if config position is safe
                 if !([ASLtoAGL _position,SAFE_DIST,2] call FUNC(isPosSafe)) then {
                     // find new safe position
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,2,-1,[0,360],_position] call FUNC(findPosSafe);
                     
                     if !(_positionSafe isEqualTo _position) then {
-                        (_ret select INDEX_VALUE) set [0,_positionSafe];    
-                        // TRACE_2("marine safe position",_name,_positionSafe);
+                        _position = _positionSafe;
                     } else {
-                        _ret set [INDEX_VALUE,[]];
-                        WARNING_1("removing unsafe marine: %1",_name);
+                        _check = false;
+                        WARNING_1("removing marine. unsafe position: %1",_name);
                     };
                 };
 
-                GVAR(marines) pushBack _ret;
+                // create hash location
+                if (_check) then {
+                    _location = createLocation ["Invisible",ASLtoAGL _position,1,1];
+
+                    _location setVariable [QGVAR(name),_name];
+                    _location setVariable [QGVAR(configName),configName _mapLocation];
+                    _location setVariable [QGVAR(type),_type];
+                    _location setVariable [QGVAR(positionASL),_position];
+                    _location setVariable [QGVAR(radius),_radius];
+                    _location setVariable [QGVAR(mapLocation),nearestLocation [ASLtoAGL _position,_type]];
+                };
+
+                GVAR(marines) pushBack [_name,_location];
             };
         };
     };
 };
 
 // remove unsafe positions 
-GVAR(locations) = GVAR(locations) select {!((_x select INDEX_VALUE) isEqualTo [])};
-GVAR(locals) = GVAR(locals) select {!((_x select INDEX_VALUE) isEqualTo [])};
-GVAR(hills) = GVAR(hills) select {!((_x select INDEX_VALUE) isEqualTo [])};
-GVAR(marines) = GVAR(marines) select {!((_x select INDEX_VALUE) isEqualTo [])};
-
-// // sort locations by xpos
-// private ["_locationsXPosSort","_polygonIndices","_newValue"];
-
-// _locationsXPosSort = [];
-// _polygonIndices = [];
-// _newValue = [];
-
-// // sort by xpos
-// {
-//     _locationsXPosSort pushBack [_x select 1 select 0 select 0,_forEachIndex];
-// } forEach GVAR(locations);
-
-// _locationsXPosSort sort true;
-
-// // create new sorted array
-// _polygonIndices = _locationsXPosSort apply {_x select 1};
-// _newValue resize (count GVAR(locations));
-
-// for "_i" from 0 to (count GVAR(locations)) - 1 do {
-//     _newValue set [_i,GVAR(locations) select (_polygonIndices select _i)];
-// };
-
-// GVAR(locations) = _newValue;
+GVAR(locations) = GVAR(locations) select {!(isNull (_x select INDEX_VALUE))};
+GVAR(locals) = GVAR(locals) select {!(isNull (_x select INDEX_VALUE))};
+GVAR(hills) = GVAR(hills) select {!(isNull (_x select INDEX_VALUE))};
+GVAR(marines) = GVAR(marines) select {!(isNull (_x select INDEX_VALUE))};
 
 // convert to hashes
 // KVP: ["",[]]
-GVAR(locations) = [GVAR(locations), []] call CBA_fnc_hashCreate;
-GVAR(locals) = [GVAR(locals), []] call CBA_fnc_hashCreate;
-GVAR(hills) = [GVAR(hills), []] call CBA_fnc_hashCreate;
-GVAR(marines) = [GVAR(marines), []] call CBA_fnc_hashCreate;
+GVAR(locations) = [GVAR(locations), locationNull] call CBA_fnc_hashCreate;
+GVAR(locals) = [GVAR(locals), locationNull] call CBA_fnc_hashCreate;
+GVAR(hills) = [GVAR(hills), locationNull] call CBA_fnc_hashCreate;
+GVAR(marines) = [GVAR(marines), locationNull] call CBA_fnc_hashCreate;
 
 if (!isMultiplayer && {!is3DEN}) exitWith {}; // exit if not in multiplayer or editor
 
@@ -206,11 +216,11 @@ private _sites = [];
 
 // get sites from location hash
 [GVAR(locations),{
-    _sites pushBack (_value select 0);
+    private _site =+ (_value getVariable [QGVAR(positionASL),[]]);
+    _sites pushBack _site;
 }] call CBA_fnc_hashEachPair;
 
 // set as position2D
-_sites =+ _sites;
 {_x resize 2} forEach _sites;
 
 // generate diagram
@@ -218,7 +228,7 @@ private _dT = diag_tickTime;
 private _voronoi = [_sites, worldSize, worldSize] call FUNC(getEdges);
 private _execTime = diag_tickTime - _dT;
 
-TRACE_3("",count _sites,count _voronoi,_execTime);
+TRACE_3("voronoi diagram",count _sites,count _voronoi,_execTime);
 
 // draw debug
 if (VORONOI_DEBUG > 0) then {
@@ -263,12 +273,8 @@ if (VORONOI_DEBUG > 0) then {
     };
 };
 
-// create polygon hash from voronoi diagram
+// ad polygon to hash location
 private ["_edgeStart","_edgeEnd","_locationL","_locationR","_keyL","_keyR","_valueL","_valueR"];
-
-// KVP: ["",[]]
-GVAR(locationPolygons) = ([GVAR(locations)] call CBA_fnc_hashKeys) apply {[_x,[]]};
-GVAR(locationPolygons) = [GVAR(locationPolygons),[]] call CBA_fnc_hashCreate;
 
 {
     _edgeStart =+ _x select 0;
@@ -287,35 +293,33 @@ GVAR(locationPolygons) = [GVAR(locationPolygons),[]] call CBA_fnc_hashCreate;
     _keyR = text _locationR;
 
     // add edge vertices to polygon hash if location in hash
-    if ([GVAR(locationPolygons),_keyL] call CBA_fnc_hashHasKey) then {
-        _valueL = [GVAR(locationPolygons),_keyL] call CBA_fnc_hashGet;
+    if ([GVAR(locations),_keyL] call CBA_fnc_hashHasKey) then {
+        _valueL = ([GVAR(locations),_keyL] call CBA_fnc_hashGet) getVariable [QGVAR(polygon),[]];
         _valueL pushBackUnique _edgeStart;
         _valueL pushBackUnique _edgeEnd;
-        [GVAR(locationPolygons),_keyL,_valueL] call CBA_fnc_hashSet;
+
+        ([GVAR(locations),_keyL] call CBA_fnc_hashGet) setVariable [QGVAR(polygon),_valueL];
     };
 
-    if ([GVAR(locationPolygons),_keyR] call CBA_fnc_hashHasKey) then {
-        _valueR = [GVAR(locationPolygons),_keyR] call CBA_fnc_hashGet;
+    if ([GVAR(locations),_keyR] call CBA_fnc_hashHasKey) then {
+        _valueR = ([GVAR(locations),_keyR] call CBA_fnc_hashGet) getVariable [QGVAR(polygon),[]];
         _valueR pushBackUnique _edgeStart;
         _valueR pushBackUnique _edgeEnd;
-        [GVAR(locationPolygons),_keyR,_valueR] call CBA_fnc_hashSet;
+
+        ([GVAR(locations),_keyR] call CBA_fnc_hashGet) setVariable [QGVAR(polygon),_valueR];
     };
 } forEach _voronoi;
 
 // sort polygon vertices
-private ["_newValue"];
-
-[GVAR(locationPolygons),{
-    _newValue = [_value] call FUNC(polygonSort);
-    [GVAR(locationPolygons),_key,_newValue] call CBA_fnc_hashSet;
+[GVAR(locations),{
+    _value setVariable [QGVAR(polygon),[_value getVariable [QGVAR(polygon),[]]] call FUNC(polygonSort)];
 }] call CBA_fnc_hashEachPair;
 
 // check convexity
-[GVAR(locationPolygons),{
-    if !([_value] call FUNC(polygonIsConvex)) then {
-        ERROR_1("%1 polygon is not convex",_key);
-
-        // breakTo SCOPE;
+[GVAR(locations),{
+    if !([_value getVariable [QGVAR(polygon),[]]] call FUNC(polygonIsConvex)) then {
+        ERROR_1("%1 polygon is not convex, removing from hash",_key);
+        [GVAR(locations),_key] call CBA_fnc_hashRem;
     };
 }] call CBA_fnc_hashEachPair;
 

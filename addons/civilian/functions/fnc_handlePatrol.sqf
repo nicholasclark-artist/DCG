@@ -26,8 +26,8 @@ __________________________________________________________________*/
     };
 
     // @todo add check for unit getting stuck at random positions
-    private _position = getPos _location;
-    private _radius = (size _location) select 0;
+    private _position = _location getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS];
+    private _radius = _location getVariable [QEGVAR(main,radius),0];
     private _buildingPositions = _location getVariable [QGVAR(buildingPositions),[]];
     private _prefabPositions = _location getVariable [QGVAR(prefabPositions),[]];
     private _animObjects = _location getVariable [QGVAR(animObjects),[]];
@@ -103,7 +103,6 @@ __________________________________________________________________*/
                         TRACE_1("pos event",_this);
 
                         _agent setVariable [QGVAR(patrol),false];
-
                         [_agent,"object",_obj] call EFUNC(main,setAmbientAnim);
 
                         // stand up
@@ -140,7 +139,6 @@ __________________________________________________________________*/
                         TRACE_1("pos event",_this);
 
                         _agent setVariable [QGVAR(patrol),false];
-
                         [_agent] call EFUNC(main,setAmbientAnim);
 
                         // release from prefab

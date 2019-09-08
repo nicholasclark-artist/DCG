@@ -18,7 +18,7 @@ __________________________________________________________________*/
 GVAR(drivers) =  GVAR(drivers) select {!isNull _x};
 
 if (count GVAR(drivers) <= ceil GVAR(vehLimit)) then {
-    private _player = selectRandom ((call CBA_fnc_players) select {((getPos _x) select 2) < 10});
+    private _player = selectRandom ((call CBA_fnc_players) select {((getPosATL _x) select 2) < 10});
 
     if (isNil "_player" || {[_player] call EFUNC(main,inSafezones)}) exitWith {};
 

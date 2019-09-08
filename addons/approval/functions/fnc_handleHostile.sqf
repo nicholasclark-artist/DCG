@@ -16,9 +16,9 @@ private _players = call CBA_fnc_players;
 
 if !(_players isEqualTo []) then {
     private _player = selectRandom _players;
-    private _pos = getPos _player;
+    private _pos = getPosATL _player;
 
-    if (alive _player && {(_pos select 2) < 10} && {!([_pos] call EFUNC(main,inSafezones))}) then {
+    if (alive _player && {(_pos select 2) < 20} && {!([_pos] call EFUNC(main,inSafezones))}) then {
         // convert approval value to hostile probability
         if (PROBABILITY(AP_CONVERT2(_pos))) then {
             private _ret = [_player] call FUNC(spawnHostile);
