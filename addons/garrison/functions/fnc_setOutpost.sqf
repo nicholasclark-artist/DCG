@@ -32,11 +32,14 @@ private _outposts = [];
     
     // find position based on terrain type
     { 
-        _type = selectRandom ["meadow", "hill", "forest"];
-        _pos = [_x,500,_type,1,0,true] call EFUNC(main,findPosTerrain);
+        private _terrain = selectRandom [["meadow",50], ["hill",20], ["forest",20]];
+        _pos = [_x,500,_terrain select 0,1,0,_terrain select 1,true] call EFUNC(main,findPosTerrain);
 
         // exit when position found
-        if !(_pos isEqualTo []) exitWith {TRACE_2("",_key,_type)}; 
+        if !(_pos isEqualTo []) exitWith {
+            _type = _terrain select 0;
+            TRACE_2("",_key,_type);
+        }; 
     } forEach _polygonPositions;
 
     if (!(_pos isEqualTo []) && {_pos inPolygon (_value getVariable [QEGVAR(main,polygon),[]])}) then {
@@ -52,10 +55,9 @@ private _outposts = [];
             WARNING("outpost and area aliases are the same. selecting new alias")
         }; 
 
-        _location setText _alias;
-
         // setvars
         _location setVariable [QGVAR(active),1];
+        _location setVariable [QGVAR(name),_alias]; 
         _location setVariable [QGVAR(task),""];
         _location setVariable [QGVAR(composition),[]];
         _location setVariable [QGVAR(terrain),_type];

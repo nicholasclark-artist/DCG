@@ -21,4 +21,9 @@ if (!isServer) exitWith {};
         _groups pushBack (_this select 1);
     }] call CBA_fnc_addEventHandler;
 
+    [{
+        call FUNC(setArea);
+    }, [], 30] call CBA_fnc_waitAndExecute;
+
+    // call FUNC(handleArea);
 }] call CBA_fnc_addEventHandler;

@@ -12,9 +12,7 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SCOPE QGVAR(spawnOutpost)
-#define SPAWN_DELAY 0.15
-
-// @todo add mil_camp compositions 
+#define SPAWN_DELAY 0.2
 
 // define scope to break hash loop
 scopeName SCOPE;
@@ -22,9 +20,9 @@ scopeName SCOPE;
 [GVAR(outposts),{
     // get composition type
     private _type = (_value getVariable [QGVAR(terrain),""]) call {
-        if (COMPARE_STR(_this,"meadow")) exitWith {"mil_base"};
-        if (COMPARE_STR(_this,"hill")) exitWith {"mil_outpost"};
-        if (COMPARE_STR(_this,"forest")) exitWith {/* "mil_camp" */"civ_camp"};
+        if (COMPARE_STR(_this,"meadow")) exitWith {"mil_cop"};
+        if (COMPARE_STR(_this,"hill")) exitWith {"mil_pb"};
+        if (COMPARE_STR(_this,"forest")) exitWith {"mil_pb"};
     };
 
     // get patrol unit count based on player count
@@ -36,7 +34,7 @@ scopeName SCOPE;
     _posOutpost resize 2;
 
     // spawn outpost for certain terrain type
-    private _composition = [_posOutpost,_type,random 0.15,random 360,true] call EFUNC(main,spawnComposition);
+    private _composition = [_posOutpost,_type,random 360,true] call EFUNC(main,spawnComposition);
     
     if (_composition isEqualTo []) then {
         breakTo SCOPE;
@@ -143,7 +141,7 @@ scopeName SCOPE;
     // @todo add comms array intel to officer 
 
     // check dynamic task params
-
+    
     // spawn outpost task
     private _taskID = [_key,diag_frameNo] joinString "_";
     private _taskAO = [GVAR(areas),_key] call CBA_fnc_hashGet;
@@ -153,11 +151,11 @@ scopeName SCOPE;
 
     private _taskSituation = format ["%1, a small group of enemy combatants was spotted constructing an outpost %2. The enemy force is composed of dismounted patrols and potentially, static emplacements. They are expected to defend upon contact.",_taskSituationTime,_taskSituationOrientation];
 
-    private _taskMission = format ["Friendly forces will conduct an attack in AO %1 on OBJ %2 to secure the enemy outpost in order to prevent anti-coalition forces from gaining momentum and swaying civilian approval.",text _taskAO, text _value];
+    private _taskMission = format ["Friendly forces will conduct an attack in AO %1 on OBJ %2 to secure the enemy outpost in order to prevent anti-coalition forces from gaining momentum and swaying civilian approval.",_taskAO getVariable [QGVAR(name),""], _value getVariable [QGVAR(name),""]];
 
     private _taskSustainment = ["","","","","Each Soldier will carry his/her full basic load.","","","All squads will maintain necessary medical equipment and will ensure it is replenished prior to each movement.","",""];
 
-    _taskStr = [_value,_taskAO,_taskSituation,_taskMission,_taskSustainment] call EFUNC(main,taskOPORD);
+    _taskStr = [_value,_taskAO,_value getVariable [QGVAR(name),""],_taskAO getVariable [QGVAR(name),""],_value getVariable [QGVAR(terrain),""],_taskSituation,_taskMission,_taskSustainment] call EFUNC(main,taskOPORD);
 
     [true,_taskID,[_taskStr select 1,_taskStr select 0,""],[_taskAO getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]] call EFUNC(main,polygonCentroid),"CREATED",0,true,"attack"] call BIS_fnc_taskCreate;
 

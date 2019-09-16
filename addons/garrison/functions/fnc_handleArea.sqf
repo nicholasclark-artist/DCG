@@ -11,6 +11,8 @@ nil
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+private ["_cleared","_outpost","_garrison","_comms"];
+
 _cleared = true;
 
 // get status of area
