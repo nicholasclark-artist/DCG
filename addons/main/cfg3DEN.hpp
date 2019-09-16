@@ -18,8 +18,11 @@
 #define COMP_ITEM GVAR(comp)
 #define COMP_TEXT "DCG - Composition"
 #define COMP_VECTORUP GVAR(vectorUp)
-#define COMP_VECTORUP_TEXT "Ignore Terrain Vector"
-#define COMP_VECTORUP_TIP ""
+#define COMP_VECTORUP_TEXT "Force default up vector"
+#define COMP_VECTORUP_TIP "Force up vector to [0,1,0]"
+#define COMP_SNAP GVAR(snap)
+#define COMP_SNAP_TEXT "Snap to surface"
+#define COMP_SNAP_TIP "Snap object to underlying surface"
 
 class Cfg3DEN {
     class Object {
@@ -32,6 +35,18 @@ class Cfg3DEN {
                         displayName = COMP_VECTORUP_TEXT;
                         tooltip = COMP_VECTORUP_TIP;
                         property = QUOTE(COMP_VECTORUP);
+                        control = "Checkbox";
+                        expression = "";
+                        defaultValue = "false";
+                        unique = 0;
+                        // validate = "number";
+                        condition = "1 - (objectAgent + logicModule + objectBrain)";
+                        // typeName = "NUMBER";
+                    };
+                    class COMP_SNAP {
+                        displayName = COMP_SNAP_TEXT;
+                        tooltip = COMP_SNAP_TIP;
+                        property = QUOTE(COMP_SNAP);
                         control = "Checkbox";
                         expression = "";
                         defaultValue = "false";

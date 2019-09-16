@@ -116,8 +116,8 @@ switch _type do {
             };
 
             if !(isNil "_position") then {
-                _prefab = [_position,"prefab",0.5,_dir - 90,false] call EFUNC(main,spawnComposition);
-                _location setVariable [QGVAR(prefabPositions),_prefab select 3];
+                _prefab = [_position,"prefab_table",_dir - 90,false] call EFUNC(main,spawnComposition);
+                _location setVariable [QGVAR(prefabPositions),_prefab select 1];
                 _ambientList append (_prefab select 2);
             };             
         };

@@ -13,14 +13,19 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define CONFIG (configfile >> QGVARMAIN(compositions))
 #define PRINT_MSG(MSG) titleText [MSG, "PLAIN"]
+#define ATTRIBUTE_SNAP(ENTITY) (parseNumber ((ENTITY get3DENAttribute QGVAR(snap)) select 0))
 #define ATTRIBUTE_VECTORUP(ENTITY) (parseNumber ((ENTITY get3DENAttribute QGVAR(vectorUp)) select 0))
 #define ATTRIBUTE_SIMPLE(ENTITY) (parseNumber ((ENTITY get3DENAttribute "objectIsSimple") select 0))
-#define ANCHOR_CHECK(ENTITY) (typeOf ENTITY isEqualTo "Sign_Arrow_F")
+#define PIVOT_CHECK(ENTITY) (typeOf ENTITY isEqualTo "Sign_Arrow_F")
 #define NODE_CHECK(ENTITY) (typeOf ENTITY isEqualTo "Sign_Arrow_Blue_F")
 #define NODE_MAXDIST 51
-#define GET_POS_RELATIVE(ENTITY) (_anchor worldToModel (getPosATL ENTITY))
-#define GET_DIR_OFFSET(ENTITY) (((getDir ENTITY) - (getDir _anchor)) mod 360)
-#define GET_DATA(ENTITY) _composition pushBack [typeOf ENTITY,str GET_POS_RELATIVE(ENTITY),(0 max ((getPosATL ENTITY) select 2)) call CBA_fnc_floatToString,GET_DIR_OFFSET(ENTITY) call CBA_fnc_floatToString,ATTRIBUTE_VECTORUP(ENTITY),ATTRIBUTE_SIMPLE(ENTITY)]
+#define GET_INS(ENTITY) (["",typeOf ((lineIntersectsSurfaces [getPosASL ENTITY, (getPosASL ENTITY) vectorAdd [0,0,-0.1],ENTITY,objNull,true,1,"GEOM","NONE"]) select 0 select 2)] select (ATTRIBUTE_SNAP(ENTITY) isEqualTo 1))
+#define GET_POS_RELATIVE(ENTITY) (_pivot worldToModel (getPosATL ENTITY))
+#define GET_DIR_OFFSET(ENTITY) (((getDir ENTITY) - (getDir _pivot)) mod 360)
+#define GET_DATA(ENTITY) _composition pushBack [typeOf ENTITY,str GET_POS_RELATIVE(ENTITY),str ((getPosATL ENTITY) select 2),GET_INS(ENTITY),str GET_DIR_OFFSET(ENTITY),ATTRIBUTE_VECTORUP(ENTITY),ATTRIBUTE_SIMPLE(ENTITY)]
+
+// data precision
+toFixed 6;
 
 // reset ui vars
 uiNamespace setVariable [QGVAR(compExportDisplay),displayNull];
@@ -33,29 +38,27 @@ if !(COMPARE_STR(worldName,"VR")) exitWith {
 private _composition = [];
 private _nodes = [];
 private _selected = get3DENSelected "object";
-private _strength = 0;
-private _count = 0;
 private _r = 0;
-private _anchor = objNull;
+private _pivot = objNull;
 private _id = "";
 private _br = toString [13,10];
 private _tab = "    ";
 
-// get composition anchor
+// get composition pivot
 {
-    if (ANCHOR_CHECK(_x)) exitWith {
-        _anchor = _x;
-        // make sure anchor is snapped to terrain
-        _anchor setPosATL [(getPosATL _anchor) select 0,(getPosATL _anchor) select 1,0];
-        _anchor setVectorUp [0,0,1];
+    if (PIVOT_CHECK(_x)) exitWith {
+        _pivot = _x;
+        // make sure pivot is snapped to terrain
+        _pivot setPosATL [(getPosATL _pivot) select 0,(getPosATL _pivot) select 1,0];
+        _pivot setVectorDirAndUp [[0,1,0],[0,0,1]];
 
         // get composition id, ids may overlap if compositions are exported from multiple missions 
-        _id = get3DENEntityID _anchor;
+        _id = get3DENEntityID _pivot;
     };
 } forEach _selected;
 
-if (isNull _anchor) exitWith {
-    PRINT_MSG("cannot export composition while anchor is undefined");
+if (isNull _pivot) exitWith {
+    PRINT_MSG("cannot export composition while pivot is undefined");
 };
 
 // get nodes (safe areas)
@@ -64,7 +67,8 @@ if (isNull _anchor) exitWith {
         for "_i" from 1 to NODE_MAXDIST step 1 do {
             private _near = nearestObjects [_x, [], _i];
             if (count _near > 1 || {_i isEqualTo NODE_MAXDIST}) exitWith {
-                _nodes pushBack [str GET_POS_RELATIVE(_x),(0 max ((getPosATL _x) select 2)) call CBA_fnc_floatToString,str (_i - 1)];
+                _x setVectorDirAndUp [[0,1,0],[0,0,1]];
+                _nodes pushBack [str GET_POS_RELATIVE(_x),str (0 max ((getPosATL _x) select 2)),str (_i - 1)];
             };
         };
     };
@@ -72,23 +76,17 @@ if (isNull _anchor) exitWith {
 
 // save object data
 {
-    if (!NODE_CHECK(_x) && {!ANCHOR_CHECK(_x)} && {!(_x isKindOf "Man")}) then {
+    if (!NODE_CHECK(_x) && {!PIVOT_CHECK(_x)} && {!(_x isKindOf "Man")}) then {
         // save raw z value separately as model-space z value is inaccurate
         GET_DATA(_x);
-        // adjust max radius
-        _r = (ceil ((getPosASL _x) vectorDistance (getPosASL _anchor))) max _r;
-        // increase count for structural types and vehicles
-        if (_x isKindOf "Building" || {_x isKindOf "AllVehicles"}) then {
-            _count = _count + 1;
-        };   
+        // update max radius
+        _r = (ceil ((getPosASL _x) vectorDistance (getPosASL _pivot))) max _r; 
     };
 } forEach _selected;
 
-_strength = round (_r + (_count * 0.5));
-
 // create type listbox
-[_br,_tab,_composition,_nodes,_r,_strength,_id] spawn {
-    params ["_br","_tab","_composition","_nodes","_r","_strength","_id"];
+[_br,_tab,_composition,_nodes,_r,_id] spawn {
+    params ["_br","_tab","_composition","_nodes","_r","_id"];
 
     closeDialog 2; 
 
@@ -122,13 +120,12 @@ _strength = round (_r + (_count * 0.5));
     waitUntil {isNull _display};
 
     // compile class text and copy to clipboard
-
     for "_i" from 0 to (count CONFIG) - 1 do {
         _cfgName = configName (CONFIG select _i);
         if (COMPARE_STR(GVAR(compExportSel),_cfgName)) exitWith {
             private _className = format ["GVARMAIN(DOUBLES(%1,%2))",_cfgName,_id];
             private _compiledEntry = [
-                format ["class %3 {%1%2radius = %4;%1%2strength = %5;%1%2nodes = ",_br,_tab,_className,_r,_strength],
+                format ["class %3 {%1%2radius = %4;%1%2nodes = ",_br,_tab,_className,_r],
                 str (str _nodes),
                 format [";%1%2objects = ", _br,_tab],
                 str (str _composition),
@@ -137,7 +134,7 @@ _strength = round (_r + (_count * 0.5));
 
             copyToClipboard _compiledEntry;
 
-            private _msg = format ["Exporting %1 composition (%2) to clipboard: radius: %3, strength: %4, nodes: %5",_cfgName,_id,_r,_strength,count _nodes];
+            private _msg = format ["Exporting %1 composition (%2) to clipboard: radius: %3, nodes: %4",_cfgName,_id,_r,count _nodes];
             PRINT_MSG(_msg);  
         };
     };
