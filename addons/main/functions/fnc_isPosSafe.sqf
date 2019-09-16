@@ -49,7 +49,7 @@ if (_check isEqualType objNull) then {
 _check = _check min 50; 
 
 // check gradient and water, water accepts -1, 0 or 2
-if (_pos isFlatEmpty [-1, -1, _gradient, 5 max (_check * 0.1), _water, false, _ignore] isEqualTo []) exitWith {false};
+if (_pos isFlatEmpty [-1, -1, _gradient, 10 max (_check * 0.1), _water, false, _ignore] isEqualTo []) exitWith {false};
 
 // in order for an object to be detected by nearObjects and nearestTerrainObjects, the object's pivot (not bounding box) must be in search radius
 
@@ -70,7 +70,7 @@ _objs = _objs select {
 };
 
 // check if under surface
-private _z = lineIntersectsSurfaces [AGLToASL _pos, (AGLToASL _pos) vectorAdd [0, 0, 50], _ignore, objNull, false, 1, "GEOM", "NONE"] isEqualTo [];
+private _z = lineIntersectsSurfaces [AGLToASL _pos, (AGLToASL _pos) vectorAdd [0, 0, 50], _ignore, objNull, true, 1, "GEOM", "NONE"] isEqualTo [];
 
 if (isNull _bbCheck) exitWith {_z && {_objs isEqualTo []}};
 
