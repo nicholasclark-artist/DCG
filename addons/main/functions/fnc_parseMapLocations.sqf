@@ -318,7 +318,7 @@ private ["_edgeStart","_edgeEnd","_locationL","_locationR","_keyL","_keyR","_val
 // check convexity
 [GVAR(locations),{
     if !([_value getVariable [QGVAR(polygon),[]]] call FUNC(polygonIsConvex)) then {
-        ERROR_1("%1 polygon is not convex, removing from hash",_key);
+        ERROR_1("%1 polygon is not convex. removing from hash",_key);
         [GVAR(locations),_key] call CBA_fnc_hashRem;
     };
 }] call CBA_fnc_hashEachPair;

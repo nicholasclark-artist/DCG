@@ -97,6 +97,7 @@
 
 // misc
 #define ASLZ(POS) ((getTerrainHeightASL POS) max 0)
+#define DEFAULT_POS [0,0,0]
 #define DEFAULT_SPAWNPOS [0,0,worldsize]
 #define DEFAULT_POLYGON [[0,0,0],[0,0,0],[0,0,0]]
 #define DEFAULT_COLOR [0,0,0,1]
