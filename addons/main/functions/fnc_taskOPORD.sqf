@@ -8,9 +8,12 @@ format task title and description into operation order (OPORD)
 Arguments:
 0: task location <LOCATION>
 1: ao location <LOCATION>
-2: OPORD situation paragraph <STRING>
-3: OPORD mission paragraph <STRING>
-4: OPORD sustainment paragraph <STRING>
+2: task location name <STRING>
+3: ao name <STRING>
+4: terrain type <STRING>
+5: OPORD situation paragraph <STRING>
+6: OPORD mission paragraph <STRING>
+7: OPORD sustainment paragraph <STRING>
 
 Return:
 array
@@ -22,20 +25,18 @@ __________________________________________________________________*/
 params [
     ["_locationTask",locationNull,[locationNull]],
     ["_locationAO",locationNull,[locationNull]],
+    ["_nameTask","",[""]],
+    ["_nameAO","",[""]],
+    ["_terrain","meadow",[""]],
     ["_situation","",[""]],
     ["_mission","",[""]],
     ["_sustainment",["","","","","","","","","",""],[[]]]
 ];
 
-if (isNull _locationTask) exitWith {};
-
-private _name = text _locationTask; 
-
-// @todo change terrain str to (flat/mountainous/urban)
-private _type = (_locationTask getVariable [QEGVAR(garrison,terrain),""]) call {
-    if (COMPARE_STR(_this,"meadow")) exitWith {"flat"};
-    if (COMPARE_STR(_this,"forest")) exitWith {"forested"};
-    if (COMPARE_STR(_this,"hill")) exitWith {
+_terrain = call {
+    if (COMPARE_STR(_terrain,"meadow")) exitWith {"flat"};
+    if (COMPARE_STR(_terrain,"forest")) exitWith {"forested"};
+    if (COMPARE_STR(_terrain,"hill")) exitWith {
         if (getTerrainHeightASL (getPos _locationTask) >= 150) then {
             "mountainous"
         } else {
@@ -68,8 +69,8 @@ private _sustainmentFormatted = [];
 
 private _para1 = [
     "1. ORIENTATION",
-    format ["%1OBJ %2 (%3).",TAB,_name,mapGridPosition getPos _locationTask],
-    format ["%1Terrain: %2m Altitude. Terrain is predominantly %3.",TAB,round getTerrainHeightASL (getPos _locationTask),_type],
+    format ["%1OBJ %2 (%3).",TAB,_nameTask,mapGridPosition getPos _locationTask],
+    format ["%1Terrain: %2m Altitude. Terrain is predominantly %3.",TAB,round getTerrainHeightASL (getPos _locationTask),_terrain],
     format ["%1Weather: %2",TAB,_weather]
 ] joinString (NEWLINE); 
 
@@ -101,5 +102,5 @@ private _para4 = [
     format ["%1%1 1. Transport - %2",TAB,_transport]
 ] joinString (NEWLINE); 
 
-[format ["AO %1: OBJ %2",text _locationAO,_name],[_para1,_para2,_para3,_para4] joinString ((NEWLINE) + (NEWLINE))]
+[format ["AO %1: OBJ %2",_nameAO,_nameTask],[_para1,_para2,_para3,_para4] joinString ((NEWLINE) + (NEWLINE))]
 
