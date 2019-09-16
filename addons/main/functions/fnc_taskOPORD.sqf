@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-format task title and description into operation order (OPORD)
+format task title and description into operation order (OPORD) 
 
 Arguments:
 0: task location <LOCATION>
