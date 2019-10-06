@@ -89,11 +89,14 @@
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
 
 // terrain expressions 
-#define EX_HOUSES "houses * (1 - meadow * 2)"
-#define EX_MEADOW "meadow * (1 - forest) * (1 - sea) * (1 - houses * 3)"
-#define EX_FOREST "(forest + trees) * (1 - meadow * 3)"
-#define EX_HILL "hills * (1 - meadow * 3)"
-#define EX_COAST "sea - waterDepth"
+#define EX_HOUSES "houses * (1 - (waterDepth interpolate [1,30,0,1])) * (1 - sea)"
+#define EX_MEADOW "meadow - (houses + trees + forest + hills + coast + sea)"
+#define EX_FOREST "(forest * trees) - (meadow + houses + sea)"
+#define EX_HILLS "hills"
+#define EX_HILLS_LOWER "hills envelope [0,0.1,0.5,0.6]"
+#define EX_COAST "coast * (1 - (waterDepth interpolate [1,30,0,1]))"
+#define EX_SEA "sea - (2 * coast)"
+#define EX_SEA_DEEP "waterDepth"
 
 // misc
 #define ASLZ(POS) ((getTerrainHeightASL POS) max 0)
