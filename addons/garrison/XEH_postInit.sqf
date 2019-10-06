@@ -23,7 +23,6 @@ if (!isServer) exitWith {};
 
     [{
         call FUNC(setArea);
-    }, [], 30] call CBA_fnc_waitAndExecute;
-
-    // call FUNC(handleArea);
+        [FUNC(handleArea), 30] call CBA_fnc_addPerFrameHandler;
+    }, [], 10] call CBA_fnc_waitAndExecute;
 }] call CBA_fnc_addEventHandler;

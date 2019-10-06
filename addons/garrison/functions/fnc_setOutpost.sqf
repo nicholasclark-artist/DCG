@@ -16,33 +16,40 @@ __________________________________________________________________*/
 // define scope to break hash loop
 scopeName SCOPE;
 
-private _outposts = [];
+private ["_outposts","_pos","_polygonPositions","_type","_aliasAO","_location"];
+
+_outposts = [];
 
 [GVAR(areas),{
-    private _pos = [];
-    private _polygonPositions = [];
-    private _type = "";
-    private _aliasAO = _value getVariable [QGVAR(name),""];
+    // exit when outpost count reached
+    if (count _outposts isEqualTo OP_COUNT) then {
+        breakTo SCOPE;
+    };
+
+    _pos = [];
+    _polygonPositions = [];
+    _type = "";
+    _aliasAO = _value getVariable [QGVAR(name),""];
 
     // get random positions in polygon
     for "_i" from 0 to 4 do {
-        _pos = [_value getVariable [QEGVAR(main,polygon),[]]] call EFUNC(main,polygonRandomPos);
-        _polygonPositions pushBack _pos;
+        _polygonPositions pushBack ([_value getVariable [QEGVAR(main,polygon),[]]] call EFUNC(main,polygonRandomPos));
     };
     
     // find position based on terrain type
     { 
-        private _terrain = selectRandom [["meadow",50], ["hill",20], ["forest",20]];
-        _pos = [_x,500,_terrain select 0,1,0,_terrain select 1,true] call EFUNC(main,findPosTerrain);
+        private _terrain = selectRandom [["meadow",50], ["peak",20], ["forest",20]];
+        _pos = [_x,500,_terrain select 0,0,0,_terrain select 1,true] call EFUNC(main,findPosTerrain);
 
         // exit when position found
         if !(_pos isEqualTo []) exitWith {
             _type = _terrain select 0;
-            TRACE_2("",_key,_type);
         }; 
     } forEach _polygonPositions;
 
     if (!(_pos isEqualTo []) && {_pos inPolygon (_value getVariable [QEGVAR(main,polygon),[]])}) then {
+        TRACE_2("",_key,_type);
+        
         // create outpost location
         _location = createLocation ["Invisible",ASLtoAGL _pos,1,1];
         
@@ -55,6 +62,9 @@ private _outposts = [];
             WARNING("outpost and area aliases are the same. selecting new alias")
         }; 
 
+        // @todo fix water positions 
+        TRACE_1("",_pos);
+        
         // setvars
         _location setVariable [QGVAR(active),1];
         _location setVariable [QGVAR(name),_alias]; 

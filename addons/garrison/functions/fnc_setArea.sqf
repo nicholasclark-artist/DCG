@@ -57,16 +57,15 @@ if !(_data isEqualTo []) then {
     if (_locations isEqualTo []) then {false breakOut SCOPE};
 };
 
+// shuffle to randomize outpost spawns
+[_locations] call EFUNC(main,shuffle);
+
 {
     // get hash location 
     _location = [EGVAR(main,locations), text _x] call CBA_fnc_hashGet;
 
     // get location polygon 
     private _polygon = _location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON];
-
-    // set position2D
-    private _pos = getPos _x;
-    _pos resize 2;
 
     // set area variables
     _location setVariable [QGVAR(polygonDraw),_id];
@@ -86,8 +85,11 @@ GVAR(areas) = [_hash,locationNull] call CBA_fnc_hashCreate;
 
 // get outposts
 private _outpost = call FUNC(setOutpost);
+TRACE_1("",_outpost);
 
 // get garrison
+GVAR(garrisons) = [[],locationNull] call CBA_fnc_hashCreate;
+GVAR(comms) = [[],locationNull] call CBA_fnc_hashCreate;
 
 // exit if cant find positions 
 if (_outpost isEqualTo 0 /* || {!_garrison} */) exitWith {false/* call FUNC(removeArea) */};
@@ -107,5 +109,7 @@ if (_outpost isEqualTo 0 /* || {!_garrison} */) exitWith {false/* call FUNC(remo
         } forEach (_this select 0); 
     }
 ] remoteExecCall [QUOTE(call), 0, false];
+
+// set tasks 
 
 true

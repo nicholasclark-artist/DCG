@@ -11,4 +11,5 @@
 #define AO_COUNT 3
 #define GAR_COUNT 1
 #define GAR_UNITCOUNT 32
-#define OP_PATROLSIZE 3
+#define OP_COUNT 2
+#define OP_PATROLSIZE 4

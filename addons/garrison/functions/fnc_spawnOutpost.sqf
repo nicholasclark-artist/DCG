@@ -12,7 +12,9 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SCOPE QGVAR(spawnOutpost)
-#define SPAWN_DELAY 0.2
+#define SPAWN_DELAY 0.5
+
+// @todo fix garrison units not moving in combat 
 
 // define scope to break hash loop
 scopeName SCOPE;
@@ -21,13 +23,14 @@ scopeName SCOPE;
     // get composition type
     private _type = (_value getVariable [QGVAR(terrain),""]) call {
         if (COMPARE_STR(_this,"meadow")) exitWith {"mil_cop"};
-        if (COMPARE_STR(_this,"hill")) exitWith {"mil_pb"};
+        if (COMPARE_STR(_this,"peak")) exitWith {"mil_pb"};
         if (COMPARE_STR(_this,"forest")) exitWith {"mil_pb"};
+
+        ""
     };
 
     // get patrol unit count based on player count
-    private _unitCount = [10,32] call EFUNC(main,getUnitCount);
-    TRACE_1("",_unitCount);
+    private _unitCount = [8,24] call EFUNC(main,getUnitCount);
 
     // simplify outpost position 
     private _posOutpost =+ (_value getVariable [QGVAR(positionASL),DEFAULT_SPAWNPOS]); 
@@ -82,37 +85,6 @@ scopeName SCOPE;
         WARNING_1("%1 outpost does not have building positions",_key);
     };
 
-    // garrison infantry
-    private ["_unit"];
-
-    {
-        if (PROBABILITY(0.5)) then {
-            _unit = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)), DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
-
-
-            private _dir = random 360;
-            _unit setFormDir _dir;
-            _unit setDir _dir;
-
-            if (PROBABILITY(0.5)) then { // garrison building exit
-                _unit setPosATL (_x buildingExit 0);
-            } else { // garrison building
-                _unit setPosATL selectRandom (_x buildingPos -1);
-            };
-
-            // add eventhandlers
-            _unit setVariable [QGVAR(location),_value];
-            _unit addEventHandler ["Killed", {
-                _location = (_this select 0) getVariable [QGVAR(location),locationNull];
-                _location call (_location getVariable [QGVAR(onKilled),{}]);
-            }]; 
-
-            [QEGVAR(cache,enableGroup),group _unit] call CBA_fnc_serverEvent;
-            [QGVAR(updateUnitCount),[_value,1]] call CBA_fnc_localEvent;
-            [QGVAR(updateGroups),[_value,group _unit]] call CBA_fnc_localEvent;
-        };
-    } forEach _buildings;
-
     // garrison officer
     private _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),3] call EFUNC(main,getPool)), DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
     
@@ -121,7 +93,7 @@ scopeName SCOPE;
     _officer setDir _dir;
     
     if (_buildings isEqualTo []) then {
-        _officer setPosASL ([_posOutpost,0,(_composition select 0) * 0.5,1,-1,-1,[0,360],[_posOutpost select 0,_posOutpost select 1,getTerrainHeightASL _posOutpost]] call EFUNC(main,findPosSafe));
+        _officer setPosASL ([_posOutpost,0,(_composition select 0) * 0.5,2,-1,-1,[0,360],[_posOutpost select 0,_posOutpost select 1,getTerrainHeightASL _posOutpost]] call EFUNC(main,findPosSafe));
     } else {
         _officer setPosATL selectRandom ((selectRandom _buildings) buildingPos -1);
     };
@@ -138,6 +110,62 @@ scopeName SCOPE;
     [QGVAR(updateUnitCount),[_value,1]] call CBA_fnc_localEvent;
     [QGVAR(updateGroups),[_value,group _officer]] call CBA_fnc_localEvent;
 
+    // garrison infantry
+    private ["_unit","_dir"];
+
+    {
+        if (PROBABILITY(0.5)) then {
+            _unit = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)), DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
+
+            _dir = random 360;
+            _unit setFormDir _dir;
+            _unit setDir _dir;
+
+            if (PROBABILITY(0.5)) then { // garrison building exit
+                _unit setPosATL (_x buildingExit 0);
+            } else { // garrison building position
+                _unit setPosATL selectRandom (_x buildingPos -1);
+            };
+
+            // add eventhandlers
+            _unit setVariable [QGVAR(location),_value];
+            _unit addEventHandler ["Killed", {
+                _location = (_this select 0) getVariable [QGVAR(location),locationNull];
+                _location call (_location getVariable [QGVAR(onKilled),{}]);
+            }]; 
+
+            [QEGVAR(cache,enableGroup),group _unit] call CBA_fnc_serverEvent;
+            [QGVAR(updateUnitCount),[_value,1]] call CBA_fnc_localEvent;
+            [QGVAR(updateGroups),[_value,group _unit]] call CBA_fnc_localEvent;
+        };
+    } forEach _buildings;
+
+    // spawn addition garrison units inside outpost (not at building positions)
+    for "_i" from 0 to (floor ((_composition select 0) / 4) min 16) do {
+        _pos = [_posOutpost,0,(_composition select 0) * 0.9,2,-1,-1,[0,360],_posOutpost] call EFUNC(main,findPosSafe);
+
+        // avoid units stacking at outpost pivot
+        if !(_pos isEqualTo _posOutpost) then {
+            _unit = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)), DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
+            
+            _dir = random 360;
+            _unit setFormDir _dir;
+            _unit setDir _dir;
+            _unit setPosASL _pos;
+
+            // add eventhandlers and vars
+            _unit setVariable [QGVAR(location),_value];
+            _unit addEventHandler ["Killed", {
+                _location = (_this select 0) getVariable [QGVAR(location),locationNull];
+                _location call (_location getVariable [QGVAR(onKilled),{}]);
+            }]; 
+
+            [QEGVAR(cache,enableGroup),group _unit] call CBA_fnc_serverEvent;
+            [QGVAR(updateUnitCount),[_value,1]] call CBA_fnc_localEvent;
+            [QGVAR(updateGroups),[_value,group _unit]] call CBA_fnc_localEvent;
+        };
+    };
+
     // @todo add comms array intel to officer 
 
     // check dynamic task params
@@ -146,18 +174,21 @@ scopeName SCOPE;
     private _taskID = [_key,diag_frameNo] joinString "_";
     private _taskAO = [GVAR(areas),_key] call CBA_fnc_hashGet;
     private _taskNearest = _taskAO getVariable [QEGVAR(main,mapLocation),locationNull];
-    private _taskSituationTime = selectRandom ["About one hour ago", "Some time ago", "Yesterday"];
     private _taskSituationOrientation = [[(getPos _taskNearest) getDir (getPos _value)] call EFUNC(main,getDirCardinal),text _taskNearest] joinString " of ";
 
-    private _taskSituation = format ["%1, a small group of enemy combatants was spotted constructing an outpost %2. The enemy force is composed of dismounted patrols and potentially, static emplacements. They are expected to defend upon contact.",_taskSituationTime,_taskSituationOrientation];
+    // private _taskSituation = format ["Some time ago, a small group of enemy combatants was spotted constructing an outpost %1. The enemy force is composed of dismounted patrols and potentially, static emplacements. They are expected to defend upon contact.",_taskSituationOrientation];
 
-    private _taskMission = format ["Friendly forces will conduct an attack in AO %1 on OBJ %2 to secure the enemy outpost in order to prevent anti-coalition forces from gaining momentum and swaying civilian approval.",_taskAO getVariable [QGVAR(name),""], _value getVariable [QGVAR(name),""]];
+    private _taskSituation = format ["Some time ago, a convoy of military logistics and engineering vehicles was spotted entering AO %1. These vehicles are likely supporting the construction of an enemy outpost (OBJ %2). Previous engagements have shown the enemy to be composed of dismounted patrols and potentially, static emplacements. They are expected to defend upon contact.",_taskAO getVariable [QGVAR(name),""],_value getVariable [QGVAR(name),""]];
+
+    private _taskMission = format ["Friendly forces will conduct an operation in AO %1 to locate and secure OBJ %2 in order to prevent anti-coalition forces from gaining momentum and swaying civilian approval.",_taskAO getVariable [QGVAR(name),""], _value getVariable [QGVAR(name),""]];
 
     private _taskSustainment = ["","","","","Each Soldier will carry his/her full basic load.","","","All squads will maintain necessary medical equipment and will ensure it is replenished prior to each movement.","",""];
 
     _taskStr = [_value,_taskAO,_value getVariable [QGVAR(name),""],_taskAO getVariable [QGVAR(name),""],_value getVariable [QGVAR(terrain),""],_taskSituation,_taskMission,_taskSustainment] call EFUNC(main,taskOPORD);
 
-    [true,_taskID,[_taskStr select 1,_taskStr select 0,""],[_taskAO getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]] call EFUNC(main,polygonCentroid),"CREATED",0,true,"attack"] call BIS_fnc_taskCreate;
+    // [true,_taskID,[_taskStr select 1,_taskStr select 0,""],[_taskAO getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]] call EFUNC(main,polygonCentroid),"CREATED",0,true,"attack"] call BIS_fnc_taskCreate;
+
+    [true,_taskID,[_taskStr select 1,_taskStr select 0,""],[objNull, getPos _value] select GVAR(enableMarkers),"CREATED",0,true,"attack"] call BIS_fnc_taskCreate;
 
     _value setVariable [QGVAR(task),_taskID];
 

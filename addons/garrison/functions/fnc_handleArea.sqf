@@ -36,18 +36,21 @@ _cleared = true;
     } else {
         _cleared = false;
     };
+
+    // check dynamic task status
 }] call CBA_fnc_hashEachPair;
 
 // if all areas clear, set new ao with cooldown
 if (_cleared) exitWith {
-    call FUNC(removeArea);
+    TRACE_1("",_cleared);
+    // call FUNC(removeArea);
 
-    [{
-        call FUNC(setArea);
-    }, [], GVAR(cooldown)] call CBA_fnc_waitAndExecute;
+    // [{
+    //     call FUNC(setArea);
+    // }, [], GVAR(cooldown)] call CBA_fnc_waitAndExecute;
 };
 
-// handle comms and dynamic tasks 
+// handle comms
 [GVAR(areas),{
     _outpost = [GVAR(outposts),_key] call CBA_fnc_hashGet;
     _garrison = [GVAR(garrisons),_key] call CBA_fnc_hashGet;

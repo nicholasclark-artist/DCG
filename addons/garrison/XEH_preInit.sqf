@@ -12,6 +12,7 @@ PREP(setArea);
 PREP(removeArea);
 PREP(setOutpost);
 PREP(spawnOutpost);
+PREP(taskOPORD);
 
 // headless client exit 
 if (!isServer) exitWith {};
