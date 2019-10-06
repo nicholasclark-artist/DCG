@@ -4,6 +4,7 @@ Nicholas Clark (SENSEI)
 
 Description:
 format task title and description into operation order (OPORD) 
+ref: https://semo.edu/pdf/showmegold-lab_opRedhawk.pdf
 
 Arguments:
 0: task location <LOCATION>
@@ -36,13 +37,9 @@ params [
 _terrain = call {
     if (COMPARE_STR(_terrain,"meadow")) exitWith {"flat"};
     if (COMPARE_STR(_terrain,"forest")) exitWith {"forested"};
-    if (COMPARE_STR(_terrain,"hill")) exitWith {
-        if (getTerrainHeightASL (getPos _locationTask) >= 150) then {
-            "mountainous"
-        } else {
-            "uneven with intermittent hills"
-        };
-    };
+    if (COMPARE_STR(_terrain,"peak")) exitWith {"uneven with large elevation changes"};
+
+    ""
 };
 
 private _weather = if (CHECK_ADDON_2(weather)) then {
@@ -69,7 +66,7 @@ private _sustainmentFormatted = [];
 
 private _para1 = [
     "1. ORIENTATION",
-    format ["%1OBJ %2 (%3).",TAB,_nameTask,mapGridPosition getPos _locationTask],
+    format ["%1Map grid position: %2.",TAB,mapGridPosition getPos _locationTask],
     format ["%1Terrain: %2m Altitude. Terrain is predominantly %3.",TAB,round getTerrainHeightASL (getPos _locationTask),_terrain],
     format ["%1Weather: %2",TAB,_weather]
 ] joinString (NEWLINE); 
