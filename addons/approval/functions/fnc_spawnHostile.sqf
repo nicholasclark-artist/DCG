@@ -140,7 +140,7 @@ switch (floor random 3) do {
                 (objectParent _driver) addEventHandler ["Hit", { 
                     if (PROBABILITY(0.1)) then {
                         "HelicopterExploSmall" createVehicle ((_this select 0) modeltoworld [0,0,0]);
-                        (_this select 0) removeAllEventHandlers "Hit";
+                        (_this select 0) removeEventHandler ["Hit",_thisEventHandler];
                     };
                 }];
                 
@@ -216,7 +216,7 @@ switch (floor random 3) do {
         _unit addEventHandler ["Hit", { 
             if (PROBABILITY(0.333)) then {
                 "HelicopterExploSmall" createVehicle ((_this select 0) modeltoworld [0,0,0]);
-                (_this select 0) removeAllEventHandlers "Hit";
+                (_this select 0) removeEventHandler ["Hit",_thisEventHandler];
             };
         }];
 
