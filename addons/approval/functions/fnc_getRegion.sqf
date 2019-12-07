@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-get KVP for position
+get region from position
 
 Arguments:
 0: position <ARRAY>
