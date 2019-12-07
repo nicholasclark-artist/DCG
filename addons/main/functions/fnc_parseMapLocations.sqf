@@ -16,7 +16,7 @@ __________________________________________________________________*/
 #define SAFE_RADIUS 50
 #define INDEX_KEY 0
 #define INDEX_VALUE 1
-#define VORONOI_DEBUG 1
+#define VORONOI_DEBUG 0
 #define VORONOI_DEBUG_CTRL (findDisplay 12 displayCtrl 51)
 #define VORONOI_SEARCH_RADIUS 300
 

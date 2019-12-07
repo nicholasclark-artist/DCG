@@ -63,7 +63,7 @@ call {
     };
 };
 
-if (COMPARE_STR(_terrain,"") || {COMPARE_STR(_expression,"")}) exitWith {
+if (COMPARE_STR(_expression,"")) exitWith {
     WARNING("cannot find position, expression is empty");
 };
 

@@ -19,9 +19,9 @@ params [
 
 // @todo equip stored gear 
 
-_logic = _unit getVariable [QGVAR(ambientAnimLogic),objNull];
-_obj = _unit getVariable [QGVAR(ambientAnimObject),objNull];
-_onKilled = _unit getVariable [QGVAR(ambientAnimOnKilled),-1];
+private _logic = _unit getVariable [QGVAR(ambientAnimLogic),objNull];
+private _obj = _unit getVariable [QGVAR(ambientAnimObject),objNull];
+private _onKilled = _unit getVariable [QGVAR(ambientAnimOnKilled),-1];
 
 deleteVehicle _logic;
 detach _unit;
