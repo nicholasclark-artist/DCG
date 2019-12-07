@@ -21,8 +21,21 @@ if (!isServer) exitWith {};
         _groups pushBack (_this select 1);
     }] call CBA_fnc_addEventHandler;
 
+    [QGVAR(updateScore), {
+        // update ao score
+        (_this select 0) setVariable [QGVAR(score),((_this select 0) getVariable [QGVAR(score),0]) + (_this select 1)];
+
+        // update average score
+        GVAR(score) = 0;
+
+        [GVAR(areas),{
+            GVAR(score) = GVAR(score) + (_value getVariable [QGVAR(score),0]);
+        }] call CBA_fnc_hashEachPair;
+
+        GVAR(score) = GVAR(score) / (count ([GVAR(areas)] call CBA_fnc_hashKeys));
+    }] call CBA_fnc_addEventHandler;
+
     [{
-        call FUNC(setArea);
-        [FUNC(handleArea), 30] call CBA_fnc_addPerFrameHandler;
+        call FUNC(init);
     }, [], 10] call CBA_fnc_waitAndExecute;
 }] call CBA_fnc_addEventHandler;

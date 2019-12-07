@@ -8,7 +8,7 @@ set outpost locations
 Arguments:
 
 Return:
-number
+nil
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SCOPE QGVAR(setOutpost)
@@ -47,9 +47,7 @@ _outposts = [];
         }; 
     } forEach _polygonPositions;
 
-    if (!(_pos isEqualTo []) && {_pos inPolygon (_value getVariable [QEGVAR(main,polygon),[]])}) then {
-        TRACE_2("",_key,_type);
-        
+    if (!(_pos isEqualTo []) && {_pos inPolygon (_value getVariable [QEGVAR(main,polygon),[]])}) then { 
         // create outpost location
         _location = createLocation ["Invisible",ASLtoAGL _pos,1,1];
         
@@ -63,7 +61,7 @@ _outposts = [];
         }; 
 
         // @todo fix water positions 
-        TRACE_1("",_pos);
+        TRACE_3("",_key,_type,_pos);
         
         // setvars
         _location setVariable [QGVAR(active),1];
@@ -72,7 +70,7 @@ _outposts = [];
         _location setVariable [QGVAR(composition),[]];
         _location setVariable [QGVAR(terrain),_type];
         _location setVariable [QGVAR(positionASL),_pos];
-        _location setVariable [QGVAR(radius),100]; // will be adjusted based on composition size
+        _location setVariable [QGVAR(radius),0]; // will be adjusted based on composition size
         _location setVariable [QGVAR(groups),[]]; // groups assigned to outpost
         _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
         _location setVariable [QGVAR(officer),objNull];
@@ -82,10 +80,13 @@ _outposts = [];
 
         // setup hash
         _outposts pushBack [_key,_location];
+
+        // update score
+        [QGVAR(updateScore),[_value,OP_SCORE]] call CBA_fnc_localEvent;
     };
 }] call CBA_fnc_hashEachPair;
 
 // create outpost hash
 GVAR(outposts) = [_outposts,locationNull] call CBA_fnc_hashCreate;
 
-count ([GVAR(outposts)] call CBA_fnc_hashKeys)
+nil

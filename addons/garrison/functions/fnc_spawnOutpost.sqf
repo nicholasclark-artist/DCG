@@ -15,6 +15,8 @@ __________________________________________________________________*/
 #define SPAWN_DELAY 0.5
 
 // @todo fix garrison units not moving in combat 
+    // regroup garrison units on FiredNear
+    // send officer to random buildingPos
 
 // define scope to break hash loop
 scopeName SCOPE;
@@ -48,6 +50,7 @@ scopeName SCOPE;
     _value setVariable [QGVAR(radius),_composition select 0];
 
     // spawn infantry patrol
+    // patrols will navigate outpost exterior and investigate nearby buildings
     private _pos = [_posOutpost,(_composition select 0) + 10,(_composition select 0) + 50,2,0,-1,[0,360],_posOutpost getPos [(_composition select 0) + 20,random 360]] call EFUNC(main,findPosSafe);
 
     for "_i" from 1 to floor (_unitCount/OP_PATROLSIZE) do {
@@ -85,7 +88,7 @@ scopeName SCOPE;
         WARNING_1("%1 outpost does not have building positions",_key);
     };
 
-    // garrison officer
+    // spawn officer and place in or around building
     private _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),3] call EFUNC(main,getPool)), DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
     
     private _dir = random 360;
@@ -110,7 +113,7 @@ scopeName SCOPE;
     [QGVAR(updateUnitCount),[_value,1]] call CBA_fnc_localEvent;
     [QGVAR(updateGroups),[_value,group _officer]] call CBA_fnc_localEvent;
 
-    // garrison infantry
+    // spawn building infantry
     private ["_unit","_dir"];
 
     {
@@ -133,6 +136,18 @@ scopeName SCOPE;
                 _location = (_this select 0) getVariable [QGVAR(location),locationNull];
                 _location call (_location getVariable [QGVAR(onKilled),{}]);
             }]; 
+            _unit addEventHandler ["FiredNear", {
+                // _unit = _this select 0;
+                // _firer = _this select 1;
+                // _node = "Sign_Pointer_F" createVehicle [0,0,0];
+                // _node setPosWorld (_unit modelToWorldWorld [0,0,2]);
+
+                // resetSubgroupDirection _unit;
+
+                _unit removeEventHandler ["FiredNear",_thisEventHandler];
+
+                // systemChat str [_unit,_firer];
+            }];  
 
             [QEGVAR(cache,enableGroup),group _unit] call CBA_fnc_serverEvent;
             [QGVAR(updateUnitCount),[_value,1]] call CBA_fnc_localEvent;
@@ -140,7 +155,7 @@ scopeName SCOPE;
         };
     } forEach _buildings;
 
-    // spawn addition garrison units inside outpost (not at building positions)
+    // spawn guard infantry inside outpost (not at building positions)
     for "_i" from 0 to (floor ((_composition select 0) / 4) min 16) do {
         _pos = [_posOutpost,0,(_composition select 0) * 0.9,2,-1,-1,[0,360],_posOutpost] call EFUNC(main,findPosSafe);
 
@@ -159,6 +174,18 @@ scopeName SCOPE;
                 _location = (_this select 0) getVariable [QGVAR(location),locationNull];
                 _location call (_location getVariable [QGVAR(onKilled),{}]);
             }]; 
+            _unit addEventHandler ["FiredNear", {
+                // _unit = _this select 0;
+                // _firer = _this select 1;
+                // _node = "Sign_Pointer_F" createVehicle [0,0,0];
+                // _node setPosWorld (_unit modelToWorldWorld [0,0,2]);
+
+                // resetSubgroupDirection _unit;
+
+                _unit removeEventHandler ["FiredNear",_thisEventHandler];
+
+                // systemChat str [_unit,_firer];
+            }];
 
             [QEGVAR(cache,enableGroup),group _unit] call CBA_fnc_serverEvent;
             [QGVAR(updateUnitCount),[_value,1]] call CBA_fnc_localEvent;
@@ -167,32 +194,6 @@ scopeName SCOPE;
     };
 
     // @todo add comms array intel to officer 
-
-    // check dynamic task params
-    
-    // spawn outpost task
-    private _taskID = [_key,diag_frameNo] joinString "_";
-    private _taskAO = [GVAR(areas),_key] call CBA_fnc_hashGet;
-    private _taskNearest = _taskAO getVariable [QEGVAR(main,mapLocation),locationNull];
-    private _taskSituationOrientation = [[(getPos _taskNearest) getDir (getPos _value)] call EFUNC(main,getDirCardinal),text _taskNearest] joinString " of ";
-
-    // private _taskSituation = format ["Some time ago, a small group of enemy combatants was spotted constructing an outpost %1. The enemy force is composed of dismounted patrols and potentially, static emplacements. They are expected to defend upon contact.",_taskSituationOrientation];
-
-    private _taskSituation = format ["Some time ago, a convoy of military logistics and engineering vehicles was spotted entering AO %1. These vehicles are likely supporting the construction of an enemy outpost (OBJ %2). Previous engagements have shown the enemy to be composed of dismounted patrols and potentially, static emplacements. They are expected to defend upon contact.",_taskAO getVariable [QGVAR(name),""],_value getVariable [QGVAR(name),""]];
-
-    private _taskMission = format ["Friendly forces will conduct an operation in AO %1 to locate and secure OBJ %2 in order to prevent anti-coalition forces from gaining momentum and swaying civilian approval.",_taskAO getVariable [QGVAR(name),""], _value getVariable [QGVAR(name),""]];
-
-    private _taskSustainment = ["","","","","Each Soldier will carry his/her full basic load.","","","All squads will maintain necessary medical equipment and will ensure it is replenished prior to each movement.","",""];
-
-    _taskStr = [_value,_taskAO,_value getVariable [QGVAR(name),""],_taskAO getVariable [QGVAR(name),""],_value getVariable [QGVAR(terrain),""],_taskSituation,_taskMission,_taskSustainment] call EFUNC(main,taskOPORD);
-
-    // [true,_taskID,[_taskStr select 1,_taskStr select 0,""],[_taskAO getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]] call EFUNC(main,polygonCentroid),"CREATED",0,true,"attack"] call BIS_fnc_taskCreate;
-
-    [true,_taskID,[_taskStr select 1,_taskStr select 0,""],[objNull, getPos _value] select GVAR(enableMarkers),"CREATED",0,true,"attack"] call BIS_fnc_taskCreate;
-
-    _value setVariable [QGVAR(task),_taskID];
-
-    TRACE_2("outpost task",_key,_taskID);
 }] call CBA_fnc_hashEachPair;
 
 nil

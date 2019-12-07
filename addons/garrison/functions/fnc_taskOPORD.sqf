@@ -8,10 +8,9 @@ ref: https://semo.edu/pdf/showmegold-lab_opRedhawk.pdf
 
 Arguments:
 0: location <LOCATION>
-1: terrain type <STRING>
-2: OPORD situation paragraph <STRING>
-3: OPORD mission paragraph <STRING>
-4: OPORD sustainment paragraph <STRING>
+1: OPORD situation paragraph <STRING>
+2: OPORD mission paragraph <STRING>
+3: OPORD sustainment paragraph <ARRAY>
 
 Return:
 array
@@ -22,46 +21,48 @@ __________________________________________________________________*/
 
 params [
     ["_location",locationNull,[locationNull]],
-    ["_terrain","meadow",[""]],
     ["_situation","",[""]],
     ["_mission","",[""]],
-    ["_sustainment",["","","","","","","","","",""],[[]]]
+    ["_sustainment",[],[[]]]
 ];
 
 private _OPORD = [];
 private _isArea = [GVAR(areas), _location getVariable [QEGVAR(main,name),""]] call CBA_fnc_hashHasKey;
 
-_terrain = call {
-    if (COMPARE_STR(_terrain,"meadow")) exitWith {"The terrain is predominantly flat"};
-    if (COMPARE_STR(_terrain,"forest")) exitWith {"The terrain is predominantly forested"};
-    if (COMPARE_STR(_terrain,"peak")) exitWith {"The terrain is predominantly uneven with large elevation changes"};
-
-    "The terrain characteristics are unavailable"
-};
-
 private _para1 = if (_isArea) then {
+    // get area orientation 
+    private _centroid = [_location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]] call EFUNC(main,polygonCentroid);
+    private _orientation = if (CHECK_DIST2D(_centroid,EGVAR(main,center),EGVAR(main,radius) * 0.2)) then {
+        "central"
+    } else {
+        [[EGVAR(main,center) getDir (getPos _location)] call EFUNC(main,getDirCardinal),"ern"] joinString ""
+    };
+    
     // get area elevation
     private _elevation = 0;
-    private _elevations =+ _location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON];
+    private _elevations =+ (_location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]);
 
-    _elevations = _elevations apply {getTerrainHeightASL _x};
+    _elevations = _elevations apply {ASLZ(_x)};
 
     {
         _elevation = _elevation + _x;
     } forEach _elevations;    
 
+    _elevation = round (_elevation / (count _elevations));
+
     // get area weather 
     private _weather = if (CHECK_ADDON_2(weather)) then {
         format ["%1°C high, %2°C low, %3%4 chance of precipitation.",EGVAR(weather,tempDay),EGVAR(weather,tempNight),round EGVAR(weather,precipitation),"%"]
     } else {
-        "Weather forecast data is unavailable."
+        "Forecast data is unavailable."
     };
 
     [
         "ORIENTATION",
-        format ["%1a. The average elevation of the area is %2m above sea level. %3.",TAB,round (_elevation / (count _elevations)),_terrain],
-        format ["%1b. Weather: %2",TAB,_weather]
-    ] joinString (NEWLINE); 
+        format ["%1a. AO %2 is located in the %3 region of %4.",TAB,_location getVariable [QGVAR(name),""],_orientation,[worldName] call CBA_fnc_capitalize],
+        format ["%1b. The average elevation of the area is %2m above sea level.",TAB,_elevation],
+        format ["%1c. Weather: %2",TAB,_weather]
+    ] joinString NEWLINE; 
 } else {
     ""
 };
@@ -70,7 +71,7 @@ private _para2 = if !(_situation isEqualTo "") then {
     [
         "SITUATION",
         format ["%1a. %2",TAB,_situation]
-    ] joinString (NEWLINE);
+    ] joinString NEWLINE;
 } else {
     ""
 };
@@ -79,12 +80,12 @@ private _para3 = if !(_mission isEqualTo "") then {
     [
         "MISSION",
         format ["%1a. %2",TAB,_mission]
-    ] joinString (NEWLINE);
+    ] joinString NEWLINE;
 } else {
     ""
 };
 
-private _para4 = if !(_sustainment isEqualTo "") then {
+private _para4 = if !(_sustainment isEqualTo []) then {
     // get CASEVAC status
     private _transport = if (CHECK_ADDON_2(transport)) then {
         "CASEVAC is available upon request."
@@ -95,8 +96,12 @@ private _para4 = if !(_sustainment isEqualTo "") then {
     // format sustainment classes
     private _sustainmentFormatted = [];
 
+    // make sure sustainment is correct length
+    _sustainment =+ _sustainment;
+    _sustainment resize 10;
+
     {
-        if (COMPARE_STR(_x,"")) then {
+        if (isNil "_x" || {COMPARE_STR(_x,"")}) then {
             _sustainmentFormatted pushBack "None.";
         } else {
             _sustainmentFormatted pushBack _x;
@@ -119,7 +124,7 @@ private _para4 = if !(_sustainment isEqualTo "") then {
         format ["%1%1%1j. Class X - Misc. supplies - %2",TAB,_sustainmentFormatted select 9],
         format ["%1b. Personnel.",TAB],
         format ["%1%1 1. Transport - %2",TAB,_transport]
-    ] joinString (NEWLINE); 
+    ] joinString NEWLINE; 
 } else {
     ""
 };
@@ -127,9 +132,9 @@ private _para4 = if !(_sustainment isEqualTo "") then {
 // format paragraph order 
 {
     if !(_x isEqualTo "") then {
-        private _formatted = [_forEachIndex + 1,_x] joinString ". ";
+        private _formatted = [(count _OPORD) + 1,_x] joinString ". ";
         _OPORD pushBack _formatted;
     };
 } forEach [_para1,_para2,_para3,_para4];
 
-[format ["%1 %2",["OBJ","AO"] select _isArea,_location getVariable [QGVAR(name),""]],_OPORD joinString ((NEWLINE) + (NEWLINE))]
+[format ["%1 %2",["OBJ","AO"] select _isArea,_location getVariable [QGVAR(name),""]],_OPORD joinString (NEWLINE + NEWLINE)]

@@ -24,16 +24,6 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(enableMarkers),
-    "CHECKBOX",
-    ["Enable objective markers","Mark objectives on map."],
-    COMPONENT_NAME,
-    false,
-    true,
-    {}
-] call CBA_Settings_fnc_init;
-
-[
     QGVAR(cooldown),
     "SLIDER",
     ["AO Cooldown","Time in seconds between AO spawns."],

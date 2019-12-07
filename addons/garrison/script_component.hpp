@@ -13,3 +13,9 @@
 #define GAR_UNITCOUNT 32
 #define OP_COUNT 2
 #define OP_PATROLSIZE 4
+
+#define GAR_SCORE 10
+#define OP_SCORE 5
+#define TASK_SCORE 5
+#define COMM_SCORE 2.5
+#define ROADBLOCK_SCORE 1
