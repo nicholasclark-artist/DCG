@@ -79,7 +79,6 @@ PREP(polygonSort);
 PREP(polygonTriangulate);
 PREP(polygonRandomPos);
 PREP(polygonIsConvex);
-PREP(taskOPORD);
 
 // heap functions
 PREP(heapSwap);
@@ -203,6 +202,7 @@ publicVariable QFUNC(displayGUIMessage);
 publicVariable QFUNC(armory);
 publicVariable QFUNC(initClient);
 publicVariable QFUNC(handleSettingChange);
+publicVariable QFUNC(polygonFill);
 
 // variables required on all machines
 publicVariable QGVAR(radius);
