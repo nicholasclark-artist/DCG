@@ -17,9 +17,9 @@ class EditorData
 	class Camera
 	{
 		pos[]={2273.5334,45.317738,13190.774};
-		dir[]={0.449642,-0.62374163,0.6395517};
-		up[]={0.35879403,0.78157097,0.51033866};
-		aside[]={0.81815022,-2.9476359e-007,-0.57520103};
+		dir[]={0.63218582,-0.46750867,0.6180889};
+		up[]={0.33438268,0.88393319,0.32693043};
+		aside[]={0.69917244,6.2398612e-007,-0.71511126};
 	};
 };
 binarizationWanted=0;
@@ -854,7 +854,7 @@ class CustomAttributes
 		class Attribute1
 		{
 			property="Enh_ambientFlyby_speed";
-			expression="missionNamespace setVariable ['Enh_ambientFlyby_speed',_value]";
+			expression="missionNamespace setVariable ['Enh_AmbientFlyby_Speed',_value]";
 			class Value
 			{
 				class data
@@ -2242,7 +2242,7 @@ class Mission
 					};
 					id=185;
 					type="C_Marshal_F";
-					atlOffset=0.35967731;
+					atlOffset=0.35967827;
 					class CustomAttributes
 					{
 						class Attribute0
@@ -2580,7 +2580,7 @@ class Mission
 				dynamicSimulation=1;
 			};
 			id=184;
-			atlOffset=0.35967731;
+			atlOffset=0.35967827;
 		};
 		class Item16
 		{
@@ -3571,7 +3571,7 @@ class Mission
 						class Attribute1
 						{
 							property="Enh_featureType";
-							expression="_this setFeatureType parseNumber (_value)";
+							expression="if (_value isEqualType 0) then {_this setFeatureType _value}; if (_value isEqualType 'STRING') then {_this setFeatureType parseNumber _value}";
 							class Value
 							{
 								class data
@@ -3628,7 +3628,7 @@ class Mission
 						class Attribute4
 						{
 							property="Enh_ambientAnimParams";
-							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if (!(_value select 0 == '') && !isMultiplayer) then		{			[_unit,_value select 0,_value select 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
+							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if ((_value # 0 != '') && !isMultiplayer) then		{			[_unit,_value # 0,_value # 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
 							class Value
 							{
 								class data
@@ -3719,7 +3719,7 @@ class Mission
 						class Attribute1
 						{
 							property="Enh_featureType";
-							expression="_this setFeatureType parseNumber (_value)";
+							expression="if (_value isEqualType 0) then {_this setFeatureType _value}; if (_value isEqualType 'STRING') then {_this setFeatureType parseNumber _value}";
 							class Value
 							{
 								class data
@@ -3776,7 +3776,7 @@ class Mission
 						class Attribute4
 						{
 							property="Enh_ambientAnimParams";
-							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if (!(_value select 0 == '') && !isMultiplayer) then		{			[_unit,_value select 0,_value select 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
+							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if ((_value # 0 != '') && !isMultiplayer) then		{			[_unit,_value # 0,_value # 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
 							class Value
 							{
 								class data
@@ -3866,7 +3866,7 @@ class Mission
 						class Attribute1
 						{
 							property="Enh_featureType";
-							expression="_this setFeatureType parseNumber (_value)";
+							expression="if (_value isEqualType 0) then {_this setFeatureType _value}; if (_value isEqualType 'STRING') then {_this setFeatureType parseNumber _value}";
 							class Value
 							{
 								class data
@@ -3923,7 +3923,7 @@ class Mission
 						class Attribute4
 						{
 							property="Enh_ambientAnimParams";
-							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if (!(_value select 0 == '') && !isMultiplayer) then		{			[_unit,_value select 0,_value select 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
+							expression="	if (is3DEN) then {_this call BIS_fnc_ambientAnim__terminate};	[_this,_value] spawn	{		sleep 0.1;		params ['_unit','_value'];		if ((_value # 0 != '') && !isMultiplayer) then		{			[_unit,_value # 0,_value # 1,objNull,false,false] call BIS_fnc_ambientAnim;			waitUntil {sleep 0.1; ((behaviour _unit) == 'COMBAT') || (damage _unit > 0.6)};			_unit call BIS_fnc_ambientAnim__terminate;		};	}";
 							class Value
 							{
 								class data
@@ -4968,7 +4968,7 @@ class Mission
 			};
 			id=570;
 			type="Land_OfficeChair_01_F";
-			atlOffset=0.34473419;
+			atlOffset=0.34474182;
 			class CustomAttributes
 			{
 				class Attribute0
