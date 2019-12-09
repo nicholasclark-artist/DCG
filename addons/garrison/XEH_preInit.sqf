@@ -10,6 +10,7 @@ PREP(init);
 PREP(initSettings);
 PREP(handleArea);
 PREP(setArea);
+PREP(setGarrison);
 PREP(setOutpost);
 PREP(setTask);
 PREP(removeArea);

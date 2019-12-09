@@ -54,6 +54,7 @@ if (_locations isEqualTo []) exitWith {false};
     private _polygon = _location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON];
 
     // set area variables
+    _location setVariable [QGVAR(active),1];
     _location setVariable [QGVAR(polygonDraw),_id];
     _location setVariable [QGVAR(name),call EFUNC(main,getAlias)];
     _location setVariable [QGVAR(task),""];

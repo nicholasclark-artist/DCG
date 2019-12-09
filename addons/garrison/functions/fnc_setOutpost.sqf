@@ -16,7 +16,7 @@ __________________________________________________________________*/
 // define scope to break hash loop
 scopeName SCOPE;
 
-private ["_outposts","_pos","_polygonPositions","_type","_aliasAO","_location"];
+private ["_outposts","_pos","_polygonPositions","_type","_aliasGarrison","_location"];
 
 _outposts = [];
 
@@ -29,7 +29,7 @@ _outposts = [];
     _pos = [];
     _polygonPositions = [];
     _type = "";
-    _aliasAO = _value getVariable [QGVAR(name),""];
+    _aliasGarrison = _value getVariable [QGVAR(nameGarrison),""];
 
     // get random positions in polygon
     for "_i" from 0 to 4 do {
@@ -55,9 +55,9 @@ _outposts = [];
         private _alias = call EFUNC(main,getAlias);
 
         // try getting a new alias if same as AO
-        if (COMPARE_STR(_alias,_aliasAO)) then { 
+        if (COMPARE_STR(_alias,_aliasGarrison)) then { 
             _alias = call EFUNC(main,getAlias);
-            WARNING("outpost and area aliases are the same. selecting new alias")
+            WARNING("outpost and garrison aliases are the same. selecting new alias")
         }; 
 
         // @todo fix water positions 
