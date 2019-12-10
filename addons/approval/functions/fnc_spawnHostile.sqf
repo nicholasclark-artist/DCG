@@ -24,7 +24,7 @@ private _isPosGood = true;
 private _hostilePos = selectRandom (([_pos,64,512,256,4,0] call EFUNC(main,findPosGrid)) select {[_x,SAFE_DIST] call EFUNC(main,getNearPlayers) isEqualTo []});
 private _nearPlayers = [_pos,SAFE_DIST] call EFUNC(main,getNearPlayers);
 
-// check if hostile position found, check if hostile position in line of sight (at average eye height)
+// check if hostile position found,check if hostile position in line of sight (at average eye height)
 _isPosGood = if (isNil "_hostilePos" || {(_nearPlayers findIf {[_hostilePos vectorAdd [0,0,1.5],eyePos _x] call EFUNC(main,inLOS)}) > -1}) then {
     false
 };
@@ -38,7 +38,7 @@ switch (floor random 3) do {
 
         // get loadout from temp unit
         private _tempGrp = createGroup EGVAR(main,enemySide);
-        (selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool))) createUnit [DEFAULT_SPAWNPOS, _tempGrp];
+        (selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool))) createUnit [DEFAULT_SPAWNPOS,_tempGrp];
         private _vest = vest (leader _tempGrp);
         private _weapon = currentWeapon (leader _tempGrp);
         private _mags = magazines (leader _tempGrp);
@@ -74,7 +74,7 @@ switch (floor random 3) do {
                 _wp = _grp addWaypoint [_pos,0];
                 _wp setWaypointBehaviour "AWARE";
                 _wp setWaypointFormation "STAG COLUMN";
-                _wp setWaypointStatements ["!(behaviour this isEqualTo ""COMBAT"")", format ["['%1',thisList] call CBA_fnc_serverEvent",QEGVAR(main,cleanup)]];
+                _wp setWaypointStatements ["!(behaviour this isEqualTo ""COMBAT"")",format ["['%1',thisList] call CBA_fnc_serverEvent",QEGVAR(main,cleanup)]];
                 
                 INFO_1("rebels spawned at %1",getPos leader _grp);
             },
@@ -115,7 +115,7 @@ switch (floor random 3) do {
         } forEach crew (objectParent _driver);
 
         // stop driver
-        private _wp = [group _driver, currentWaypoint group _driver];
+        private _wp = [group _driver,currentWaypoint group _driver];
         _wp setWaypointPosition [getpos _driver,0];
 
         [
@@ -137,7 +137,7 @@ switch (floor random 3) do {
                 _driver removeAllEventHandlers "firedNear";
 
                 // event to detonate prematurely if hit
-                (objectParent _driver) addEventHandler ["Hit", { 
+                (objectParent _driver) addEventHandler ["Hit",{ 
                     if (PROBABILITY(0.1)) then {
                         "HelicopterExploSmall" createVehicle ((_this select 0) modeltoworld [0,0,0]);
                         (_this select 0) removeEventHandler ["Hit",_thisEventHandler];
@@ -151,9 +151,9 @@ switch (floor random 3) do {
                 (objectParent _driver) allowCrewInImmobile true;
                 
                 // send to target
-                _wp = (group _driver) addWaypoint [getPos _player, 0];
+                _wp = (group _driver) addWaypoint [getPos _player,0];
                 _wp setWaypointSpeed "FULL";
-                _wp setWaypointStatements ["true", format ["['%1',this] call CBA_fnc_serverEvent",QEGVAR(main,cleanup)]];
+                _wp setWaypointStatements ["true",format ["['%1',this] call CBA_fnc_serverEvent",QEGVAR(main,cleanup)]];
                 
                 // follow player
                 [{
@@ -163,8 +163,8 @@ switch (floor random 3) do {
                     if (isNull _grp || {isNil "_player"}) exitWith {
                         [_idPFH] call CBA_fnc_removePerFrameHandler;
                     };
-                    _wp setWaypointPosition [getPosASL _player, -1];
-                }, 5, [group _driver,_wp,_player]] call CBA_fnc_addPerFrameHandler;
+                    _wp setWaypointPosition [getPosASL _player,-1];
+                },5,[group _driver,_wp,_player]] call CBA_fnc_addPerFrameHandler;
 
                 // detonate hostile if close to target
                 [
@@ -182,7 +182,7 @@ switch (floor random 3) do {
                     }
                 ] call CBA_fnc_waitUntilAndExecute;
 
-                INFO_1("hostile vehicle spawned at %1", getPos _driver);
+                INFO_1("hostile vehicle spawned at %1",getPos _driver);
             },
             [_player,_driver,_wp],
             5
@@ -199,7 +199,7 @@ switch (floor random 3) do {
 
         // set hostile
         private _grp = createGroup CIVILIAN;
-        (selectRandom EGVAR(main,unitsCiv)) createUnit [_hostilePos, _grp];
+        (selectRandom EGVAR(main,unitsCiv)) createUnit [_hostilePos,_grp];
         _grp = [[leader _grp]] call EFUNC(main,setSide);
         [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
         
@@ -213,7 +213,7 @@ switch (floor random 3) do {
         _unit removeAllEventHandlers "firedNear";
 
         // event to detonate prematurely if hit
-        _unit addEventHandler ["Hit", { 
+        _unit addEventHandler ["Hit",{ 
             if (PROBABILITY(0.333)) then {
                 "HelicopterExploSmall" createVehicle ((_this select 0) modeltoworld [0,0,0]);
                 (_this select 0) removeEventHandler ["Hit",_thisEventHandler];
@@ -226,9 +226,9 @@ switch (floor random 3) do {
         _unit allowFleeing 0;
         
         // send to target
-        _wp = (group _unit) addWaypoint [_pos, 0];
+        _wp = (group _unit) addWaypoint [_pos,0];
         _wp setWaypointSpeed "FULL";
-        _wp setWaypointStatements ["true", format ["['%1',this] call CBA_fnc_serverEvent",QEGVAR(main,cleanup)]];
+        _wp setWaypointStatements ["true",format ["['%1',this] call CBA_fnc_serverEvent",QEGVAR(main,cleanup)]];
 
         // follow player
         [{
@@ -238,8 +238,8 @@ switch (floor random 3) do {
             if (isNull _grp || {isNil "_player"}) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
             };
-            _wp setWaypointPosition [getPosASL _player, -1];
-        }, 5, [group _unit,_wp,_player]] call CBA_fnc_addPerFrameHandler;
+            _wp setWaypointPosition [getPosASL _player,-1];
+        },5,[group _unit,_wp,_player]] call CBA_fnc_addPerFrameHandler;
 
         // detonate hostile if close to target
         [
@@ -256,7 +256,7 @@ switch (floor random 3) do {
             }
         ] call CBA_fnc_waitUntilAndExecute;
 
-        INFO_1("hostile unit spawned at %1", getPos _unit);
+        INFO_1("hostile unit spawned at %1",getPos _unit);
 
         true
     };

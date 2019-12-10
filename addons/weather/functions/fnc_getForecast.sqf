@@ -51,7 +51,7 @@ switch (_this select 0) do {
 
         _forecast pushBack _rain;
 
-        // no variance, get new value every cycle, so fog is not constant
+        // no variance,get new value every cycle,so fog is not constant
         _forecast pushBack (call FUNC(getFog));
 
         _forecast

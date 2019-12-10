@@ -81,10 +81,10 @@ _pilot setBehaviourStrong "CARELESS";
 _transport lockDriver true;
 
 {
-    _transport lockTurret [_x, true];
-} forEach (allTurrets [_transport, false]);
+    _transport lockTurret [_x,true];
+} forEach (allTurrets [_transport,false]);
 
-// disable caching on transport, can cause waypoint issues
+// disable caching on transport,can cause waypoint issues
 [QEGVAR(cache,disableGroup),group _transport] call CBA_fnc_serverEvent;
 
 // move to pick up position
@@ -109,7 +109,7 @@ TR_INFIL(_transport);
         _transport setVariable [QEGVAR(main,forceCleanup),true];
         [QEGVAR(main,cleanup),_transport] call CBA_fnc_serverEvent;
     };
-}, 1, [_requestor,_transport]] call CBA_fnc_addPerFrameHandler;
+},1,[_requestor,_transport]] call CBA_fnc_addPerFrameHandler;
 
 // handles transport getting stuck in a hover
 [{
@@ -135,6 +135,6 @@ TR_INFIL(_transport);
     };
 
     _transport setVariable [QGVAR(stuckPos),getPosWorld _transport];
-}, 10, [_transport]] call CBA_fnc_addPerFrameHandler;
+},10,[_transport]] call CBA_fnc_addPerFrameHandler;
 
 nil

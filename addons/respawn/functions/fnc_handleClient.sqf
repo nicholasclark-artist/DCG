@@ -18,12 +18,12 @@ if (isNil "ace_respawn_savePreDeathGear" || {!ace_respawn_savePreDeathGear}) the
 INFO("Handling gear on respawn");
 
     player addEventHandler ["Killed",{
-        player setVariable [QGVAR(unitGear), getUnitLoadout player];
-        player setVariable [QGVAR(unitWeapon), [currentWeapon player, currentMuzzle player, currentWeaponMode player]];
+        player setVariable [QGVAR(unitGear),getUnitLoadout player];
+        player setVariable [QGVAR(unitWeapon),[currentWeapon player,currentMuzzle player,currentWeaponMode player]];
     }];
 
     player addEventHandler ["Respawn",{
-        [player, player getVariable QGVAR(unitGear), player getVariable QGVAR(unitWeapon)] call FUNC(restoreLoadout);
+        [player,player getVariable QGVAR(unitGear),player getVariable QGVAR(unitWeapon)] call FUNC(restoreLoadout);
     }];
 };
 

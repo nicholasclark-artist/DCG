@@ -10,13 +10,13 @@
 #include "script_component.hpp"
 
 #ifdef DO_DEBUG
-diag_log text format ["Func: %1", _fnc_scriptName];
-diag_log text format ["Called by: %1", _fnc_scriptNameParent];
+diag_log text format ["Func: %1",_fnc_scriptName];
+diag_log text format ["Called by: %1",_fnc_scriptNameParent];
 #endif
 
-params ["_point", "_x", "_dirY"];
+params ["_point","_x","_dirY"];
 
-_point params ["_pointX", "_pointY"];
+_point params ["_pointX","_pointY"];
 
 private _dp = 2 * (_pointY - _dirY);
 private _a1 = 1 / _dp;

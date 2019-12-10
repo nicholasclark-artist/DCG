@@ -48,8 +48,8 @@ private _onCreate = {
     TRACE_1("spawn",_this);
 
     // headless client / cache support
-    _this setVariable [QEGVAR(main,HCBlacklist), true];
-    _this setVariable ["acex_headless_blacklist", true];
+    _this setVariable [QEGVAR(main,HCBlacklist),true];
+    _this setVariable ["acex_headless_blacklist",true];
 
     // behaviors 
     _this setSkill 0.1;
@@ -86,7 +86,7 @@ for "_i" from 0 to (count _locations - 1) do {
 
     // find houses with building positions 
     // @todo add eventhandler to buildings to remove house from buildingPos array when destroyed
-    _buildingPositions = (ASLToAGL _position nearObjects ["House", _radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
+    _buildingPositions = (ASLToAGL _position nearObjects ["House",_radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
 
     if (count _buildingPositions > 1) then {
         // get ambient anim objects 
@@ -118,7 +118,7 @@ for "_i" from 0 to (count _locations - 1) do {
         _mrk setMarkerColor ([CIVILIAN,true] call BIS_fnc_sideColor);
         _mrk setMarkerShape "ELLIPSE";
         _mrk setMarkerBrush "Border";
-        _mrk setMarkerSize [_radius + GVAR(spawnDist), _radius + GVAR(spawnDist)];
+        _mrk setMarkerSize [_radius + GVAR(spawnDist),_radius + GVAR(spawnDist)];
         [_mrk] call EFUNC(main,setDebugMarker);     
 
         // add to location hash

@@ -17,7 +17,7 @@ __________________________________________________________________*/
 [
     QGVAR(enable),
     "CHECKBOX",
-    format ["Enable %1", COMPONENT_NAME],
+    format ["Enable %1",COMPONENT_NAME],
     COMPONENT_NAME,
     true,
     true,
@@ -30,7 +30,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["Network 01","Units included in this list will be assigned to network. Units must be separated by a comma."],
     COMPONENT_NAME,
-    "plt_pl, a_sl, b_sl",
+    "plt_pl,a_sl,b_sl",
     true,
     {},
     true
@@ -41,7 +41,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["Network 02","Units included in this list will be assigned to network. Units must be separated by a comma."],
     COMPONENT_NAME,
-    "plt_fo, r1_pilot, r1_copilot, r2_pilot, r2_copilot, rh1_co",
+    "plt_fo,r1_pilot,r1_copilot,r2_pilot,r2_copilot,rh1_co",
     true,
     {},
     true
@@ -52,7 +52,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["Network 03","Units included in this list will be assigned to network. Units must be separated by a comma."],
     COMPONENT_NAME,
-    "plt_pl, plt_sgt, plt_med, plt_fo",
+    "plt_pl,plt_sgt,plt_med,plt_fo",
     true,
     {},
     true
@@ -63,7 +63,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["Network 04","Units included in this list will be assigned to network. Units must be separated by a comma."],
     COMPONENT_NAME,
-    "a_sl, a_med, a1_ftl, a1_ar, a1_gr, a1_r, a2_ftl, a2_ar, a2_gr, a2_r",
+    "a_sl,a_med,a1_ftl,a1_ar,a1_gr,a1_r,a2_ftl,a2_ar,a2_gr,a2_r",
     true,
     {},
     true
@@ -74,7 +74,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["Network 05","Units included in this list will be assigned to network. Units must be separated by a comma."],
     COMPONENT_NAME,
-    "b_sl, b_med, b1_ftl, b1_ar, b1_gr, b1_r, b2_ftl, b2_ar, b2_gr, b2_r",
+    "b_sl,b_med,b1_ftl,b1_ar,b1_gr,b1_r,b2_ftl,b2_ar,b2_gr,b2_r",
     true,
     {},
     true
@@ -85,7 +85,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["Network 06","Units included in this list will be assigned to network. Units must be separated by a comma."],
     COMPONENT_NAME,
-    "rh1_co, rh1_driver, rh1_gunner",
+    "rh1_co,rh1_driver,rh1_gunner",
     true,
     {},
     true
@@ -94,7 +94,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet01_ACRE),
     "LIST",
-    ["Network 01 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
+    ["Network 01 ACRE2 Radio","ACRE2 radio for units assigned to network."],
     CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -109,7 +109,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet02_ACRE),
     "LIST",
-    ["Network 02 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
+    ["Network 02 ACRE2 Radio","ACRE2 radio for units assigned to network."],
     CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -124,7 +124,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet03_ACRE),
     "LIST",
-    ["Network 03 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
+    ["Network 03 ACRE2 Radio","ACRE2 radio for units assigned to network."],
     CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -139,7 +139,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet04_ACRE),
     "LIST",
-    ["Network 04 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
+    ["Network 04 ACRE2 Radio","ACRE2 radio for units assigned to network."],
     CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -154,7 +154,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet05_ACRE),
     "LIST",
-    ["Network 05 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
+    ["Network 05 ACRE2 Radio","ACRE2 radio for units assigned to network."],
     CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -169,7 +169,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet06_ACRE),
     "LIST",
-    ["Network 06 ACRE2 Radio", "ACRE2 radio for units assigned to network."],
+    ["Network 06 ACRE2 Radio","ACRE2 radio for units assigned to network."],
     CATEGORY_ACRE,
     [
         ["ACRE_PRC343","ACRE_PRC152","ACRE_PRC117F","ACRE_PRC77","ACRE_PRC148","ACRE_SEM52SL"],
@@ -184,7 +184,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet01_TFAR),
     "LIST",
-    ["Network 01 TFAR Radio", "TFAR radio for units assigned to network."],
+    ["Network 01 TFAR Radio","TFAR radio for units assigned to network."],
     CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
@@ -199,7 +199,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet02_TFAR),
     "LIST",
-    ["Network 02 TFAR Radio", "TFAR radio for units assigned to network."],
+    ["Network 02 TFAR Radio","TFAR radio for units assigned to network."],
     CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
@@ -214,7 +214,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet03_TFAR),
     "LIST",
-    ["Network 03 TFAR Radio", "TFAR radio for units assigned to network."],
+    ["Network 03 TFAR Radio","TFAR radio for units assigned to network."],
     CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
@@ -229,7 +229,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet04_TFAR),
     "LIST",
-    ["Network 04 TFAR Radio", "TFAR radio for units assigned to network."],
+    ["Network 04 TFAR Radio","TFAR radio for units assigned to network."],
     CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
@@ -244,7 +244,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet05_TFAR),
     "LIST",
-    ["Network 05 TFAR Radio", "TFAR radio for units assigned to network."],
+    ["Network 05 TFAR Radio","TFAR radio for units assigned to network."],
     CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],
@@ -259,7 +259,7 @@ __________________________________________________________________*/
 [
     QGVAR(commNet06_TFAR),
     "LIST",
-    ["Network 06 TFAR Radio", "TFAR radio for units assigned to network."],
+    ["Network 06 TFAR Radio","TFAR radio for units assigned to network."],
     CATEGORY_TFAR,
     [
         ["TFAR_anprc152","TFAR_rf7800str","TFAR_rt1523g","TFAR_anprc148jem","TFAR_anprc154","TFAR_anprc155","TFAR_fadak","TFAR_pnr1000a","TFAR_mr3000"],

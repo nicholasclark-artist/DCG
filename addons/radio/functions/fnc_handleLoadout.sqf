@@ -1,6 +1,6 @@
 /*
 Author:
-Nicholas Clark (SENSEI), Larrow, Kingsley1997
+Nicholas Clark (SENSEI),Larrow,Kingsley1997
 
 Description:
 handle arsenal loadouts
@@ -17,7 +17,7 @@ __________________________________________________________________*/
 if !(hasInterface) exitWith {};
 
 if (CHECK_ADDON_1(acre_main)) then {
-    // ACRE workaround, disable random button to prevent inventory desync
+    // ACRE workaround,disable random button to prevent inventory desync
     [
         missionNamespace,
         "arsenalOpened",
@@ -26,7 +26,7 @@ if (CHECK_ADDON_1(acre_main)) then {
             _display = _this select 0;
             (_display displayCtrl 44150) ctrlRemoveAllEventHandlers "buttonclick";
             (_display displayCtrl 44150) ctrlEnable false;
-            _display displayAddEventHandler ["KeyDown", "if ((_this select 1) in [19,29]) then {true}"];
+            _display displayAddEventHandler ["KeyDown","if ((_this select 1) in [19,29]) then {true}"];
         }
     ] call BIS_fnc_addScriptedEventHandler;
 

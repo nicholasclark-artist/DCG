@@ -14,7 +14,7 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define COOLDOWN 300
-#define SEND_MSG(MSG) [MSG] remoteExecCall [QEFUNC(main,displayText), _player, false]
+#define SEND_MSG(MSG) [MSG] remoteExecCall [QEFUNC(main,displayText),_player,false]
 
 params [
     ["_player",objNull,[objNull]],
@@ -30,7 +30,7 @@ if (diag_tickTime < (_unit getVariable [QGVAR(questioned),COOLDOWN * -1]) + COOL
     SEND_MSG(selectRandom _text);
 };
 
-_unit setVariable [QGVAR(questioned), diag_tickTime, true];
+_unit setVariable [QGVAR(questioned),diag_tickTime,true];
 
 // @todo differentiate a civilian not having info and an unwillingness to talk
 private _text = [
@@ -48,17 +48,17 @@ if (weaponLowered _player) then {
 };
 
 if (PROBABILITY(_value)) then {
-    private _type = [0, floor random 2] select (CHECK_ADDON_2(ied));
+    private _type = [0,floor random 2] select (CHECK_ADDON_2(ied));
 
     if (_type isEqualTo 0) exitWith {
-        _near = _unit nearEntities [["CAManBase", "LandVehicle", "Ship", "Air"], 1200];
+        _near = _unit nearEntities [["CAManBase","LandVehicle","Ship","Air"],1200];
         _near = _near select {!(side _x isEqualTo EGVAR(main,playerSide)) && {!(side _x isEqualTo CIVILIAN)}};
 
         if (_near isEqualTo []) exitWith {
             SEND_MSG(selectRandom _text);
         };
 
-        private _area = nearestLocations [getposATL (selectRandom _near), ["NameCityCapital","NameCity","NameVillage"], 1000];
+        private _area = nearestLocations [getposATL (selectRandom _near),["NameCityCapital","NameCity","NameVillage"],1000];
 
         if (_area isEqualTo []) exitWith {
             SEND_MSG(selectRandom _text);
@@ -82,7 +82,7 @@ if (PROBABILITY(_value)) then {
 
                 _x setVariable [QGVAR(iedMarked),true];
 
-                _mrk = createMarker [format ["%1_%2",QUOTE(ADDON),diag_tickTime], getpos _x]; 
+                _mrk = createMarker [format ["%1_%2",QUOTE(ADDON),diag_tickTime],getpos _x]; 
                 _mrk setMarkerType "hd_warning";
                 _mrk setMarkerSize [0.75,0.75];
                 _mrk setMarkerColor "ColorRed";

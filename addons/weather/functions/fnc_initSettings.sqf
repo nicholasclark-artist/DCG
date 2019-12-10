@@ -12,11 +12,11 @@ bool
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-// @todo add settings: allow rain, allow fog
+// @todo add settings: allow rain,allow fog
 [
     QGVAR(enable),
     "CHECKBOX",
-    format ["Enable %1", COMPONENT_NAME],
+    format ["Enable %1",COMPONENT_NAME],
     COMPONENT_NAME,
     true,
     true,

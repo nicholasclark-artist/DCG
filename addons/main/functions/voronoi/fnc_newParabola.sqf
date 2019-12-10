@@ -10,12 +10,12 @@
 #include "script_component.hpp"
 
 #ifdef DO_DEBUG
-diag_log text format ["Func: %1", _fnc_scriptName];
-diag_log text format ["Called by: %1", _fnc_scriptNameParent];
+diag_log text format ["Func: %1",_fnc_scriptName];
+diag_log text format ["Called by: %1",_fnc_scriptNameParent];
 #endif
 
 if(_this isEqualTo []) then {
-    [POINT_NULL, false, PTR_NULL, EVENT_NULL, PTR_NULL, PTR_NULL, PTR_NULL]
+    [POINT_NULL,false,PTR_NULL,EVENT_NULL,PTR_NULL,PTR_NULL,PTR_NULL]
 } else {
-    [_this, true, PTR_NULL, EVENT_NULL, PTR_NULL, PTR_NULL, PTR_NULL]
+    [_this,true,PTR_NULL,EVENT_NULL,PTR_NULL,PTR_NULL,PTR_NULL]
 };

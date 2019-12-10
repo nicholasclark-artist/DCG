@@ -17,7 +17,7 @@ __________________________________________________________________*/
 
 params ["_modelInfo"];
 
-// [modelspace offset, direction offset, animations]
+// [modelspace offset,direction offset,animations]
 switch (_modelInfo select 0) do {
     // chairs
     case "campingchair_v1_f.p3d": {

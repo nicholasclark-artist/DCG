@@ -9,7 +9,7 @@ Arguments:
 0: center position <ARRAY>
 1: composition type <STRING>
 3: base direction <NUMBER>
-4: clear position before spawning composition, this param requires function call from server <BOOL>
+4: clear position before spawning composition,this param requires function call from server <BOOL>
 
 Return:
 array
@@ -46,7 +46,7 @@ private _intersects = [];
 private ["_cfg"];
 
 // spawn pivot
-private _pivot = createVehicle ["Land_HelipadEmpty_F", DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
+private _pivot = createVehicle ["Land_HelipadEmpty_F",DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
 _pivot setDir _dir;
 _pivot setPosATL _position;
 _pivot setVectorUp [0,0,1];
@@ -57,7 +57,7 @@ _objects pushBack _pivot;
 
 // clear terrain objects within composition radius
 if (_clear && {isServer}) then {
-    private _objectsTerrain = nearestTerrainObjects [_position, [], getNumber (_composition >> "radius"), false, true];
+    private _objectsTerrain = nearestTerrainObjects [_position,[],getNumber (_composition >> "radius"),false,true];
 
     {
         _x hideObjectGlobal true;
@@ -68,7 +68,7 @@ if (_clear && {isServer}) then {
     _pivot setVariable ["objectsTerrain",_objectsTerrain];
 
     // restore objects when pivot deleted
-    _pivot addEventHandler ["Deleted", {
+    _pivot addEventHandler ["Deleted",{
         {
             _x hideObjectGlobal false;
             _x allowDamage true;
@@ -89,9 +89,9 @@ for "_i" from 0 to count _objData - 1 do {
     _z = parseNumber _z;
     
     _obj = if (_simple < 1) then {
-        createVehicle [_type, DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
+        createVehicle [_type,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
     } else {
-        createSimpleObject [_type, DEFAULT_SPAWNPOS];
+        createSimpleObject [_type,DEFAULT_SPAWNPOS];
     };
 
     // get world position and set to ASL terrain height plus z offset
@@ -106,7 +106,7 @@ for "_i" from 0 to count _objData - 1 do {
     _obj setDir DIR_OFFSET(_dirOffset);
     _obj setPosASL _pos;
 
-    // if default up vector is not forced, align to terrain normal 
+    // if default up vector is not forced,align to terrain normal 
     if (_vectorUp < 1) then {
         _obj setVectorUp surfaceNormal getPosASL _obj;
     };
@@ -122,7 +122,7 @@ for "_i" from 0 to count _objData - 1 do {
     // find intersection object
     // @todo align intersection vector to terrain normal?
         // _obj modelToWorldWorld ((surfaceNormal getPosASL _obj) vectorMultiply 10)
-    private _intersect = lineIntersectsSurfaces [(getPosASL _obj) vectorAdd [0, 0, 10], getPosASL _obj, _obj, objNull, false, 5, "GEOM", "NONE"];
+    private _intersect = lineIntersectsSurfaces [(getPosASL _obj) vectorAdd [0,0,10],getPosASL _obj,_obj,objNull,false,5,"GEOM","NONE"];
 
     {
         if (typeOf (_x select 2) isEqualTo _ins) exitWith {

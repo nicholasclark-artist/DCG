@@ -18,10 +18,10 @@ if (GVAR(animalCount) >= 32) exitWith {};
 private _animals = [];
 private _places = [];
 private _expressions = [
-    [EX_HOUSES, ["Alsatian_Random_F","Fin_random_F"]],
-    [EX_HOUSES + "* (1 - rain * 3)", ["Cock_random_F","Hen_random_F"]],
-    [EX_MEADOW, ["Sheep_random_F"]],
-    [EX_HILL + "* (1 - houses * 2)", ["Goat_random_F"]]
+    [EX_HOUSES,["Alsatian_Random_F","Fin_random_F"]],
+    [EX_HOUSES + "* (1 - rain * 3)",["Cock_random_F","Hen_random_F"]],
+    [EX_MEADOW,["Sheep_random_F"]],
+    [EX_HILL + "* (1 - houses * 2)",["Goat_random_F"]]
 ];
 
 // get player to spawn animals around
@@ -39,7 +39,7 @@ private ["_place"];
 {
     _place = selectBestPlaces [_position,ANIMAL_SPAWNDIST,_x select 0,50,1];
     if !(_place isEqualTo []) then {
-        _places pushBack [_place select 0, _x select 1];
+        _places pushBack [_place select 0,_x select 1];
     };
 } forEach _expressions;
 
@@ -71,4 +71,4 @@ for "_i" from 1 to 4 do {
         GVAR(animalCount) = GVAR(animalCount) - (count _animals);
         [QEGVAR(main,cleanup),_animals] call CBA_fnc_serverEvent;
     };
-}, 60, [_position,_animals]] call CBA_fnc_addPerFrameHandler;
+},60,[_position,_animals]] call CBA_fnc_addPerFrameHandler;

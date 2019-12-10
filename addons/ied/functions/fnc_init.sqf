@@ -23,14 +23,14 @@ __________________________________________________________________*/
         private _pos = getPos _road;
 
         if (!([_pos] call EFUNC(main,inSafezones)) && {isOnRoad _pos}) then {
-            _pos = _pos getPos [5, random 360];
+            _pos = _pos getPos [5,random 360];
             _pos set [2,0];
 
             // let ace handle ied if enabled
             _ied = if (CHECK_ADDON_1(ace_explosives)) then {
-                [objNull, _pos, random 360, selectRandom ACE_TYPES, "PressurePlate", []] call ACE_Explosives_fnc_placeExplosive;
+                [objNull,_pos,random 360,selectRandom ACE_TYPES,"PressurePlate",[]] call ACE_Explosives_fnc_placeExplosive;
             } else {
-                createSimpleObject [selectRandom VANILLA_TYPES, AGLtoASL _pos];
+                createSimpleObject [selectRandom VANILLA_TYPES,AGLtoASL _pos];
             };
 
             _mrk = createMarker [format["%1_%2",QUOTE(ADDON),_forEachIndex],getPos _ied];
@@ -46,7 +46,7 @@ __________________________________________________________________*/
 
 // @todo optimize ied checks
 if !(CHECK_ADDON_1(ace_explosives)) then {
-    [FUNC(handleIED), 2, []] call CBA_fnc_addPerFrameHandler;
+    [FUNC(handleIED),2,[]] call CBA_fnc_addPerFrameHandler;
 };
 
 nil

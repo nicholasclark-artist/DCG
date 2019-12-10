@@ -26,7 +26,7 @@ params [
 [
     {getAssignedCuratorUnit GVAR(curator) isEqualTo (_this select 0)},
     {
-        [curatorEditableObjects GVAR(curator),owner (_this select 0)] call EFUNC(main,setOwner); // set object locality to new unit, otherwise non local objects lag when edited
+        [curatorEditableObjects GVAR(curator),owner (_this select 0)] call EFUNC(main,setOwner); // set object locality to new unit,otherwise non local objects lag when edited
 
         [
             [name (_this select 1),_this select 2],
@@ -37,11 +37,11 @@ params [
 
                 call FUNC(curatorEH);
 
-                _format = format ["%2 has transferred FOB control to you \n \nPress [%1] to start building",call FUNC(getKeybind), (_this select 0)];
+                _format = format ["%2 has transferred FOB control to you \n \nPress [%1] to start building",call FUNC(getKeybind),(_this select 0)];
 
                 [_format,true] call EFUNC(main,displayText);
             }
-        ] remoteExecCall [QUOTE(call),owner (_this select 0), false];
+        ] remoteExecCall [QUOTE(call),owner (_this select 0),false];
     },
     [_new,_old,_handleNew]
 ] call CBA_fnc_waitUntilAndExecute;

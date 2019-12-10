@@ -15,7 +15,7 @@ __________________________________________________________________*/
 private _unit = getAssignedCuratorUnit GVAR(curator);
 
 {
-    // ignore units in vehicles, only subtract cost of vehicle
+    // ignore units in vehicles,only subtract cost of vehicle
     if (EGVAR(approval,enable) isEqualTo 1 && {!(_x isKindOf "Man") || (_x isKindOf "Man" && (isNull objectParent _x))}) then {
         _cost = [typeOf _x] call FUNC(getCuratorCost);
         _cost = _cost*FOB_COST_MULTIPIER;
@@ -32,7 +32,7 @@ GVAR(curator) removeCuratorEditableObjects [curatorEditableObjects GVAR(curator)
 GVAR(respawnPos) call BIS_fnc_removeRespawnPosition;
 deleteVehicle GVAR(anchor);
 
-{deleteLocation GVAR(location)} remoteExecCall [QUOTE(call), 0, false];
+{deleteLocation GVAR(location)} remoteExecCall [QUOTE(call),0,false];
 
 // reassign previous curator
 if !(isNull GVAR(curatorExternal)) then {

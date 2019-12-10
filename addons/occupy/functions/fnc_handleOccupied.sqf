@@ -33,7 +33,7 @@ private _maxCount = 0;
         _maxCount = _maxCount + 1;
     };
     false
-} count (_center nearEntities [ENTITY, _size]);
+} count (_center nearEntities [ENTITY,_size]);
 
 [{
     params ["_args","_idPFH"];
@@ -48,19 +48,19 @@ private _maxCount = 0;
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         [_center,EGVAR(main,enemySide)] spawn EFUNC(main,spawnReinforcements);
     };
-}, 60, [_name,_center]] call CBA_fnc_addPerFrameHandler;
+},60,[_name,_center]] call CBA_fnc_addPerFrameHandler;
 
 [{
     params ["_args","_idPFH"];
     _args params ["_name","_center","_size","_type","_objArray","_mrkArray","_maxCount"];
 
-    _entities = _center nearEntities [ENTITY, _size];
+    _entities = _center nearEntities [ENTITY,_size];
     _count = count (_entities select {side _x isEqualTo EGVAR(main,enemySide)});
 
-    // if enemy has lost a certain amount of units, move to next phase
+    // if enemy has lost a certain amount of units,move to next phase
     if (_count <= _maxCount*ENEMYMAX_MULTIPLIER) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
-        ["TaskUpdated",["",format ["The enemy is losing control of %1! Keep up the fight and they may surrender!",_name]]] remoteExecCall [QUOTE(BIS_fnc_showNotification), allPlayers, false];
+        ["TaskUpdated",["",format ["The enemy is losing control of %1! Keep up the fight and they may surrender!",_name]]] remoteExecCall [QUOTE(BIS_fnc_showNotification),allPlayers,false];
         EGVAR(patrol,blacklist) pushBack [_center,_size]; // stop patrols from spawning in town
 
         [{
@@ -72,7 +72,7 @@ private _maxCount = 0;
             _enemyScore = 1;
 
             // get scores for all units in town
-            _entities = _center nearEntities [ENTITY, _size];
+            _entities = _center nearEntities [ENTITY,_size];
             _friendlies = _entities select {side _x isEqualTo EGVAR(main,playerSide)};
             _enemies = _entities select {side _x isEqualTo EGVAR(main,enemySide)};
 
@@ -82,14 +82,14 @@ private _maxCount = 0;
             _enemyScore = _enemyScore + count (_enemies select {isNull (objectParent _x)});
             _enemyScore = _enemyScore + (count (_enemies select {!(isNull (objectParent _x))})) * 2;
 
-            // get chance for enemies to surrender, surrender chance is capped
+            // get chance for enemies to surrender,surrender chance is capped
             _chanceSurrender = (_friendlyScore/_enemyScore) min SURRENDER_CHANCE;
-            LOG_4("E_Score: %1, F_Score: %2, E_Count: %3, S_Chance: %4",_enemyScore,_friendlyScore,count _enemies,_chanceSurrender);
+            LOG_4("E_Score: %1,F_Score: %2,E_Count: %3,S_Chance: %4",_enemyScore,_friendlyScore,count _enemies,_chanceSurrender);
 
             if (count _enemies isEqualTo 0 || {_enemyScore <= _friendlyScore && (random 1 < _chanceSurrender)}) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
                 missionNamespace setVariable [SURRENDER_VAR(_name),true];
-                ["TaskSucceeded",["",format ["%1 Liberated!",_name]]] remoteExecCall [QUOTE(BIS_fnc_showNotification), allPlayers, false];
+                ["TaskSucceeded",["",format ["%1 Liberated!",_name]]] remoteExecCall [QUOTE(BIS_fnc_showNotification),allPlayers,false];
 
                 {
                     if !(typeOf (vehicle _x) isKindOf "AIR") then {
@@ -123,11 +123,11 @@ private _maxCount = 0;
                 EGVAR(patrol,blacklist) deleteAt (EGVAR(patrol,blacklist) find [_center,_size]);
                 [{
                     EGVAR(civilian,blacklist) deleteAt (EGVAR(civilian,blacklist) find _this);
-                }, _name, 300] call CBA_fnc_waitAndExecute;
+                },_name,300] call CBA_fnc_waitAndExecute;
 
                 // setup next occupied location
-                [FUNC(findLocation), [], GVAR(cooldown)] call CBA_fnc_waitAndExecute;
+                [FUNC(findLocation),[],GVAR(cooldown)] call CBA_fnc_waitAndExecute;
             };
-        }, INTERVAL, _args] call CBA_fnc_addPerFrameHandler;
+        },INTERVAL,_args] call CBA_fnc_addPerFrameHandler;
     };
-}, INTERVAL, [_name,_center,_size,_type,_objArray,_mrkArray,_maxCount]] call CBA_fnc_addPerFrameHandler;
+},INTERVAL,[_name,_center,_size,_type,_objArray,_mrkArray,_maxCount]] call CBA_fnc_addPerFrameHandler;

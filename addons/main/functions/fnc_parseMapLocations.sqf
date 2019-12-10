@@ -204,10 +204,10 @@ GVAR(marines) = GVAR(marines) select {!(isNull (_x select INDEX_VALUE))};
 
 // convert to hashes
 // KVP: ["",[]]
-GVAR(locations) = [GVAR(locations), locationNull] call CBA_fnc_hashCreate;
-GVAR(locals) = [GVAR(locals), locationNull] call CBA_fnc_hashCreate;
-GVAR(hills) = [GVAR(hills), locationNull] call CBA_fnc_hashCreate;
-GVAR(marines) = [GVAR(marines), locationNull] call CBA_fnc_hashCreate;
+GVAR(locations) = [GVAR(locations),locationNull] call CBA_fnc_hashCreate;
+GVAR(locals) = [GVAR(locals),locationNull] call CBA_fnc_hashCreate;
+GVAR(hills) = [GVAR(hills),locationNull] call CBA_fnc_hashCreate;
+GVAR(marines) = [GVAR(marines),locationNull] call CBA_fnc_hashCreate;
 
 if (!isMultiplayer && {!is3DEN}) exitWith {}; // exit if not in multiplayer or editor
 
@@ -225,7 +225,7 @@ private _sites = [];
 
 // generate diagram
 private _dT = diag_tickTime;
-private _voronoi = [_sites, worldSize, worldSize] call FUNC(getEdges);
+private _voronoi = [_sites,worldSize,worldSize] call FUNC(getEdges);
 private _execTime = diag_tickTime - _dT;
 
 TRACE_3("voronoi diagram",count _sites,count _voronoi,_execTime);
@@ -240,12 +240,12 @@ if (VORONOI_DEBUG > 0) then {
             "Draw",
             {
                 GVAR(voronoi) apply {
-                    _x params ["_start", "_end"];
+                    _x params ["_start","_end"];
 
                     private _d = _end getDir _start;
                     private _l = 0.5*(_start distance2D _end);
-                    private _a1 = _end getPos [_l min 75, _d+25];
-                    private _a2 = _end getPos [_l min 75, _d-25];
+                    private _a1 = _end getPos [_l min 75,_d+25];
+                    private _a2 = _end getPos [_l min 75,_d-25];
 
                     (_this select 0) drawLine [
                         _start,
@@ -288,7 +288,7 @@ private ["_edgeStart","_edgeEnd","_locationL","_locationR","_keyL","_keyR","_val
     _locationL = [(nearestLocations [_x select 2,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 2) isEqualTo objNull);
     _locationR = [(nearestLocations [_x select 3,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 3) isEqualTo objNull);
     
-    // get name's of locations, same as hash key
+    // get name's of locations,same as hash key
     _keyL = text _locationL;
     _keyR = text _locationR;
 

@@ -37,8 +37,8 @@ GVAR(overcastForecast) = 0;
 GVAR(rainForecast) = 0;
 GVAR(fogForecast) = 0;
 
-// get map data, default to Altis
-_world = ["Altis", worldName] select (isClass (configFile >> "CfgWorlds" >> worldName >> QGVARMAIN(clouds)));
+// get map data,default to Altis
+_world = ["Altis",worldName] select (isClass (configFile >> "CfgWorlds" >> worldName >> QGVARMAIN(clouds)));
 
 GVAR(tempDay) = getArray (configFile >> "CfgWorlds" >> _world >> QGVARMAIN(tempDay));
 GVAR(tempNight) = getArray (configFile >> "CfgWorlds" >> _world >> QGVARMAIN(tempNight));

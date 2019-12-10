@@ -28,7 +28,7 @@ if (_ifRecon) then {
         if (_side isEqualTo INDEPENDENT) exitWith {"I_UAV_02_F"};
     };
 
-    GVAR(uav) = createVehicle [_type, _position, [], 0, "FLY"];
+    GVAR(uav) = createVehicle [_type,_position,[],0,"FLY"];
     publicVariable QGVAR(uav);
     createVehicleCrew GVAR(uav);
     GVAR(uav) allowDamage false;
@@ -46,7 +46,7 @@ if (_ifRecon) then {
         if !(_this select 1) then {(_this select 0) setFuel 1};
     }];
 
-    private _wp = group GVAR(uav) addWaypoint [_position, 0];
+    private _wp = group GVAR(uav) addWaypoint [_position,0];
     _wp setWaypointType "LOITER";
     _wp setWaypointLoiterType "CIRCLE_L";
     _wp setWaypointLoiterRadius (GVAR(range)*1.5);

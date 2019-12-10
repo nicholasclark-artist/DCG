@@ -22,15 +22,15 @@
 // save macros 
 #define SAVE_SETVAR(VAR1) profileNamespace setVariable [QGVAR(saveData),VAR1]
 #define SAVE_GETVAR profileNamespace getVariable [QGVAR(saveData),[]]
-#define SAVE_SCENARIO_ID ([QUOTE(VERSION), toUpper worldName, toUpper missionName] joinString " - ")
+#define SAVE_SCENARIO_ID ([QUOTE(VERSION),toUpper worldName,toUpper missionName] joinString " - ")
 
 #define SAVE_ACTION_NAME "Save Mission Data"
 #define SAVE_ACTION_COND CBA_missionTime > 60 && {isServer || IS_ADMIN_LOGGED}
 #define SAVE_ACTION_STATEMENT \
     [ \
-        format ["Are you sure you want to overwrite the saved data for %1?", SAVE_SCENARIO_ID], \
-        TITLE, \
-        "Data saved to server profile.", \
+        format ["Are you sure you want to overwrite the saved data for %1?",SAVE_SCENARIO_ID],\
+        TITLE,\
+        "Data saved to server profile.",\
         {[QGVAR(saveData),[]] call CBA_fnc_serverEvent} \
     ] spawn FUNC(displayGUIMessage)
 
@@ -38,8 +38,8 @@
 #define SAVE_ACTION_COND_DELETE isServer || {IS_ADMIN_LOGGED}
 #define SAVE_ACTION_STATEMENT_DELETE \
     [ \
-        "Are you sure you want to permenantly delete ALL saved mission data?", \
-        TITLE, \
-        "Data deleted from server profile.", \
+        "Are you sure you want to permenantly delete ALL saved mission data?",\
+        TITLE,\
+        "Data deleted from server profile.",\
         {[QGVAR(deleteData),[]] call CBA_fnc_serverEvent} \
     ] spawn FUNC(displayGUIMessage)

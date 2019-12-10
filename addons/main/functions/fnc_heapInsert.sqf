@@ -9,11 +9,11 @@
 #include "script_component.hpp"
 
 params [
-    ["_heap", [], [[]]],
-    ["_key", -1],
+    ["_heap",[],[[]]],
+    ["_key",-1],
     "_value"
 ];
 
-private _last = _heap pushBack [_key, _value];
+private _last = _heap pushBack [_key,_value];
 
-[_heap, _last] call FUNC(heapPercUp);
+[_heap,_last] call FUNC(heapPercUp);

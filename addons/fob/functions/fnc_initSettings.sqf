@@ -15,7 +15,7 @@ __________________________________________________________________*/
 [
     QGVAR(enable),
     "CHECKBOX",
-    format ["Enable %1", COMPONENT_NAME],
+    format ["Enable %1",COMPONENT_NAME],
     COMPONENT_NAME,
     true,
     true,
@@ -30,7 +30,7 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     [
         [0,1],
-        ["All Players", "Group Leaders"],
+        ["All Players","Group Leaders"],
         0
     ],
     true,

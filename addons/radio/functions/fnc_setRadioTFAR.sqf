@@ -55,8 +55,8 @@ private _pairs = [];
 LOG_1("TFAR inventory pairs: %1",_pairs);
 LOG_1("TFAR missing classes: %1",_missing);
 
-// TFAR function that checks for ID radios, TFAR_fnc_requestRadios, uses waitUntil :(
-// hacky fix, set channel after an amount of time and hopefully ID is added
+// TFAR function that checks for ID radios,TFAR_fnc_requestRadios,uses waitUntil :(
+// hacky fix,set channel after an amount of time and hopefully ID is added
 [
     {
         params ["_pairs"];
@@ -68,7 +68,7 @@ LOG_1("TFAR missing classes: %1",_missing);
 
             if !(_matches isEqualTo []) then {
                 _selected = _matches select 0; // get the first matching pair
-                [_id, _selected select 1] call TFAR_fnc_setSwChannel;
+                [_id,_selected select 1] call TFAR_fnc_setSwChannel;
                 _pairs deleteAt (_pairs find _selected); // remove pair from array after setting channel
             };
         } forEach (player call TFAR_fnc_radiosList);
@@ -76,7 +76,7 @@ LOG_1("TFAR missing classes: %1",_missing);
         // set LR radio
         {
             if (COMPARE_STR(backpack player,_x select 0)) exitWith {
-            [(call TFAR_fnc_activeLrRadio) select 0, (call TFAR_fnc_activeLrRadio) select 1, _x select 1] call TFAR_fnc_setLrChannel;
+            [(call TFAR_fnc_activeLrRadio) select 0,(call TFAR_fnc_activeLrRadio) select 1,_x select 1] call TFAR_fnc_setLrChannel;
             };
         } forEach _pairs;
     },
@@ -85,6 +85,6 @@ LOG_1("TFAR missing classes: %1",_missing);
 ] call CBA_fnc_waitAndExecute;
 
 if !(_missing isEqualTo []) then {
-    _missing = _missing joinString ", ";
+    _missing = _missing joinString ",";
     [format ["Cannot add the following radios to your inventory: %1",_missing],true] call EFUNC(main,displayText);
 };

@@ -60,7 +60,7 @@ clearBackpackCargoGlobal GVAR(anchor);
 [[],{
     if (hasInterface) then {
         if (CHECK_ADDON_1(ace_cargo)) then {
-            [GVAR(anchor), false] call ace_cargo_fnc_makeLoadable;
+            [GVAR(anchor),false] call ace_cargo_fnc_makeLoadable;
         };
 
          [GVAR(anchor)] call EFUNC(main,armory);
@@ -78,8 +78,8 @@ clearBackpackCargoGlobal GVAR(anchor);
 
         GVAR(respawnPos) = [missionNamespace,FOB_POSITION,"Forward Operating Base"] call BIS_fnc_addRespawnPosition;
         GVAR(curator) addCuratorPoints _points;
-        GVAR(curator) setCuratorCoef ["Place", GVAR(placeCoef) min 0];
-        GVAR(curator) setCuratorCoef ["Delete", GVAR(deleteCoef) max 0];
+        GVAR(curator) setCuratorCoef ["Place",GVAR(placeCoef) min 0];
+        GVAR(curator) setCuratorCoef ["Delete",GVAR(deleteCoef) max 0];
         GVAR(curator) setCuratorWaypointCost 0;
         GVAR(curator) addCuratorEditingArea [0,FOB_POSITION,GVAR(range)];
         GVAR(curator) addCuratorCameraArea [0,FOB_POSITION,GVAR(range)];
@@ -87,7 +87,7 @@ clearBackpackCargoGlobal GVAR(anchor);
         [GVAR(curator),"object",["UnitPos","Rank","Lock"]] call BIS_fnc_setCuratorAttributes;
 
         if !(isNull _unit) then {
-            // if unit is already assigned to a curator, save previous curator for later
+            // if unit is already assigned to a curator,save previous curator for later
             _previousCurator = getAssignedCuratorLogic _unit;
 
             if !(isNull _previousCurator) then {
@@ -102,7 +102,7 @@ clearBackpackCargoGlobal GVAR(anchor);
             [
                 {getAssignedCuratorUnit GVAR(curator) isEqualTo (_this select 0)},
                 {
-                    [] remoteExecCall [QFUNC(curatorEH), owner (getAssignedCuratorUnit GVAR(curator)), false];
+                    [] remoteExecCall [QFUNC(curatorEH),owner (getAssignedCuratorUnit GVAR(curator)),false];
                 },
                 [_unit]
             ] call CBA_fnc_waitUntilAndExecute;

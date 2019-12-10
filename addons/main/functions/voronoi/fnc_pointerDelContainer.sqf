@@ -9,7 +9,7 @@
 
 #include "script_component.hpp"
 params [
-    ["_container", objNull, [objNull]]
+    ["_container",objNull,[objNull]]
 ];
 
 if(!isNull _container) then {

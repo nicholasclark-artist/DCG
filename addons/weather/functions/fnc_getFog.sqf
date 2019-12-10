@@ -25,4 +25,4 @@ private _fog = if (_spread < 2.5) then {
 
 _fog = 0 max _fog min 1;
 
-[_fog, _fog/10 + random _fog/100, random 100]
+[_fog,_fog/10 + random _fog/100,random 100]

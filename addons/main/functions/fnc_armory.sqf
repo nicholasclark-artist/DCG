@@ -17,7 +17,7 @@ __________________________________________________________________*/
 if (player canAddItemToBackpack PACK) then { \
     player addItemToBackpack PACK; \
 } else { \
-    [format ["Cannot add %1 to your inventory.", [configFile >> "cfgWeapons" >> PACK] call BIS_fnc_displayName], true] call EFUNC(main,displayText); \
+    [format ["Cannot add %1 to your inventory.",[configFile >> "cfgWeapons" >> PACK] call BIS_fnc_displayName],true] call EFUNC(main,displayText); \
 };
 #define STATE_RADIO call EFUNC(radio,setRadio);
 #define STATE_ARMORY ["Open",true] spawn bis_fnc_arsenal;

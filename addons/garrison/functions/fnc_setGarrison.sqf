@@ -17,7 +17,7 @@ __________________________________________________________________*/
 scopeName SCOPE;
 
 // get random AO location
-private _location = [GVAR(areas), selectRandom ([GVAR(areas)] call CBA_fnc_hashKeys)] call CBA_fnc_hashGet;
+private _location = [GVAR(areas),selectRandom ([GVAR(areas)] call CBA_fnc_hashKeys)] call CBA_fnc_hashGet;
 
 // set as garrison location
 // no need for separate garrison hash as garrison location is same as AO location

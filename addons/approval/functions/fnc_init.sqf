@@ -46,7 +46,7 @@ private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
 
 // start hostile handler after one cooldown cycle
 [{
-    [FUNC(handleHostile), GVAR(hostileCooldown), []] call CBA_fnc_addPerFrameHandler;
-}, [], GVAR(hostileCooldown)] call CBA_fnc_waitAndExecute;
+    [FUNC(handleHostile),GVAR(hostileCooldown),[]] call CBA_fnc_addPerFrameHandler;
+},[],GVAR(hostileCooldown)] call CBA_fnc_waitAndExecute;
 
 nil

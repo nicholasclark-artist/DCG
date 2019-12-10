@@ -19,7 +19,7 @@ __________________________________________________________________*/
 [
     QGVAR(enable),
     "CHECKBOX",
-    format ["Enable %1", toUpper QUOTE(PREFIX)],
+    format ["Enable %1",toUpper QUOTE(PREFIX)],
     COMPONENT_NAME,
     true,
     true,
@@ -63,12 +63,12 @@ __________________________________________________________________*/
             [INDEPENDENT,EAST]
         ],
         [
-            "West, East",
-            "West, Independent",
-            "East, West",
-            "East, Independent",
-            "Independent, West",
-            "Independent, East"
+            "West,East",
+            "West,Independent",
+            "East,West",
+            "East,Independent",
+            "Independent,West",
+            "Independent,East"
         ],
         0
     ],
@@ -206,11 +206,11 @@ __________________________________________________________________*/
 [
     QGVAR(safezoneMarkersDisplay),
     "LIST",
-    ["Safezone Markers", "Safezone map marker display settings."],
+    ["Safezone Markers","Safezone map marker display settings."],
     CATEGORY_SAFE,
     [
         [0,1,2],
-        ["Off", "Solid", "Border"],
+        ["Off","Solid","Border"],
         0
     ],
     true,

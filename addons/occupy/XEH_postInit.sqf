@@ -6,7 +6,7 @@ __________________________________________________________________*/
 
 POSTINIT;
 
-["CBA_settingsInitialized", {
+["CBA_settingsInitialized",{
     if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
     call FUNC(init);

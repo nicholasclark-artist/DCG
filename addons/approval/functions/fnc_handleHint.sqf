@@ -70,6 +70,6 @@ private _text = [AP_HINT_TITLE(mapGridPosition (_posRegion)),AP_HINT_SUBTITLE,AP
             [_map,_id,CBA_missionTime]
         ] call CBA_fnc_waitUntilAndExecute; 
     }
-] remoteExecCall [QUOTE(call), owner _player, false];
+] remoteExecCall [QUOTE(call),owner _player,false];
 
 nil

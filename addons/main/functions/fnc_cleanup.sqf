@@ -6,7 +6,7 @@ Description:
 add to cleanup loop
 
 Arguments:
-0: entity <ARRAY, STRING, OBJECT, LOCATION, GROUP>
+0: entity <ARRAY,STRING,OBJECT,LOCATION,GROUP>
 
 Return:
 nothing
@@ -14,7 +14,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 [_this] params [
-    ["_entity", objNull, [objNull, grpNull, locationNull, "", []]]
+    ["_entity",objNull,[objNull,grpNull,locationNull,"",[]]]
 ];
 
 if (_entity isEqualType []) then {

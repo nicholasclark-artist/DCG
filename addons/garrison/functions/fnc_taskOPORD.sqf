@@ -27,7 +27,7 @@ params [
 ];
 
 private _OPORD = [];
-private _isArea = [GVAR(areas), _location getVariable [QEGVAR(main,name),""]] call CBA_fnc_hashHasKey;
+private _isArea = [GVAR(areas),_location getVariable [QEGVAR(main,name),""]] call CBA_fnc_hashHasKey;
 
 private _para1 = if (_isArea) then {
     // get area orientation 
@@ -52,7 +52,7 @@ private _para1 = if (_isArea) then {
 
     // get area weather 
     private _weather = if (CHECK_ADDON_2(weather)) then {
-        format ["%1°C high, %2°C low, %3%4 chance of precipitation.",EGVAR(weather,tempDay),EGVAR(weather,tempNight),round EGVAR(weather,precipitation),"%"]
+        format ["%1°C high,%2°C low,%3%4 chance of precipitation.",EGVAR(weather,tempDay),EGVAR(weather,tempNight),round EGVAR(weather,precipitation),"%"]
     } else {
         "Forecast data is unavailable."
     };

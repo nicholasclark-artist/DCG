@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-display GUI message, function must be spawned
+display GUI message,function must be spawned
 
 Arguments:
 0: message to display <STRING>

@@ -4,20 +4,20 @@
     Please do not redistribute this work without acknowledgement of the original author. 
     You are otherwise free to use this code as you wish.
 
-    Description: Prints the given tree, by default only prints pointer names but printing behaviour can be changed through the return value of _code.
+    Description: Prints the given tree,by default only prints pointer names but printing behaviour can be changed through the return value of _code.
     Inside _code parameter _this refers to the pointer to the given element that is currently being printed.
 */
 
 #include "script_component.hpp"
 
 #ifdef DO_DEBUG
-diag_log text format ["Func: %1", _fnc_scriptName];
-diag_log text format ["Called by: %1", _fnc_scriptNameParent];
+diag_log text format ["Func: %1",_fnc_scriptName];
+diag_log text format ["Called by: %1",_fnc_scriptNameParent];
 #endif
 
 params [
-    ["_rootPtr", "", [""]],
-    ["_code", {_this}, [{}]]
+    ["_rootPtr","",[""]],
+    ["_code",{_this},[{}]]
 ];
 
 #define LOG_2(x) (log(x)/log 2)
@@ -80,7 +80,7 @@ diag_log text _str;
         _spacer = _spacer + "   ";
     };
 
-    private _str = format ["%1 | %2", _forEachIndex, _spacer];
+    private _str = format ["%1 | %2",_forEachIndex,_spacer];
     {
         _str = _str + _x + _spacer;
     } forEach _level;

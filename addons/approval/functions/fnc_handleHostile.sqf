@@ -24,7 +24,7 @@ if !(_players isEqualTo []) then {
             private _ret = [_player] call FUNC(spawnHostile);
 
             if (GVAR(hostileHint) && {_ret}) then {
-                ["Aerial recon shows hostile civilian activity in your region!", true] remoteExecCall [QEFUNC(main,displayText), allPlayers, false];
+                ["Aerial recon shows hostile civilian activity in your region!",true] remoteExecCall [QEFUNC(main,displayText),allPlayers,false];
             };
         };
     };

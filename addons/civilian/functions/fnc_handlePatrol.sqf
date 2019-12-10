@@ -73,7 +73,7 @@ __________________________________________________________________*/
             // select position to move to
             switch (selectRandom _types) do {
                 case "random": { // random position
-                    _posMove = _position getPos [(random (_radius - (_radius * 0.2))) + (_radius * 0.2), random 360];
+                    _posMove = _position getPos [(random (_radius - (_radius * 0.2))) + (_radius * 0.2),random 360];
                     _posMove = [_posMove,nil] select (surfaceIsWater _posMove);
 
                     // if !(isNil "_posMove") then {
@@ -196,6 +196,6 @@ __________________________________________________________________*/
             };     
         };
     } forEach (_location getVariable [QGVAR(units),[]]);
-}, 60, _this] call CBA_fnc_addPerFrameHandler; 
+},60,_this] call CBA_fnc_addPerFrameHandler; 
 
 nil

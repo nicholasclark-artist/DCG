@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-finds a positionASL of a certain terrain type. If the terrain type is "house", the function returns an array including the house object and position
+finds a positionASL of a certain terrain type. If the terrain type is "house",the function returns an array including the house object and position
 
 Arguments:
 0: center position <ARRAY>
@@ -64,7 +64,7 @@ call {
 };
 
 if (COMPARE_STR(_expression,"")) exitWith {
-    WARNING("cannot find position, expression is empty");
+    WARNING("cannot find position,expression is empty");
 };
 
 // search count and precision is limited
@@ -74,19 +74,19 @@ private _places = selectBestPlaces [_center,_radius,_expression,100,10];
 _places = _places select {(parseNumber ((_x select 1) toFixed 2)) > _minValue};
 
 if (_rural) then {
-    _places = _places select {(nearestLocations [_x select 0, ["NameVillage","NameCity","NameCityCapital"], DIST]) isEqualTo []};
+    _places = _places select {(nearestLocations [_x select 0,["NameVillage","NameCity","NameCityCapital"],DIST]) isEqualTo []};
 };
 
-// places are sorted by score in descending order, shuffle for more variation 
+// places are sorted by score in descending order,shuffle for more variation 
 [_places] call EFUNC(main,shuffle);
 
 {
     if !(_terrain isEqualTo "house") then {
-        // check safe distance from objects, water positions not allowed
+        // check safe distance from objects,water positions not allowed
         if (_rSafe > 0 && {!([_x select 0,_rSafe,0] call FUNC(isPosSafe))}) exitWith {};
 
-        // check gradients, check at two distances
-        if (_rGrad > 0 && {(_x select 0) isFlatEmpty [-1, -1, GRAD1, _rGrad * 0.25, -1] isEqualTo []} && {(_x select 0) isFlatEmpty [-1, -1, GRAD2, _rGrad, -1] isEqualTo []}) exitWith {};
+        // check gradients,check at two distances
+        if (_rGrad > 0 && {(_x select 0) isFlatEmpty [-1,-1,GRAD1,_rGrad * 0.25,-1] isEqualTo []} && {(_x select 0) isFlatEmpty [-1,-1,GRAD2,_rGrad,-1] isEqualTo []}) exitWith {};
 
         _ret =+ _x select 0;
         _ret set [2,ASLZ(_ret)];

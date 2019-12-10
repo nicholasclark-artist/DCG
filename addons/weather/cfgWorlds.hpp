@@ -22,7 +22,7 @@ class CfgWorlds {
         GVARMAIN(clouds)[] = {0.54,0.54,0.54,0.58,0.63,0.75,0.93,0.97,0.90,0.73,0.60,0.51};
         // probability of precipitation
         GVARMAIN(precipitation)[] = {0.28,0.25,0.24,0.20,0.14,0.11,0.06,0.04,0.07,0.15,0.18,0.30};
-        // rainfall amount in millimeters, {min, max, avg}
+        // rainfall amount in millimeters,{min,max,avg}
         GVARMAIN(rainfall)[] = {{20,127,73},{8,130,63},{15,114,55},{11,84,44},{2,72,31},{2,58,25},{0,26,10},{0,39,10},{0,41,14},{3,89,38},{16,112,57},{24,164,89}};
     };
 

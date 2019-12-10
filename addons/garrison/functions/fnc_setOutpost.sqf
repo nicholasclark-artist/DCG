@@ -38,7 +38,7 @@ _outposts = [];
     
     // find position based on terrain type
     { 
-        private _terrain = selectRandom [["meadow",50], ["peak",20], ["forest",20]];
+        private _terrain = selectRandom [["meadow",50],["peak",20],["forest",20]];
         _pos = [_x,500,_terrain select 0,0,0,_terrain select 1,true] call EFUNC(main,findPosTerrain);
 
         // exit when position found

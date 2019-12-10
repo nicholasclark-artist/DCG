@@ -39,7 +39,7 @@ if (GVAR(cycle) mod 2 isEqualTo 0) then { // overcast cycle
             WARNING("external interference: overcast not trending towards desired forecast");
             WEATHER_DELAY_OVERCAST setOvercast GVAR(overcastForecast);
         };
-    }, 1] call CBA_fnc_addPerFrameHandler;
+    },1] call CBA_fnc_addPerFrameHandler;
 } else { // fog cycle
     INFO("fog cycle");
     GVAR(fogForecast) = _forecast select 2;
@@ -63,7 +63,7 @@ if (GVAR(cycle) mod 2 isEqualTo 0) then { // overcast cycle
             WARNING("external interference: fog not trending towards desired forecast");
             WEATHER_DELAY_FOG setFog GVAR(fogForecast);
         };
-    }, 1] call CBA_fnc_addPerFrameHandler;
+    },1] call CBA_fnc_addPerFrameHandler;
 };
 
 nil

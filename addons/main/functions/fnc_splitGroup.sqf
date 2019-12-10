@@ -32,7 +32,7 @@ private _oldCount = count units _oldGrp;
 _count = (ceil _count) max 1;
 _remaining = ((ceil _remaining) min _oldCount) max 0;
 
-// move units to temp group first, so old group count is correct at function end
+// move units to temp group first,so old group count is correct at function end
 private _tempGrp = createGroup [side _oldGrp,true];
 _tempGrp setBehaviourStrong (behaviour leader _oldGrp);
 ((units _oldGrp) select [0,_oldCount - _remaining]) joinSilent _tempGrp;
@@ -61,6 +61,6 @@ _tempGrp setBehaviourStrong (behaviour leader _oldGrp);
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         [QEGVAR(cache,enableGroup),_newGrp] call CBA_fnc_serverEvent;
     };
-}, 0.1, [_tempGrp,_count,_code,_params,_remaining]] call CBA_fnc_addPerFrameHandler;
+},0.1,[_tempGrp,_count,_code,_params,_remaining]] call CBA_fnc_addPerFrameHandler;
 
 nil

@@ -33,20 +33,20 @@ private _ret = [];
 private _origin = [(_center select 0) - (_distMax*0.5),(_center select 1) - (_distMax*0.5)];
 private _count = floor (_distMax/_spacing);
 
-private ["_column", "_row", "_mrk"];
+private ["_column","_row","_mrk"];
 
 for "_y" from 0 to _count do {
     _column = [_origin select 0,(_origin select 1) + (_spacing*_y)];
     _ret pushBack _column;
 
     for "_x" from 1 to _count do {
-        _row = [(_column select 0) + (_spacing*_x), _column select 1];
+        _row = [(_column select 0) + (_spacing*_x),_column select 1];
         _ret pushBack _row;
     };
 };
 
 if (_distMin > 0) then {
-    _ret = _ret select {!(_x inArea [_center, _distMin, _distMin, 0, false, -1])};
+    _ret = _ret select {!(_x inArea [_center,_distMin,_distMin,0,false,-1])};
 };
 
 if (_distObj > 0 || {_water > -1}) then {
@@ -56,10 +56,10 @@ if (_distObj > 0 || {_water > -1}) then {
 {
     _x set [2,ASLZ(_x)];
 
-    // _mrk = createMarker [format["%1_grid_%2",QUOTE(PREFIX),diag_frameNo + _forEachIndex], _x];
+    // _mrk = createMarker [format["%1_grid_%2",QUOTE(PREFIX),diag_frameNo + _forEachIndex],_x];
     // _mrk setMarkerType "mil_dot";
     // _mrk setMarkerColor "ColorUNKNOWN";
-    // _mrk setMarkerText format["%1 (%2)",_forEachIndex, _x select 2];
+    // _mrk setMarkerText format["%1 (%2)",_forEachIndex,_x select 2];
     // [_mrk] call FUNC(setDebugMarker);
 } forEach _ret;
 

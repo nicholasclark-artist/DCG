@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-split convex polygon into triangles, polygon must be sorted
+split convex polygon into triangles,polygon must be sorted
 
 Arguments:
 0: polygon vertices <ARRAY>

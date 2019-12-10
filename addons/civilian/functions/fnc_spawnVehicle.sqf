@@ -80,7 +80,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
             {CHECK_VECTORDIST(getPosASL (_this select 0),getPosASL (_this select 2),COMPLETION_DIST)},
             {
                 // exact placement
-                (_this select 1) setWaypointPosition [getPosASL(_this select 3), -1];
+                (_this select 1) setWaypointPosition [getPosASL(_this select 3),-1];
             },
             [_driver,_wp,_mid,_end]
         ] call CBA_fnc_waitUntilAndExecute;    
@@ -111,7 +111,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         // add to driver array
         GVAR(drivers) pushBack _driver;
 
-        TRACE_3("spawning driver",_driver, getPos _start, getPos _end);
+        TRACE_3("spawning driver",_driver,getPos _start,getPos _end);
     },
     [_grp,_start,_mid,_end]
 ] call CBA_fnc_waitUntilAndExecute;  

@@ -33,13 +33,13 @@ _helipad setPos _pos;
 _heli doMove _pos;
 
 // close doors while enroute
-_heli animateDoor ["door_R", 0];
-_heli animateDoor ["door_L", 0];
-_heli animateDoor ["CargoRamp_Open", 0];
-_heli animateDoor ["Door_rear_source", 0];
-_heli animateDoor ["Door_6_source", 0];
-_heli animate ["dvere1_posunZ", 0];
-_heli animate ["dvere2_posunZ", 0];
+_heli animateDoor ["door_R",0];
+_heli animateDoor ["door_L",0];
+_heli animateDoor ["CargoRamp_Open",0];
+_heli animateDoor ["Door_rear_source",0];
+_heli animateDoor ["Door_6_source",0];
+_heli animate ["dvere1_posunZ",0];
+_heli animate ["dvere2_posunZ",0];
 
 [
     {unitReady (driver (_this select 0)) || {!alive (_this select 0)} || {(_this select 0) getVariable [QGVAR(cancelLandAt),false]}},
@@ -48,7 +48,7 @@ _heli animate ["dvere2_posunZ", 0];
 
         if (!alive _heli || {_heli getVariable [QGVAR(cancelLandAt),false]}) exitWith {};
 
-        // if object obstructing LZ, command SHOULD redirect heli to empty position
+        // if object obstructing LZ,command SHOULD redirect heli to empty position
         _heli land _type;
         _heli landAt _helipad;
 
@@ -60,15 +60,15 @@ _heli animate ["dvere2_posunZ", 0];
 
                 if (!alive _heli || {_heli getVariable [QGVAR(cancelLandAt),false]}) exitWith {};
 
-                _heli animateDoor ["door_R", 1];
-                _heli animateDoor ["door_L", 1];
-                _heli animateDoor ["CargoRamp_Open", 1];
-                _heli animateDoor ["Door_rear_source", 1];
-                _heli animateDoor ["Door_6_source", 1];
-                _heli animate ["dvere1_posunZ", 1];
-                _heli animate ["dvere2_posunZ", 1];
+                _heli animateDoor ["door_R",1];
+                _heli animateDoor ["door_L",1];
+                _heli animateDoor ["CargoRamp_Open",1];
+                _heli animateDoor ["Door_rear_source",1];
+                _heli animateDoor ["Door_6_source",1];
+                _heli animate ["dvere1_posunZ",1];
+                _heli animate ["dvere2_posunZ",1];
 
-                // check if heli has actually landed, sometimes heli will touch ground and rise to a hover if object is interferring with LZ
+                // check if heli has actually landed,sometimes heli will touch ground and rise to a hover if object is interferring with LZ
                 [
                     {
                         params ["_heli","_onComplete","_params","_helipad"];

@@ -13,7 +13,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 // probability of precipitation
-private _pRain = [GVAR(precipitation), GVAR(precipitationOverride)] select (GVAR(precipitationOverride) >= 0);
+private _pRain = [GVAR(precipitation),GVAR(precipitationOverride)] select (GVAR(precipitationOverride) >= 0);
 
 if (PROBABILITY(_pRain)) then {
     // get rainfall amount from map data 

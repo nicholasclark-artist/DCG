@@ -14,7 +14,7 @@ __________________________________________________________________*/
 
 INFO_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
 
-// save event code to variable, give eventhandler less code to compile, https://feedback.bistudio.com/T123355
+// save event code to variable,give eventhandler less code to compile,https://feedback.bistudio.com/T123355
 FUNC(curatorRegistered) = {
     _costs = [];
     {
@@ -42,7 +42,7 @@ FUNC(curatorPlaced) = {
         _cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
         _cost = _cost*FOB_COST_MULTIPIER;
 
-        [QEGVAR(approval,add), [getPosASL (_this select 1), _cost]] call CBA_fnc_serverEvent;
+        [QEGVAR(approval,add),[getPosASL (_this select 1),_cost]] call CBA_fnc_serverEvent;
     };
 };
 
@@ -51,7 +51,7 @@ FUNC(curatorDeleted) = {
         _cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
         _cost = _cost*FOB_COST_MULTIPIER;
 
-        [QEGVAR(approval,add), [getPosASL (_this select 1),_cost * -1]] call CBA_fnc_serverEvent;
+        [QEGVAR(approval,add),[getPosASL (_this select 1),_cost * -1]] call CBA_fnc_serverEvent;
     };
 };
 

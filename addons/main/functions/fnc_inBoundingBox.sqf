@@ -6,7 +6,7 @@ Description:
 check for bounding box intersection between two objects
 
 Arguments:
-0: object or array containing object and position to check (array required if object is not at desired position) <OBJECT, ARRAY>
+0: object or array containing object and position to check (array required if object is not at desired position) <OBJECT,ARRAY>
 1: object to check against <OBJECT>
 
 Return:
@@ -41,8 +41,8 @@ private _bb1 = 0 boundingBoxReal _obj1;
 
 private _getBoundingBox = {
     _bbr = _this select 1;
-    _bbx = [_bbr select 0 select 0, _bbr select 1 select 0];
-    _bby = [_bbr select 0 select 1, _bbr select 1 select 1];
+    _bbx = [_bbr select 0 select 0,_bbr select 1 select 0];
+    _bby = [_bbr select 0 select 1,_bbr select 1 select 1];
 
     _arr = [];
 
@@ -52,7 +52,7 @@ private _getBoundingBox = {
         {
             _arr pushBack ((_this select 0) modelToWorld [_x,_y,(_bbr select 0 select 2) min (_bbr select 1 select 2)]); 
         } forEach _bbx;
-        // reverse x order, so polygon draws correctly ([x1,y1], [x2,y1], [x2,y2], [x1,y2])
+        // reverse x order,so polygon draws correctly ([x1,y1],[x2,y1],[x2,y2],[x1,y2])
         reverse _bbx;
     } forEach _bby;
 

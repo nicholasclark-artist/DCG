@@ -51,10 +51,10 @@ if (_type isEqualTo 0) exitWith {
             [_idPFH] call CBA_fnc_removePerFrameHandler;
         };
 
-        (selectRandom _unitPool) createUnit [_pos, _grp];
+        (selectRandom _unitPool) createUnit [_pos,_grp];
 
         _check pushBack 0;
-    }, _delay, [_pos,_grp,_unitPool,_count,_check]] call CBA_fnc_addPerFrameHandler;
+    },_delay,[_pos,_grp,_unitPool,_count,_check]] call CBA_fnc_addPerFrameHandler;
 
     _grp
 };
@@ -64,7 +64,7 @@ if (_type isEqualTo 0) exitWith {
     _args params ["_pos","_grp","_type","_count","_unitPool","_vehPool","_airPool","_check","_cargo","_delay"];
 
     if (count _check isEqualTo _count) exitWith {
-        // if cargo spawned, set ready in cargo handler 
+        // if cargo spawned,set ready in cargo handler 
         if !(_cargo) then {
             _grp setVariable [QGVAR(ready),true,false];
         };
@@ -75,10 +75,10 @@ if (_type isEqualTo 0) exitWith {
     private ["_veh"];
 
     if (_type isEqualTo 1) then {
-        _veh = createVehicle [selectRandom _vehPool, _pos, [], 0, "NONE"];
+        _veh = createVehicle [selectRandom _vehPool,_pos,[],0,"NONE"];
         _veh setVectorUp surfaceNormal getPos _veh;
     } else {
-        _veh = createVehicle [selectRandom _airPool, _pos, [], 100, "FLY"];
+        _veh = createVehicle [selectRandom _airPool,_pos,[],100,"FLY"];
     };
 
     /*
@@ -86,7 +86,7 @@ if (_type isEqualTo 0) exitWith {
         any event that triggers on group creation will run twice
     */
     
-    // use createVehicleCrew to populate vehicles, so DCG's faction/filter settings do not interfere
+    // use createVehicleCrew to populate vehicles,so DCG's faction/filter settings do not interfere
     createVehicleCrew _veh;
     crew _veh joinSilent _grp;
     _grp addVehicle _veh;
@@ -105,15 +105,15 @@ if (_type isEqualTo 0) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
             };
 
-            _unit = _grp createUnit [selectRandom _unitPool, DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
+            _unit = _grp createUnit [selectRandom _unitPool,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
 
             // assign units before 'moveIn' so they dont momentarily dismount
             _unit assignAsCargo _veh;
             _unit moveInCargo _veh;
-        }, _delay, [_grp,_unitPool,_veh,((_veh emptyPositions "cargo") min MAX_CARGO) + (count crew _veh)]] call CBA_fnc_addPerFrameHandler;
+        },_delay,[_grp,_unitPool,_veh,((_veh emptyPositions "cargo") min MAX_CARGO) + (count crew _veh)]] call CBA_fnc_addPerFrameHandler;
     };
 
     _check pushBack 0;
-}, _delay, [_pos,_grp,_type,_count,_unitPool,_vehPool,_airPool,_check,_cargo,_delay]] call CBA_fnc_addPerFrameHandler;
+},_delay,[_pos,_grp,_type,_count,_unitPool,_vehPool,_airPool,_check,_cargo,_delay]] call CBA_fnc_addPerFrameHandler;
 
 _grp

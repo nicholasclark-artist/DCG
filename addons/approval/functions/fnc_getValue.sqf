@@ -6,7 +6,7 @@ Description:
 get region approval value
 
 Arguments:
-0: region <ARRAY, LOCATION>
+0: region <ARRAY,LOCATION>
 
 Return:
 number

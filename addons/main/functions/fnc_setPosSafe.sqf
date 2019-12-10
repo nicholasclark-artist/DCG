@@ -19,7 +19,7 @@ params [
     ["_pos",[0,0,0],[[]]]
 ];
 
-// force positionASL, allow underwater positions
+// force positionASL,allow underwater positions
 if (count _pos isEqualTo 2 || {(_pos select 2) > 0}) then {
     _pos =+ _pos; 
     _pos set [2,ASLZ(_pos)];

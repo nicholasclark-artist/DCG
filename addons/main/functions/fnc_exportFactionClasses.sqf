@@ -14,7 +14,7 @@ __________________________________________________________________*/
 
 private ["_cfgClass","_side"];
 
-// _msg is an array, this makes concatenation faster
+// _msg is an array,this makes concatenation faster
 private _msg = [format["// Use the 'Entry' item to populate %2 unit pools%1%1",endl,toUpper QUOTE(PREFIX)]];
 private _cfg = configFile >> "CfgFactionClasses";
 
@@ -44,6 +44,6 @@ for "_index" from 0 to (count _cfg - 1) do {
 
 copyToClipboard (_msg joinString "");
 
-titleText ["Exporting faction list to clipboard.", "PLAIN"];
+titleText ["Exporting faction list to clipboard.","PLAIN"];
 
 nil

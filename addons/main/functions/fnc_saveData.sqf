@@ -34,7 +34,7 @@ if (CHECK_ADDON_2(main)) then {
             // save entity variables if "dcg" found in variable name
             _vars = (allVariables _entity) select {(_x find QUOTE(PREFIX)) >= 0};
 
-            // set as [variable name, variable value]
+            // set as [variable name,variable value]
             {_vars set [_forEachIndex,[_x,_entity getVariable _x]]} forEach _vars;
 
             _data pushBack [typeOf _x,getPosASL _x,getDir _x,vectorUp _x,_vars];

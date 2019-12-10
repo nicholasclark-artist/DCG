@@ -9,7 +9,7 @@ if !(isMultiplayer) exitWith {
 TEST_edgesToDraw = [];
 
 [] spawn {
-    params ["_t", "_e", "_s"];
+    params ["_t","_e","_s"];
     
     #define MAIN_MAP (findDisplay 12 displayCtrl 51)
     waitUntil { !isNull MAIN_MAP };
@@ -17,12 +17,12 @@ TEST_edgesToDraw = [];
         "Draw",
         {
             TEST_edgesToDraw apply {
-                _x params ["_start", "_end"];
+                _x params ["_start","_end"];
 
                 private _d = _end getDir _start;
                 private _l = 0.5*(_start distance2D _end);
-                private _a1 = _end getPos [_l min 75, _d+25];
-                private _a2 = _end getPos [_l min 75, _d-25];
+                private _a1 = _end getPos [_l min 75,_d+25];
+                private _a2 = _end getPos [_l min 75,_d-25];
 
                 (_this select 0) drawLine [
                     _start,
@@ -79,7 +79,7 @@ onMapSingleClick {
 
             private _dT = diag_tickTime;
             //Get voronoi edges
-            private _voronoiEdges = [TEST_sites, worldSize, worldSize] call dcg_main_fnc_getEdges;
+            private _voronoiEdges = [TEST_sites,worldSize,worldSize] call dcg_main_fnc_getEdges;
             private _execTime = diag_tickTime - _dT;
 
             TEST_edgesToDraw = _voronoiEdges;

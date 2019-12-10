@@ -7,8 +7,8 @@
     #define PREP_VOR(fncName) FUNC(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\voronoi\DOUBLES(fnc,fncName).sqf)
 #else
     #undef PREP
-    #define PREP(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
-    #define PREP_VOR(fncName) [QPATHTOF(functions\voronoi\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
+    #define PREP(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf),QFUNC(fncName)] call CBA_fnc_compileFunction
+    #define PREP_VOR(fncName) [QPATHTOF(functions\voronoi\DOUBLES(fnc,fncName).sqf),QFUNC(fncName)] call CBA_fnc_compileFunction
 #endif
 
 #define PREP_MODULE(folder) [] call compile preprocessFileLineNumbers QPATHTOF(folder\__PREP__.sqf)
@@ -43,10 +43,10 @@
 // heaps
 // Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
 
-// Min/max switch, comment for a min heap, uncomment for a max heap
+// Min/max switch,comment for a min heap,uncomment for a max heap
 #define MAX_HEAP
 
-#define HEAP_NODEPARAMS(x) (x) params ["_key", "_value"]
+#define HEAP_NODEPARAMS(x) (x) params ["_key","_value"]
 #define HEAP_NODE_KEY 0
 #define HEAP_NODE_VALUE 1
 
@@ -106,7 +106,7 @@
 #define DEFAULT_COLOR [0,0,0,1]
 #define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
-#define SETTINGS_INIT publicVariable QFUNC(initSettings); remoteExecCall [QFUNC(initSettings), -2, true]; call FUNC(initSettings)
+#define SETTINGS_INIT publicVariable QFUNC(initSettings); remoteExecCall [QFUNC(initSettings),-2,true]; call FUNC(initSettings)
 
 // fob cost
 #define FOB_COST_MAN 2
@@ -134,5 +134,5 @@
 #define AP_VILLAGE ((AP_MAX*0.05)*EGVAR(approval,multiplier))
 #define AP_CITY ((AP_MAX*0.1)*EGVAR(approval,multiplier))
 #define AP_CAPITAL ((AP_MAX*0.15)*EGVAR(approval,multiplier))
-#define AP_CONVERT1(POS) (linearConversion [AP_MIN, AP_MAX, ([POS] call EFUNC(approval,getRegion)) getVariable [QEGVAR(approval,value),0], 0, 1, true])
+#define AP_CONVERT1(POS) (linearConversion [AP_MIN,AP_MAX,([POS] call EFUNC(approval,getRegion)) getVariable [QEGVAR(approval,value),0],0,1,true])
 #define AP_CONVERT2(POS) ((1 - AP_CONVERT1(POS)) * 0.5)

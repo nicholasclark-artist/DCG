@@ -8,7 +8,7 @@
 */
 #include "script_component.hpp"
 
-params ["_heap", "_index1", "_index2"];
+params ["_heap","_index1","_index2"];
 private _temp = _heap#_index1;
-_heap set [_index1, _heap#_index2];
-_heap set [_index2, _temp];
+_heap set [_index1,_heap#_index2];
+_heap set [_index2,_temp];

@@ -31,7 +31,7 @@ params [
 //     _max = 200;
 //     _u = ceil ((log (_p max 2) / log 2) * _m);
 //     _u = (_u max _min) min _max;
-//     diag_log text (format["Players:%1, Units:%2, Diff:%3",_p,_u,_u - _l]);
+//     diag_log text (format["Players:%1,Units:%2,Diff:%3",_p,_u,_u - _l]);
 //     _l = _u;
 // };
 // diag_log text "END";

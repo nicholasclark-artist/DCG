@@ -64,7 +64,7 @@ if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
                     _wp setWaypointSpeed "NORMAL";
                     _wp setWaypointStatements [
                         "!(behaviour this isEqualTo ""COMBAT"")",
-                        format ["[this, this, %1, 5, ""MOVE"", ""SAFE"", ""YELLOW"", ""NORMAL"", ""STAG COLUMN"", """", [5,10,15]] call CBA_fnc_taskPatrol;",PATROL_RANGE]
+                        format ["[this,this,%1,5,""MOVE"",""SAFE"",""YELLOW"",""NORMAL"",""STAG COLUMN"","""",[5,10,15]] call CBA_fnc_taskPatrol;",PATROL_RANGE]
                     ];
 
                     INFO_1("spawning vehicle patrol at %1",_pos);
@@ -86,7 +86,7 @@ if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
                     _wp setWaypointSpeed "LIMITED";
                     _wp setWaypointStatements [
                         "!(behaviour this isEqualTo ""COMBAT"")",
-                        format ["[this, this, %1, 5, ""MOVE"", ""SAFE"", ""YELLOW"", ""LIMITED"", ""STAG COLUMN"", """", [0,0,0]] call CBA_fnc_taskPatrol;",PATROL_RANGE]
+                        format ["[this,this,%1,5,""MOVE"",""SAFE"",""YELLOW"",""LIMITED"",""STAG COLUMN"","""",[0,0,0]] call CBA_fnc_taskPatrol;",PATROL_RANGE]
                     ];
 
                     INFO_1("spawning infantry patrol at %1",_pos);

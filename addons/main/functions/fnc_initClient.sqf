@@ -27,7 +27,7 @@ if (!hasInterface) exitWith {};
 // setting restart warning
 [
     {
-        ["cba_settings_refreshSetting", {
+        ["cba_settings_refreshSetting",{
             [_this] call FUNC(handleSettingChange);
             INFO("handle settings change");
         }] call CBA_fnc_addEventHandler; 

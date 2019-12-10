@@ -40,14 +40,14 @@ _cleared = true;
     // check dynamic task status
 }] call CBA_fnc_hashEachPair;
 
-// if all areas clear, set new ao with cooldown
+// if all areas clear,set new ao with cooldown
 if (_cleared) exitWith {
     TRACE_1("",_cleared);
     // call FUNC(removeArea);
 
     // [{
     //     call FUNC(setArea);
-    // }, [], GVAR(cooldown)] call CBA_fnc_waitAndExecute;
+    // },[],GVAR(cooldown)] call CBA_fnc_waitAndExecute;
 };
 
 // handle comms

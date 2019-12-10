@@ -9,15 +9,15 @@
 
 #include "script_component.hpp"
 params [
-    ["_container", objNull, [objNull]]
+    ["_container",objNull,[objNull]]
 ];
 
 if(isNull _container) then {
-    _container = createGroup sideLogic createUnit ["Logic", [0,0,0], [], 0, "NONE"];
+    _container = createGroup sideLogic createUnit ["Logic",[0,0,0],[],0,"NONE"];
 };
 
 if(isNil {_container getVariable "POINTER_NUM"}) then {
-    _container setVariable ["POINTER_NUM", 0];
+    _container setVariable ["POINTER_NUM",0];
 };
 
 _container

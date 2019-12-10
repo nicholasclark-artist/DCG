@@ -45,7 +45,7 @@ private ["_id","_situation","_mission","_description","_sustainment","_ao","_nam
     // setup description
     _name = _value getVariable [QGVAR(nameGarrison),""];
 
-    _situation = format ["Some time ago, a convoy of military logistics and engineering vehicles was spotted entering AO %1. These vehicles are likely supporting the construction of an enemy outpost (OBJ %2). Previous engagements have shown the enemy to be composed of dismounted patrols and potentially, static emplacements. They are expected to defend upon contact.",_value getVariable [QGVAR(name),""],_name];
+    _situation = format ["Some time ago,a convoy of military logistics and engineering vehicles was spotted entering AO %1. These vehicles are likely supporting the construction of an enemy outpost (OBJ %2). Previous engagements have shown the enemy to be composed of dismounted patrols and potentially,static emplacements. They are expected to defend upon contact.",_value getVariable [QGVAR(name),""],_name];
     _mission = format ["Friendly forces will conduct an operation in AO %1 to locate and secure OBJ %2 in order to prevent anti-coalition forces from gaining momentum and swaying civilian approval.",_value getVariable [QGVAR(name),""],_name];
     _sustainment = ["","","","","Each Soldier will carry his/her full basic load.","","","All squads will maintain necessary medical equipment and will ensure it is replenished prior to each movement.","",""];
 
@@ -68,7 +68,7 @@ private ["_id","_situation","_mission","_description","_sustainment","_ao","_nam
     _ao = [GVAR(areas),_key] call CBA_fnc_hashGet;
     _name = _value getVariable [QGVAR(name),""];
 
-    _situation = format ["Some time ago, a convoy of military logistics and engineering vehicles was spotted entering AO %1. These vehicles are likely supporting the construction of an enemy outpost (OBJ %2). Previous engagements have shown the enemy to be composed of dismounted patrols and potentially, static emplacements. They are expected to defend upon contact.",_ao getVariable [QGVAR(name),""],_name];
+    _situation = format ["Some time ago,a convoy of military logistics and engineering vehicles was spotted entering AO %1. These vehicles are likely supporting the construction of an enemy outpost (OBJ %2). Previous engagements have shown the enemy to be composed of dismounted patrols and potentially,static emplacements. They are expected to defend upon contact.",_ao getVariable [QGVAR(name),""],_name];
     _mission = format ["Friendly forces will conduct an operation in AO %1 to locate and secure OBJ %2 in order to prevent anti-coalition forces from gaining momentum and swaying civilian approval.",_ao getVariable [QGVAR(name),""],_name];
     _sustainment = ["","","","","Each Soldier will carry his/her full basic load.","","","All squads will maintain necessary medical equipment and will ensure it is replenished prior to each movement.","",""];
 

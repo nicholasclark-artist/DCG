@@ -49,7 +49,7 @@ __________________________________________________________________*/
                 _value setVariable [QGVAR(ambients),[]];
                 _value setVariable [QGVAR(units),[]];
             };
-        }, 60, [_value]] call CBA_fnc_addPerFrameHandler;    
+        },60,[_value]] call CBA_fnc_addPerFrameHandler;    
     };
 }] call CBA_fnc_hashEachPair;
 

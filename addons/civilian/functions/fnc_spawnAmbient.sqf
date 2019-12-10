@@ -56,25 +56,25 @@ switch _type do {
                 _path = _path + ".p3d";
             };
 
-            _temp = createSimpleObject [_path, DEFAULT_SPAWNPOS];
+            _temp = createSimpleObject [_path,DEFAULT_SPAWNPOS];
             _temp setDir _dir;
 
             if ([_position,_temp,0] call EFUNC(main,isPosSafe)) then {
-                _veh = createVehicle [_class, DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
+                _veh = createVehicle [_class,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
                 _veh setDir _dir;
                 _veh setPosATL _position;
                 _veh setFuel (0.1 + random 0.5);
 
                 // alarm eventhandlers
                 // @todo find alarm sfx
-                _veh addEventHandler ["GetIn", {
+                _veh addEventHandler ["GetIn",{
                     if (isPlayer (_this select 2) && {!((_this select 0) getVariable [QGVAR(alarm),false])}) then {
                         (_this select 0) setVariable [QGVAR(alarm),true];
                         playSound3D [SFX_ALARM,_this select 0,false,getPosASL (_this select 0),3,1,200];
                     };
                 }];
 
-                _veh addEventHandler ["Hit", {
+                _veh addEventHandler ["Hit",{
                     if !((_this select 0) getVariable [QGVAR(alarm),false]) then {
                         (_this select 0) setVariable [QGVAR(alarm),true];
                         playSound3D [SFX_ALARM,_this select 0,false,getPosASL (_this select 0),3,1,200];

@@ -123,7 +123,7 @@ GVAR(settingsInitFinished) = false;
 GVAR(runAtSettingsInitialized) = [];
 
 // eventhandlers 
-["CBA_settingsInitialized", {
+["CBA_settingsInitialized",{
     INFO("Settings initialized");
 
     if !(SLX_XEH_MACHINE#8) then {
@@ -133,7 +133,7 @@ GVAR(runAtSettingsInitialized) = [];
     if (isServer) then {
         GVAR(settingsInitFinished) = true;
 
-        // handle delayed functions, useful for functions that are not called from pre/post init scripts
+        // handle delayed functions,useful for functions that are not called from pre/post init scripts
         INFO_1("%1 delayed functions running",count GVAR(runAtSettingsInitialized));
         
         {
@@ -147,7 +147,7 @@ GVAR(runAtSettingsInitialized) = [];
 // headless client exit 
 if (!isServer) exitWith {};
 
-[QGVAR(HCConnected), FUNC(handleHCConnected)] call CBA_fnc_addEventHandler;
+[QGVAR(HCConnected),FUNC(handleHCConnected)] call CBA_fnc_addEventHandler;
 
 // cleanup variables
 GVAR(cleanup) = [];

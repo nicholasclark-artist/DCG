@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-initialize safezone triggers, run from EDEN attributes
+initialize safezone triggers,run from EDEN attributes
 
 Arguments:
 0: editor placed marker <STRING>
@@ -17,7 +17,7 @@ if (is3DEN || {!isServer} || {!GVAR(safezoneEnable)}) exitWith {};
 
 // run after settings init
 if (!GVAR(settingsInitFinished)) exitWith {
-    GVAR(runAtSettingsInitialized) pushBack [FUNC(initSafezones), _this];
+    GVAR(runAtSettingsInitialized) pushBack [FUNC(initSafezones),_this];
 };
 
 // exit if main addon disabled
@@ -35,16 +35,16 @@ _marker setMarkerAlpha 0;
 
 private _act = format ["
     {
-        if (!isPlayer _x && {!(_x getVariable ['%1', false])}) then {
+        if (!isPlayer _x && {!(_x getVariable ['%1',false])}) then {
             _x call CBA_fnc_deleteEntity;
         };
     } forEach thisList;
 ",QGVAR(safezoneKeepEntity)]; // @todo add keep functionality to documentation
 
-_trg = createTrigger ["EmptyDetector", getMarkerPos _marker];
-_trg setTriggerActivation [format["%1",GVAR(enemySide)], "PRESENT", true];
-_trg setTriggerStatements ["this", _act, ""];  
-_trg setTriggerArea [(getMarkerSize _marker) select 0, (getMarkerSize _marker) select 1, markerDir _marker, COMPARE_STR(markerShape _marker,"RECTANGLE")];
+_trg = createTrigger ["EmptyDetector",getMarkerPos _marker];
+_trg setTriggerActivation [format["%1",GVAR(enemySide)],"PRESENT",true];
+_trg setTriggerStatements ["this",_act,""];  
+_trg setTriggerArea [(getMarkerSize _marker) select 0,(getMarkerSize _marker) select 1,markerDir _marker,COMPARE_STR(markerShape _marker,"RECTANGLE")];
 
 GVAR(safezoneTriggers) pushBack _trg;
 GVAR(safezoneMarkers) pushBack _marker;

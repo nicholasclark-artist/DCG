@@ -15,7 +15,7 @@ __________________________________________________________________*/
 [
     QGVAR(enable),
     "CHECKBOX",
-    format ["Enable %1", COMPONENT_NAME],
+    format ["Enable %1",COMPONENT_NAME],
     COMPONENT_NAME,
     true,
     true,
@@ -63,7 +63,7 @@ __________________________________________________________________*/
             };
             case false: {
                 if (GVAR(handleDisconnectID) >= 0) then {
-                    removeMissionEventHandler ["HandleDisconnect", GVAR(handleDisconnectID)];
+                    removeMissionEventHandler ["HandleDisconnect",GVAR(handleDisconnectID)];
                 };
             };
             default {};

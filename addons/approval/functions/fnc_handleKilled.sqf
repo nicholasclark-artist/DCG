@@ -17,13 +17,13 @@ __________________________________________________________________*/
 if !(isMultiplayer) exitWith {};
 
 params [
-    ["_unit", objNull, [objNull]],
-    ["_killer", objNull, [objNull]]
+    ["_unit",objNull,[objNull]],
+    ["_killer",objNull,[objNull]]
 ];
 
-// ACE workaround, https://github.com/acemod/ACE3/issues/3790
+// ACE workaround,https://github.com/acemod/ACE3/issues/3790
 if (isNull _killer || {_unit isEqualTo _killer}) then {
-    _killer = _unit getVariable ["ace_medical_lastDamageSource", _killer];
+    _killer = _unit getVariable ["ace_medical_lastDamageSource",_killer];
 };
 
 if (isNull _unit || {isNull _killer} || {_killer isEqualTo _unit} || {side _killer isEqualTo CIVILIAN}) exitWith {
@@ -47,6 +47,6 @@ if !(side group _unit isEqualTo EGVAR(main,enemySide)) then {
     _unitValue = _unitValue * -1;
 };
 
-[QGVAR(add), [getPos _unit, _unitValue]] call CBA_fnc_serverEvent;
+[QGVAR(add),[getPos _unit,_unitValue]] call CBA_fnc_serverEvent;
 
 true

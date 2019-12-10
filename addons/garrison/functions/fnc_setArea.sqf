@@ -23,10 +23,10 @@ private _locations = [];
 _id = QGVAR(polygonDraw);
 
 // get primary location
-private _primary = [EGVAR(main,locations), selectRandom ([EGVAR(main,locations)] call CBA_fnc_hashKeys)] call CBA_fnc_hashGet;
+private _primary = [EGVAR(main,locations),selectRandom ([EGVAR(main,locations)] call CBA_fnc_hashKeys)] call CBA_fnc_hashGet;
 
-// get list of locations in area, includes primary location
-_locations = nearestLocations [_primary getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS], ["namecitycapital","namecity","namevillage"],AO_SEARCH_RADIUS];
+// get list of locations in area,includes primary location
+_locations = nearestLocations [_primary getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS],["namecitycapital","namecity","namevillage"],AO_SEARCH_RADIUS];
 
 // make sure locations have data
 private _rem = [];
@@ -48,7 +48,7 @@ if (_locations isEqualTo []) exitWith {false};
 
 {
     // get hash location 
-    _location = [EGVAR(main,locations), text _x] call CBA_fnc_hashGet;
+    _location = [EGVAR(main,locations),text _x] call CBA_fnc_hashGet;
 
     // get location polygon 
     private _polygon = _location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON];

@@ -14,7 +14,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define REINIT \
         [{call FUNC(init)},[],60] call CBA_fnc_waitAndExecute; \
-        WARNING("init failed, retry after cooldown")
+        WARNING("init failed,retry after cooldown")
 
 if !(isServer) exitWith {false};
 
@@ -42,18 +42,18 @@ if (GVAR(score) <= 0) exitWith {
     // REINIT;
 };
 
-// spawn in order (garrison, comm, outpost, dynamic task)
+// spawn in order (garrison,comm,outpost,dynamic task)
 // call FUNC(spawnGarrison);
 
 // comm array position is dependent on garrison position
 [{
     // call FUNC(spawnComm);
-}, [], 5] call CBA_fnc_waitAndExecute;
+},[],5] call CBA_fnc_waitAndExecute;
 
 // outpost must be spawned after comm array so officer can provide intel on comm position
 [{
     call FUNC(spawnOutpost);
-}, [], 10] call CBA_fnc_waitAndExecute;
+},[],10] call CBA_fnc_waitAndExecute;
 
 // @todo compare scores and spawn dynamic task in low score area to give each AO a point of interest
 
@@ -75,12 +75,12 @@ private _id = "";
             [_x,[EGVAR(main,enemySide),false] call BIS_fnc_sideColor,"\A3\ui_f\data\map\markerbrushes\bdiagonal_ca.paa",true,findDisplay 12 displayCtrl 51,_this select 1] call EFUNC(main,polygonFill);
         } forEach (_this select 0); 
     }
-] remoteExecCall [QUOTE(call), 0, false];
+] remoteExecCall [QUOTE(call),0,false];
 
 // set tasks 
 call FUNC(setTask);
 
 // run handler
-// [FUNC(handleArea), 30] call CBA_fnc_addPerFrameHandler;
+// [FUNC(handleArea),30] call CBA_fnc_addPerFrameHandler;
 
 nil

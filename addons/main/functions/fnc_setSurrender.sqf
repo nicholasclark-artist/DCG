@@ -23,7 +23,7 @@ if (typeOf _obj isKindOf "LandVehicle") exitWith {
     crew _obj allowGetIn false;
     {
         moveOut _x;
-        _x setVelocity [0, 0, 0];
+        _x setVelocity [0,0,0];
         _x setBehaviourStrong "CARELESS";
         if (CHECK_ADDON_1(ace_captives)) then {
             [_x,true] call ace_captives_fnc_setSurrendered;

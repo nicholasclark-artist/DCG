@@ -26,8 +26,8 @@ params [
 ];
 
 (getAllHitPointsDamage _veh) params [
-    ["_allHitpoints", []],
-    ["_allHitpointsSelections", []]
+    ["_allHitpoints",[]],
+    ["_allHitpointsSelections",[]]
 ];
 
 if (!(local _veh) || {_allHitpoints isEqualTo []} || {!(_veh isKindOf "LandVehicle" || (_veh isKindOf "Ship") || (_veh isKindOf "Air"))}) exitWith {};
@@ -65,7 +65,7 @@ for "_i" from 1 to _hitCount step 1 do {
 };
 
 if (_playSound) then {
-    playSound3D ["A3\Sounds_F\Vehicles\air\noises\heli_damage_rotor_int_open_1.wss", _veh, false, getPosATL _veh, 2];
+    playSound3D ["A3\Sounds_F\Vehicles\air\noises\heli_damage_rotor_int_open_1.wss",_veh,false,getPosATL _veh,2];
 };
 
 private _fx = "test_EmptyObjectForSmoke" createVehicle (getPosWorld _veh);

@@ -55,10 +55,10 @@ if !(_pairs isEqualTo []) then {
 
         if !(_matches isEqualTo []) then {
           _selected = _matches select 0; // get the first matching pair
-          [_id, _selected select 1] call acre_api_fnc_setRadioChannel;
+          [_id,_selected select 1] call acre_api_fnc_setRadioChannel;
           _pairs deleteAt (_pairs find _selected); // remove pair from array after setting channel
 
-          INFO_3("Assign ACRE radio: id: %1, base class: %2, channel: %3",_id,_class,_selected select 1);
+          INFO_3("Assign ACRE radio: id: %1,base class: %2,channel: %3",_id,_class,_selected select 1);
         };
       } forEach ([] call acre_api_fnc_getCurrentRadioList);
       },
@@ -68,6 +68,6 @@ if !(_pairs isEqualTo []) then {
 
 if !(_missing isEqualTo []) then {
     _missing = _missing apply {[configFile >> "cfgWeapons" >> _x] call BIS_fnc_displayName};
-    _missing = _missing joinString ", ";
+    _missing = _missing joinString ",";
     [format ["Cannot add the following radios to your inventory: %1",_missing],true] call EFUNC(main,displayText);
 };

@@ -60,7 +60,7 @@ call {
 };
 
 if (_pool isEqualTo []) exitWith {
-    WARNING("Cannot occupy location, unit pool empty")
+    WARNING("Cannot occupy location,unit pool empty")
 };
 
 call {
@@ -100,7 +100,7 @@ PREP_INF(_center,_infCount,_size*0.68);
 PREP_SNIPER(_center,2,_size);
 
 // destroy buildings
-private _buildings = _center nearObjects ["House", _size];
+private _buildings = _center nearObjects ["House",_size];
 
 if !(_buildings isEqualTo []) then {
     private _count = ceil random 4;
@@ -109,7 +109,7 @@ if !(_buildings isEqualTo []) then {
         private _house = selectRandom _buildings;
         _buildings deleteAt (_buildings find _house);
         if !((_house buildingPos -1) isEqualTo []) then {
-            _house setDamage [1, false];
+            _house setDamage [1,false];
             private _fx = "test_EmptyObjectForSmoke" createVehicle [0,0,0];
             _fx setPosWorld (getPosWorld _house);
         };
@@ -118,7 +118,7 @@ if !(_buildings isEqualTo []) then {
 
 private _iconPos =+ _center;
 _iconPos set [1,(_iconPos select 1) - 40];
-_icon = createMarker [[QUOTE(ADDON),_name] joinString "_", _iconPos];
+_icon = createMarker [[QUOTE(ADDON),_name] joinString "_",_iconPos];
 _icon setMarkerShape "ICON";
 _icon setMarkerColor ([EGVAR(main,enemySide),true] call BIS_fnc_sideColor);
 _icon setMarkerText (["Liberate",_typeName] joinString " ");

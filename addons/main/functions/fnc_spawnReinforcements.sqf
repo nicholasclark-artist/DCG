@@ -59,7 +59,7 @@ private _heli = createVehicle [_type,_center getPos [DIST_SPAWN,random 360],[],0
 _heli lock 3;
 
 private _grp = createGroup _side;
-private _pilot = _grp createUnit [selectRandom _unitPool, DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
+private _pilot = _grp createUnit [selectRandom _unitPool,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
 [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
 _pilot assignAsDriver _heli;
 _pilot moveInDriver _heli;
@@ -77,7 +77,7 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
         params ["_heli","_grpPatrol"];
 
         {
-            _x assignAsCargoIndex [_heli, _forEachIndex];
+            _x assignAsCargoIndex [_heli,_forEachIndex];
             _x moveInCargo _heli;
         } forEach (units _grpPatrol);
     },
@@ -94,9 +94,9 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
 
         _grpPatrol leaveVehicle _heli;
         _onComplete = format ["if ([%1,500] call %2 isEqualTo []) then {['%3',thisList] call CBA_fnc_serverEvent};",_center,QFUNC(getPlayers),QGVAR(cleanup)];
-        [_grpPatrol, [_center, 50, 50, 0, false],"AWARE","NO CHANGE","UNCHANGED","NO CHANGE",_onComplete] call CBA_fnc_taskSearchArea;
+        [_grpPatrol,[_center,50,50,0,false],"AWARE","NO CHANGE","UNCHANGED","NO CHANGE",_onComplete] call CBA_fnc_taskSearchArea;
 
-        INFO_2("Reinforcement dismount at %1, target is %2",getPos leader _grpPatrol,_center);
+        INFO_2("Reinforcement dismount at %1,target is %2",getPos leader _grpPatrol,_center);
 
         [
             {{alive (_x select 0)} count (fullCrew [_this,"cargo",false]) isEqualTo 0},
@@ -120,6 +120,6 @@ private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
         [QGVAR(cleanup),_heli] call CBA_fnc_serverEvent;
         INFO("Reinforcement vehicle destroyed");
     };
-}, 1, [_heli]] call CBA_fnc_addPerFrameHandler;
+},1,[_heli]] call CBA_fnc_addPerFrameHandler;
 
 true

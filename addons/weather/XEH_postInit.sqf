@@ -10,10 +10,10 @@ POSTINIT;
 // headless client exit 
 if (!isServer) exitWith {};
 
-["CBA_settingsInitialized", {
+["CBA_settingsInitialized",{
     if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
-    // [QEGVAR(main,debug), {
+    // [QEGVAR(main,debug),{
     //     _this call FUNC(handleDebug);
     // }] call CBA_fnc_addEventHandler;
 
@@ -25,8 +25,8 @@ if (!isServer) exitWith {};
     GVAR(precipitation) = GVAR(precipitation) select MONTH_CURRENT;
     GVAR(rainfall) = GVAR(rainfall) select MONTH_CURRENT;
 
-    [QGVAR(dateChange), {
-        INFO("date changed, set initial forecast");
+    [QGVAR(dateChange),{
+        INFO("date changed,set initial forecast");
 
         GVAR(date) = date;
         
@@ -37,7 +37,7 @@ if (!isServer) exitWith {};
         GVAR(fog) = _forecast select 2;
     }] call CBA_fnc_addEventHandler;
 
-    [QGVAR(updateMeasurements), {
+    [QGVAR(updateMeasurements),{
         call FUNC(getTemperature);
         call FUNC(getHumidity);
 

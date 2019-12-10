@@ -26,17 +26,17 @@ if !(_data isEqualTo []) then {
     setDate GVAR(date);
 
     // update measurements 
-    [QGVAR(updateMeasurements), []] call CBA_fnc_localEvent;
+    [QGVAR(updateMeasurements),[]] call CBA_fnc_localEvent;
 } else {
     if (GVAR(month) < 0) then {GVAR(month) = ceil random 12};
     if (GVAR(hour) < 0) then {GVAR(hour) = floor random 24};
 
     // set date before getting forecast
-    GVAR(date) = [2019, GVAR(month), ceil random 27, GVAR(hour), floor random 30];
+    GVAR(date) = [2019,GVAR(month),ceil random 27,GVAR(hour),floor random 30];
     setDate GVAR(date);
 
     // update measurements 
-    [QGVAR(updateMeasurements), []] call CBA_fnc_localEvent;
+    [QGVAR(updateMeasurements),[]] call CBA_fnc_localEvent;
 
     // get initial weather values
     private _forecast = [0] call FUNC(getForecast);
@@ -62,12 +62,12 @@ if !(_data isEqualTo []) then {
         
         // handle date changes and measurement updates
         [{
-            [QGVAR(updateMeasurements), []] call CBA_fnc_localEvent;
+            [QGVAR(updateMeasurements),[]] call CBA_fnc_localEvent;
 
             if !((date select [0,3]) isEqualTo (GVAR(date) select [0,3])) then {
-                [QGVAR(dateChange), []] call CBA_fnc_localEvent;
+                [QGVAR(dateChange),[]] call CBA_fnc_localEvent;
             };
-        }, 300] call CBA_fnc_addPerFrameHandler;
+        },300] call CBA_fnc_addPerFrameHandler;
     }
 ] call CBA_fnc_waitUntilAndExecute;
 
@@ -75,10 +75,10 @@ if !(_data isEqualTo []) then {
 [
     {nextWeatherChange < 1},
     {
-        [FUNC(handleForecast), 1] call CBA_fnc_addPerFrameHandler;
+        [FUNC(handleForecast),1] call CBA_fnc_addPerFrameHandler;
 
         if (GVAR(rain) > 0) then {
-            [FUNC(handleRain), 1800] call CBA_fnc_addPerFrameHandler;
+            [FUNC(handleRain),1800] call CBA_fnc_addPerFrameHandler;
         };
     }
 ] call CBA_fnc_waitUntilAndExecute;

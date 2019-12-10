@@ -6,7 +6,7 @@
 	You are otherwise free to use this code as you wish. 
 */
 
-//Debug switch, comment to turn off
+//Debug switch,comment to turn off
 // #define DO_DEBUG 
 
 /* =================== Pointers =================== */
@@ -14,9 +14,9 @@
 #define PTR_NULL ""
 #define PTR_IS_NULL(x) ((x) isEqualTo PTR_NULL)
 #define PTR_MAIN _voronoiContainer
-#define SET_PTR(x,val) ([PTR_MAIN, x , val] call FUNC(pointerSet))
-#define GET_PTR(x) ([PTR_MAIN, x] call FUNC(pointerGet))
-#define NEW_PTR(val) ([PTR_MAIN, val] call FUNC(pointerNew))
+#define SET_PTR(x,val) ([PTR_MAIN,x ,val] call FUNC(pointerSet))
+#define GET_PTR(x) ([PTR_MAIN,x] call FUNC(pointerGet))
+#define NEW_PTR(val) ([PTR_MAIN,val] call FUNC(pointerNew))
 #define DEL_PTR(x) (SET_PTR(x,nil)) 
 
 /* =================== Points =================== */

@@ -31,5 +31,5 @@ if (CHECK_ADDON_1(ace_interact_menu)) then {
         _obj removeAction _x;
     } forEach _childIndex;
 
-    _obj removeEventHandler ["Respawn", _actionEH];
+    _obj removeEventHandler ["Respawn",_actionEH];
 };

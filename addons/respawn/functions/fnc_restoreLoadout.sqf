@@ -1,6 +1,6 @@
 /*
 Author:
-bux578, commy2, Nicholas Clark (SENSEI)
+bux578,commy2,Nicholas Clark (SENSEI)
 
 Description:
 restore player loadout
@@ -15,17 +15,17 @@ none
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-params ["_unit", "_allGear", "_activeWeaponAndMuzzle"];
+params ["_unit","_allGear","_activeWeaponAndMuzzle"];
 
 // restore all gear
 if (!isNil "_allGear") then {
     _unit setUnitLoadout _allGear;
 };
 
-// restore the last active weapon, muzzle and weaponMode
+// restore the last active weapon,muzzle and weaponMode
 if (!isNil "_activeWeaponAndMuzzle") then {
-    // @todo, replace this with CBA_fnc_selectWeapon after next CBA update
-    _activeWeaponAndMuzzle params ["_activeWeapon", "_activeMuzzle", "_activeWeaponMode"];
+    // @todo,replace this with CBA_fnc_selectWeapon after next CBA update
+    _activeWeaponAndMuzzle params ["_activeWeapon","_activeMuzzle","_activeWeaponMode"];
 
     if (
         (_activeMuzzle != "") &&
@@ -45,7 +45,7 @@ if (!isNil "_activeWeaponAndMuzzle") then {
         while {
             _index < 100 && {currentWeaponMode _unit != _activeWeaponMode}
         } do {
-            _unit action ["SwitchWeapon", _unit, _unit, _index];
+            _unit action ["SwitchWeapon",_unit,_unit,_index];
             _index = _index + 1;
         };
     };

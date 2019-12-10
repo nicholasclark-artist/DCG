@@ -31,6 +31,6 @@ unassignCurator _previousCurator;
         INFO_3("Assigning unit: %1 to curator: %2. Previous assigned curator: %3",_this select 1,_this select 0,_this select 2);
         (_this select 1) assignCurator (_this select 0);
     },
-    [_curator, _unit, _previousCurator],
+    [_curator,_unit,_previousCurator],
     1
 ] call CBA_fnc_waitAndExecute;

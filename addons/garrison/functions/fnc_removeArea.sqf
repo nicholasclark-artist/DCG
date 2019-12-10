@@ -39,10 +39,10 @@ if !(isServer) exitWith {false};
         [_value getVariable [QGVAR(polygonDraw),[]]],
         {
             {
-                (findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["Draw", _x];
+                (findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["Draw",_x];
             } forEach (_this select 0); 
         }
-    ] remoteExecCall [QUOTE(call), 0, false];
+    ] remoteExecCall [QUOTE(call),0,false];
 }] call CBA_fnc_hashEachPair;
 
 nil

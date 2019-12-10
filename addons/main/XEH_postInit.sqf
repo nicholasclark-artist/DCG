@@ -7,16 +7,16 @@ __________________________________________________________________*/
 POSTINIT;
 
 // eventhandlers
-["CBA_settingsInitialized", {
+["CBA_settingsInitialized",{
     if !(GVAR(enable)) exitWith {LOG(MSG_EXIT)};
 
     // headless client setup
     if (isServer) then {
         // disable if ace headless addon detected 
         if (GVAR(enableHC) && {!(CHECK_ADDON_1(acex_headless))}) then {
-            ["AllVehicles", "init", FUNC(sendToHC), nil, nil, true] call CBA_fnc_addClassEventHandler;
+            ["AllVehicles","init",FUNC(sendToHC),nil,nil,true] call CBA_fnc_addClassEventHandler;
 
-            addMissionEventHandler ["HandleDisconnect", {
+            addMissionEventHandler ["HandleDisconnect",{
                 if ((_this select 0) isEqualTo GVAR(HC)) then {
                     GVAR(HC) = objNull;
                     INFO("headless client disconnected");
@@ -24,23 +24,23 @@ POSTINIT;
             }];
         };
     } else {
-        [QGVAR(HCConnected), [player]] call CBA_fnc_serverEvent;
+        [QGVAR(HCConnected),[player]] call CBA_fnc_serverEvent;
     };
 
     // headless client exit 
     if (!isServer) exitWith {};
 
     // eventhandlers
-    [QGVAR(saveData), FUNC(saveData)] call CBA_fnc_addEventHandler;
+    [QGVAR(saveData),FUNC(saveData)] call CBA_fnc_addEventHandler;
 
-    [QGVAR(deleteData), {
+    [QGVAR(deleteData),{
         profileNamespace setVariable [QGVAR(saveData),nil];
         saveProfileNamespace;   
     }] call CBA_fnc_addEventHandler;
 
-    [QGVAR(cleanup), {_this call FUNC(cleanup)}] call CBA_fnc_addEventHandler;
+    [QGVAR(cleanup),{_this call FUNC(cleanup)}] call CBA_fnc_addEventHandler;
 
-    [QGVAR(debugMarkers), {
+    [QGVAR(debugMarkers),{
         if (GVAR(debug)) then {[1] call FUNC(debug)};
     }] call CBA_fnc_addEventHandler;
 
@@ -50,7 +50,7 @@ POSTINIT;
         1800
     ] call CBA_fnc_addPerFrameHandler;
         
-    [FUNC(handleCleanup), 120] call CBA_fnc_addPerFrameHandler;
+    [FUNC(handleCleanup),120] call CBA_fnc_addPerFrameHandler;
 
     // call debug if macro enabled
     [DEBUG_ADDON] call FUNC(debug);

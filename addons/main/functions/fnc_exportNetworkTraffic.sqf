@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-export network traffic, function must be spawned
+export network traffic,function must be spawned
 
 Arguments:
 0: log path <STRING>

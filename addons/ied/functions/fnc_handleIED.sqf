@@ -17,7 +17,7 @@ if (GVAR(list) isEqualTo []) exitWith {
 };
 
 {
-    _near = _x nearEntities [["CAManBase", "LandVehicle"], 4];
+    _near = _x nearEntities [["CAManBase","LandVehicle"],4];
     _near = _near select {isPlayer _x};
 
     if !(_near isEqualTo []) then {

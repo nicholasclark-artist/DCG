@@ -9,7 +9,7 @@ POSTINIT;
 // headless client exit 
 if (!isServer) exitWith {};
 
-["CBA_settingsInitialized", {
+["CBA_settingsInitialized",{
     if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
     EGVAR(main,grid) call FUNC(init);

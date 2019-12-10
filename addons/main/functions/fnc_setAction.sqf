@@ -21,7 +21,7 @@ Arguments:
 Return:
 array
 
-VANILLA: [Action Index, Child Action Indices, EH Index]
+VANILLA: [Action Index,Child Action Indices,EH Index]
 ACE: [Action]
 __________________________________________________________________*/
 #include "script_component.hpp"
@@ -47,7 +47,7 @@ private _addAction = -1;
 // @todo test adding ace_common_fnc_canInteractWith check to ace condition
 if (CHECK_ADDON_1(ace_interact_menu)) then {
     _addAction = [_id,_name,"",_statement,_condition,_child,_arguments,_pos,_distance] call ace_interact_menu_fnc_createAction;
-    _path = [_obj, _type, _path, _addAction] call ace_interact_menu_fnc_addActionToObject;
+    _path = [_obj,_type,_path,_addAction] call ace_interact_menu_fnc_addActionToObject;
     _actions append _path;
 } else {
     private _childActions = [];

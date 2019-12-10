@@ -46,7 +46,7 @@ for "_index" from 0 to (count _cfg - 1) do {
     };
 };
 
-titleText [format ["Exporting %1 classes to clipboard.",count _classArr], "PLAIN"];
+titleText [format ["Exporting %1 classes to clipboard.",count _classArr],"PLAIN"];
 
 _classArr = _classArr joinString ",";
 

@@ -10,11 +10,11 @@
 #include "script_component.hpp"
 
 #ifdef DO_DEBUG
-diag_log text format ["Func: %1", _fnc_scriptName];
-diag_log text format ["Called by: %1", _fnc_scriptNameParent];
+diag_log text format ["Func: %1",_fnc_scriptName];
+diag_log text format ["Called by: %1",_fnc_scriptNameParent];
 #endif
 
-params ["_nPtr", "_width", "_height", "_vertices"];
+params ["_nPtr","_width","_height","_vertices"];
 private _n = GET_PTR(_nPtr);
 if(_n#PARABOLA_IS_LEAF) exitWith {
     SET_PTR(_nPtr,PTR_NULL);
@@ -41,22 +41,22 @@ private _end = if(_my < 0 || _my > _height) then {
         0 min (_nEdge#EDGE_START#POINT_Y - 10) 
     };
 
-    [(_my-_eG)/_eF, _my]
+    [(_my-_eG)/_eF,_my]
 } else {
-    [_mx, _my]
+    [_mx,_my]
 };
 
-_nEdge set [EDGE_END, _end];
+_nEdge set [EDGE_END,_end];
 _vertices pushBack _end;
 
 private _leftChildPtr = _n#PARABOLA_LEFT;
 private _rightChildPtr = _n#PARABOLA_RIGHT;
 
 #ifdef DO_DEBUG
-diag_log text format ["_leftChildPtr = %1", _leftChildPtr];
-diag_log text format ["_rightChildPtr = %1", _rightChildPtr];
+diag_log text format ["_leftChildPtr = %1",_leftChildPtr];
+diag_log text format ["_rightChildPtr = %1",_rightChildPtr];
 #endif
 
-[_leftChildPtr, _width, _height, _vertices] call FUNC(finishEdge);
-[_rightChildPtr, _width, _height, _vertices] call FUNC(finishEdge);
+[_leftChildPtr,_width,_height,_vertices] call FUNC(finishEdge);
+[_rightChildPtr,_width,_height,_vertices] call FUNC(finishEdge);
 DEL_PTR(_nPtr);

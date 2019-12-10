@@ -1,6 +1,6 @@
 /*
 Author:
-ACE2 Team, Nicholas Clark (SENSEI)
+ACE2 Team,Nicholas Clark (SENSEI)
 
 Description:
 get current dew point

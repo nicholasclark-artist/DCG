@@ -22,7 +22,7 @@ if !(_data isEqualTo []) then {
         private _veh = _type createVehicle DEFAULT_SPAWNPOS;
 
         {
-            _veh setVariable [_x select 0, _x select 1, false];
+            _veh setVariable [_x select 0,_x select 1,false];
         } forEach _vars;
 
         _veh setDir _dir;

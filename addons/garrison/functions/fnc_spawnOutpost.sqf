@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-spawn outposts, should not be called directly
+spawn outposts,should not be called directly
 
 Arguments:
 
@@ -63,7 +63,7 @@ scopeName SCOPE;
                 // add eventhandlers
                 {
                     _x setVariable [QGVAR(location),_location];
-                    _x addEventHandler ["Killed", {
+                    _x addEventHandler ["Killed",{
                         _location = (_this select 0) getVariable [QGVAR(location),locationNull];
                         _location call (_location getVariable [QGVAR(onKilled),{}]);
                     }]; 
@@ -73,7 +73,7 @@ scopeName SCOPE;
                 [QGVAR(updateGroups),[_location,_grp]] call CBA_fnc_localEvent;
 
                 // set group on patrol
-                [_grp, getPos _location, (50 max (_location getVariable [QGVAR(radius),100])) * (random [1,2,3]), 4, "MOVE", "SAFE", "YELLOW", "LIMITED", "STAG COLUMN", "if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}", [5,16,15]] call CBA_fnc_taskPatrol;
+                [_grp,getPos _location,(50 max (_location getVariable [QGVAR(radius),100])) * (random [1,2,3]),4,"MOVE","SAFE","YELLOW","LIMITED","STAG COLUMN","if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}",[5,16,15]] call CBA_fnc_taskPatrol;
             },
             [_grp,_value],
             (SPAWN_DELAY * _unitCount) * 2
@@ -81,7 +81,7 @@ scopeName SCOPE;
     };
     
     // get composition buildings with suitable positions  
-    private _buildings = _posOutpost nearObjects ["House", _composition select 0];
+    private _buildings = _posOutpost nearObjects ["House",_composition select 0];
     _buildings = _buildings select {!((_x buildingPos -1) isEqualTo [])};
     
     if (_buildings isEqualTo []) then {
@@ -89,7 +89,7 @@ scopeName SCOPE;
     };
 
     // spawn officer and place in or around building
-    private _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),3] call EFUNC(main,getPool)), DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
+    private _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),3] call EFUNC(main,getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
     
     private _dir = random 360;
     _officer setFormDir _dir;
@@ -104,7 +104,7 @@ scopeName SCOPE;
     // add eventhandlers and vars
     _value setVariable [QGVAR(officer),_officer];
     _officer setVariable [QGVAR(location),_value];
-    _officer addEventHandler ["Killed", {
+    _officer addEventHandler ["Killed",{
         _location = (_this select 0) getVariable [QGVAR(location),locationNull];
         _location call (_location getVariable [QGVAR(onKilled),{}]);
     }]; 
@@ -118,7 +118,7 @@ scopeName SCOPE;
 
     {
         if (PROBABILITY(0.5)) then {
-            _unit = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)), DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
+            _unit = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
 
             _dir = random 360;
             _unit setFormDir _dir;
@@ -132,11 +132,11 @@ scopeName SCOPE;
 
             // add eventhandlers
             _unit setVariable [QGVAR(location),_value];
-            _unit addEventHandler ["Killed", {
+            _unit addEventHandler ["Killed",{
                 _location = (_this select 0) getVariable [QGVAR(location),locationNull];
                 _location call (_location getVariable [QGVAR(onKilled),{}]);
             }]; 
-            _unit addEventHandler ["FiredNear", {
+            _unit addEventHandler ["FiredNear",{
                 // _unit = _this select 0;
                 // _firer = _this select 1;
                 // _node = "Sign_Pointer_F" createVehicle [0,0,0];
@@ -161,7 +161,7 @@ scopeName SCOPE;
 
         // avoid units stacking at outpost pivot
         if !(_pos isEqualTo _posOutpost) then {
-            _unit = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)), DEFAULT_SPAWNPOS, [], 0, "CAN_COLLIDE"];
+            _unit = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
             
             _dir = random 360;
             _unit setFormDir _dir;
@@ -170,11 +170,11 @@ scopeName SCOPE;
 
             // add eventhandlers and vars
             _unit setVariable [QGVAR(location),_value];
-            _unit addEventHandler ["Killed", {
+            _unit addEventHandler ["Killed",{
                 _location = (_this select 0) getVariable [QGVAR(location),locationNull];
                 _location call (_location getVariable [QGVAR(onKilled),{}]);
             }]; 
-            _unit addEventHandler ["FiredNear", {
+            _unit addEventHandler ["FiredNear",{
                 // _unit = _this select 0;
                 // _firer = _this select 1;
                 // _node = "Sign_Pointer_F" createVehicle [0,0,0];

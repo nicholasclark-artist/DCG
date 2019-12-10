@@ -9,19 +9,19 @@ POSTINIT;
 // headless client exit 
 if (!isServer) exitWith {};
 
-["CBA_settingsInitialized", {
+["CBA_settingsInitialized",{
     if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
-    [QGVAR(updateUnitCount), {
+    [QGVAR(updateUnitCount),{
         (_this select 0) setVariable [QGVAR(unitCountCurrent),((_this select 0) getVariable [QGVAR(unitCountCurrent),0]) + (_this select 1)];
     }] call CBA_fnc_addEventHandler;
 
-    [QGVAR(updateGroups), {
+    [QGVAR(updateGroups),{
         private _groups = (_this select 0) getVariable [QGVAR(groups),[]];
         _groups pushBack (_this select 1);
     }] call CBA_fnc_addEventHandler;
 
-    [QGVAR(updateScore), {
+    [QGVAR(updateScore),{
         // update ao score
         (_this select 0) setVariable [QGVAR(score),((_this select 0) getVariable [QGVAR(score),0]) + (_this select 1)];
 
@@ -37,5 +37,5 @@ if (!isServer) exitWith {};
 
     [{
         call FUNC(init);
-    }, [], 10] call CBA_fnc_waitAndExecute;
+    },[],10] call CBA_fnc_waitAndExecute;
 }] call CBA_fnc_addEventHandler;

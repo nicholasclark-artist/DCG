@@ -17,8 +17,8 @@ if(_this isEqualType [] && !(_this isEqualTo [])) then {
     if(_last == 0) then {
         _heap deleteAt _last;
     } else {
-        _heap set [0, _heap deleteAt _last];
-        [_heap, 0] call FUNC(heapPercDown);
+        _heap set [0,_heap deleteAt _last];
+        [_heap,0] call FUNC(heapPercDown);
     };
 };
 _return

@@ -6,7 +6,7 @@ Description:
 check if position or entity is in any safezone area
 
 Arguments:
-0: entity to check <ARRAY, OBJECT, GROUP, LOCATION, MARKER>
+0: entity to check <ARRAY,OBJECT,GROUP,LOCATION,MARKER>
 
 Return:
 boolean
@@ -14,7 +14,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_entity", objNull, [objNull, grpNull, locationNull, "", []]]
+    ["_entity",objNull,[objNull,grpNull,locationNull,"",[]]]
 ];
 
 // @todo optimize array case 

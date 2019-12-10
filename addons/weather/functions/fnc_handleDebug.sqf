@@ -15,7 +15,7 @@ __________________________________________________________________*/
 
 switch (_this select 0) do {
     case 0: { 
-        // removeMissionEventHandler ["EachFrame", GVAR(debug)];
+        // removeMissionEventHandler ["EachFrame",GVAR(debug)];
         removeAllMissionEventHandlers "EachFrame";
         GVAR(debug) = nil;
     };
