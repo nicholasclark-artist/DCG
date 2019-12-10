@@ -273,7 +273,7 @@ if (VORONOI_DEBUG > 0) then {
     };
 };
 
-// ad polygon to hash location
+// add polygon to hash location
 private ["_edgeStart","_edgeEnd","_locationL","_locationR","_keyL","_keyR","_valueL","_valueR"];
 
 {

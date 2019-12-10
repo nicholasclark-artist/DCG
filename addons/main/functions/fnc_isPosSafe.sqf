@@ -7,7 +7,7 @@ checks if positionAGL is safe
 
 Arguments:
 0: positionAGL <ARRAY>
-1: search radius,minimum distance from objects or object used to calculate search radius <NUMBER,OBJECT>
+1: search radius, minimum distance from objects or object used to calculate search radius <NUMBER,OBJECT>
 2: allow water <NUMBER>
 3: max gradient <NUMBER>
 4: object to ignore <OBJECT>
@@ -48,10 +48,10 @@ if (_check isEqualType objNull) then {
 // cap radius at 50m
 _check = _check min 50; 
 
-// check gradient and water,water accepts -1,0 or 2
+// check gradient and water, water accepts -1,0 or 2
 if (_pos isFlatEmpty [-1,-1,_gradient,10 max (_check * 0.1),_water,false,_ignore] isEqualTo []) exitWith {false};
 
-// in order for an object to be detected by nearObjects and nearestTerrainObjects,the object's pivot (not bounding box) must be in search radius
+// in order for an object to be detected by nearObjects and nearestTerrainObjects, the object's pivot (not bounding box) must be in search radius
 
 // get near entities and filter ignored objects and game logics
 private _objs = _pos nearObjects ["All",_check];
@@ -61,10 +61,10 @@ _objs = _objs select {
     {getNumber (configFile >> "CfgVehicles" >> typeOf _x >> "scope") > 1}
 };
 
-// get terrain objects,2d search radius
+// get terrain objects, 2d search radius
 _objs append (nearestTerrainObjects [_pos,[],_check,false,true]);
 
-// filter out thin objects that should not realistically harm position safety,not ideal solution
+// filter out thin objects that should not realistically harm position safety, not ideal solution
 _objs = _objs select {
     (abs (((0 boundingBoxReal _x) select 1 select 2) - ((0 boundingBoxReal _x) select 0 select 2))) >= BBR_HEIGHT_MIN
 };
