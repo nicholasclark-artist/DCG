@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-find random position in convex polygon
+find random positionASL in convex polygon
 
 Arguments:
 0: polygon vertices <ARRAY>
@@ -33,4 +33,8 @@ private _tri = _triangles selectRandomWeighted _weights;
 private _r1 = random 1;
 private _r2 = random 1;
 
-((_tri select 0) vectorMultiply (1 - sqrt(_r1))) vectorAdd ((_tri select 1) vectorMultiply (sqrt(_r1) * (1 - _r2))) vectorAdd ((_tri select 2) vectorMultiply (sqrt(_r1) * _r2))
+private _ret = ((_tri select 0) vectorMultiply (1 - sqrt(_r1))) vectorAdd ((_tri select 1) vectorMultiply (sqrt(_r1) * (1 - _r2))) vectorAdd ((_tri select 2) vectorMultiply (sqrt(_r1) * _r2));
+
+_ret set [2,getTerrainHeightASL _ret];
+
+_ret
