@@ -43,7 +43,7 @@ _tempGrp setBehaviourStrong (behaviour leader _oldGrp);
     _args params ["_tempGrp","_count","_code","_params","_remaining"];
 
     // move units to new group
-    private _newGrp = createGroup side _tempGrp;
+    private _newGrp = createGroup [side _tempGrp,true];
     ((units _tempGrp) select [0,_count]) joinSilent _newGrp;
 
     // set behaviour and vars

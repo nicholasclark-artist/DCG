@@ -58,7 +58,7 @@ if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
 private _heli = createVehicle [_type,_center getPos [DIST_SPAWN,random 360],[],0,"FLY"];
 _heli lock 3;
 
-private _grp = createGroup _side;
+private _grp = createGroup [_side,true];
 private _pilot = _grp createUnit [selectRandom _unitPool,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
 [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
 _pilot assignAsDriver _heli;

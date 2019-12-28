@@ -91,7 +91,7 @@ scopeName SCOPE;
 
     {
         if (PROBABILITY(0.5)) then {
-            _unit = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
+            _unit = (createGroup [EGVAR(main,enemySide),true]) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
 
             _dir = random 360;
             _unit setFormDir _dir;
@@ -122,7 +122,7 @@ scopeName SCOPE;
 
         // avoid units stacking at outpost pivot
         if !(_pos isEqualTo _posOutpost) then {
-            _unit = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
+            _unit = (createGroup [EGVAR(main,enemySide),true]) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
             
             _dir = random 360;
             _unit setFormDir _dir;

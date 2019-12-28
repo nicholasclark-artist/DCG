@@ -32,7 +32,7 @@ private _overwatch = [_pos,_count,_min,_max] call FUNC(findPosOverwatch);
 
 private ["_grp","_unit","_mrk"];
 {
-    _grp = createGroup _side;
+    _grp = createGroup [_side,true];
     _unit = _grp createUnit [selectRandom ([_side,4] call FUNC(getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
     [_unit,_x] call FUNC(setPosSafe);
     _unit setUnitPos "DOWN";

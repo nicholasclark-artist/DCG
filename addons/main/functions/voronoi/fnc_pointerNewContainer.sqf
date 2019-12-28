@@ -13,7 +13,7 @@ params [
 ];
 
 if(isNull _container) then {
-    _container = createGroup sideLogic createUnit ["Logic",[0,0,0],[],0,"NONE"];
+    _container = (createGroup [sideLogic,true]) createUnit ["Logic",[0,0,0],[],0,"NONE"];
 };
 
 if(isNil {_container getVariable "POINTER_NUM"}) then {

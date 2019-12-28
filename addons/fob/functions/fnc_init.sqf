@@ -13,7 +13,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 GVAR(side) = createCenter sideLogic;
-GVAR(group) = createGroup GVAR(side);
+GVAR(group) = createGroup [GVAR(side),true];
 
 GVAR(curator) = GVAR(group) createUnit ["ModuleCurator_F",DEFAULT_SPAWNPOS,[],0,"FORM"];
 GVAR(curator) setVariable ["showNotification",false,true];

@@ -37,7 +37,7 @@ switch (floor random 3) do {
         };
 
         // get loadout from temp unit
-        private _tempGrp = createGroup EGVAR(main,enemySide);
+        private _tempGrp = createGroup [EGVAR(main,enemySide),true];
         (selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool))) createUnit [DEFAULT_SPAWNPOS,_tempGrp];
         private _vest = vest (leader _tempGrp);
         private _weapon = currentWeapon (leader _tempGrp);
@@ -198,7 +198,7 @@ switch (floor random 3) do {
         };
 
         // set hostile
-        private _grp = createGroup CIVILIAN;
+        private _grp = createGroup [CIVILIAN,true];
         (selectRandom EGVAR(main,unitsCiv)) createUnit [_hostilePos,_grp];
         _grp = [[leader _grp]] call EFUNC(main,setSide);
         [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;

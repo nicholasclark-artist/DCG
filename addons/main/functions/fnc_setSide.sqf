@@ -19,8 +19,7 @@ params [
     ["_side",GVAR(enemySide),[sideUnknown]]
 ];
 
-private _newgrp = createGroup _side;
-_newgrp deleteGroupWhenEmpty true;
+private _newgrp = createGroup [_side,true];
 
 {
     [_x] joinSilent grpNull;

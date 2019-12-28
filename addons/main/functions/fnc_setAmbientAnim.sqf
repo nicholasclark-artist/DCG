@@ -68,8 +68,7 @@ _unit removeWeapon _weapon;
 private _pos = getPosASL _obj;
 
 // game logic used as attach object
-private _logic = (createGroup CIVILIAN) createUnit ["Logic",DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
-(group _logic) deleteGroupWhenEmpty true;
+private _logic = (createGroup [CIVILIAN,true]) createUnit ["Logic",DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
 
 _logic setDir (getDir _obj + (_animData select 1));
 _logic setPosASL _pos;

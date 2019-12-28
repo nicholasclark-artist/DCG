@@ -62,7 +62,7 @@ call {
             _tower setdir ([_tower,_pos] call BIS_fnc_DirTo) + 180;
             _tower setvectorup [0,0,1];
             _tower setPos _posGrid;
-            private _gunner = (createGroup _side) createUnit [_unit,DEFAULT_SPAWNPOS,[],0,"NONE"];
+            private _gunner = (createGroup [_side,true]) createUnit [_unit,DEFAULT_SPAWNPOS,[],0,"NONE"];
             _gunner setFormDir (getDir _tower);
             _gunner setDir (getDir _tower);
             _gunner setPosATL (_tower buildingpos 1);
@@ -93,7 +93,7 @@ call {
 
             private _static = createVehicle [_static2,DEFAULT_SPAWNPOS,[],0,"CAN COLLIDE"];
             _static setPos (_bunker modelToWorld [0,0,-0.8]);
-            private _gunner = (createGroup _side) createUnit [_unit,DEFAULT_SPAWNPOS,[],0,"NONE"];
+            private _gunner = (createGroup [_side,true]) createUnit [_unit,DEFAULT_SPAWNPOS,[],0,"NONE"];
             _gunner moveInGunner _static;
             _gunner doWatch (_bunker modelToWorld [0,-40,1]);
             _gunnerArray pushBack _gunner;
@@ -121,7 +121,7 @@ call {
                 [-2.3,0,0]
             ];
 
-            private _gunner = (createGroup _side) createUnit [_unit,DEFAULT_SPAWNPOS,[],0,"NONE"];
+            private _gunner = (createGroup [_side,true]) createUnit [_unit,DEFAULT_SPAWNPOS,[],0,"NONE"];
             _gunner moveInGunner _static;
             _gunnerArray pushBack _gunner;
         };
