@@ -8,7 +8,7 @@ set comm array locations
 Arguments:
 
 Return:
-nil
+bool
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SCOPE QGVAR(setComm)
@@ -16,32 +16,50 @@ __________________________________________________________________*/
 // define scope to break hash loop
 scopeName SCOPE;
 
-private ["_polygonPositions"];
+private ["_polygon","_polygonPositions"];
 
-[GVAR(areas),{
-    // only run on active garrison
-    if (_value getVariable [QGVAR(activeGarrison),0] isEqualTo 1) then {
-        // get random positions in polygon
-        _polygonPositions = [];
+private _comms = [];
 
-        for "_i" from 0 to 9 do {
-            _polygonPositions pushBack ([_value getVariable [QEGVAR(main,polygon),[]]] call EFUNC(main,polygonRandomPos));
-        };
+[GVAR(garrisons),{
+    // get random positions in polygon
+    _polygon = ([GVAR(areas),key] call CBA_fnc_hashGet) getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON];
+    _polygonPositions = [];
 
-        // find suitable position
-        _polygonPositions = _polygonPositions select ([_x,0,0,0.275] call EFUNC(main,isPosSafe));
-
-        // exit if no positions left
-        if (_polygonPositions isEqualTo []) then {
-            breakTo SCOPE;
-        };
-        
-        // set as comms array location
-        _value setVariable [QGVAR(positionASLComm),selectRandom _polygonPositions];
-
-        // update score
-        [QGVAR(updateScore),[_location,COMM_SCORE]] call CBA_fnc_localEvent;
+    for "_i" from 0 to 9 do {
+        _polygonPositions pushBack ([_polygon] call EFUNC(main,polygonRandomPos));
     };
+
+    // find suitable position
+    _polygonPositions = _polygonPositions select {[_x,0,0,0.275] call EFUNC(main,isPosSafe)};
+
+    // exit if no positions left
+    if (_polygonPositions isEqualTo []) then {
+        breakTo SCOPE;
+    };
+    
+    // create location 
+    _location = createLocation ["Invisible",ASLtoAGL (selectRandom _polygonPositions),1,1];
+
+    // set vars
+    _location setVariable [QGVAR(active),1];
+    _location setVariable [QGVAR(name),call FUNC(getName)];
+    _location setVariable [QGVAR(task),""];
+    _location setVariable [QGVAR(positionASL),AGLtoASL (getPos _location)];
+    _location setVariable [QGVAR(radius),0];
+    _location setVariable [QGVAR(groups),[]]; // groups assigned to comm array
+    _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
+    _location setVariable [QGVAR(onKilled),{ // update unit count on killed event
+        _this setVariable [QGVAR(unitCountCurrent),(_this getVariable [QGVAR(unitCountCurrent),-1]) - 1];
+    }];
+
+    // setup hash
+    _comms pushBack [_key,_location];
+
+    // update score
+    [QGVAR(updateScore),[_location,COMM_SCORE]] call CBA_fnc_localEvent;
 }] call CBA_fnc_hashEachPair;
 
-nil
+// create hash
+GVAR(comms) = [_comms,locationNull] call CBA_fnc_hashCreate;
+
+(count ([GVAR(comms)] call CBA_fnc_hashKeys)) > 0

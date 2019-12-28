@@ -14,9 +14,7 @@ __________________________________________________________________*/
 #define SCOPE QGVAR(spawnOutpost)
 #define SPAWN_DELAY 0.5
 
-// @todo fix garrison units not moving in combat 
-    // regroup garrison units on FiredNear
-    // send officer to random buildingPos
+// @todo spawn intel files on composition node 
 
 // define scope to break hash loop
 scopeName SCOPE;
@@ -88,31 +86,6 @@ scopeName SCOPE;
         WARNING_1("%1 outpost does not have building positions",_key);
     };
 
-    // spawn officer and place in or around building
-    private _officer = (createGroup EGVAR(main,enemySide)) createUnit [selectRandom ([EGVAR(main,enemySide),3] call EFUNC(main,getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
-    
-    private _dir = random 360;
-    _officer setFormDir _dir;
-    _officer setDir _dir;
-    
-    if (_buildings isEqualTo []) then {
-        _officer setPosASL ([_posOutpost,0,(_composition select 0) * 0.5,2,-1,-1,[0,360],[_posOutpost select 0,_posOutpost select 1,getTerrainHeightASL _posOutpost]] call EFUNC(main,findPosSafe));
-    } else {
-        _officer setPosATL selectRandom ((selectRandom _buildings) buildingPos -1);
-    };
-
-    // add eventhandlers and vars
-    _value setVariable [QGVAR(officer),_officer];
-    _officer setVariable [QGVAR(location),_value];
-    _officer addEventHandler ["Killed",{
-        _location = (_this select 0) getVariable [QGVAR(location),locationNull];
-        _location call (_location getVariable [QGVAR(onKilled),{}]);
-    }]; 
-
-    [QEGVAR(cache,enableGroup),group _officer] call CBA_fnc_serverEvent;
-    [QGVAR(updateUnitCount),[_value,1]] call CBA_fnc_localEvent;
-    [QGVAR(updateGroups),[_value,group _officer]] call CBA_fnc_localEvent;
-
     // spawn building infantry
     private ["_unit","_dir"];
 
@@ -136,18 +109,6 @@ scopeName SCOPE;
                 _location = (_this select 0) getVariable [QGVAR(location),locationNull];
                 _location call (_location getVariable [QGVAR(onKilled),{}]);
             }]; 
-            _unit addEventHandler ["FiredNear",{
-                // _unit = _this select 0;
-                // _firer = _this select 1;
-                // _node = "Sign_Pointer_F" createVehicle [0,0,0];
-                // _node setPosWorld (_unit modelToWorldWorld [0,0,2]);
-
-                // resetSubgroupDirection _unit;
-
-                _unit removeEventHandler ["FiredNear",_thisEventHandler];
-
-                // systemChat str [_unit,_firer];
-            }];  
 
             [QEGVAR(cache,enableGroup),group _unit] call CBA_fnc_serverEvent;
             [QGVAR(updateUnitCount),[_value,1]] call CBA_fnc_localEvent;
@@ -173,18 +134,6 @@ scopeName SCOPE;
             _unit addEventHandler ["Killed",{
                 _location = (_this select 0) getVariable [QGVAR(location),locationNull];
                 _location call (_location getVariable [QGVAR(onKilled),{}]);
-            }]; 
-            _unit addEventHandler ["FiredNear",{
-                // _unit = _this select 0;
-                // _firer = _this select 1;
-                // _node = "Sign_Pointer_F" createVehicle [0,0,0];
-                // _node setPosWorld (_unit modelToWorldWorld [0,0,2]);
-
-                // resetSubgroupDirection _unit;
-
-                _unit removeEventHandler ["FiredNear",_thisEventHandler];
-
-                // systemChat str [_unit,_firer];
             }];
 
             [QEGVAR(cache,enableGroup),group _unit] call CBA_fnc_serverEvent;

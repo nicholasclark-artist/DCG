@@ -32,9 +32,9 @@ if !(_ao) exitWith {
 };
 
 // find suitable spawn areas
-call FUNC(setOutpost);
 call FUNC(setGarrison);
-// call FUNC(setComms);
+call FUNC(setComm);
+call FUNC(setOutpost);
 
 // retry if score too low
 if (GVAR(score) <= 0) exitWith {
@@ -43,14 +43,14 @@ if (GVAR(score) <= 0) exitWith {
 };
 
 // spawn in order (garrison,comm,outpost,dynamic task)
-// call FUNC(spawnGarrison);
+call FUNC(spawnGarrison);
 
-// comm array position is dependent on garrison position
+// comm array position is dependent on garrison
 [{
     // call FUNC(spawnComm);
 },[],5] call CBA_fnc_waitAndExecute;
 
-// outpost must be spawned after comm array so officer can provide intel on comm position
+// outpost must be spawned after comm array for intel item
 [{
     call FUNC(spawnOutpost);
 },[],10] call CBA_fnc_waitAndExecute;

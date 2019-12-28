@@ -56,7 +56,7 @@ if (_locations isEqualTo []) exitWith {false};
     // set area variables
     _location setVariable [QGVAR(active),1];
     _location setVariable [QGVAR(polygonDraw),_id];
-    _location setVariable [QGVAR(name),call EFUNC(main,getAlias)];
+    _location setVariable [QGVAR(name),call FUNC(getName)];
     _location setVariable [QGVAR(task),""];
 
     // setup area hash

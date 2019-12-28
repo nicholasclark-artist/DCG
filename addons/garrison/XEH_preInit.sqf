@@ -12,8 +12,11 @@ PREP(handleArea);
 PREP(setArea);
 PREP(setGarrison);
 PREP(setOutpost);
+PREP(setComm);
 PREP(setTask);
+PREP(getName);
 PREP(removeArea);
+PREP(spawnGarrison);
 PREP(spawnOutpost);
 PREP(taskOPORD);
 
@@ -21,5 +24,6 @@ PREP(taskOPORD);
 if (!isServer) exitWith {};
 
 GVAR(score) = 0;
+GVAR(aliasBlacklist) = [];
 
 SETTINGS_INIT;
