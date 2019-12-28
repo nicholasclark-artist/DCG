@@ -20,7 +20,7 @@ __________________________________________________________________*/
 #define SURRENDER_CHANCE 0.3
 #define REINFORCE_CHANCE 0.1
 #define ENTITY ["CAManBase","LandVehicle","Air","Ship"]
-#define ENEMYMAX_MULTIPLIER 0.5
+#define ENEMYMAX_COEF 0.5
 
 params ["_name","_center","_size","_type","_objArray","_mrkArray"];
 
@@ -58,7 +58,7 @@ private _maxCount = 0;
     _count = count (_entities select {side _x isEqualTo EGVAR(main,enemySide)});
 
     // if enemy has lost a certain amount of units,move to next phase
-    if (_count <= _maxCount*ENEMYMAX_MULTIPLIER) exitWith {
+    if (_count <= _maxCount*ENEMYMAX_COEF) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
         ["TaskUpdated",["",format ["The enemy is losing control of %1! Keep up the fight and they may surrender!",_name]]] remoteExecCall [QUOTE(BIS_fnc_showNotification),allPlayers,false];
         EGVAR(patrol,blacklist) pushBack [_center,_size]; // stop patrols from spawning in town

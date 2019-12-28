@@ -19,9 +19,9 @@ __________________________________________________________________*/
 #define WRECKS \
     ["a3\structures_f\wrecks\Wreck_Car2_F.p3d","a3\structures_f\wrecks\Wreck_Car3_F.p3d","a3\structures_f\wrecks\Wreck_Car_F.p3d","a3\structures_f\wrecks\Wreck_Offroad2_F.p3d","a3\structures_f\wrecks\Wreck_Offroad_F.p3d","a3\structures_f\wrecks\Wreck_Truck_dropside_F.p3d","a3\structures_f\wrecks\Wreck_Truck_F.p3d","a3\structures_f\wrecks\Wreck_UAZ_F.p3d","a3\structures_f\wrecks\Wreck_Van_F.p3d","a3\structures_f\wrecks\Wreck_Ural_F.p3d"]
 #define SAFE_DIST 12
-#define INF_COUNT_VILL ([15,30] call EFUNC(main,getUnitCount))*GVAR(multiplier)
-#define INF_COUNT_CITY ([25,40] call EFUNC(main,getUnitCount))*GVAR(multiplier)
-#define INF_COUNT_CAP ([30,50] call EFUNC(main,getUnitCount))*GVAR(multiplier)
+#define INF_COUNT_VILL ([15,30] call EFUNC(main,getUnitCount))*GVAR(countCoef)
+#define INF_COUNT_CITY ([25,40] call EFUNC(main,getUnitCount))*GVAR(countCoef)
+#define INF_COUNT_CAP ([30,50] call EFUNC(main,getUnitCount))*GVAR(countCoef)
 #define VEH_COUNT_VILL 1
 #define VEH_COUNT_CITY 1
 #define VEH_COUNT_CAP 2

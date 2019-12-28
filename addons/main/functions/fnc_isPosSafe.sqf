@@ -16,7 +16,7 @@ Return:
 boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CHECK_MULTIPLIER 2
+#define CHECK_COEF 2
 #define BBR_HEIGHT_MIN 0.55
 
 params [
@@ -42,7 +42,7 @@ if (_check isEqualType objNull) then {
     private _maxLength = abs ((_bb select 1 select 1) - (_bb select 0 select 1));
 
     // get radius from object bounding box
-    _check = (_bb select (count _bb - 1)) * CHECK_MULTIPLIER;
+    _check = (_bb select (count _bb - 1)) * CHECK_COEF;
 };
 
 // cap radius at 50m

@@ -63,16 +63,16 @@ if !(_obj isEqualTo _unit) then {
 
 // setup gear
 private _weapon = currentWeapon _unit;
-_unit removeWeapon currentWeapon _unit;
+_unit removeWeapon _weapon;
 
 private _pos = getPosASL _obj;
 
 // game logic used as attach object
-private _logic = (createGroup CIVILIAN) createUnit ["Logic",[_pos select 0,_pos select 1,0],[],0,"CAN_COLLIDE"];
+private _logic = (createGroup CIVILIAN) createUnit ["Logic",DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
 (group _logic) deleteGroupWhenEmpty true;
 
-_logic setPosASL _pos;
 _logic setDir (getDir _obj + (_animData select 1));
+_logic setPosASL _pos;
 
 // attach to logic
 _unit attachTo [_logic,_animData select 0];

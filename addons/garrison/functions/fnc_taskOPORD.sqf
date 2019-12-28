@@ -52,7 +52,7 @@ private _para1 = if (_isArea) then {
 
     // get area weather 
     private _weather = if (CHECK_ADDON_2(weather)) then {
-        format ["%1°C high,%2°C low,%3%4 chance of precipitation.",EGVAR(weather,tempDay),EGVAR(weather,tempNight),round EGVAR(weather,precipitation),"%"]
+        format ["%1°C high, %2°C low, %3%4 chance of precipitation.",EGVAR(weather,tempDay),EGVAR(weather,tempNight),round EGVAR(weather,precipitation),"%"]
     } else {
         "Forecast data is unavailable."
     };

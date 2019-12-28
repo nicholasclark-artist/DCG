@@ -24,7 +24,7 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(multiplier),
+    QGVAR(countCoef),
     "SLIDER",
     ["Enemy Count Multiplier",""],
     COMPONENT_NAME,

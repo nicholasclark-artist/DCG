@@ -25,7 +25,7 @@ __________________________________________________________________*/
 ] call CBA_Settings_fnc_init;
 
 [
-    QGVAR(multiplier),
+    QGVAR(coef),
     "SLIDER",
     ["Approval Multiplier","Multiplier for the rate of approval change."],
     COMPONENT_NAME,

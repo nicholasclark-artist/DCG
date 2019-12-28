@@ -99,11 +99,11 @@
 #define EX_SEA_DEEP "waterDepth"
 
 // misc
-#define ASLZ(POS) ((getTerrainHeightASL POS) max 0)
 #define DEFAULT_POS [0,0,0]
 #define DEFAULT_SPAWNPOS [0,0,worldsize]
 #define DEFAULT_POLYGON [[0,0,0],[0,0,0],[0,0,0]]
 #define DEFAULT_COLOR [0,0,0,1]
+#define ASLZ(POS) ((getTerrainHeightASL POS) max 0)
 #define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
 #define SETTINGS_INIT publicVariable QFUNC(initSettings); remoteExecCall [QFUNC(initSettings),-2,true]; call FUNC(initSettings)
@@ -124,15 +124,15 @@
 #define AP_MIN 0
 #define AP_MAX 100
 #define AP_DEFAULT AP_MAX*0.1
-#define AP_CAR ((AP_MAX*0.005)*EGVAR(approval,multiplier))
-#define AP_TANK ((AP_MAX*0.0075)*EGVAR(approval,multiplier))
-#define AP_AIR ((AP_MAX*0.01)*EGVAR(approval,multiplier))
-#define AP_SHIP ((AP_MAX*0.005)*EGVAR(approval,multiplier))
-#define AP_MAN ((AP_MAX*0.001)*EGVAR(approval,multiplier))
-#define AP_CIV ((AP_MAX*0.05)*EGVAR(approval,multiplier))
-#define AP_FOB ((AP_MAX*0.0025)*EGVAR(approval,multiplier))
-#define AP_VILLAGE ((AP_MAX*0.05)*EGVAR(approval,multiplier))
-#define AP_CITY ((AP_MAX*0.1)*EGVAR(approval,multiplier))
-#define AP_CAPITAL ((AP_MAX*0.15)*EGVAR(approval,multiplier))
+#define AP_CAR ((AP_MAX*0.005)*EGVAR(approval,coef))
+#define AP_TANK ((AP_MAX*0.0075)*EGVAR(approval,coef))
+#define AP_AIR ((AP_MAX*0.01)*EGVAR(approval,coef))
+#define AP_SHIP ((AP_MAX*0.005)*EGVAR(approval,coef))
+#define AP_MAN ((AP_MAX*0.001)*EGVAR(approval,coef))
+#define AP_CIV ((AP_MAX*0.05)*EGVAR(approval,coef))
+#define AP_FOB ((AP_MAX*0.0025)*EGVAR(approval,coef))
+#define AP_VILLAGE ((AP_MAX*0.05)*EGVAR(approval,coef))
+#define AP_CITY ((AP_MAX*0.1)*EGVAR(approval,coef))
+#define AP_CAPITAL ((AP_MAX*0.15)*EGVAR(approval,coef))
 #define AP_CONVERT1(POS) (linearConversion [AP_MIN,AP_MAX,([POS] call EFUNC(approval,getRegion)) getVariable [QEGVAR(approval,value),0],0,1,true])
 #define AP_CONVERT2(POS) ((1 - AP_CONVERT1(POS)) * 0.5)

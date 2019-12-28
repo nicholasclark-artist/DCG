@@ -26,7 +26,7 @@ __________________________________________________________________*/
     };
 
     // @todo add check for unit getting stuck at random positions
-    private _position = _location getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS];
+    private _position = _location getVariable [QEGVAR(main,positionASL),DEFAULT_POS];
     private _radius = _location getVariable [QEGVAR(main,radius),0];
     private _buildingPositions = _location getVariable [QGVAR(buildingPositions),[]];
     private _prefabPositions = _location getVariable [QGVAR(prefabPositions),[]];

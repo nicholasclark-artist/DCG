@@ -38,4 +38,19 @@ __________________________________________________________________*/
     {}
 ] call CBA_Settings_fnc_init;
 
+[
+    QGVAR(countCoef),
+    "SLIDER",
+    ["Enemy Count Multiplier",""],
+    COMPONENT_NAME,
+    [
+        0.5,
+        2,
+        1,
+        0
+    ],
+    true,
+    {}
+] call CBA_Settings_fnc_init;
+
 nil

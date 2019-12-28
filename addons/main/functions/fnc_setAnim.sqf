@@ -21,6 +21,7 @@ params [
     ["_priority",0,[0]]
 ];
 
+// @todo check for disableAI first
 call {
     if (_priority isEqualTo 0) exitWith {
         if (isNull objectParent _unit) then {
