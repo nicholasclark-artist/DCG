@@ -10,8 +10,8 @@ class CfgWorlds {
     class Altis: CAWorld {
         // temperature in degrees celsius
         // https://weatherspark.com/y/148550/Average-Weather-at-Limnos-Airport-Greece-Year-Round
-        GVARMAIN(tempDay)[] = {11,10,11,15,19,25,29,30,27,23,18,14};
-        GVARMAIN(tempNight)[] = {5,4,5,8,11,15,19,21,19,15,11,7};
+        GVARMAIN(temperatureDay)[] = {11,10,11,15,19,25,29,30,27,23,18,14};
+        GVARMAIN(temperatureNight)[] = {5,4,5,8,11,15,19,21,19,15,11,7};
 
         // relative humidity
         // https://www.weather-atlas.com/en/greece/myrina-climate
@@ -28,8 +28,8 @@ class CfgWorlds {
 
     class Stratis: CAWorld {
         // https://weatherspark.com/y/90554/Average-Weather-in-%C3%81gios-Efstr%C3%A1tios-Greece-Year-Round
-        GVARMAIN(tempDay)[] = {12,11,12,15,19,24,27,28,26,22,18,14};
-        GVARMAIN(tempNight)[] = {7,7,7,10,13,17,21,22,20,17,13,9};
+        GVARMAIN(temperatureDay)[] = {12,11,12,15,19,24,27,28,26,22,18,14};
+        GVARMAIN(temperatureNight)[] = {7,7,7,10,13,17,21,22,20,17,13,9};
 
         // https://www.weather-atlas.com/en/greece/myrina-climate
         GVARMAIN(humidity)[] = {0.77,0.75,0.75,0.73,0.68,0.61,0.57,0.62,0.66,0.72,0.77,0.78};
@@ -42,8 +42,8 @@ class CfgWorlds {
 
     class Tanoa: CAWorld {
         // http://www.iten-online.ch/klima/australien/fidschi/suva.htm
-        GVARMAIN(tempDay)[] = {30,31,30,29,28,27,26,26,27,27,28,29};
-        GVARMAIN(tempNight)[] = {23,23,23,23,21,21,20,20,20,21,22,23};
+        GVARMAIN(temperatureDay)[] = {30,31,30,29,28,27,26,26,27,27,28,29};
+        GVARMAIN(temperatureNight)[] = {23,23,23,23,21,21,20,20,20,21,22,23};
 
         // https://weather-and-climate.com/average-monthly-Humidity-perc,suva,Fiji
         GVARMAIN(humidity)[] = {0.81,0.83,0.85,0.84,0.80,0.80,0.78,0.76,0.77,0.78,0.79,0.80};

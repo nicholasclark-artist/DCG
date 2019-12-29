@@ -3,7 +3,6 @@ Author:
 Nicholas Clark (SENSEI)
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define MONTH_CURRENT ((date select 1) - 1)
 
 POSTINIT;
 
@@ -17,16 +16,8 @@ if (!isServer) exitWith {};
     //     _this call FUNC(handleDebug);
     // }] call CBA_fnc_addEventHandler;
 
-    // get current month data 
-    GVAR(tempDay) = GVAR(tempDay) select MONTH_CURRENT;
-    GVAR(tempNight) = GVAR(tempNight) select MONTH_CURRENT;
-    GVAR(humidity) = GVAR(humidity) select MONTH_CURRENT;
-    GVAR(clouds) = GVAR(clouds) select MONTH_CURRENT;
-    GVAR(precipitation) = GVAR(precipitation) select MONTH_CURRENT;
-    GVAR(rainfall) = GVAR(rainfall) select MONTH_CURRENT;
-
-    [QGVAR(dateChange),{
-        INFO("date changed,set initial forecast");
+    [QGVAR(updateDate),{
+        INFO("date changed, set initial forecast");
 
         GVAR(date) = date;
         
@@ -41,7 +32,7 @@ if (!isServer) exitWith {};
         call FUNC(getTemperature);
         call FUNC(getHumidity);
 
-        // TRACE_2("updating climate measurements",GVAR(temperatureCurrent),GVAR(humidityCurrent));
+        TRACE_2("updating climate measurements",GVAR(temperatureCurrent),GVAR(humidityCurrent));
     }] call CBA_fnc_addEventHandler;
 
     call FUNC(init);

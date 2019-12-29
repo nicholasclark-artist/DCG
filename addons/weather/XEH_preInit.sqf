@@ -28,9 +28,9 @@ GVAR(humidityCurrent) = 0;
 
 // initial weather
 GVAR(date) = [0,0,0,0,0];
-GVAR(overcast) = 0;
-GVAR(rain) = 0;
-GVAR(fog) = 0;
+GVAR(overcast) = -1;
+GVAR(rain) = -1;
+GVAR(fog) = -1;
 
 // weather forecast
 GVAR(overcastForecast) = 0;
@@ -40,8 +40,8 @@ GVAR(fogForecast) = 0;
 // get map data,default to Altis
 _world = ["Altis",worldName] select (isClass (configFile >> "CfgWorlds" >> worldName >> QGVARMAIN(clouds)));
 
-GVAR(tempDay) = getArray (configFile >> "CfgWorlds" >> _world >> QGVARMAIN(tempDay));
-GVAR(tempNight) = getArray (configFile >> "CfgWorlds" >> _world >> QGVARMAIN(tempNight));
+GVAR(temperatureDay) = getArray (configFile >> "CfgWorlds" >> _world >> QGVARMAIN(temperatureDay));
+GVAR(temperatureNight) = getArray (configFile >> "CfgWorlds" >> _world >> QGVARMAIN(temperatureNight));
 GVAR(humidity) = getArray (configFile >> "CfgWorlds" >> _world >> QGVARMAIN(humidity));
 GVAR(clouds) = getArray (configFile >> "CfgWorlds" >> _world >> QGVARMAIN(clouds));
 GVAR(precipitation) = getArray (configFile >> "CfgWorlds" >> _world >> QGVARMAIN(precipitation));

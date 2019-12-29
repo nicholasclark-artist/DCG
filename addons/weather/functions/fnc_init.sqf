@@ -11,6 +11,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define MONTH_CURRENT ((GVAR(date) select 1) - 1)
 
 private _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
 
@@ -23,22 +24,29 @@ if !(_data isEqualTo []) then {
 
     GVAR(month) = GVAR(date) select 1;
     GVAR(hour) = GVAR(date) select 3;
-    setDate GVAR(date);
-
-    // update measurements 
-    [QGVAR(updateMeasurements),[]] call CBA_fnc_localEvent;
 } else {
     if (GVAR(month) < 0) then {GVAR(month) = ceil random 12};
     if (GVAR(hour) < 0) then {GVAR(hour) = floor random 24};
 
-    // set date before getting forecast
-    GVAR(date) = [2019,GVAR(month),ceil random 27,GVAR(hour),floor random 30];
-    setDate GVAR(date);
+    GVAR(date) = [2020,GVAR(month),ceil random 27,GVAR(hour),floor random 30];
+};
 
-    // update measurements 
-    [QGVAR(updateMeasurements),[]] call CBA_fnc_localEvent;
+// set date
+setDate GVAR(date);
 
-    // get initial weather values
+// get current month data 
+GVAR(temperatureDay) = GVAR(temperatureDay) select MONTH_CURRENT;
+GVAR(temperatureNight) = GVAR(temperatureNight) select MONTH_CURRENT;
+GVAR(humidity) = GVAR(humidity) select MONTH_CURRENT;
+GVAR(clouds) = GVAR(clouds) select MONTH_CURRENT;
+GVAR(precipitation) = GVAR(precipitation) select MONTH_CURRENT;
+GVAR(rainfall) = GVAR(rainfall) select MONTH_CURRENT;
+
+// update measurements 
+[QGVAR(updateMeasurements),[]] call CBA_fnc_localEvent;
+
+// initial weather values are out of bounds to force a new forecast, unless loading saved data
+if (GVAR(overcast) < 0 || {GVAR(rain) < 0} || {GVAR(fog) < 0}) then {
     private _forecast = [0] call FUNC(getForecast);
 
     GVAR(overcast) = _forecast select 0;
@@ -65,7 +73,7 @@ if !(_data isEqualTo []) then {
             [QGVAR(updateMeasurements),[]] call CBA_fnc_localEvent;
 
             if !((date select [0,3]) isEqualTo (GVAR(date) select [0,3])) then {
-                [QGVAR(dateChange),[]] call CBA_fnc_localEvent;
+                [QGVAR(updateDate),[]] call CBA_fnc_localEvent;
             };
         },300] call CBA_fnc_addPerFrameHandler;
     }

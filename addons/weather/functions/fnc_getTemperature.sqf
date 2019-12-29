@@ -20,7 +20,7 @@ if (CHECK_ADDON_1(ace_weather) && {!isNil "ace_weather_currentTemperature"}) exi
 private _month = date select 1;
 private _timeRatio = abs(daytime - 12) / 12;
 
-private _temperature = GVAR(tempDay) * (1 - _timeRatio) + GVAR(tempNight) * _timeRatio;
+private _temperature = GVAR(temperatureDay) * (1 - _timeRatio) + GVAR(temperatureNight) * _timeRatio;
 private _tempRandom = random [-4,0,4];
 private _weatherRandom = random [0,9,5];
 
