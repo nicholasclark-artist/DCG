@@ -51,6 +51,9 @@ _check = _check min 50;
 // check gradient and water, water accepts -1,0 or 2
 if (_pos isFlatEmpty [-1,-1,_gradient,10 max (_check * 0.1),_water,false,_ignore] isEqualTo []) exitWith {false};
 
+// skip distance checks if min distance is 0
+if (_check <= 0) exitWith {true};
+
 // in order for an object to be detected by nearObjects and nearestTerrainObjects, the object's pivot (not bounding box) must be in search radius
 
 // get near entities and filter ignored objects and game logics
