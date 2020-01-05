@@ -27,6 +27,8 @@ params [
     ["_infilMrk","",[""]]
 ];
 
+// @todo add radio sounds inside heli 
+
 // refer to requestor by client ID so PVs work if requestor dies
 _requestor = owner _requestor;
 

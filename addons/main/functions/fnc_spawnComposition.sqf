@@ -21,7 +21,7 @@ __________________________________________________________________*/
 
 params [
     ["_position",DEFAULT_POS,[[]]],
-    ["_type","mil_fob",[""]],
+    ["_type","",[""]],
     ["_dir",-1,[0]],
     ["_clear",false,[false]]
 ];
@@ -133,7 +133,7 @@ for "_i" from 0 to count _objData - 1 do {
             _obj setPosASL _pos;
             _obj setVectorUp (_x select 1);
 
-            TRACE_1("intersection",_x);
+            // TRACE_1("intersection",_x);
         };
     } forEach _intersect; 
 } forEach _intersects;
