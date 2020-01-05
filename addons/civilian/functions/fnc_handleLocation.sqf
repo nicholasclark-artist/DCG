@@ -16,8 +16,8 @@ __________________________________________________________________*/
 
 // loop through all locations
 [GVAR(locations),{
-    // spawn entities if players in radius
-    if (!(_value getVariable [QGVAR(active),false]) && {!([_value getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS],(_value getVariable [QEGVAR(main,radius),0]) + GVAR(spawnDist),_value getVariable [QGVAR(zdist),-1]] call EFUNC(main,getNearPlayers) isEqualTo [])}) then {
+    // spawn entities if players in radius and not on blacklist
+    if (!(_value getVariable [QGVAR(active),false]) && {!([_value getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS],(_value getVariable [QEGVAR(main,radius),0]) + GVAR(spawnDist),_value getVariable [QGVAR(zdist),-1]] call EFUNC(main,getNearPlayers) isEqualTo [])} && {GVAR(blacklist) findIf {(toLower _key) find _x > -1} < 0}) then {
         // set location as active
         _value setVariable [QGVAR(active),true];
 
@@ -33,9 +33,9 @@ __________________________________________________________________*/
         // cleanup when players leave area
         [{
             params ["_args","_idPFH"];
-            _args params ["_value"];
+            _args params ["_key","_value"];
 
-            if ([_value getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS],(_value getVariable [QEGVAR(main,radius),0]) + GVAR(spawnDist),_value getVariable [QGVAR(zdist),-1]] call EFUNC(main,getNearPlayers) isEqualTo []) exitWith {
+            if ([_value getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS],(_value getVariable [QEGVAR(main,radius),0]) + GVAR(spawnDist),_value getVariable [QGVAR(zdist),-1]] call EFUNC(main,getNearPlayers) isEqualTo [] || {GVAR(blacklist) findIf {(toLower _key) find _x > -1} >= 0}) exitWith {
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
                 
                 // cleanup objects
@@ -49,7 +49,7 @@ __________________________________________________________________*/
                 _value setVariable [QGVAR(ambients),[]];
                 _value setVariable [QGVAR(units),[]];
             };
-        },60,[_value]] call CBA_fnc_addPerFrameHandler;    
+        },60,[_key,_value]] call CBA_fnc_addPerFrameHandler;   
     };
 }] call CBA_fnc_hashEachPair;
 

@@ -30,7 +30,9 @@ __________________________________________________________________*/
     COMPONENT_NAME,
     "pier,airbase,air base,airfield,terminal",
     true,
-    {},
+    {
+        GVAR(blacklist) = (_this splitString ",") apply {toLower _x};
+    },
     true
 ] call CBA_Settings_fnc_init;
 

@@ -11,13 +11,8 @@ Return:
 nil
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define LOCATION_COND GVAR(blacklist) findIf {(toLower _key) find _x > -1} < 0 && {!([_value] call EFUNC(main,inSafezones))}
 
-// convert blacklist to array and format
-GVAR(blacklist) = GVAR(blacklist) splitString ",";
-GVAR(blacklist) = GVAR(blacklist) apply {toLower _x};
-
-private ["_locations","_arr"];
+private ["_locations"];
 
 // get locations for unit spawns
 _locations = [];
@@ -26,7 +21,7 @@ _locations = [];
 [
     EGVAR(main,locations),
     {
-        if (LOCATION_COND) then {
+        if !([_value] call EFUNC(main,inSafezones)) then {
             _locations pushBack _value;
         };
     }
@@ -35,7 +30,7 @@ _locations = [];
 [
     EGVAR(main,locals),
     {
-        if (LOCATION_COND) then {
+        if !([_value] call EFUNC(main,inSafezones)) then {
             _locations pushBack _value;
         };
     }
