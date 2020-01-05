@@ -97,26 +97,14 @@ switch _type do {
 
         [_roads] call EFUNC(main,shuffle);
 
-        private ["_road","_dir","_prefab","_nodes"];
+        private ["_road","_prefab","_nodes"];
 
         for "_i" from 0 to (count _roads min _count) - 1 do {
             _road = _roads select _i;
-            _dir = _road getRelDir ((roadsConnectedTo _road) select 0);
-            _dir = _dir + (180 * round (random 1));
+            _position = [_road] call EFUNC(main,findPosRoadside);
 
-            _position = nil;
-
-            // find new position until position at edge of road
-            for "_i" from 3 to 10 do {
-                _position = [((getPosATL _road) select 0) + (_i * sin (_dir + 90)),((getPosATL _road) select 1) + (_i * cos (_dir + 90)),0];
-                
-                if !(isOnRoad _position) exitWith {
-                    _position = [((getPosATL _road) select 0) + ((_i - 1) * sin (_dir + 90)),((getPosATL _road) select 1) + ((_i - 1) * cos (_dir + 90)),0];
-                };
-            };
-
-            if !(isNil "_position") then {
-                _prefab = [_position,"prefab_table",_dir - 90,false] call EFUNC(main,spawnComposition);
+            if !(_position isEqualTo []) then {
+                _prefab = [_position,"sup_table",(_road getRelDir ((roadsConnectedTo _road) select 0)) - 90,false] call EFUNC(main,spawnComposition);
                 _location setVariable [QGVAR(prefabPositions),_prefab select 1];
                 _ambientList append (_prefab select 2);
             };             

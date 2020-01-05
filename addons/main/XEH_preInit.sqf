@@ -23,6 +23,7 @@ PREP(findPosOverwatch);
 PREP(findPosGrid);
 PREP(findPosSafe);
 PREP(findPosTerrain);
+PREP(findPosRoadside);
 PREP(inBoundingBox);
 PREP(inBuilding);
 PREP(inLOS);
