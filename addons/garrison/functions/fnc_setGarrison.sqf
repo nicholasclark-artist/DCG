@@ -11,10 +11,6 @@ Return:
 bool
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SCOPE QGVAR(setGarrison)
-
-// define scope to break hash loop
-scopeName SCOPE;
 
 private _garrisons = [];
 
@@ -27,6 +23,7 @@ private _location = createLocation ["Invisible",getPos _ao,1,1];
 
 // set vars
 _location setVariable [QGVAR(active),1];
+_location setVariable [QGVAR(type),"garrison"];
 _location setVariable [QGVAR(name),call FUNC(getName)];
 _location setVariable [QGVAR(task),""];
 _location setVariable [QGVAR(positionASL),AGLtoASL (getPos _location)];
@@ -36,6 +33,7 @@ _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
 _location setVariable [QGVAR(onKilled),{ // update unit count on killed event
     _this setVariable [QGVAR(unitCountCurrent),(_this getVariable [QGVAR(unitCountCurrent),-1]) - 1];
 }];
+_location setVariable [QGVAR(prefabs),[]];
 
 // setup hash
 _garrisons pushBack [_key,_location];
@@ -46,4 +44,4 @@ _garrisons pushBack [_key,_location];
 // create hash
 GVAR(garrisons) = [_garrisons,locationNull] call CBA_fnc_hashCreate;
 
-(count ([GVAR(comms)] call CBA_fnc_hashKeys)) > 0
+(count ([GVAR(garrisons)] call CBA_fnc_hashKeys)) > 0

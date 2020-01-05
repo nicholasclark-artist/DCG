@@ -42,6 +42,7 @@ private _comms = [];
 
     // set vars
     _location setVariable [QGVAR(active),1];
+    _location setVariable [QGVAR(type),"comm"];
     _location setVariable [QGVAR(name),call FUNC(getName)];
     _location setVariable [QGVAR(task),""];
     _location setVariable [QGVAR(positionASL),AGLtoASL (getPos _location)];

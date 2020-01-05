@@ -18,6 +18,7 @@ PREP(getName);
 PREP(removeArea);
 PREP(spawnGarrison);
 PREP(spawnOutpost);
+PREP(spawnUnit);
 PREP(taskOPORD);
 
 // headless client exit 

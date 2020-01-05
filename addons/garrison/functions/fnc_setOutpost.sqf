@@ -16,7 +16,7 @@ __________________________________________________________________*/
 // define scope to break hash loop
 scopeName SCOPE;
 
-private ["_outposts","_pos","_polygonPositions","_type","_location"];
+private ["_outposts","_pos","_polygonPositions","_terrain","_location"];
 
 _outposts = [];
 
@@ -28,7 +28,7 @@ _outposts = [];
 
     _pos = [];
     _polygonPositions = [];
-    _type = "";
+    _terrain = "";
 
     // get random positions in polygon
     for "_i" from 0 to 4 do {
@@ -37,12 +37,12 @@ _outposts = [];
     
     // find position based on terrain type
     { 
-        private _terrain = selectRandom [["meadow",50],["peak",20],["forest",20]];
-        _pos = [_x,500,_terrain select 0,0,0,_terrain select 1,true] call EFUNC(main,findPosTerrain);
+        private _terrainKVP = selectRandom [["meadow",50],["peak",20],["forest",20]];
+        _pos = [_x,500,_terrainKVP select 0,0,0,_terrainKVP select 1,true] call EFUNC(main,findPosTerrain);
 
         // exit when position found
         if !(_pos isEqualTo []) exitWith {
-            _type = _terrain select 0;
+            _terrain = _terrainKVP select 0;
         }; 
     } forEach _polygonPositions;
 
@@ -51,14 +51,16 @@ _outposts = [];
         _location = createLocation ["Invisible",ASLtoAGL _pos,1,1];
 
         // @todo fix water positions 
-        TRACE_3("",_key,_type,_pos);
+        TRACE_3("",_key,_terrain,_pos);
         
         // setvars
         _location setVariable [QGVAR(active),1];
+        _location setVariable [QGVAR(type),"outpost"];
         _location setVariable [QGVAR(name),call FUNC(getName)]; 
         _location setVariable [QGVAR(task),""];
         _location setVariable [QGVAR(composition),[]];
-        _location setVariable [QGVAR(terrain),_type];
+        _location setVariable [QGVAR(nodes),[]];
+        _location setVariable [QGVAR(terrain),_terrain];
         _location setVariable [QGVAR(positionASL),_pos];
         _location setVariable [QGVAR(radius),0]; // will be adjusted based on composition size
         _location setVariable [QGVAR(groups),[]]; // groups assigned to outpost

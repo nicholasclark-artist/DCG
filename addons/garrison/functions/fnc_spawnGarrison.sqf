@@ -13,9 +13,6 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define SCOPE QGVAR(spawnGarrison)
 #define SPAWN_DELAY 0.5
-#define INF_COUNT_VILL ([10,20] call EFUNC(main,getUnitCount))*GVAR(countCoef)
-#define INF_COUNT_CITY ([16,32] call EFUNC(main,getUnitCount))*GVAR(countCoef)
-#define INF_COUNT_CAP ([24,50] call EFUNC(main,getUnitCount))*GVAR(countCoef)
 #define VEH_COUNT_VILL 1
 #define VEH_COUNT_CITY 1
 #define VEH_COUNT_CAP 2
@@ -27,18 +24,24 @@ __________________________________________________________________*/
 scopeName SCOPE;
 
 [GVAR(garrisons),{
+    // ao location
     private _ao = [GVAR(areas),_key] call CBA_fnc_hashGet;
 
-    // get settlement type
+    // garrison settings
+    private _radius = _value getVariable [QGVAR(radius),0];
+    private _prefabCount = 0;
+    private _prefabObjects = [];
+
+    // update garrison settings based on type
     (_ao getVariable [QEGVAR(main,type),""]) call {
         if (COMPARE_STR(toLower _this,"namecitycapital")) exitWith {
-            
+            _prefabCount = 4;
         };
         if (COMPARE_STR(toLower _this,"namecity")) exitWith {
-            
+            _prefabCount = 4;
         };
         if (COMPARE_STR(toLower _this,"namevillage")) exitWith {
-            
+            _prefabCount = 2;
         };
     };
 
@@ -48,10 +51,10 @@ scopeName SCOPE;
 
     // set blacklists
     EGVAR(civilian,blacklist) pushBack (_ao getVariable [QEGVAR(main,name),""]);
-    EGVAR(patrol,blacklist) pushBack [_pos,_value getVariable [QGVAR(radius),0]];
+    EGVAR(patrol,blacklist) pushBack [_pos,_radius];
 
     // destroy buildings
-    private _buildings = _pos nearObjects ["House",_value getVariable [QGVAR(radius),0]];
+    private _buildings = _pos nearObjects ["House",_radius];
 
     if !(_buildings isEqualTo []) then {
         private _count = ceil random 4;
@@ -67,14 +70,34 @@ scopeName SCOPE;
         };
     };
 
-    // @todo spawn prefabs
-    
-    // road checkpoints
+    // get prefab positions
+    private _roads = _pos nearRoads _radius * 0.75;
 
-    // supply truck sites
+    // remove intersections
+    _roads = _roads select {count (roadsConnectedTo _x) < 3};
 
-    // stationary patrol vehicle
-    
+    if !(_roads isEqualTo []) then {
+        [_roads] call EFUNC(main,shuffle);
+
+        private ["_road","_prefab","_nodes"];
+
+        for "_i" from 0 to (count _roads min _prefabCount) - 1 do {
+            _road = _roads select _i;
+            private _pos = [_road] call EFUNC(main,findPosRoadside);
+
+            // spawn supply vehicle prefabs
+            if !(_pos isEqualTo []) then {
+                _prefab = [_pos,"sup_vehicle",_road getRelDir ((roadsConnectedTo _road) select 0),true] call EFUNC(main,spawnComposition);
+                _prefabObjects append (_prefab select 2);
+            };             
+        };
+    };
+
+    // save reference to all prefab objects in location
+    _value setVariable [QGVAR(prefabs),_prefabObjects];
+
+    // spawn infantry
+    [_value,_ao] call FUNC(spawnUnit);
 }] call CBA_fnc_hashEachPair;
 
 nil

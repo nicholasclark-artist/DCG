@@ -10,9 +10,9 @@
 
 #define AO_COUNT 3
 #define GAR_COUNT 1
-#define GAR_UNITCOUNT 32
 #define OP_COUNT 2
-#define OP_PATROLSIZE 4
+
+#define PATROLSIZE 6
 
 #define GAR_SCORE 10
 #define OP_SCORE 5
