@@ -34,6 +34,7 @@ private _posArray = [_pos,75,_max,_min,4] call EFUNC(main,findPosGrid);
     if (count _ret isEqualTo _count) exitWith {};
 
     _overwatch = _x;
+    _overwatch pushBack ASLZ(_overwatch);
     _overwatch = _overwatch vectorAdd [0,0,2];
 
     if (!(terrainIntersectASL [_overwatch,_pos]) && {(_x select 2) - (_pos select 2) >= _height}) then {
