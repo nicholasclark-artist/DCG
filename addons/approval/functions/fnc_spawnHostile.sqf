@@ -21,8 +21,10 @@ __________________________________________________________________*/
 private _player = _this select 0;
 private _pos = getPos _player;
 private _isPosGood = true;
-private _hostilePos = selectRandom (([_pos,64,512,256,4,0] call EFUNC(main,findPosGrid)) select {[_x,SAFE_DIST] call EFUNC(main,getNearPlayers) isEqualTo []});
 private _nearPlayers = [_pos,SAFE_DIST] call EFUNC(main,getNearPlayers);
+private _hostilePos = [_pos,64,512,256,4,0] call EFUNC(main,findPosGrid);
+_hostilePos = selectRandom (_hostilePos select {[_x,SAFE_DIST] call EFUNC(main,getNearPlayers) isEqualTo []});
+_hostilePos pushBack ASLZ(_hostilePos);
 
 // check if hostile position found,check if hostile position in line of sight (at average eye height)
 _isPosGood = if (isNil "_hostilePos" || {(_nearPlayers findIf {[_hostilePos vectorAdd [0,0,1.5],eyePos _x] call EFUNC(main,inLOS)}) > -1}) then {

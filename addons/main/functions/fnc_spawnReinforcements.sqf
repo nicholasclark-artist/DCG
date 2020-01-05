@@ -46,8 +46,10 @@ if (_grid isEqualTo []) exitWith {
     false
 };
 
-private _lz = ASLtoAGL (selectRandom _grid);
 private _type = selectRandom _vehPool;
+private _lz = selectRandom _grid;
+_lz pushBack ASLZ(_lz);
+_lz = ASLtoAGL _lz;
 
 if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
     if (_side isEqualTo EAST) exitWith {_type = "O_Heli_Light_02_unarmed_F"};

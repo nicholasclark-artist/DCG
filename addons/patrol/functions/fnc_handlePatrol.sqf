@@ -40,6 +40,8 @@ if (count GVAR(groups) <= ceil GVAR(groupLimit)) then {
             if (_posArray isEqualTo []) exitWith {};
 
             private _pos = selectRandom _posArray;
+            _pos pushBack ASLZ(_pos);
+            
             _players = [getPosATL _player,100] call EFUNC(main,getNearPlayers);
             
             if ([_pos,100] call EFUNC(main,getNearPlayers) isEqualTo [] && {{[[_pos select 0,_pos select 1,(_pos select 2) + 1.5],eyePos _x] call EFUNC(main,inLOS)} count _players isEqualTo 0}) then {
