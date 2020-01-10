@@ -17,7 +17,7 @@ __________________________________________________________________*/
 #define ATTRIBUTE_VECTORUP(ENTITY) (parseNumber ((ENTITY get3DENAttribute QGVAR(vectorUp)) select 0))
 #define ATTRIBUTE_SIMPLE(ENTITY) (parseNumber ((ENTITY get3DENAttribute "objectIsSimple") select 0))
 #define PIVOT_CHECK(ENTITY) (typeOf ENTITY isEqualTo "Sign_Arrow_F")
-#define NODE_CHECK(ENTITY) (typeOf ENTITY isEqualTo "Sign_Arrow_Blue_F")
+#define NODE_CHECK(ENTITY) (typeOf ENTITY isEqualTo "CBA_BuildingPos")
 #define NODE_MAXDIST 51
 #define GET_INS(ENTITY) (["",typeOf ((lineIntersectsSurfaces [getPosASL ENTITY,(getPosASL ENTITY) vectorAdd [0,0,-0.1],ENTITY,objNull,true,1,"GEOM","NONE"]) select 0 select 2)] select (ATTRIBUTE_SNAP(ENTITY) isEqualTo 1))
 #define GET_POS_RELATIVE(ENTITY) (_pivot worldToModel (getPosATL ENTITY))
@@ -25,7 +25,7 @@ __________________________________________________________________*/
 #define GET_DATA(ENTITY) _composition pushBack [typeOf ENTITY,str GET_POS_RELATIVE(ENTITY),str ((getPosATL ENTITY) select 2),GET_INS(ENTITY),str GET_DIR_OFFSET(ENTITY),ATTRIBUTE_VECTORUP(ENTITY),ATTRIBUTE_SIMPLE(ENTITY)]
 
 // data precision
-toFixed 6;
+toFixed 4;
 
 // reset ui vars
 uiNamespace setVariable [QGVAR(compExportDisplay),displayNull];
@@ -64,16 +64,35 @@ if (isNull _pivot) exitWith {
 // get nodes (safe areas)
 {
     if (NODE_CHECK(_x)) then {
+        private _radius = 0;
+
         for "_i" from 1 to NODE_MAXDIST step 1 do {
             private _near = nearestObjects [_x,[],_i];
-            if (count _near > 1 || {_i isEqualTo NODE_MAXDIST}) exitWith {
-                _x setVectorDirAndUp [[0,1,0],[0,0,1]];
-                _nodes pushBack [str GET_POS_RELATIVE(_x),str (0 max ((getPosATL _x) select 2)),str (_i - 1)];
+
+            if (count _near > 1) exitWith {
+                // we only care about the first nearest object (the node is element 0)
+                _near = _near select 1;
+
+                // node radius will default to 0 if in another object's bounding box
+                if !([_x,_near] call FUNC(inBoundingBox)) then {
+                    // get radius to nearest bounding box vertex
+                    _radius = _x distance2D ([_near,_x] call FUNC(getBoundingBoxCorners));
+                };
+            };
+
+            // use max radius if no near objects
+            if (_i isEqualTo NODE_MAXDIST) exitWith {
+                _radius = NODE_MAXDIST;
             };
         };
+
+        // save node
+        _x setVectorDirAndUp [[0,1,0],[0,0,1]];
+        _nodes pushBack [str GET_POS_RELATIVE(_x),str (0 max ((getPosATL _x) select 2)),str _radius];
     };
 } forEach _selected;
 
+TRACE_1("",_nodes);
 // save object data
 {
     if (!NODE_CHECK(_x) && {!PIVOT_CHECK(_x)} && {!(_x isKindOf "Man")}) then {
@@ -134,7 +153,7 @@ if (isNull _pivot) exitWith {
 
             copyToClipboard _compiledEntry;
 
-            private _msg = format ["Exporting %1 composition (%2) to clipboard: radius: %3,nodes: %4",_cfgName,_id,_r,count _nodes];
+            private _msg = format ["Exporting %1 composition (%2) to clipboard: radius: %3, nodes: %4",_cfgName,_id,_r,count _nodes];
             PRINT_MSG(_msg);  
         };
     };

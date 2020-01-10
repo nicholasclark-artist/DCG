@@ -65,14 +65,14 @@ if (_clear && {isServer}) then {
     } forEach _objectsTerrain;
 
     // save reference to terrain objects in pivot 
-    _pivot setVariable ["objectsTerrain",_objectsTerrain];
+    _pivot setVariable [QGVARMAIN(objectsTerrain),_objectsTerrain];
 
     // restore objects when pivot deleted
     _pivot addEventHandler ["Deleted",{
         {
             _x hideObjectGlobal false;
             _x allowDamage true;
-        } forEach ((_this select 0) getVariable ["objectsTerrain",[]]);
+        } forEach ((_this select 0) getVariable [QGVARMAIN(objectsTerrain),[]]);
     }];  
 };
 

@@ -67,7 +67,7 @@ if (_distObj > 0 || {_water > -1}) then {
 // } forEach _ret;
 
 if (_shuffle) then {
-    [_ret] call FUNC(shuffle);
+    _ret = _ret call BIS_fnc_arrayShuffle;
 }; 
 
 _ret

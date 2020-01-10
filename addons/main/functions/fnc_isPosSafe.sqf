@@ -16,7 +16,7 @@ Return:
 boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define CHECK_COEF 2
+#define CHECK_COEF 3
 #define BBR_HEIGHT_MIN 0.55
 
 params [
@@ -33,16 +33,14 @@ if (count _pos isEqualTo 2) then {
     _pos pushBack 0;
 };
 
-private _bbCheck = objNull;
+private _bbObj = objNull;
 
 if (_check isEqualType objNull) then {
-    _bbCheck = _check;
-    private _bb = 0 boundingBoxReal _check;
-    private _maxWidth = abs ((_bb select 1 select 0) - (_bb select 0 select 0));
-    private _maxLength = abs ((_bb select 1 select 1) - (_bb select 0 select 1));
+    _bbObj = _check;
+    private _bb = 0 boundingBoxReal _bbObj;
 
     // get radius from object bounding box
-    _check = (_bb select (count _bb - 1)) * CHECK_COEF;
+    _check = CHECK_COEF * ((_bbObj call FUNC(getObjectSize)) select 0);
 };
 
 // cap radius at 50m
@@ -73,11 +71,15 @@ _objs = _objs select {
 };
 
 // check if under surface
-private _z = lineIntersectsSurfaces [AGLToASL _pos,(AGLToASL _pos) vectorAdd [0,0,50],_ignore,objNull,true,1,"GEOM","NONE"] isEqualTo [];
+private _insBegin = (AGLToASL _pos) vectorAdd [0,0,0.1];
+private _insEnd = (AGLToASL _pos) vectorAdd [0,0,(_bbObj call FUNC(getObjectSize)) select 1];
+private _z = lineIntersectsSurfaces [_insBegin,_insEnd,_ignore,objNull,true,1,"GEOM","NONE"] isEqualTo [];
 
-if (isNull _bbCheck) exitWith {_z && {_objs isEqualTo []}};
+if (isNull _bbObj) exitWith {_z && {_objs isEqualTo []}};
 
-// TRACE_1("",_objs);
+// _classes = _objs apply {typeOf _x};
+// _ins = lineIntersectsSurfaces [_insBegin,_insEnd,_ignore,objNull,true,1,"GEOM","NONE"];
+// TRACE_2("",_classes,_ins);
 
 // check bounding box intersections if object provided
-_z && {_objs findIf {[[_bbCheck,_pos],_x] call FUNC(inBoundingBox)} < 0}
+_z && {_objs findIf {[[_bbObj,_pos],_x] call FUNC(inBoundingBox)} < 0}

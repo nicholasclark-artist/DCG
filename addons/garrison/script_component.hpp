@@ -12,7 +12,7 @@
 #define GAR_COUNT 1
 #define OP_COUNT 2
 
-#define PATROLSIZE 6
+#define PAT_GRPSIZE 6
 
 #define GAR_SCORE 10
 #define OP_SCORE 5

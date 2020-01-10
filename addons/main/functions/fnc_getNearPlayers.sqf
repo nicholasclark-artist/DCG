@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-gets near players
+get near players
 
 Arguments:
 0: center position <ARRAY>

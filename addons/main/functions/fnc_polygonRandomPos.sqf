@@ -35,6 +35,6 @@ private _r2 = random 1;
 
 private _ret = ((_tri select 0) vectorMultiply (1 - sqrt(_r1))) vectorAdd ((_tri select 1) vectorMultiply (sqrt(_r1) * (1 - _r2))) vectorAdd ((_tri select 2) vectorMultiply (sqrt(_r1) * _r2));
 
-_ret set [2,getTerrainHeightASL _ret];
+_ret set [2,ASLZ(_ret)];
 
 _ret

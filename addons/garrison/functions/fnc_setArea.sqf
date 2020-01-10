@@ -44,7 +44,7 @@ _locations resize (count _locations min AO_COUNT);
 if (_locations isEqualTo []) exitWith {false};
 
 // shuffle to randomize outpost spawns
-[_locations] call EFUNC(main,shuffle);
+_locations = _locations call BIS_fnc_arrayShuffle;
 
 {
     // get hash location 

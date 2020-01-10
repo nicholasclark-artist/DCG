@@ -34,7 +34,7 @@ switch _type do {
 
         if (_roads isEqualTo []) exitWith {};
 
-        [_roads] call EFUNC(main,shuffle);
+        _roads = _roads call BIS_fnc_arrayShuffle;
 
         private ["_road","_dir","_class","_path","_temp","_veh"];
 
@@ -56,7 +56,7 @@ switch _type do {
                 _path = _path + ".p3d";
             };
 
-            _temp = createSimpleObject [_path,DEFAULT_SPAWNPOS];
+            _temp = createSimpleObject [_path,DEFAULT_SPAWNPOS,true];
             _temp setDir _dir;
 
             if ([_position,_temp,0] call EFUNC(main,isPosSafe)) then {
@@ -95,7 +95,7 @@ switch _type do {
 
         if (_roads isEqualTo []) exitWith {};
 
-        [_roads] call EFUNC(main,shuffle);
+        _roads = _roads call BIS_fnc_arrayShuffle;
 
         private ["_road","_prefab","_nodes"];
 

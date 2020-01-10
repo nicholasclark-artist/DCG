@@ -12,7 +12,6 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SCOPE QGVAR(spawnGarrison)
-#define SPAWN_DELAY 0.5
 #define VEH_COUNT_VILL 1
 #define VEH_COUNT_CITY 1
 #define VEH_COUNT_CAP 2
@@ -77,7 +76,7 @@ scopeName SCOPE;
     _roads = _roads select {count (roadsConnectedTo _x) < 3};
 
     if !(_roads isEqualTo []) then {
-        [_roads] call EFUNC(main,shuffle);
+        _roads = _roads call BIS_fnc_arrayShuffle;
 
         private ["_road","_prefab","_nodes"];
 
@@ -97,7 +96,7 @@ scopeName SCOPE;
     _value setVariable [QGVAR(prefabs),_prefabObjects];
 
     // spawn infantry
-    [_value,_ao] call FUNC(spawnUnit);
+    // [_value,_ao] call FUNC(spawnUnit);
 }] call CBA_fnc_hashEachPair;
 
 nil

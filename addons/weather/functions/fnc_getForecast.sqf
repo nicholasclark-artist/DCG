@@ -12,6 +12,8 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+// @todo precipitation should be depedendent on cloud cover
+// currently, a high precipitation probability setting does not guarantee rain
 switch (_this select 0) do {
     // initial forecast
     case 0: { 

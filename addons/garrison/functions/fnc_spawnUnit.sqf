@@ -25,39 +25,44 @@ private _radius = _location getVariable [QGVAR(radius),0];
 private _position =+ (_location getVariable [QGVAR(positionASL),DEFAULT_SPAWNPOS]); 
 _position set [2,0];
 
-// PATROLS
+private _unitCountPatrol = 0;
+private _type = "";
 
-// get patrol unit count based on player count
-private _unitCountPatrol = (_location getVariable [QGVAR(type),""]) call {
-    if (COMPARE_STR(toLower _this,"outpost")) exitWith {
-        [16,32,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+(_location getVariable [QGVAR(type),""]) call {
+    if (COMPARE_STR(_this,"outpost")) exitWith {
+        _unitCountPatrol = [16,32,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+        _type = toLower _this;
     };
-    if (COMPARE_STR(toLower _this,"comm")) exitWith {
-        [8,16,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+    if (COMPARE_STR(_this,"comm")) exitWith {
+        _unitCountPatrol = [8,16,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+        _type = toLower _this;
     };
-    if (COMPARE_STR(toLower _this,"garrison")) then {
+    if (COMPARE_STR(_this,"garrison")) then {
         (_ao getVariable [QEGVAR(main,type),""]) call {
-            if (COMPARE_STR(toLower _this,"namecitycapital")) exitWith {
-                [32,64,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+            if (COMPARE_STR(_this,"namecitycapital")) exitWith {
+                _unitCountPatrol = [32,64,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+                _type = toLower _this;
             };
-            if (COMPARE_STR(toLower _this,"namecity")) exitWith {
-                [32,64,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+            if (COMPARE_STR(_this,"namecity")) exitWith {
+                _unitCountPatrol = [32,64,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+                _type = toLower _this;
             };
-            if (COMPARE_STR(toLower _this,"namevillage")) exitWith {
-                [16,32,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+            if (COMPARE_STR(_this,"namevillage")) exitWith {
+                _unitCountPatrol = [16,32,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+                _type = toLower _this;
             };
-
-            0
         };
     };
 };
+
+// PATROLS
 
 // get patrol spawn position in safe area around composition
 private _posPatrol = [_position,_radius + 10,_radius + 50,2,0,-1,[0,360],_position getPos [_radius + 20,random 360]] call EFUNC(main,findPosSafe);
 
 // spawn infantry patrol, patrols will navigate outpost exterior and investigate nearby buildings
-for "_i" from 1 to floor (1 max (_unitCountPatrol / PATROLSIZE)) do {
-    private _grp = [_posPatrol,0,PATROLSIZE,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup);
+for "_i" from 1 to floor (1 max (_unitCountPatrol / PAT_GRPSIZE)) do {
+    private _grp = [_posPatrol,0,PAT_GRPSIZE,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
     [{(_this select 0) getVariable [QEGVAR(main,ready),false]},
         {
@@ -76,14 +81,15 @@ for "_i" from 1 to floor (1 max (_unitCountPatrol / PATROLSIZE)) do {
             [QGVAR(updateGroups),[_location,_grp]] call CBA_fnc_localEvent;
 
             // set group on patrol
-            [_grp,getPos _location,random [200,600,800],3,"MOVE","SAFE","YELLOW","LIMITED","STAG COLUMN","if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}",[5,16,15]] call CBA_fnc_taskPatrol;
+            [_grp,getPos _location,random [200,600,800],3,"MOVE","SAFE","YELLOW","LIMITED","STAG COLUMN","if (0.15 > random 1) then {this spawn CBA_fnc_searchNearby}",[5,16,15]] call CBA_fnc_taskPatrol;
         },
         [_grp,_location],
-        (SPAWN_DELAY * _unitCountPatrol) * 2
+        ((SPAWN_DELAY max 0.1) * (PAT_GRPSIZE * (_unitCountPatrol max 1))) * 2
     ] call CBA_fnc_waitUntilAndExecute;
 };
 
 // get composition buildings with suitable positions  
+// @todo get building positions instead of buildings so multiple infantry can garrison the same building 
 private _buildings = _position nearObjects ["House",_radius];
 _buildings = _buildings select {!((_x buildingPos -1) isEqualTo [])};
 
@@ -91,43 +97,45 @@ if (_buildings isEqualTo []) then {
     WARNING_1("%1 does not have building positions for infantry",_key);
 };
 
-_buildings resize (ceil (count _buildings * 0.5));
-
-TRACE_3("",_key,_unitCountPatrol,count _buildings);
+_buildings resize (ceil (count _buildings * 0.4));
 
 // BUILDING INFANTRY
 
-for "_i" from 1 to floor (1 max (count _buildings / PATROLSIZE)) do {
-    private _grp = [_position,0,PATROLSIZE,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup);
+for "_i" from 1 to floor (1 max (count _buildings / PAT_GRPSIZE)) do {
+    private _grp = [_position,0,PAT_GRPSIZE,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
     [{(_this select 0) getVariable [QEGVAR(main,ready),false]},
         {
-            params ["_grp","_location","_buildings"];
-            
-            // garrison infantry 
+            params ["_grp","_location","_radius","_buildings"];
+
+            _grp setCombatMode "RED";
+
             private ["_building","_dir"];
 
             {
-                // get building
-                _building = selectRandom _buildings;
-                _buildings deleteAt (_buildings find _building);
-
+                // set unit direction
                 _dir = random 360;
                 _x setFormDir _dir;
                 _x setDir _dir;
 
-                if (PROBABILITY(0.75)) then { // garrison building exit
-                    _x setPosATL (_building buildingExit 0);
-                } else { // garrison building position
-                    _x setPosATL selectRandom (_building buildingPos -1);
+                // garrison infantry 
+                if !(_buildings isEqualTo []) then {
+                    _building = _buildings deleteAt (floor random count _buildings);
+
+                    if (PROBABILITY(0.75)) then { // garrison building exit
+                        _x setPosATL (_building buildingExit 0);
+                    } else { // garrison building position
+                        _x setPosATL selectRandom (_building buildingPos -1);
+                    };
+                } else {
+                    // @todo check 'setVehiclePosition' performance impact
+                    _x setVehiclePosition [_x getPos [random [0,_radius * 0.2,_radius * 0.75],random 360],[],0,"NONE"];
                 };
 
                 // force unit to hold position
                 _x forceSpeed 0;
-            } forEach (units _grp);
 
-            // add eventhandlers
-            {
+                // add eventhandlers
                 _x setVariable [QGVAR(location),_location];
                 _x addEventHandler ["Killed",{
                     _location = (_this select 0) getVariable [QGVAR(location),locationNull];
@@ -137,13 +145,21 @@ for "_i" from 1 to floor (1 max (count _buildings / PATROLSIZE)) do {
 
             [QGVAR(updateUnitCount),[_location,count units _grp]] call CBA_fnc_localEvent;
             [QGVAR(updateGroups),[_location,_grp]] call CBA_fnc_localEvent;
+
+            // check for behaviour change
+            [{COMPARE_STR(behaviour leader _this,"COMBAT")}, 
+                {
+                    {
+                        _x forceSpeed -1;
+                    } forEach (units _this);
+                }, 
+                _grp
+            ] call CBA_fnc_waitUntilAndExecute;
         },
-        [_grp,_location,_buildings],
-        (SPAWN_DELAY * (count _buildings)) * 2
+        [_grp,_location,_radius,_buildings],
+        ((SPAWN_DELAY max 0.1) * (PAT_GRPSIZE * (count _buildings max 1))) * 2
     ] call CBA_fnc_waitUntilAndExecute;
 };
-
-
 
 // private ["_unit","_dir"];
 

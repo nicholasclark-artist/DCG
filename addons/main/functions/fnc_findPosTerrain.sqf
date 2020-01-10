@@ -78,7 +78,7 @@ if (_rural) then {
 };
 
 // places are sorted by score in descending order,shuffle for more variation 
-[_places] call EFUNC(main,shuffle);
+_places = _places call BIS_fnc_arrayShuffle;
 
 {
     if !(_terrain isEqualTo "house") then {
@@ -91,7 +91,7 @@ if (_rural) then {
         _ret =+ _x select 0;
         _ret set [2,ASLZ(_ret)];
     } else {
-        _ret = [_x select 0,DIST_HOUSE] call FUNC(findPosHouse);
+        _ret = [_x select 0,DIST_HOUSE] call FUNC(findPosBuilding);
     };
 
     if !(_ret isEqualTo []) exitWith {};

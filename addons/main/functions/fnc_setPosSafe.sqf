@@ -16,7 +16,7 @@ __________________________________________________________________*/
 
 params [
     ["_obj",objNull,[objNull]],
-    ["_pos",[0,0,0],[[]]]
+    ["_pos",DEFAULT_POS,[[]]]
 ];
 
 // force positionASL,allow underwater positions
@@ -25,6 +25,10 @@ if (count _pos isEqualTo 2 || {(_pos select 2) > 0}) then {
     _pos set [2,ASLZ(_pos)];
 };
 
+// center object on position
+_pos = [_pos,_obj] call FUNC(getPosOffset);
+
+// snap to normal and set position
 _obj setVectorUp surfaceNormal _pos;
 _obj setPosASL _pos;
 

@@ -46,7 +46,7 @@ if (_type isEqualTo 0) exitWith {
         params ["_args","_idPFH"];
         _args params ["_pos","_grp","_unitPool","_count","_check"];
 
-        if (count _check isEqualTo _count) exitWith {
+        if (count _check >= _count) exitWith {
             _grp setVariable [QGVAR(ready),true,false];
             [_idPFH] call CBA_fnc_removePerFrameHandler;
         };
@@ -63,8 +63,8 @@ if (_type isEqualTo 0) exitWith {
     params ["_args","_idPFH"];
     _args params ["_pos","_grp","_type","_count","_unitPool","_vehPool","_airPool","_check","_cargo","_delay"];
 
-    if (count _check isEqualTo _count) exitWith {
-        // if cargo spawned,set ready in cargo handler 
+    if (count _check >= _count) exitWith {
+        // if cargo spawned, set ready in cargo handler 
         if !(_cargo) then {
             _grp setVariable [QGVAR(ready),true,false];
         };
@@ -72,7 +72,7 @@ if (_type isEqualTo 0) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
     };
 
-    private ["_veh"];
+    private ["_veh","_grpTemp"];
 
     if (_type isEqualTo 1) then {
         _veh = createVehicle [selectRandom _vehPool,_pos,[],0,"NONE"];
@@ -87,11 +87,14 @@ if (_type isEqualTo 0) exitWith {
     */
     
     // use createVehicleCrew to populate vehicles,so DCG's faction/filter settings do not interfere
-    createVehicleCrew _veh;
+    _grpTemp = createVehicleCrew _veh;
     crew _veh joinSilent _grp;
     _grp addVehicle _veh;
+    _grp selectLeader (commander _veh);
     _veh setUnloadInCombat [true,true];
     
+    deleteGroup _grpTemp;
+
     // save reference to vehicle
     (driver _veh) setVariable [QGVAR(assignedVehicle),assignedVehicle _driver,false];
 
