@@ -41,7 +41,7 @@ private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
     _value setVariable [QGVAR(color),DEFAULT_COLOR];
 
     // update region color
-    [_value getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS],0] call FUNC(setValue);
+    [_value getVariable [QEGVAR(main,positionASL),DEFAULT_POS],0] call FUNC(setValue);
 }] call CBA_fnc_hashEachPair;
 
 // start hostile handler after one cooldown cycle

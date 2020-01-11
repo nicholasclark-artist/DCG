@@ -20,6 +20,7 @@ array
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define ITERATIONS 1000
+#define SCOPE QGVAR(findPosSafe)
 
 params [
     ["_center",[],[[],objNull]],
@@ -32,13 +33,13 @@ params [
     ["_default",[],[[]]]
 ];
 
-scopeName "main";
+scopeName SCOPE;
 
 for "_i" from 1 to ITERATIONS do {
     _center getPos [floor (random ((_max - _min) + 1)) + _min,floor (random (((_dir select 1) - (_dir select 0)) + 1)) + (_dir select 0)] call {
         if !([_this,_check,_water,_gradient] call FUNC(isPosSafe)) exitWith {};   
         _this set [2,ASLZ(_this)];
-        _this select [0,3] breakOut "main";
+        _this select [0,3] breakOut SCOPE;
     };
 };
 
@@ -64,4 +65,4 @@ WARNING("falling back to default position");
     };
 
     GVAR(center)
-}
+};
