@@ -16,10 +16,13 @@ __________________________________________________________________*/
 #define AP_HINT_TITLE(NAME) format ["<t size='1.4' align='center'>Region %1</t><br/>",NAME]
 #define AP_HINT_SUBTITLE "<t size='0.94' align='center'>Open map to view region border</t><br/><br/>"
 #define AP_HINT_BODY(NAME,TYPE,ALT,DIST) format ["<t align='center'>Nearest settlement: %1 <br/>Settlement type: %2 <br/>Settlement altitude: %3m <br/>Distance to settlement: %4m</t><br/>",NAME,TYPE,ALT,DIST]
+#define SCOPE QGVAR(handleHint)
 
 params [
     ["_player",objNull,[objNull]]
 ];
+
+scopeName SCOPE;
 
 private _position = getPosASL _player;
 private _region = [_position] call FUNC(getRegion);
@@ -32,7 +35,9 @@ private _altitude = round (_posRegion select 2);
 private _distance = round (_posRegion vectorDistance _position); 
 private _name = _region getVariable [QEGVAR(main,name),""];
 private _type = _region getVariable [QEGVAR(main,type),""];
+private _id = "";
 
+// format type
 _type = switch (toLower _type) do {
     case "namevillage": {"Village"};
     case "namecity": {"City"};
@@ -40,7 +45,16 @@ _type = switch (toLower _type) do {
     default {"Unknown"};
 };
 
-private _text = [AP_HINT_TITLE(mapGridPosition (_posRegion)),AP_HINT_SUBTITLE,AP_HINT_BODY(_name,_type,_altitude,_distance)] joinString "";
+// get id
+[EGVAR(main,locations),{
+    private _nameValue = _value getVariable [QEGVAR(main,name),""];
+    if (COMPARE_STR(_nameValue,_name)) then {
+        _id = str (_forEachIndex + 1); // @todo fix hacky way of getting id
+        breakTo SCOPE;
+    };
+}] call CBA_fnc_hashEachPair;
+
+private _text = [AP_HINT_TITLE(_id),AP_HINT_SUBTITLE,AP_HINT_BODY(_name,_type,_altitude,_distance)] joinString "";
 
 [
     [_region getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON],_region getVariable [QGVAR(color),DEFAULT_COLOR],_text],
