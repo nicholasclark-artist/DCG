@@ -38,6 +38,9 @@ private _para1 = if (_isArea) then {
         [[EGVAR(main,center) getDir (getPos _location)] call EFUNC(main,getDirCardinal),"ern"] joinString ""
     };
     
+    // get area km²
+    private _A = parseNumber (([_location getVariable [QEGVAR(main,polygon),[]]] call EFUNC(main,polygonArea)) toFixed 2);
+ 
     // get area elevation
     private _elevation = 0;
     private _elevations =+ (_location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]);
@@ -60,9 +63,10 @@ private _para1 = if (_isArea) then {
     [
         "ORIENTATION",
         format ["%1a. AO %2 is located in the %3 region of %4.",TAB,_location getVariable [QGVAR(name),""],_orientation,[worldName] call CBA_fnc_capitalize],
-        format ["%1b. The average elevation of the area is %2m above sea level.",TAB,_elevation],
-        format ["%1c. Weather: %2",TAB,_weather]
-    ] joinString NEWLINE; 
+        format ["%1b. AO %2 covers %3km².",TAB,_location getVariable [QGVAR(name),""],_A],
+        format ["%1c. The average elevation of the area is %2m above sea level.",TAB,_elevation],
+        format ["%1d. Weather: %2",TAB,_weather]
+    ] joinString NEWLINE;
 } else {
     ""
 };
