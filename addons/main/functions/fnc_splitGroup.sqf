@@ -13,7 +13,7 @@ Arguments:
 4: number of units to keep in old group <NUMBER>
 
 Return:
-nil
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

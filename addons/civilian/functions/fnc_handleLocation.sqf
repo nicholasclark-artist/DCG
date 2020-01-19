@@ -8,7 +8,7 @@ handle entity spawning in civilian locations
 Arguments:
 
 Return:
-nil
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

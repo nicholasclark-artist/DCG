@@ -8,7 +8,7 @@ parse location hashes for civilian handling
 Arguments:
 
 Return:
-nil
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

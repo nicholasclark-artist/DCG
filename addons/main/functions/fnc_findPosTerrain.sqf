@@ -28,8 +28,8 @@ params [
     ["_radius",100,[0]],
     ["_terrain","",[""]],
     ["_minValue",0,[0]],
-    ["_rSafe",0,[0]],
-    ["_rGrad",0,[0]],
+    ["_rSafe",-1,[0]],
+    ["_rGrad",-1,[0]],
     ["_rural",false,[false]]
 ];
 

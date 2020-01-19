@@ -7,7 +7,7 @@ export network traffic,function must be spawned
 
 Arguments:
 0: log path <STRING>
-1: filters <ARRAY>
+1: duration <NUMBER>
 
 Return:
 nothing
@@ -17,7 +17,6 @@ __________________________________________________________________*/
 
 params [
     ["_path","",[""]],
-    ["_filter",[],[[]]],
     ["_duration",10,[0]]
 ];
 

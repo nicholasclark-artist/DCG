@@ -10,7 +10,7 @@ Arguments:
 1: value <NUMBER>
 
 Return:
-nil
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

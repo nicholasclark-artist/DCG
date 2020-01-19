@@ -26,7 +26,7 @@ if !(GVAR(enable)) exitWith {};
 params ["_marker"];
 
 // handle markers with bad shapes
-if (!(COMPARE_STR(markerShape _marker,"RECTANGLE")) && {!(COMPARE_STR(markerShape _marker,"ELLIPSE"))}) then {
+if !(toUpper markerShape _marker in ["RECTANGLE","ELLIPSE"]) then {
     _marker setMarkerShape "ELLIPSE";
 };
 

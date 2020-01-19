@@ -14,7 +14,7 @@ Arguments:
 5: infil marker <STRING>
 
 Return:
-nil
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

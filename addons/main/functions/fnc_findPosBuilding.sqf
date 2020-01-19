@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-finds an interior building position
+finds an interior building position. Returns an array with the building and the selected building positionASL
 
 Arguments:
 0: center position <ARRAY>

@@ -50,7 +50,7 @@ POSTINIT;
         1800
     ] call CBA_fnc_addPerFrameHandler;
         
-    [FUNC(handleCleanup),120] call CBA_fnc_addPerFrameHandler;
+    [FUNC(handleCleanup),60] call CBA_fnc_addPerFrameHandler;
 
     // call debug if macro enabled
     [DEBUG_ADDON] call FUNC(debug);
