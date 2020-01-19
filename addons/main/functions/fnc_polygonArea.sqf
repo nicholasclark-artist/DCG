@@ -4,6 +4,7 @@ Nicholas Clark (SENSEI)
 
 Description:
 calculate convex polygon area in km²
+https://www.mathopenref.com/coordpolygonarea.html
 
 Arguments:
 0: polygon vertices <ARRAY>
@@ -14,7 +15,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_polygon",[[0,0,0],[0,0,0],[0,0,0]],[[]]]
+    ["_polygon",DEFAULT_POLYGON,[[]]]
 ];
 
 private _area = 0;

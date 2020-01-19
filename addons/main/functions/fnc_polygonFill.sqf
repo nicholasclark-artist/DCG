@@ -19,7 +19,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_polygon",[[0,0,0],[0,0,0],[0,0,0]],[[]]],
+    ["_polygon",DEFAULT_POLYGON,[[]]],
     ["_color",[1,0,0,0.5],[[]]],
     ["_texture","#(rgb,1,1,1)color(1,1,1,1)",[""]],
     ["_outline",false,[false]],
@@ -44,7 +44,7 @@ if (_outline) then {
     _ret pushBack _id;
 };
 
-// set global variable reference to id array
+// set global variable reference to return value
 if !(_idGlobal isEqualTo "") then {
     private _value = missionNamespace getVariable [_idGlobal,[]];
     _value append _ret;

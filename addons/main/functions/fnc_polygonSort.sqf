@@ -14,7 +14,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_polygon",[[0,0,0],[0,0,0],[0,0,0]],[[]]]
+    ["_polygon",DEFAULT_POLYGON,[[]]]
 ];
 
 private _dirToArr = [];
@@ -22,7 +22,7 @@ private _polygonIndices = [];
 private _polygonSorted = [];
 
 // get centroid of polygon
-private _centroid = [_polygon] call FUNC(polygonCentroid);
+private _centroid = [_polygon] call FUNC(polygonCenter);
 
 // sort by vertex direction from centroid
 {

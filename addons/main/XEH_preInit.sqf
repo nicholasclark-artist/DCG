@@ -77,12 +77,15 @@ PREP(landAt);
 PREP(parseFactions);
 PREP(parseMapLocations);
 PREP(polygonArea);
-PREP(polygonCentroid);
+PREP(polygonCenter);
 PREP(polygonFill);
 PREP(polygonSort);
 PREP(polygonTriangulate);
 PREP(polygonRandomPos);
 PREP(polygonIsConvex);
+PREP(polygonLength);
+PREP(taskPatrol);
+PREP(taskDefend);
 
 // heap functions
 PREP(heapSwap);

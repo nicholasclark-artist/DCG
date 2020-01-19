@@ -3,8 +3,8 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-check if polygon is convex,polygon must be sorted
-this function does not account for convex,self-intersecting polygons
+check if polygon is convex, polygon must be sorted
+this function does not account for convex, self-intersecting polygons
 
 Arguments:
 0: polygon vertices <ARRAY>
@@ -16,7 +16,7 @@ __________________________________________________________________*/
 #define SCOPE QGVAR(polygonIsConvex)
 
 params [
-    ["_polygon",[[0,0,0],[0,0,0],[0,0,0]],[[]]]
+    ["_polygon",DEFAULT_POLYGON,[[]]]
 ];
 
 scopeName SCOPE;
