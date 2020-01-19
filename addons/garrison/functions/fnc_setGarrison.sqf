@@ -22,16 +22,16 @@ private _ao = [GVAR(areas),_key] call CBA_fnc_hashGet;
 private _location = createLocation ["Invisible",getPos _ao,1,1];
 
 // set vars
-_location setVariable [QGVAR(active),1];
+_location setVariable [QGVAR(status),1];
 _location setVariable [QGVAR(type),"garrison"];
 _location setVariable [QGVAR(name),call FUNC(getName)];
 _location setVariable [QGVAR(task),""];
 _location setVariable [QGVAR(positionASL),AGLtoASL (getPos _location)];
 _location setVariable [QGVAR(radius),_ao getVariable [QEGVAR(main,radius),0]];
 _location setVariable [QGVAR(groups),[]]; // groups assigned to garrison
-_location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
+// _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
 _location setVariable [QGVAR(onKilled),{ // update unit count on killed event
-    _this setVariable [QGVAR(unitCountCurrent),(_this getVariable [QGVAR(unitCountCurrent),-1]) - 1];
+    // _this setVariable [QGVAR(unitCountCurrent),(_this getVariable [QGVAR(unitCountCurrent),-1]) - 1];
 }];
 _location setVariable [QGVAR(prefabs),[]];
 

@@ -13,11 +13,10 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define SCOPE QGVAR(spawnOutpost)
 
-// @todo spawn intel files on composition node 
-// @todo disallow water waypoints
-
 // define scope to break hash loop
 scopeName SCOPE;
+
+private ["_intelNodes","_intelComp","_intelObj"];
 
 [GVAR(outposts),{
     // get composition type
@@ -36,13 +35,33 @@ scopeName SCOPE;
         breakTo SCOPE;
     };
 
+    // spawn intel composition
+    _intelNodes = (_composition select 1) select {((_x select 0) select 2) < 0.5};
+    _intelComp = [selectRandom _intelNodes,""] call FUNC(spawnPrefab);
+
+    // get intel object from composition
+    {
+        if (typeOf _x in INTEL_CLASSES) exitWith {
+            _intelObj = _x;
+
+            // @todo add action
+        };
+    } forEach (_intelComp select 2);
+
+    // assign intel object
+    if (GVAR(intelPrimary) isEqualTo []) then {
+        GVAR(intelPrimary) pushBack _intelObj;
+    } else {
+        GVAR(intelSecondary) pushBack _intelObj;
+    };
+
     // setvars 
     _value setVariable [QGVAR(radius),_composition select 0];
     _value setVariable [QGVAR(nodes),_composition select 1];
     _value setVariable [QGVAR(composition),_composition select 2];
     
     // spawn infantry
-    [_value] call FUNC(spawnUnit);
+    // [_value] call FUNC(spawnUnit);
 }] call CBA_fnc_hashEachPair;
 
 nil

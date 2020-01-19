@@ -31,15 +31,15 @@ private _isArea = [GVAR(areas),_location getVariable [QEGVAR(main,name),""]] cal
 
 private _para1 = if (_isArea) then {
     // get area orientation 
-    private _centroid = [_location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]] call EFUNC(main,polygonCentroid);
-    private _orientation = if (CHECK_DIST2D(_centroid,EGVAR(main,center),EGVAR(main,radius) * 0.2)) then {
+    private _center = [_location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON],1] call EFUNC(main,polygonCenter);
+    private _orientation = if (CHECK_DIST2D(_center,EGVAR(main,center),EGVAR(main,radius) * 0.2)) then {
         "central"
     } else {
         [[EGVAR(main,center) getDir (getPos _location)] call EFUNC(main,getDirCardinal),"ern"] joinString ""
     };
     
     // get area km²
-    private _A = parseNumber (([_location getVariable [QEGVAR(main,polygon),[]]] call EFUNC(main,polygonArea)) toFixed 2);
+    private _A = parseNumber (([_location getVariable [QEGVAR(main,polygon),[]]] call EFUNC(main,polygonArea)) toFixed 1);
  
     // get area elevation
     private _elevation = 0;

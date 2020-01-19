@@ -10,7 +10,7 @@ Arguments:
 0: prefab type <STRING>
 
 Return:
-boolean
+array
 __________________________________________________________________*/
 #include "script_component.hpp"
 
@@ -19,8 +19,9 @@ params [
     ["_type","",[""]]
 ];
 
-_position =+ _position;
-_position resize 2;
+private _ret = [];
+
+
 
 switch _type do {
     case "mil_cp": {
@@ -35,13 +36,18 @@ switch _type do {
         // check for empty area
         if ([_position,2.5,0,0.3,_roads select 0] call EFUNC(main,isPosSafe)) then {
             // spawn composition
-            private _comp = [_position,_type,-1,true] call EFUNC(main,spawnComposition);
+            private _ret = [_position,_type,-1,true] call EFUNC(main,spawnComposition);
 
-            // spawn units at nodes
+            // spawn units at nodes and append units to return
             {
 
-            } forEach (_comp select 1);
+            } forEach (_ret select 1);
+
+            _ret
         };
+    };
+    case "": {
+        _ret
     };
 };
 

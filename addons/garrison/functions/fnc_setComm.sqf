@@ -23,11 +23,7 @@ private _comms = [];
 [GVAR(garrisons),{
     // get random positions in polygon
     _polygon = ([GVAR(areas),key] call CBA_fnc_hashGet) getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON];
-    _polygonPositions = [];
-
-    for "_i" from 0 to 9 do {
-        _polygonPositions pushBack ([_polygon] call EFUNC(main,polygonRandomPos));
-    };
+    _polygonPositions = [_polygon,10] call EFUNC(main,polygonRandomPos);
 
     // find suitable position
     _polygonPositions = _polygonPositions select {[_x,0,0,0.275] call EFUNC(main,isPosSafe)};
@@ -41,16 +37,16 @@ private _comms = [];
     _location = createLocation ["Invisible",ASLtoAGL (selectRandom _polygonPositions),1,1];
 
     // set vars
-    _location setVariable [QGVAR(active),1];
+    _location setVariable [QGVAR(status),1];
     _location setVariable [QGVAR(type),"comm"];
     _location setVariable [QGVAR(name),call FUNC(getName)];
     _location setVariable [QGVAR(task),""];
     _location setVariable [QGVAR(positionASL),AGLtoASL (getPos _location)];
     _location setVariable [QGVAR(radius),0];
     _location setVariable [QGVAR(groups),[]]; // groups assigned to comm array
-    _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
+    // _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
     _location setVariable [QGVAR(onKilled),{ // update unit count on killed event
-        _this setVariable [QGVAR(unitCountCurrent),(_this getVariable [QGVAR(unitCountCurrent),-1]) - 1];
+        // _this setVariable [QGVAR(unitCountCurrent),(_this getVariable [QGVAR(unitCountCurrent),-1]) - 1];
     }];
 
     // setup hash

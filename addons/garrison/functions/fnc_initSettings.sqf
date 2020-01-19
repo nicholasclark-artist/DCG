@@ -8,7 +8,7 @@ initialize settings via CBA framework
 Arguments:
 
 Return:
-nil
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

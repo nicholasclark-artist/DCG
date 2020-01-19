@@ -9,70 +9,51 @@ Arguments:
 0: data loaded from server profile <ARRAY>
 
 Return:
-nil
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define REINIT \
-        [{call FUNC(init)},[],60] call CBA_fnc_waitAndExecute; \
-        WARNING("init failed,retry after cooldown")
+        call FUNC(removeArea); \
+        [{call FUNC(init)},[],10] call CBA_fnc_waitAndExecute; \
+        WARNING("init failed, retry after cooldown")
 
-if !(isServer) exitWith {false};
+if !(isServer) exitWith {nil};
 
 params [
     ["_data",[],[[]]]
 ];
 
-// find ao's
-private _ao = call FUNC(setArea);
+// find initial areas
+private _ao = [AO_COUNT_P1] call FUNC(setArea);
 
-// retry if failed to find ao
+// retry on fail
 if !(_ao) exitWith {
-    // call FUNC(removeArea);
-    // REINIT;
+    REINIT;
 };
 
 // find suitable spawn areas
-call FUNC(setGarrison);
-call FUNC(setComm);
-call FUNC(setOutpost);
+private _outpost = [OP_COUNT] call FUNC(setOutpost);
 
-// retry if score too low
-if (GVAR(score) <= 0) exitWith {
-    // call FUNC(removeArea);
-    // REINIT;
+// retry on fail
+if !(_outpost) exitWith {
+    REINIT;
 };
 
-// spawn in order (garrison,comm,outpost,dynamic task)
-call FUNC(spawnGarrison);
-
-// comm array position is dependent on garrison
-[{
-    // call FUNC(spawnComm);
-},[],5] call CBA_fnc_waitAndExecute;
-
-// outpost must be spawned after comm array for intel item
-[{
-    call FUNC(spawnOutpost);
-},[],10] call CBA_fnc_waitAndExecute;
-
-// @todo compare scores and spawn dynamic task in low score area to give each AO a point of interest
-
-// @todo lower approval in regions occupied by enemy 
+call FUNC(spawnArea);
+// call FUNC(spawnOutpost);
 
 // draw ao on map 
 private _polygons = [];
-private _id = "";
 
 [GVAR(areas),{
     _polygons pushBack (_value getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]);
-    _id = _value getVariable [QGVAR(polygonDraw),""];
 }] call CBA_fnc_hashEachPair;
 
 [
-    [_polygons,_id],
+    [_polygons],
     {
         {
-            [_x,[EGVAR(main,enemySide),false] call BIS_fnc_sideColor,"\A3\ui_f\data\map\markerbrushes\bdiagonal_ca.paa",true,findDisplay 12 displayCtrl 51,_this select 1] call EFUNC(main,polygonFill);
+            [_x,[EGVAR(main,enemySide),false] call BIS_fnc_sideColor,"\A3\ui_f\data\map\markerbrushes\bdiagonal_ca.paa",true,findDisplay 12 displayCtrl 51,QGVAR(polygonDraw)] call EFUNC(main,polygonFill);
         } forEach (_this select 0); 
     }
 ] remoteExecCall [QUOTE(call),0,false];

@@ -10,10 +10,12 @@ Arguments:
 1: area location <LOCATION>
 
 Return:
-nil
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define SPAWN_DELAY 0.5
+
+// @todo disallow water waypoints
 
 params [
     ["_location",locationNull,[locationNull]],
@@ -64,7 +66,8 @@ private _posPatrol = [_position,_radius + 10,_radius + 50,2,0,-1,[0,360],_positi
 for "_i" from 1 to floor (1 max (_unitCountPatrol / PAT_GRPSIZE)) do {
     private _grp = [_posPatrol,0,PAT_GRPSIZE,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
-    [{(_this select 0) getVariable [QEGVAR(main,ready),false]},
+    [
+        {(_this select 0) getVariable [QEGVAR(main,ready),false]},
         {
             params ["_grp","_location"];
             
@@ -77,64 +80,28 @@ for "_i" from 1 to floor (1 max (_unitCountPatrol / PAT_GRPSIZE)) do {
                 }]; 
             } forEach (units _grp);
 
-            [QGVAR(updateUnitCount),[_location,count units _grp]] call CBA_fnc_localEvent;
+            // [QGVAR(updateUnitCount),[_location,count units _grp]] call CBA_fnc_localEvent;
             [QGVAR(updateGroups),[_location,_grp]] call CBA_fnc_localEvent;
 
             // set group on patrol
-            [_grp,getPos _location,random [200,600,800],3,"MOVE","SAFE","YELLOW","LIMITED","STAG COLUMN","if (0.15 > random 1) then {this spawn CBA_fnc_searchNearby}",[5,16,15]] call CBA_fnc_taskPatrol;
+            [_grp,getPosATL _location,random [100,200,500],1,"if (0.15 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,taskPatrol);
         },
         [_grp,_location],
         ((SPAWN_DELAY max 0.1) * (PAT_GRPSIZE * (_unitCountPatrol max 1))) * 2
     ] call CBA_fnc_waitUntilAndExecute;
 };
 
-// get composition buildings with suitable positions  
-// @todo get building positions instead of buildings so multiple infantry can garrison the same building 
-private _buildings = _position nearObjects ["House",_radius];
-_buildings = _buildings select {!((_x buildingPos -1) isEqualTo [])};
-
-if (_buildings isEqualTo []) then {
-    WARNING_1("%1 does not have building positions for infantry",_key);
-};
-
-_buildings resize (ceil (count _buildings * 0.4));
-
 // BUILDING INFANTRY
 
 for "_i" from 1 to floor (1 max (count _buildings / PAT_GRPSIZE)) do {
     private _grp = [_position,0,PAT_GRPSIZE,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
-    [{(_this select 0) getVariable [QEGVAR(main,ready),false]},
+    [
+        {(_this select 0) getVariable [QEGVAR(main,ready),false]},
         {
-            params ["_grp","_location","_radius","_buildings"];
-
-            _grp setCombatMode "RED";
-
-            private ["_building","_dir"];
-
+            params ["_grp","_location","_radius"];
+            
             {
-                // set unit direction
-                _dir = random 360;
-                _x setFormDir _dir;
-                _x setDir _dir;
-
-                // garrison infantry 
-                if !(_buildings isEqualTo []) then {
-                    _building = _buildings deleteAt (floor random count _buildings);
-
-                    if (PROBABILITY(0.75)) then { // garrison building exit
-                        _x setPosATL (_building buildingExit 0);
-                    } else { // garrison building position
-                        _x setPosATL selectRandom (_building buildingPos -1);
-                    };
-                } else {
-                    // @todo check 'setVehiclePosition' performance impact
-                    _x setVehiclePosition [_x getPos [random [0,_radius * 0.2,_radius * 0.75],random 360],[],0,"NONE"];
-                };
-
-                // force unit to hold position
-                _x forceSpeed 0;
-
                 // add eventhandlers
                 _x setVariable [QGVAR(location),_location];
                 _x addEventHandler ["Killed",{
@@ -143,80 +110,15 @@ for "_i" from 1 to floor (1 max (count _buildings / PAT_GRPSIZE)) do {
                 }]; 
             } forEach (units _grp);
 
-            [QGVAR(updateUnitCount),[_location,count units _grp]] call CBA_fnc_localEvent;
+            // [QGVAR(updateUnitCount),[_location,count units _grp]] call CBA_fnc_localEvent;
             [QGVAR(updateGroups),[_location,_grp]] call CBA_fnc_localEvent;
 
-            // check for behaviour change
-            [{COMPARE_STR(behaviour leader _this,"COMBAT")}, 
-                {
-                    {
-                        _x forceSpeed -1;
-                    } forEach (units _this);
-                }, 
-                _grp
-            ] call CBA_fnc_waitUntilAndExecute;
+            // set group to defend composition
+            [_grp,getPosATL _location,_radius] call EFUNC(main,taskDefend);
         },
         [_grp,_location,_radius,_buildings],
         ((SPAWN_DELAY max 0.1) * (PAT_GRPSIZE * (count _buildings max 1))) * 2
     ] call CBA_fnc_waitUntilAndExecute;
 };
-
-// private ["_unit","_dir"];
-
-// // spawn building infantry
-// {
-//     _unit = (createGroup [EGVAR(main,enemySide),true]) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
-
-//     _dir = random 360;
-//     _unit setFormDir _dir;
-//     _unit setDir _dir;
-
-//     if (PROBABILITY(0.75)) then { // garrison building exit
-//         _unit setPosATL (_x buildingExit 0);
-//     } else { // garrison building position
-//         _unit setPosATL selectRandom (_x buildingPos -1);
-//     };
-
-//     // add eventhandlers
-//     _unit setVariable [QGVAR(location),_location];
-//     _unit addEventHandler ["Killed",{
-//         _location = (_this select 0) getVariable [QGVAR(location),locationNull];
-//         _location call (_location getVariable [QGVAR(onKilled),{}]);
-//     }]; 
-
-//     [QEGVAR(cache,enableGroup),group _unit] call CBA_fnc_serverEvent;
-//     [QGVAR(updateUnitCount),[_location,1]] call CBA_fnc_localEvent;
-//     [QGVAR(updateGroups),[_location,group _unit]] call CBA_fnc_localEvent;
-// } forEach _buildings;
-
-// COMPOSITION INFANTRY
-
-// private ["_posInf","_unit","_dir"];
-
-// // spawn infantry outside buildings
-// for "_i" from 0 to (floor (_radius / 4) min 16) do {
-//     _posInf = [_position,0,_radius * 0.9,2,-1,-1,[0,360],_position] call EFUNC(main,findPosSafe);
-
-//     // avoid units stacking at composition pivot
-//     if !(_posInf isEqualTo _position) then {
-//         _unit = (createGroup [EGVAR(main,enemySide),true]) createUnit [selectRandom ([EGVAR(main,enemySide),0] call EFUNC(main,getPool)),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
-        
-//         _dir = random 360;
-//         _unit setFormDir _dir;
-//         _unit setDir _dir;
-//         _unit setPosASL _posInf;
-
-//         // add eventhandlers and vars
-//         _unit setVariable [QGVAR(location),_location];
-//         _unit addEventHandler ["Killed",{
-//             _location = (_this select 0) getVariable [QGVAR(location),locationNull];
-//             _location call (_location getVariable [QGVAR(onKilled),{}]);
-//         }];
-
-//         [QEGVAR(cache,enableGroup),group _unit] call CBA_fnc_serverEvent;
-//         [QGVAR(updateUnitCount),[_location,1]] call CBA_fnc_localEvent;
-//         [QGVAR(updateGroups),[_location,group _unit]] call CBA_fnc_localEvent;
-//     };
-// };
 
 nil

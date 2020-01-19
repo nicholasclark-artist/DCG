@@ -16,6 +16,7 @@ PREP(setComm);
 PREP(setTask);
 PREP(getName);
 PREP(removeArea);
+PREP(spawnArea);
 PREP(spawnGarrison);
 PREP(spawnOutpost);
 PREP(spawnUnit);
@@ -26,5 +27,7 @@ if (!isServer) exitWith {};
 
 GVAR(score) = 0;
 GVAR(aliasBlacklist) = [];
+GVAR(intelPrimary) = [];
+GVAR(intelSecondary) = [];
 
 SETTINGS_INIT;
