@@ -11,7 +11,6 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SCOPE QGVAR(parseMapLocations)
 #define SAFE_DIST 2
 #define SAFE_RADIUS 50
 #define INDEX_KEY 0
@@ -20,7 +19,7 @@ __________________________________________________________________*/
 #define VORONOI_DEBUG_CTRL (findDisplay 12 displayCtrl 51)
 #define VORONOI_SEARCH_RADIUS 300
 
-scopeName SCOPE;
+if (!isServer) exitWith {};
 
 // get map locations from config
 private _cfgLocations = configFile >> "CfgWorlds" >> worldName >> "Names";
@@ -211,116 +210,137 @@ GVAR(marines) = [GVAR(marines),locationNull] call CBA_fnc_hashCreate;
 
 if (!isMultiplayer && {!is3DEN}) exitWith {}; // exit if not in multiplayer or editor
 
-// create voronoi diagram
-private _sites = [];
+private _fnc_voronoi = {
+    // params passed, remove from hash before generating
+    // if !(_this isEqualTo []) then {
+    //     {
+    //         [GVAR(locations),_x] call CBA_fnc_hashRem;
+    //     } forEach _this;
+        
+    //     WARNING_1("regenerating diagram without %1",_this);
+    // };
 
-// get sites from location hash
-[GVAR(locations),{
-    private _site =+ (_value getVariable [QGVAR(positionASL),[]]);
-    _sites pushBack _site;
-}] call CBA_fnc_hashEachPair;
+    // create voronoi diagram
+    private _sites = [];
 
-// set as position2D
-{_x resize 2} forEach _sites;
+    // get sites from location hash
+    [GVAR(locations),{
+        private _site =+ (_value getVariable [QGVAR(positionASL),[]]);
+        _sites pushBack _site;
+    }] call CBA_fnc_hashEachPair;
 
-// generate diagram
-private _dT = diag_tickTime;
-private _voronoi = [_sites,worldSize,worldSize] call FUNC(getEdges);
-private _execTime = diag_tickTime - _dT;
+    // set as position2D
+    {_x resize 2} forEach _sites;
 
-TRACE_3("voronoi diagram",count _sites,count _voronoi,_execTime);
+    // generate diagram
+    private _dT = diag_tickTime;
+    private _voronoi = [_sites,worldSize,worldSize] call FUNC(getEdges);
+    private _execTime = diag_tickTime - _dT;
 
-// draw debug
-if (VORONOI_DEBUG > 0) then {
-    GVAR(voronoi) = _voronoi;
+    TRACE_3("voronoi diagram",count _sites,count _voronoi,_execTime);
 
-    [] spawn {
-        waitUntil {!isNull VORONOI_DEBUG_CTRL};
-        GVAR(voronoiDebugDraw) = VORONOI_DEBUG_CTRL ctrlAddEventHandler [
-            "Draw",
-            {
-                GVAR(voronoi) apply {
-                    _x params ["_start","_end"];
+    // draw debug
+    if (VORONOI_DEBUG > 0) then {
+        GVAR(voronoi) = _voronoi;
 
-                    private _d = _end getDir _start;
-                    private _l = 0.5*(_start distance2D _end);
-                    private _a1 = _end getPos [_l min 75,_d+25];
-                    private _a2 = _end getPos [_l min 75,_d-25];
+        [] spawn {
+            waitUntil {!isNull VORONOI_DEBUG_CTRL};
+            GVAR(voronoiDebugDraw) = VORONOI_DEBUG_CTRL ctrlAddEventHandler [
+                "Draw",
+                {
+                    GVAR(voronoi) apply {
+                        _x params ["_start","_end"];
 
-                    (_this select 0) drawLine [
-                        _start,
-                        _end,
-                        [1,0,0,1]
-                    ];
-                    (_this select 0) drawLine [
-                        _end,
-                        _a1,
-                        [1,0,0,1]
-                    ];
-                    (_this select 0) drawLine [
-                        _end,
-                        _a2,
-                        [1,0,0,1]
-                    ];
-                    (_this select 0) drawLine [
-                        _a1,
-                        _a2,
-                        [1,0,0,1]
-                    ];
-                };
-            }
-        ];
+                        private _d = _end getDir _start;
+                        private _l = 0.5 * (_start distance2D _end);
+                        private _a1 = _end getPos [_l min 75,_d + 25];
+                        private _a2 = _end getPos [_l min 75,_d - 25];
+
+                        (_this select 0) drawLine [
+                            _start,
+                            _end,
+                            [1,0,0,1]
+                        ];
+                        (_this select 0) drawLine [
+                            _end,
+                            _a1,
+                            [1,0,0,1]
+                        ];
+                        (_this select 0) drawLine [
+                            _end,
+                            _a2,
+                            [1,0,0,1]
+                        ];
+                        (_this select 0) drawLine [
+                            _a1,
+                            _a2,
+                            [1,0,0,1]
+                        ];
+                    };
+                }
+            ];
+        };
     };
+
+    // add polygon to hash location
+    private ["_edgeStart","_edgeEnd","_locationL","_locationR","_keyL","_keyR","_valueL","_valueR"];
+
+    {
+        _edgeStart =+ _x select 0;
+        _edgeStart pushBack 0;
+
+        _edgeEnd =+ _x select 1;
+        _edgeEnd pushBack 0;
+
+        // @todo find faster way to get locations associated with edge
+        // get locations to the left and right of voronoi edge
+        _locationL = [(nearestLocations [_x select 2,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 2) isEqualTo objNull);
+        _locationR = [(nearestLocations [_x select 3,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 3) isEqualTo objNull);
+        
+        // get name's of locations,same as hash key
+        _keyL = text _locationL;
+        _keyR = text _locationR;
+
+        // add edge vertices to polygon hash if location in hash
+        if ([GVAR(locations),_keyL] call CBA_fnc_hashHasKey) then {
+            _valueL = ([GVAR(locations),_keyL] call CBA_fnc_hashGet) getVariable [QGVAR(polygon),[]];
+            _valueL pushBackUnique _edgeStart;
+            _valueL pushBackUnique _edgeEnd;
+
+            ([GVAR(locations),_keyL] call CBA_fnc_hashGet) setVariable [QGVAR(polygon),_valueL];
+        };
+
+        if ([GVAR(locations),_keyR] call CBA_fnc_hashHasKey) then {
+            _valueR = ([GVAR(locations),_keyR] call CBA_fnc_hashGet) getVariable [QGVAR(polygon),[]];
+            _valueR pushBackUnique _edgeStart;
+            _valueR pushBackUnique _edgeEnd;
+
+            ([GVAR(locations),_keyR] call CBA_fnc_hashGet) setVariable [QGVAR(polygon),_valueR];
+        };
+    } forEach _voronoi;
+
+    // sort polygon vertices
+    [GVAR(locations),{
+        _value setVariable [QGVAR(polygon),[_value getVariable [QGVAR(polygon),[]]] call FUNC(polygonSort)];
+    }] call CBA_fnc_hashEachPair;
+
+    // check convexity
+    // private _concaves = [];
+
+    [GVAR(locations),{
+        if !([_value getVariable [QGVAR(polygon),[]]] call FUNC(polygonIsConvex)) then {
+            // _concaves pushBack _key;
+            [GVAR(locations),_key] call CBA_fnc_hashRem;
+
+            ERROR_1("%1 polygon is not convex",_key);
+        };
+    }] call CBA_fnc_hashEachPair;
+
+    // if !(_concaves isEqualTo []) then {
+    //     _concaves call _fnc_voronoi;
+    // };
 };
 
-// add polygon to hash location
-private ["_edgeStart","_edgeEnd","_locationL","_locationR","_keyL","_keyR","_valueL","_valueR"];
-
-{
-    _edgeStart =+ _x select 0;
-    _edgeStart pushBack 0;
-
-    _edgeEnd =+ _x select 1;
-    _edgeEnd pushBack 0;
-
-    // @todo find faster way to get locations associated with edge
-    // get locations to the left and right of voronoi edge
-    _locationL = [(nearestLocations [_x select 2,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 2) isEqualTo objNull);
-    _locationR = [(nearestLocations [_x select 3,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 3) isEqualTo objNull);
-    
-    // get name's of locations,same as hash key
-    _keyL = text _locationL;
-    _keyR = text _locationR;
-
-    // add edge vertices to polygon hash if location in hash
-    if ([GVAR(locations),_keyL] call CBA_fnc_hashHasKey) then {
-        _valueL = ([GVAR(locations),_keyL] call CBA_fnc_hashGet) getVariable [QGVAR(polygon),[]];
-        _valueL pushBackUnique _edgeStart;
-        _valueL pushBackUnique _edgeEnd;
-
-        ([GVAR(locations),_keyL] call CBA_fnc_hashGet) setVariable [QGVAR(polygon),_valueL];
-    };
-
-    if ([GVAR(locations),_keyR] call CBA_fnc_hashHasKey) then {
-        _valueR = ([GVAR(locations),_keyR] call CBA_fnc_hashGet) getVariable [QGVAR(polygon),[]];
-        _valueR pushBackUnique _edgeStart;
-        _valueR pushBackUnique _edgeEnd;
-
-        ([GVAR(locations),_keyR] call CBA_fnc_hashGet) setVariable [QGVAR(polygon),_valueR];
-    };
-} forEach _voronoi;
-
-// sort polygon vertices
-[GVAR(locations),{
-    _value setVariable [QGVAR(polygon),[_value getVariable [QGVAR(polygon),[]]] call FUNC(polygonSort)];
-}] call CBA_fnc_hashEachPair;
-
-// check convexity
-[GVAR(locations),{
-    if !([_value getVariable [QGVAR(polygon),[]]] call FUNC(polygonIsConvex)) then {
-        ERROR_1("%1 polygon is not convex. removing from hash",_key);
-        [GVAR(locations),_key] call CBA_fnc_hashRem;
-    };
-}] call CBA_fnc_hashEachPair;
+call _fnc_voronoi;
 
 nil
