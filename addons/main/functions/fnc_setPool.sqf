@@ -26,8 +26,9 @@ if (_side isEqualTo 0) exitWith {
     GVAR(unitsEast) = _ret select 0;
     GVAR(vehiclesEast) = _ret select 1;
     GVAR(aircraftEast) = _ret select 2;
-    GVAR(officersEast) = _ret select 3;
-    GVAR(snipersEast) = _ret select 4;
+    GVAR(shipsEast) = _ret select 3;
+    GVAR(officersEast) = _ret select 4;
+    GVAR(snipersEast) = _ret select 5;
 };
 
 if (_side isEqualTo 1) exitWith {
@@ -36,8 +37,9 @@ if (_side isEqualTo 1) exitWith {
     GVAR(unitsWest) = _ret select 0;
     GVAR(vehiclesWest) = _ret select 1;
     GVAR(aircraftWest) = _ret select 2;
-    GVAR(officersWest) = _ret select 3;
-    GVAR(snipersWest) = _ret select 4;
+    GVAR(shipsWest) = _ret select 3;
+    GVAR(officersWest) = _ret select 4;
+    GVAR(snipersWest) = _ret select 5;
 };
 
 if (_side isEqualTo 2) exitWith {
@@ -46,8 +48,9 @@ if (_side isEqualTo 2) exitWith {
     GVAR(unitsInd) = _ret select 0;
     GVAR(vehiclesInd) = _ret select 1;
     GVAR(aircraftInd) = _ret select 2;
-    GVAR(officersInd) = _ret select 3;
-    GVAR(snipersInd) = _ret select 4;
+    GVAR(shipsInd) = _ret select 3;
+    GVAR(officersInd) = _ret select 4;
+    GVAR(snipersInd) = _ret select 5;
 };
 
 if (_side isEqualTo 3) exitWith {
@@ -56,7 +59,8 @@ if (_side isEqualTo 3) exitWith {
     GVAR(unitsCiv) = _ret select 0;
     GVAR(vehiclesCiv) = _ret select 1;
     GVAR(aircraftCiv) = _ret select 2;
+    GVAR(shipsCiv) = _ret select 3;
+    GVAR(officersCiv) = _ret select 4;
 };
-
 
 nil

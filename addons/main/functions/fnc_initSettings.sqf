@@ -63,12 +63,12 @@ __________________________________________________________________*/
             [INDEPENDENT,EAST]
         ],
         [
-            "West,East",
-            "West,Independent",
-            "East,West",
-            "East,Independent",
-            "Independent,West",
-            "Independent,East"
+            "West, East",
+            "West, Independent",
+            "East, West",
+            "East, Independent",
+            "Independent, West",
+            "Independent, East"
         ],
         0
     ],

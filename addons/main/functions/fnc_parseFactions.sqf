@@ -22,7 +22,7 @@ __________________________________________________________________*/
 #define CONFIGTOPARSE configFile >> "CfgVehicles"
 
 params [
-    ["_side",-1,[0]],
+    ["_side",0,[0]],
     ["_factions","",[""]],
     ["_filters","",[""]]
 ];
@@ -42,7 +42,8 @@ private _factionCfg = format ["
     {getNumber (_x >> 'side') isEqualTo %1} && 
     {toUpper getText (_x >> 'faction') in %2} && 
     {getText (_x >> 'vehicleClass') != 'Autonomous'} &&
-    {configName _x isKindOf 'CAManBase' || configName _x isKindOf 'Car' || configName _x isKindOf 'Tank' || configName _x isKindOf 'Air'}
+    {getText (_x >> 'vehicleClass') != 'Submarine'} &&
+    {configName _x isKindOf 'CAManBase' || configName _x isKindOf 'Car' || configName _x isKindOf 'Tank' || configName _x isKindOf 'Ship' || configName _x isKindOf 'Air'}
 ",_side,_factions] configClasses (CONFIGTOPARSE);
 
 // apply filter to configs
@@ -56,9 +57,15 @@ _factionCfg = _factionCfg apply {configName _x};
 private _units = _factionCfg select {_x isKindOf "CAManBase"};
 private _land = _factionCfg select {_x isKindOf "LandVehicle"};
 private _air = _factionCfg select {_x isKindOf "Air"};
+private _ship = _factionCfg select {_x isKindOf "Ship"};
 
-// get special classes using display name
-private _officers = _units select {toLower getText (CONFIGTOPARSE >> _x >> "displayName") find "officer" > -1};
+// get special classes
+private _officers = if (_side isEqualTo 3) then {
+    _units select {toLower getText (CONFIGTOPARSE >> _x >> "vehicleClass") find "menstory" > -1};
+} else {
+    _units select {toLower getText (CONFIGTOPARSE >> _x >> "displayName") find "officer" > -1};
+};
+
 private _snipers = _units select {toLower getText (CONFIGTOPARSE >> _x >> "displayName") find "sniper" > -1};
 
 // remove special classes from units
@@ -68,9 +75,10 @@ _units = _units - _snipers;
 if (_units isEqualTo []) then {WARNING_1("empty unit pool: side %1",_side)};
 if (_land isEqualTo []) then {WARNING_1("empty land vehicle pool: side %1",_side)};
 if (_air isEqualTo []) then {WARNING_1("empty aircraft pool: side %1",_side)};
+if (_ship isEqualTo []) then {WARNING_1("empty ship pool: side %1",_side)};
 if (_officers isEqualTo []) then {WARNING_1("empty officer pool: side %1",_side)};
 if (_snipers isEqualTo []) then {WARNING_1("empty sniper pool: side %1",_side)};
 
 INFO_1("parse factions %1 complete",_side);
 
-[_units,_land,_air,_officers,_snipers]
+[_units,_land,_air,_ship,_officers,_snipers]

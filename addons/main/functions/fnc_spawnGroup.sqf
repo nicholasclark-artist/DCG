@@ -33,6 +33,7 @@ private _check = [];
 private _unitPool = [_side,0] call FUNC(getPool);
 private _vehPool = [_side,1] call FUNC(getPool);
 private _airPool = [_side,2] call FUNC(getPool);
+private _shipPool = [_side,3] call FUNC(getPool);
 
 // add group to cache system
 [QEGVAR(cache,enableGroup),_grp] call CBA_fnc_serverEvent;
@@ -61,7 +62,7 @@ if (_type isEqualTo 0) exitWith {
 
 [{
     params ["_args","_idPFH"];
-    _args params ["_pos","_grp","_type","_count","_unitPool","_vehPool","_airPool","_check","_cargo","_delay"];
+    _args params ["_pos","_grp","_type","_count","_unitPool","_vehPool","_airPool","_shipPool","_check","_cargo","_delay"];
 
     if (count _check >= _count) exitWith {
         // if cargo spawned, set ready in cargo handler 
@@ -74,11 +75,17 @@ if (_type isEqualTo 0) exitWith {
 
     private ["_veh","_grpTemp"];
 
-    if (_type isEqualTo 1) then {
-        _veh = createVehicle [selectRandom _vehPool,_pos,[],0,"NONE"];
-        _veh setVectorUp surfaceNormal getPos _veh;
-    } else {
-        _veh = createVehicle [selectRandom _airPool,_pos,[],100,"FLY"];
+    call {
+        if (_type isEqualTo 1) exitWith {
+            _veh = createVehicle [selectRandom _vehPool,_pos,[],0,"NONE"];
+            _veh setVectorUp surfaceNormal getPos _veh;
+        };
+        if (_type isEqualTo 2) exitWith {
+            _veh = createVehicle [selectRandom _airPool,_pos,[],100,"FLY"];
+        };
+        if (_type isEqualTo 3) exitWith {
+            _veh = createVehicle [selectRandom _shipPool,_pos,[],0,"NONE"];
+        };    
     };
 
     /*
@@ -86,7 +93,7 @@ if (_type isEqualTo 0) exitWith {
         any event that triggers on group creation will run twice
     */
     
-    // use createVehicleCrew to populate vehicles,so DCG's faction/filter settings do not interfere
+    // use createVehicleCrew to create accurate crew, so DCG's faction/filter settings do not interfere
     _grpTemp = createVehicleCrew _veh;
     crew _veh joinSilent _grp;
     _grp addVehicle _veh;
@@ -117,6 +124,6 @@ if (_type isEqualTo 0) exitWith {
     };
 
     _check pushBack 0;
-},_delay,[_pos,_grp,_type,_count,_unitPool,_vehPool,_airPool,_check,_cargo,_delay]] call CBA_fnc_addPerFrameHandler;
+},_delay,[_pos,_grp,_type,_count,_unitPool,_vehPool,_airPool,_shipPool,_check,_cargo,_delay]] call CBA_fnc_addPerFrameHandler;
 
 _grp
