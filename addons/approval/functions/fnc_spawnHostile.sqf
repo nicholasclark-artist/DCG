@@ -27,8 +27,8 @@ _hostilePos = selectRandom (_hostilePos select {[_x,SAFE_DIST] call EFUNC(main,g
 _hostilePos pushBack ASLZ(_hostilePos);
 
 // check if hostile position found,check if hostile position in line of sight (at average eye height)
-_isPosGood = if (isNil "_hostilePos" || {(_nearPlayers findIf {[_hostilePos vectorAdd [0,0,1.5],eyePos _x] call EFUNC(main,inLOS)}) > -1}) then {
-    false
+if (isNil "_hostilePos" || {(_nearPlayers findIf {[_hostilePos vectorAdd [0,0,1.5],eyePos _x] call EFUNC(main,inLOS)}) > -1}) then {
+    _isPosGood = false;
 };
 
 switch (floor random 3) do {
