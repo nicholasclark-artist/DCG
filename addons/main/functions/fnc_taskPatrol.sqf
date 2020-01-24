@@ -51,7 +51,7 @@ private _formation = selectRandom ["STAG COLUMN","WEDGE","ECH LEFT","ECH RIGHT",
 
 // clamp aircraft patrol radius
 if (_groupVehicle isKindOf "Air") then {
-	_radius = _radius max 1000;
+    _radius = _radius max 1000;
 };
 
 // clear existing waypoints
