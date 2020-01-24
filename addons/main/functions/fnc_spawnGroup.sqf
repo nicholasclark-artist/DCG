@@ -7,11 +7,11 @@ spawn group
 
 Arguments:
 0: position where group will spawn <ARRAY>
-1: type of group <NUMBER>
-2: number of units in group <NUMBER>
+1: type of group, 0: infantry, 1: land/sea vehicle, 2: air <NUMBER>
+2: number of units in infantry group <NUMBER>
 3: side of group <SIDE>
 4: delay between unit spawns <NUMBER>
-5: fill vehicle cargo <BOOL>
+5: fill vehicle cargo or number of units to spawn in cargo <BOOL,NUMBER>
 
 Return:
 group
@@ -25,7 +25,7 @@ params [
     ["_count",1,[0]],
     ["_side",GVAR(enemySide),[sideUnknown]],
     ["_delay",1,[0]],
-    ["_cargo",false,[false]]
+    ["_cargo",0,[false,0]]
 ];
 
 private _grp = createGroup [_side,true];
@@ -34,9 +34,6 @@ private _unitPool = [_side,0] call FUNC(getPool);
 private _vehPool = [_side,1] call FUNC(getPool);
 private _airPool = [_side,2] call FUNC(getPool);
 private _shipPool = [_side,3] call FUNC(getPool);
-
-// add group to cache system
-[QEGVAR(cache,enableGroup),_grp] call CBA_fnc_serverEvent;
 
 // don't consider height to simplify spawning
 _pos =+ _pos;
@@ -60,70 +57,64 @@ if (_type isEqualTo 0) exitWith {
     _grp
 };
 
-[{
-    params ["_args","_idPFH"];
-    _args params ["_pos","_grp","_type","_count","_unitPool","_vehPool","_airPool","_shipPool","_check","_cargo","_delay"];
+// spawn vehicle 
+private ["_veh"];
 
-    if (count _check >= _count) exitWith {
-        // if cargo spawned, set ready in cargo handler 
-        if !(_cargo) then {
+if (_type isEqualTo 1) then {
+    _veh = ([selectRandom _vehPool,selectRandom _shipPool] select (surfaceIsWater _pos)) createVehicle _pos;
+
+    if !(surfaceIsWater _pos) then {
+        _veh setVectorUp surfaceNormal getPos _veh;
+    };  
+} else {
+    _veh = createVehicle [selectRandom _airPool,_pos,[],100,"FLY"];
+};
+
+/*
+    a temporary group is created with 'createVehicleCrew'
+    any event that triggers on group creation will run twice
+*/
+
+// use createVehicleCrew to create accurate crew, so DCG's faction/filter settings do not interfere
+private _grpTemp = createVehicleCrew _veh;
+crew _veh joinSilent _grp;
+_grp addVehicle _veh;
+_grp selectLeader (effectiveCommander _veh);
+_veh setUnloadInCombat [true,true];
+
+deleteGroup _grpTemp;
+
+if (_cargo isEqualType false) then { // get cargo count if boolean passed
+    _cargo = if (_cargo) then {
+        _veh emptyPositions "cargo";
+    } else {
+        0;
+    };
+} else { // don't spawn more cargo units than cargo positions
+    _cargo = (_veh emptyPositions "cargo") min _cargo;
+};
+
+if (_cargo > 0) then {
+    [{
+        params ["_args","_idPFH"];
+        _args params ["_grp","_unitPool","_veh","_count"];
+
+        if (!(alive _veh) || {count crew _veh >= _count}) exitWith {
             _grp setVariable [QGVAR(ready),true,false];
+            [_idPFH] call CBA_fnc_removePerFrameHandler;
         };
-        
-        [_idPFH] call CBA_fnc_removePerFrameHandler;
-    };
 
-    private ["_veh","_grpTemp"];
+        _unit = _grp createUnit [selectRandom _unitPool,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
 
-    call {
-        if (_type isEqualTo 1) exitWith {
-            _veh = createVehicle [selectRandom _vehPool,_pos,[],0,"NONE"];
-            _veh setVectorUp surfaceNormal getPos _veh;
-        };
-        if (_type isEqualTo 2) exitWith {
-            _veh = createVehicle [selectRandom _airPool,_pos,[],100,"FLY"];
-        };
-        if (_type isEqualTo 3) exitWith {
-            _veh = createVehicle [selectRandom _shipPool,_pos,[],0,"NONE"];
-        };    
-    };
+        // assign units before 'moveIn' so they dont momentarily dismount
+        _unit assignAsCargo _veh;
+        _unit moveInCargo _veh;
+    },_delay,[_grp,_unitPool,_veh,(_cargo min MAX_CARGO) + (count crew _veh)]] call CBA_fnc_addPerFrameHandler;
+} else {
+    _grp setVariable [QGVAR(ready),true,false];
+};
 
-    /*
-        a temporary group is created with 'createVehicleCrew'
-        any event that triggers on group creation will run twice
-    */
-    
-    // use createVehicleCrew to create accurate crew, so DCG's faction/filter settings do not interfere
-    _grpTemp = createVehicleCrew _veh;
-    crew _veh joinSilent _grp;
-    _grp addVehicle _veh;
-    _grp selectLeader (commander _veh);
-    _veh setUnloadInCombat [true,true];
-    
-    deleteGroup _grpTemp;
-
-    // save reference to vehicle
-    (driver _veh) setVariable [QGVAR(assignedVehicle),assignedVehicle _driver,false];
-
-    if (_cargo) then {
-        [{
-            params ["_args","_idPFH"];
-            _args params ["_grp","_unitPool","_veh","_count"];
-
-            if (!(alive _veh) || {count crew _veh >= _count}) exitWith {
-                _grp setVariable [QGVAR(ready),true,false];
-                [_idPFH] call CBA_fnc_removePerFrameHandler;
-            };
-
-            _unit = _grp createUnit [selectRandom _unitPool,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
-
-            // assign units before 'moveIn' so they dont momentarily dismount
-            _unit assignAsCargo _veh;
-            _unit moveInCargo _veh;
-        },_delay,[_grp,_unitPool,_veh,((_veh emptyPositions "cargo") min MAX_CARGO) + (count crew _veh)]] call CBA_fnc_addPerFrameHandler;
-    };
-
-    _check pushBack 0;
-},_delay,[_pos,_grp,_type,_count,_unitPool,_vehPool,_airPool,_shipPool,_check,_cargo,_delay]] call CBA_fnc_addPerFrameHandler;
+// add group to cache system
+[QEGVAR(cache,enableGroup),_grp] call CBA_fnc_serverEvent;
 
 _grp
