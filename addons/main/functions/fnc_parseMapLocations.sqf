@@ -210,16 +210,10 @@ GVAR(marines) = [GVAR(marines),locationNull] call CBA_fnc_hashCreate;
 
 if (!isMultiplayer && {!is3DEN}) exitWith {}; // exit if not in multiplayer or editor
 
-private _fnc_voronoi = {
-    // params passed, remove from hash before generating
-    // if !(_this isEqualTo []) then {
-    //     {
-    //         [GVAR(locations),_x] call CBA_fnc_hashRem;
-    //     } forEach _this;
-        
-    //     WARNING_1("regenerating diagram without %1",_this);
-    // };
+// @todo remove locations that sometimes break voronoi diagram, eventually needs a fix
+[GVAR(locations),"Poliakko"] call CBA_fnc_hashRem;
 
+private _fnc_voronoi = {
     // create voronoi diagram
     private _sites = [];
 
@@ -324,21 +318,13 @@ private _fnc_voronoi = {
         _value setVariable [QGVAR(polygon),[_value getVariable [QGVAR(polygon),[]]] call FUNC(polygonSort)];
     }] call CBA_fnc_hashEachPair;
 
-    // check convexity
-    // private _concaves = [];
-
     [GVAR(locations),{
         if !([_value getVariable [QGVAR(polygon),[]]] call FUNC(polygonIsConvex)) then {
-            // _concaves pushBack _key;
             [GVAR(locations),_key] call CBA_fnc_hashRem;
 
             ERROR_1("%1 polygon is not convex",_key);
         };
     }] call CBA_fnc_hashEachPair;
-
-    // if !(_concaves isEqualTo []) then {
-    //     _concaves call _fnc_voronoi;
-    // };
 };
 
 call _fnc_voronoi;
