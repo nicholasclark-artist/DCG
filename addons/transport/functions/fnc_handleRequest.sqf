@@ -72,7 +72,10 @@ _transport setUnloadInCombat [false,false];
 
 // in case 'setUnloadInCombat' fails
 {
-    _x addEventHandler ["GetOutMan",{deleteVehicle (_this select 0)}];
+    _x addEventHandler ["GetOutMan",{
+        unassignVehicle (_this select 0);
+        deleteVehicle (_this select 0);
+    }];
 } forEach crew _transport;
 
 _pilot = driver _transport;
@@ -125,14 +128,14 @@ TR_INFIL(_transport);
     _stuckPos = _transport getVariable [QGVAR(stuckPos),[0,0,0]];
 
     if (!isTouchingGround _transport && {unitReady _transport} && {CHECK_VECTORDIST(getPosWorld _transport,_stuckPos,3)}) then {
-        _transport setVariable [QUOTE(DOUBLES(MAIN_ADDON,cancelLandAt)),true];
+        _transport setVariable [QUOTE(DOUBLES(MAIN_ADDON,landAt)),-1];
 
         if !(_transport getVariable [QGVAR(signal),-1] isEqualTo 1) then {
             TR_EXFIL(_transport);
-            WARNING_1("Handle hover bug: send transport to exfil: %1",(getPos _transport) select 2);
+            WARNING_1("handle hover bug: send transport to exfil: %1",(getPos _transport) select 2);
         } else {
             TR_INFIL(_transport);
-            WARNING_1("Handle hover bug: send transport to infil: %1",(getPos _transport) select 2);
+            WARNING_1("handle hover bug: send transport to infil: %1",(getPos _transport) select 2);
         };
     };
 

@@ -35,45 +35,44 @@
             {GVAR(status) = TR_STATE_READY} remoteExecCall [QUOTE(call),_this,false]; \
             GVAR(count) = GVAR(count) - 1; \
             publicVariable QGVAR(count); \
-        },\
-        (REQUESTOR),\
+        }, \
+        (REQUESTOR), \
         GVAR(cooldown) \
     ] call CBA_fnc_waitAndExecute
 #define TR_EXFIL(TRANSPORT) \
     [ \
-        TRANSPORT,\
-        TRANSPORT getVariable QGVAR(exfil),\
-        "GET IN",\
+        TRANSPORT, \
+        TRANSPORT getVariable QGVAR(exfil), \
         { \
             [ \
                 { \
                     if !(_this getVariable [QGVAR(signal),-1] isEqualTo 1) then { \
-                        {if !(_x isEqualTo (driver _this)) then {moveOut _x}} forEach (crew _this); \
+                        {if !(group _x isEqualTo (group (driver _this))) then {moveOut _x}} forEach (crew _this); \
                         [QEGVAR(main,cleanup),_this] call CBA_fnc_serverEvent; \
-                        _this doMove [0,0,0]; \
+                        _this move DEFAULT_POS; \
                         _this setVariable [QGVAR(status),TR_STATE_WAITING,false]; \
                     }; \
-                },\
-                _this select 0,\
+                }, \
+                _this, \
                 TR_IDLE_TIME \
             ] call CBA_fnc_waitAndExecute; \
-        } \
+        }, \
+        TRANSPORT \
     ] call EFUNC(main,landAt)
 #define TR_INFIL(TRANSPORT) \
     [ \
-        {_this getVariable [QGVAR(signal),-1] isEqualTo 1},\
+        {_this getVariable [QGVAR(signal),-1] isEqualTo 1}, \
         { \
             _this removeAllEventHandlers "GetIn"; \
             [ \
-                _this,\
-                _this getVariable QGVAR(infil),\
-                "GET OUT",\
+                _this, \
+                _this getVariable QGVAR(infil), \
                 { \
                     [ \
                         { \
                             {if !(_x isEqualTo (driver _this)) then {moveOut _x}} forEach (crew _this); \
                             [QEGVAR(main,cleanup),_this] call CBA_fnc_serverEvent; \
-                            _this doMove [0,0,0]; \
+                            _this move DEFAULT_POS; \
                             _this setVariable [QGVAR(status),TR_STATE_WAITING,false]; \
                             _this animateDoor ["door_R",0]; \
                             _this animateDoor ["door_L",0]; \
@@ -82,11 +81,13 @@
                             _this animateDoor ["Door_6_source",0]; \
                             _this animate ["dvere1_posunZ",0]; \
                             _this animate ["dvere2_posunZ",0]; \
-                        },\
-                        _this select 0,\
+                        }, \
+                        _this, \
                         10 \
                     ] call CBA_fnc_waitAndExecute; \
-                }] call EFUNC(main,landAt); \
+                }, \
+                TRANSPORT \
+            ] call EFUNC(main,landAt); \
         },\
         TRANSPORT \
     ] call CBA_fnc_waitUntilAndExecute

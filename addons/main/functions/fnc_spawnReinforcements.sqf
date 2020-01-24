@@ -14,114 +14,127 @@ boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define MAX_CARGO(VEH) ((VEH) emptyPositions "cargo") min 6
-#define DIST_MIN 250
-#define DIST_MAX 400
-#define DIST_SPAWN 3000
+#define DIST_MIN 350
+#define DIST_MAX 700
+#define DIST_SPAWN 5000
 #define TR_SIZE 15
 
 params [
-    ["_center",[],[[]]],
+    ["_position",[],[[]]],
     ["_side",GVAR(enemySide),[sideUnknown]]
 ];
 
-private _unitPool = [_side,0] call FUNC(getPool);
-private _vehPool = [_side,1] call FUNC(getPool);
-private _fnc_getCargo = {
-    params ["_class"];
-
-    private _baseCfg = configFile >> "CfgVehicles" >> _class;
-    private _numCargo = count ("
-        if (isText(_x >> 'proxyType') && {getText(_x >> 'proxyType') isEqualTo 'CPCargo'}) then {
-            true
-        };
-    "configClasses (_baseCfg >> "Turrets")) + getNumber (_baseCfg >> "transportSoldier");
-
-    _numCargo
-};
-
-_grid = [_center,30,DIST_MAX,DIST_MIN,TR_SIZE,0] call EFUNC(main,findPosGrid);
+_grid = [_position,DIST_MAX/6,DIST_MAX,DIST_MIN,TR_SIZE,0] call EFUNC(main,findPosGrid);
 
 if (_grid isEqualTo []) exitWith {
-    WARNING("Reinforcements LZ undefined");
+    WARNING("reinforcement LZ undefined");
     false
 };
 
-private _type = selectRandom _vehPool;
+// select random landing position from grid
 private _lz = selectRandom _grid;
 _lz pushBack ASLZ(_lz);
 _lz = ASLtoAGL _lz;
 
-if (!(_type isKindOf "Helicopter") || {([_type] call _fnc_getCargo) < 1}) then {
+// get aircraft class name
+private _type = selectRandom ([_side,2] call FUNC(getPool));
+
+// must be a helicopter with at least 4 cargo seats
+if (!(_type isKindOf "Helicopter") || {([_type] call FUNC(getCargoCount)) < 4}) then {
     if (_side isEqualTo EAST) exitWith {_type = "O_Heli_Light_02_unarmed_F"};
     if (_side isEqualTo WEST) exitWith {_type = "B_Heli_Light_01_F"};
     if (_side isEqualTo RESISTANCE) exitWith {_type = "I_Heli_light_03_unarmed_F"};
 };
 
-private _heli = createVehicle [_type,_center getPos [DIST_SPAWN,random 360],[],0,"FLY"];
-_heli lock 3;
+// spawn transport and create crew
+private _transport = createVehicle [_type,_position getPos [DIST_SPAWN,random 360],[],0,"FLY"];
 
-private _grp = createGroup [_side,true];
-private _pilot = _grp createUnit [selectRandom _unitPool,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
+private _grp = createVehicleCrew _transport;
+_grp addVehicle _transport;
+_grp selectLeader (effectiveCommander _veh);
+
+// set crew behaviors 
+_transport setUnloadInCombat [false,false];
+// (driver _transport) disableAI "FSM";
+// (driver _transport) setBehaviourStrong "CARELESS";
+
+// in case 'setUnloadInCombat' fails
+{
+    _x addEventHandler ["GetOutMan",{
+        unassignVehicle (_this select 0);
+        deleteVehicle (_this select 0);
+    }];
+} forEach crew _transport;
+
+// lock players out 
+_transport lock 3;
+
+// disable caching so waypoints function correctly
 [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
-_pilot assignAsDriver _heli;
-_pilot moveInDriver _heli;
-_pilot disableAI "FSM";
-_pilot setBehaviourStrong "CARELESS";
-_pilot addEventHandler ["GetOutMan",{deleteVehicle (_this select 0)}];
 
-private _grpPatrol = [[0,0,0],0,MAX_CARGO(_heli),_side] call FUNC(spawnGroup);
-[QEGVAR(cache,disableGroup),_grpPatrol] call CBA_fnc_serverEvent;
+// spawn QRF group
+private _grpReinforce = [DEFAULT_SPAWNPOS,0,MAX_CARGO(_transport),_side] call FUNC(spawnGroup);
 
-// place patrol group in cargo
+// disable caching
+[QEGVAR(cache,disableGroup),_grpReinforce] call CBA_fnc_serverEvent;
+
+// place group in cargo
 [
-    {count units (_this select 1) >= MAX_CARGO(_this select 0)},
+    {(_this select 0) getVariable [QEGVAR(main,ready),false]},
     {
-        params ["_heli","_grpPatrol"];
+        params ["_grpReinforce","_transport"];
 
         {
-            _x assignAsCargoIndex [_heli,_forEachIndex];
-            _x moveInCargo _heli;
-        } forEach (units _grpPatrol);
+            _x assignAsCargoIndex [_transport,_forEachIndex];
+            _x moveInCargo _transport;
+        } forEach (units _grpReinforce);
     },
-    [_heli,_grpPatrol]
+    [_grpReinforce,_transport]
 ] call CBA_fnc_waitUntilAndExecute;
 
-// move to drop off position
+// move to landing zone
 [
-    _heli,
+    _transport,
     _lz,
-    "LAND",
     {
-        params ["_heli","_grpPatrol","_center"];
+        params ["_transport","_grpReinforce","_position"];
 
-        _grpPatrol leaveVehicle _heli;
-        _onComplete = format ["if ([%1,500] call %2 isEqualTo []) then {['%3',thisList] call CBA_fnc_serverEvent};",_center,QFUNC(getPlayers),QGVAR(cleanup)];
-        [_grpPatrol,[_center,50,50,0,false],"AWARE","NO CHANGE","UNCHANGED","NO CHANGE",_onComplete] call CBA_fnc_taskSearchArea;
+        // dismount transport
+        _grpReinforce leaveVehicle _transport;
 
-        INFO_2("Reinforcement dismount at %1,target is %2",getPos leader _grpPatrol,_center);
+        // if reinforcements reach position and no players near then delete group
+        _onComplete = format ["if ([%1,500] call %2 isEqualTo []) then {['%3',thisList] call CBA_fnc_serverEvent};",_position,QFUNC(getPlayers),QGVAR(cleanup)];
 
+        // search area around position
+        [_grpReinforce,[_position,50,50,0,false],"AWARE","NO CHANGE","UNCHANGED","NO CHANGE",_onComplete] call CBA_fnc_taskSearchArea;
+
+        INFO_2("reinforcement dismount at %1, target at %2",getPosATL leader _grpReinforce,_position);
+
+        // send transport away and cleanup
         [
-            {{alive (_x select 0)} count (fullCrew [_this,"cargo",false]) isEqualTo 0},
             {
-                _this doMove [0,0,0];
-                [QGVAR(cleanup),_this] call CBA_fnc_serverEvent;
+                {group _x isEqualTo (_this select 1)} count (crew (_this select 0)) isEqualTo 0
             },
-            _heli
+            {
+                (_this select 0) move DEFAULT_POS;
+                [QGVAR(cleanup),_this select 0] call CBA_fnc_serverEvent;
+            },
+            [_transport,_grpReinforce]
         ] call CBA_fnc_waitUntilAndExecute;
     },
-    [_grpPatrol,_center]
-] call EFUNC(main,landAt);
+    [_transport,_grpReinforce,_position]
+] call FUNC(landAt);
 
 // watch if heli is destroyed
 [{
     params ["_args","_idPFH"];
-    _args params ["_heli"];
+    _args params ["_transport"];
 
-    if (isTouchingGround _heli && {!alive _heli || !canMove _heli || fuel _heli isEqualTo 0}) exitWith {
+    if (isTouchingGround _transport && {!alive _transport || !canMove _transport || fuel _transport isEqualTo 0}) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
-        [QGVAR(cleanup),_heli] call CBA_fnc_serverEvent;
-        INFO("Reinforcement vehicle destroyed");
+        [QGVAR(cleanup),_transport] call CBA_fnc_serverEvent;
+        INFO("reinforcement vehicle destroyed");
     };
-},1,[_heli]] call CBA_fnc_addPerFrameHandler;
+},1,[_transport]] call CBA_fnc_addPerFrameHandler;
 
 true
