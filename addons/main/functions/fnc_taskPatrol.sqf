@@ -64,27 +64,27 @@ if (_groupVehicle isKindOf "Air") then {
 
 if (_type < 2) then {
     // count increases with radius
-    private _count = (round(_radius / 32) max 4) min 8;
+    private _count = (round (_radius / 64) max 3) min 6;
     private _wpPositions = [];
 
     private ["_angle","_a","_b"];
 
     for "_i" from 0 to _count - 1 do {
-        _angle = (360/_count) * _i;
+        _angle = (360 / _count) * _i;
         _a = (_position select 0) + (sin _angle * _radius);
         _b = (_position select 1) + (cos _angle * _radius);
 
         if (_groupVehicle isKindOf "LAND" && !(surfaceIsWater [_a,_b]) || {_groupVehicle isKindOf "SHIP" && surfaceIsWater [_a,_b]} || {_groupVehicle isKindOf "AIR"}) then {
             // check if position in blacklist
             // if (_blacklist findIf {[_a,_b,0] inPolygon _x} < 0) then {
-            //     _wpPositions set [count _wpPositions,[_a,_b,0]];
+            //     _wpPositions pushBack [_a,_b,0];
             // };
-            _wpPositions set [count _wpPositions,[_a,_b,0]];
+            _wpPositions pushBack [_a,_b,0];
         };
     };
 
     if (_wpPositions isEqualTo []) exitWith {
-        WARNING("cannot find suitable waypoint positions");
+        WARNING_1("cannot find suitable waypoint positions for %1",_group);
         false
     };
     
@@ -102,7 +102,7 @@ if (_type < 2) then {
         _wp setWaypointType "MOVE";
         _wp setWaypointBehaviour "SAFE";
         _wp setWaypointCombatMode "YELLOW";
-        _wp setWaypointSpeed "LIMITED";
+        _wp setWaypointSpeed (["NORMAL","LIMITED"] select (isNull (objectParent (leader _group)))); 
         _wp setWaypointFormation _formation;
         _wp setWaypointStatements ["TRUE",_onComplete];
         _wp setWaypointTimeout [0,5,16];
@@ -115,7 +115,7 @@ if (_type < 2) then {
     true
 } else {
     if !(leader _group isEqualTo _groupVehicle) exitWith {
-        WARNING("cannot patrol as individuals while leader in vehicle");
+        WARNING_1("cannot patrol as individuals while %1 leader in vehicle",_group);
         false
     };
 

@@ -34,7 +34,7 @@ if !(local _group) exitWith {};
 } forEach units _group;
 
 private _statics = _position nearObjects ["StaticWeapon",_radius];
-private _buildings = _position nearObjects ["Building",_radius];
+private _buildings = _position nearObjects ["House",_radius];
 
 // Filter out occupied statics
 _statics = _statics select {locked _x != 2 && {(_x emptyPositions "Gunner") > 0}};
