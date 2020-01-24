@@ -63,7 +63,7 @@ private _grp = [getPosASL _start,1,1,CIVILIAN] call EFUNC(main,spawnGroup);
         _driver disableAI "FSM";
         _driver disableAI "TARGET";
         _driver disableAI "AUTOTARGET";
-        _driver setSkill 0;
+        // _driver setSkill 0;
         
         // set waypoint to midpoint
         private _wp = _grp addWaypoint [_mid,-1];
