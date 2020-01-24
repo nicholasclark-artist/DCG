@@ -44,10 +44,6 @@ private _comms = [];
     _location setVariable [QGVAR(positionASL),AGLtoASL (getPos _location)];
     _location setVariable [QGVAR(radius),0];
     _location setVariable [QGVAR(groups),[]]; // groups assigned to comm array
-    // _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
-    _location setVariable [QGVAR(onKilled),{ // update unit count on killed event
-        // _this setVariable [QGVAR(unitCountCurrent),(_this getVariable [QGVAR(unitCountCurrent),-1]) - 1];
-    }];
 
     // setup hash
     _comms pushBack [_key,_location];

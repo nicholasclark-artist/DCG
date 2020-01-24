@@ -60,18 +60,6 @@ private ["_key","_location","_polygon","_safe","_patrolPositions","_patrolCount"
         _patrolPositions = [[_polygon,1] call EFUNC(main,polygonCenter),_spacing,_length] call EFUNC(main,findPosGrid);
         _patrolPositions = _patrolPositions select {[_x select 0,_x select 1,0] inPolygon _polygon};
 
-        // _patrolPositions = _patrolPositions select {!(surfaceIsWater _x)};
-        // _patrolPositions = _patrolPositions call BIS_fnc_arrayShuffle;
-        // _patrolPositions resize (count _patrolPositions min (count _patrolPositions / (([_polygon] call EFUNC(main,polygonArea)) * 0.5)));
-
-        TRACE_3("",_key,_spacing,count _patrolPositions);
-
-        // {
-        //     _mrk = createMarker [format["%1",diag_frameNo + (random 10000)],_x];
-        //     _mrk setMarkerType "mil_dot";
-        //     _mrk setMarkerColor "ColorUNKNOWN";
-        // } forEach _patrolPositions;
-
         // set area variables
         _location setVariable [QGVAR(status),1];
         _location setVariable [QGVAR(name),call FUNC(getName)];

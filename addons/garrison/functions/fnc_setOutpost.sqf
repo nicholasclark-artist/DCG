@@ -70,10 +70,6 @@ _outposts = [];
         _location setVariable [QGVAR(terrain),_terrain];
         _location setVariable [QGVAR(positionASL),_pos];
         _location setVariable [QGVAR(groups),[]]; // groups assigned to outpost
-        // _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
-        _location setVariable [QGVAR(onKilled),{ // update unit count on killed event
-            // _this setVariable [QGVAR(unitCountCurrent),(_this getVariable [QGVAR(unitCountCurrent),-1]) - 1];
-        }];
 
         // setup hash
         _outposts pushBack [_key,_location];

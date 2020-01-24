@@ -14,7 +14,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define REINIT \
         call FUNC(removeArea); \
-        [{call FUNC(init)},[],10] call CBA_fnc_waitAndExecute; \
+        [FUNC(init),[],10] call CBA_fnc_waitAndExecute; \
         WARNING("init failed, retry after cooldown")
 
 if !(isServer) exitWith {nil};
@@ -39,7 +39,8 @@ if !(_outpost) exitWith {
     REINIT;
 };
 
-call FUNC(spawnArea);
+// @todo improve fps drop
+[] spawn FUNC(spawnArea); 
 // call FUNC(spawnOutpost);
 
 // draw ao on map 

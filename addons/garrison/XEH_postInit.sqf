@@ -35,7 +35,5 @@ if (!isServer) exitWith {};
         GVAR(score) = GVAR(score) / (count ([GVAR(areas)] call CBA_fnc_hashKeys));
     }] call CBA_fnc_addEventHandler;
 
-    [{
-        call FUNC(init);
-    },[],10] call CBA_fnc_waitAndExecute;
+    [FUNC(init),[],10] call CBA_fnc_waitAndExecute;
 }] call CBA_fnc_addEventHandler;

@@ -29,10 +29,7 @@ _location setVariable [QGVAR(task),""];
 _location setVariable [QGVAR(positionASL),AGLtoASL (getPos _location)];
 _location setVariable [QGVAR(radius),_ao getVariable [QEGVAR(main,radius),0]];
 _location setVariable [QGVAR(groups),[]]; // groups assigned to garrison
-// _location setVariable [QGVAR(unitCountCurrent),0]; // actual unit count
-_location setVariable [QGVAR(onKilled),{ // update unit count on killed event
-    // _this setVariable [QGVAR(unitCountCurrent),(_this getVariable [QGVAR(unitCountCurrent),-1]) - 1];
-}];
+
 _location setVariable [QGVAR(prefabs),[]];
 
 // setup hash
