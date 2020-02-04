@@ -7,7 +7,7 @@ set object at safe position (positionASL)
 
 Arguments:
 0: object <OBJEECT>
-1: position <ARRAY>
+1: positionASL <ARRAY>
 
 Return:
 nothing
@@ -19,8 +19,8 @@ params [
     ["_pos",DEFAULT_POS,[[]]]
 ];
 
-// force positionASL,allow underwater positions
-if (count _pos isEqualTo 2 || {(_pos select 2) > 0}) then {
+// force positionASL, allow underwater positions
+if (count _pos isEqualTo 2) then {
     _pos =+ _pos; 
     _pos set [2,ASLZ(_pos)];
 };
