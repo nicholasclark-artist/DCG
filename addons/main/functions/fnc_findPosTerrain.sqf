@@ -20,8 +20,8 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define DIST 400
 #define DIST_HOUSE 100
-#define GRAD1 0.173
-#define GRAD2 0.275
+#define GRAD1 0.172
+#define GRAD2 0.274
 
 params [
     ["_center",[],[[]]],
