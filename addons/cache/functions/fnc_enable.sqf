@@ -22,6 +22,6 @@ params [
 _grp setVariable [QGVAR(disableGroup),false];
 
 _grp enableDynamicSimulation true;
-TRACE_1("enable dynamic simulation",_grp);
+TRACE_1("enable dynamic simulation",netId _grp);
 
 nil
