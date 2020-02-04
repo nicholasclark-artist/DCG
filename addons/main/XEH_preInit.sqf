@@ -40,6 +40,7 @@ PREP(getPool);
 PREP(getAlias);
 PREP(getUnitCount);
 PREP(getCargoCount);
+PREP(getTerrainAngle);
 PREP(sendToHC);
 PREP(setAction);
 PREP(setOwner);
