@@ -17,6 +17,7 @@ private _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
 if !(_data isEqualTo []) then {
     [_data select 0,_data select 1] call FUNC(handleCreate);
 
+    // @todo fix setPos
     {
         _veh = (_x select 0) createVehicle DEFAULT_SPAWNPOS;
         _veh setDir (_x select 2);

@@ -21,8 +21,6 @@ params [
 
 private _ret = [];
 
-
-
 switch _type do {
     case "mil_cp": {
         // get road position
@@ -46,8 +44,7 @@ switch _type do {
             _ret
         };
     };
-    case "": {
-        _ret
-    };
+    
+    default {_ret};
 };
 

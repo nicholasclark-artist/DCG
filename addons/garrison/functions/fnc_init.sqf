@@ -39,9 +39,8 @@ if !(_outpost) exitWith {
     REINIT;
 };
 
-// @todo improve fps drop
 [] spawn FUNC(spawnArea); 
-// call FUNC(spawnOutpost);
+[] spawn FUNC(spawnOutpost);
 
 // draw ao on map 
 private _polygons = [];

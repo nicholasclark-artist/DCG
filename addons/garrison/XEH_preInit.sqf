@@ -19,6 +19,7 @@ PREP(removeArea);
 PREP(spawnArea);
 PREP(spawnGarrison);
 PREP(spawnOutpost);
+PREP(spawnPrefab);
 PREP(spawnUnit);
 PREP(taskOPORD);
 

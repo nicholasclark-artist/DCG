@@ -128,7 +128,7 @@ TR_INFIL(_transport);
     _stuckPos = _transport getVariable [QGVAR(stuckPos),[0,0,0]];
 
     if (!isTouchingGround _transport && {unitReady _transport} && {CHECK_VECTORDIST(getPosWorld _transport,_stuckPos,3)}) then {
-        _transport setVariable [QUOTE(DOUBLES(MAIN_ADDON,landAt)),-1];
+        _transport setVariable [QEGVAR(main,landAt),-1]; 
 
         if !(_transport getVariable [QGVAR(signal),-1] isEqualTo 1) then {
             TR_EXFIL(_transport);
