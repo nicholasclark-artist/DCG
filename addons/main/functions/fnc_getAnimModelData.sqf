@@ -15,7 +15,9 @@ __________________________________________________________________*/
 #define ANIMS_SEAT ["HubSittingChairA_idle1","HubSittingChairA_idle2","HubSittingChairA_idle3","HubSittingChairB_idle1","HubSittingChairB_idle2","HubSittingChairB_idle3"]
 #define ANIMS_WALL ["InBaseMoves_Lean1"]
 
-params ["_modelInfo"];
+params [
+    ["_modelInfo",[],[[]]]
+];
 
 // [modelspace offset,direction offset,animations]
 switch (_modelInfo select 0) do {

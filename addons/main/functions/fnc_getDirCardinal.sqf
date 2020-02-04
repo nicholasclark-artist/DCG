@@ -6,15 +6,17 @@ Description:
 get cardinal direction
 
 Arguments:
-0: direction in azimuth degrees
+0: direction in azimuth degrees <NUMBER>
 
 Return:
 string
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private _degrees = [0,45,90,135,180,225,270,315,360];
+params [
+    ["_dir",0,[0]]
+];
 
-_degrees = _degrees apply {abs ((_this select 0) - _x)};
+private _degrees = [0,45,90,135,180,225,270,315,360] apply {abs (_dir - _x)};
 
 ["North","North-East","East","South-East","South","South-West","West","North-West","North"] select (_degrees find (selectMin _degrees))

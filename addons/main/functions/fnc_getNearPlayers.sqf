@@ -16,7 +16,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    "_center",
+    ["_center",DEFAULT_POS,[[]]],
     ["_radius",50,[0]],
     ["_z",-1,[0]]
 ];

@@ -13,7 +13,11 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-switch (_this select 0) do {
+params [
+    ["_option",1,[0]]
+];
+
+switch _option do {
     case 0: {
         GVAR(debug) = false; 
         GVAR(debugMarkers) apply {_x setMarkerAlpha 0};
