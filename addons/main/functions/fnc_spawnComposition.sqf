@@ -9,7 +9,7 @@ Arguments:
 0: center position <ARRAY>
 1: composition type <STRING>
 3: base direction <NUMBER>
-4: clear position before spawning composition,this param requires function call from server <BOOL>
+4: clear position before spawning composition, this param requires function call from server <BOOL>
 
 Return:
 array
@@ -86,7 +86,6 @@ for "_i" from 0 to count _objData - 1 do {
 
     _relPos = parseSimpleArray _relPos;
     _dirOffset = parseNumber _dirOffset;
-    _z = parseNumber _z;
     
     _obj = if (_simple < 1) then {
         createVehicle [_type,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
@@ -96,7 +95,7 @@ for "_i" from 0 to count _objData - 1 do {
 
     // get world position and set to ASL terrain height plus z offset
     _pos = POS_RELATIVE(_relPos);
-    _pos set [2,(getTerrainHeightASL _pos) + _z];
+    _pos set [2,(getTerrainHeightASL _pos) + (parseNumber _z)];
 
     // setup objects that will be snapped to another object's surface
     if !(_ins isEqualTo "") then {
@@ -150,9 +149,9 @@ for "_i" from 0 to count _nodeData - 1 do {
     _pos = POS_RELATIVE(_relPos);
     
     // set height above terrain
-    _pos set [2,_z];
+    _pos set [2,parseNumber _z];
 
     _nodes pushBack [_pos,_radius];
 };
 
-[getNumber (_composition >> "radius"),_nodes,_objects]
+[getNumber (_composition >> "radius"),_nodes,_objects,configName _composition]
