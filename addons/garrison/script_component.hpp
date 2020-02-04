@@ -16,8 +16,9 @@
 
 #define PAT_GRPSIZE 4 // number of units in group
 #define PAT_SPACING 750 // distance in meters between patrol groups
-#define PAT_LIMIT 8 // max number of patrol groups per area
-#define PAT_LIMIT_WATER 3 // max number of patrol groups per area
+#define PAT_UNIT_LIMIT 8 // max number of patrol groups per area
+#define PAT_SHIP_LIMIT 3 // max number of patrol groups per area
+#define PAT_SHIP_CARGO 1
 
 #define GAR_SCORE 10
 #define OP_SCORE 5
@@ -25,4 +26,5 @@
 #define COMM_SCORE 2.5
 #define ROADBLOCK_SCORE 1
 
-#define INTEL_CLASSES [""]
+#define INTEL_ITEMS ["intel_file1_f","intel_file2_f","land_document_01_f","land_laptop_unfolded_f","land_laptop_03_black_f","land_laptop_03_sand_f","land_laptop_03_olive_f"]
+#define INTEL_BASES ["land_campingtable_f","land_campingtable_small_f","land_campingtable_small_white_f","land_campingtable_white_f","land_tableplastic_01_f","land_rattantable_01_f","land_woodentable_large_f","land_woodentable_small_f","land_tablesmall_01_f","land_tablebig_01_f","officetable_01_new_f","officetable_01_old_f","land_portabledesk_01_olive_f"]

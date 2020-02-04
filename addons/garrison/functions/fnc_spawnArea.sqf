@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-spawn areas, should not be called directly and must be spawned
+spawn areas, should not be called directly and must run in scheduled environment
 
 Arguments:
 
@@ -11,14 +11,9 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SCOPE QGVAR(spawnArea)
 #define SPAWN_DELAY (1 max 0.1)
-#define SHIP_CARGO_COUNT 1
 
-// define scope to break hash loop
-scopeName SCOPE;
-
-private ["_positions","_positionsLand","_positionsWater","_grp","_count"];
+private ["_positions","_positionsLand","_positionsWater","_grp"];
 
 [GVAR(areas),{
     // get land and water positions 
@@ -30,10 +25,8 @@ private ["_positions","_positionsLand","_positionsWater","_grp","_count"];
     _positionsLand = _positionsLand call BIS_fnc_arrayShuffle;
     _positionsWater = _positionsWater call BIS_fnc_arrayShuffle;
 
-    _positionsLand resize (count _positionsLand min PAT_LIMIT);
-    _positionsWater resize (count _positionsWater min PAT_LIMIT_WATER);
-
-    _count = (PAT_GRPSIZE * (count _positionsLand)) max 1;
+    _positionsLand resize (count _positionsLand min PAT_UNIT_LIMIT);
+    _positionsWater resize (count _positionsWater min PAT_SHIP_LIMIT);
 
     // infantry patrols
     {
@@ -50,44 +43,44 @@ private ["_positions","_positionsLand","_positionsWater","_grp","_count"];
                 [_grp,getPosATL leader _grp,PAT_SPACING,0,"if (0.15 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,taskPatrol);
             },
             [_grp,_value],
-            (SPAWN_DELAY * _count) * 2
+            (SPAWN_DELAY * PAT_GRPSIZE) * 2
         ] call CBA_fnc_waitUntilAndExecute;
 
         // _mrk = createMarker [format["%1",_forEachIndex + (random 10000)],_x];
         // _mrk setMarkerType "mil_dot";
         // _mrk setMarkerColor "ColorUNKNOWN";
 
+        // wait until entire group is spawned before moving to next group
         sleep (SPAWN_DELAY * PAT_GRPSIZE);
     } forEach _positionsLand;
 
-    _count = (count _positionsWater) max 1;
-
     // ship patrols
     {
-        _grp = [_x,1,-1,EGVAR(main,enemySide),SPAWN_DELAY,SHIP_CARGO_COUNT] call EFUNC(main,spawnGroup);
+        _grp = [_x,1,-1,EGVAR(main,enemySide),SPAWN_DELAY,PAT_SHIP_CARGO] call EFUNC(main,spawnGroup);
 
         [
-            {(_this select 0) getVariable [QEGVAR(main,ready),false]},
+            {(_this select 1) getVariable [QEGVAR(main,ready),false]},
             {
-                params ["_grp","_value"];
-
-                [QGVAR(updateGroups),[_value,_grp]] call CBA_fnc_localEvent;
+                [QGVAR(updateGroups),_this] call CBA_fnc_localEvent;
 
                 // set group on patrol
-                [_grp,getPosATL leader _grp,1000,0] call EFUNC(main,taskPatrol);
+                [(_this select 1),getPosATL leader (_this select 1),1000,0] call EFUNC(main,taskPatrol);
 
-                // // infinite fuel
-                (objectParent leader _grp) addEventHandler ["Fuel",{if !(_this select 1) then {(_this select 0) setFuel 1}}];
+                // infinite fuel
+                (objectParent leader (_this select 1)) addEventHandler ["Fuel",{
+                    if !(_this select 1) then {(_this select 0) setFuel 1};
+                }];
             },
-            [_grp,_value],
-            (SPAWN_DELAY * _count) * 2
+            [_value,_grp],
+            (SPAWN_DELAY * ((count _positionsWater) max 1)) * 2
         ] call CBA_fnc_waitUntilAndExecute;
 
         // _mrk = createMarker [format["%1",_forEachIndex + (random 10000)],_x];
         // _mrk setMarkerType "mil_dot";
         // _mrk setMarkerColor "ColorBLUE";
 
-        sleep (SPAWN_DELAY * SHIP_CARGO_COUNT);
+        // wait until entire group is spawned before moving to next group
+        sleep (SPAWN_DELAY * PAT_SHIP_CARGO);
     } forEach _positionsWater;
 }] call CBA_fnc_hashEachPair;
 
