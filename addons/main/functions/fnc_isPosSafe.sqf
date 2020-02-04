@@ -40,7 +40,7 @@ if (_check isEqualType objNull) then {
     private _bb = 0 boundingBoxReal _bbObj;
 
     // get radius from object bounding box
-    _check = CHECK_COEF * ((_bbObj call FUNC(getObjectSize)) select 0);
+    _check = CHECK_COEF * (([_bbObj] call FUNC(getObjectSize)) select 0);
 };
 
 // cap radius at 50m
@@ -72,7 +72,7 @@ _objs = _objs select {
 
 // check if under surface
 private _insBegin = (AGLToASL _pos) vectorAdd [0,0,0.1];
-private _insEnd = (AGLToASL _pos) vectorAdd [0,0,(_bbObj call FUNC(getObjectSize)) select 1];
+private _insEnd = (AGLToASL _pos) vectorAdd [0,0,([_bbObj] call FUNC(getObjectSize)) select 1];
 private _z = lineIntersectsSurfaces [_insBegin,_insEnd,_ignore,objNull,true,1,"GEOM","NONE"] isEqualTo [];
 
 if (isNull _bbObj) exitWith {_z && {_objs isEqualTo []}};
