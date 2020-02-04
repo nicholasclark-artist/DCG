@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-get position offset using boundingBox center, necessary because object's pivot may not be at object's center
+get position offset using boundingBox center, necessary because object's pivot may not be at object's center, returns positionASL
 
 Arguments:
 0: position to offset <ARRAY>
@@ -19,9 +19,12 @@ params [
     ["_obj",objNull,[objNull]]
 ];
 
-// _pos vectorAdd ([_obj] call FUNC(getObjectCenter) vectorDiff (_obj worldToModel (getPosATL _obj)))
+private _ret = [];
+private _pivot = getPosASL _obj;
+private _center = _obj modelToWorld ([_obj] call FUNC(getObjectCenter)); 
 
-private _posObj = getPos _obj;
-private _posObjCenter = _obj modelToWorld ([_obj] call FUNC(getObjectCenter)); 
+// return object's original height 
+_ret = _pos getPos [_pivot distance2D _center,getDir _obj];
+_ret set [2,_pos select 2];
 
-_pos getPos [_posObj distance2D _posObjCenter,(getDir _obj)]
+_ret
