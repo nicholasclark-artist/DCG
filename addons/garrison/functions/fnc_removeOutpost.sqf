@@ -15,21 +15,30 @@ if !(isServer) exitWith {};
 
 params [
     ["_key","",[""]],
-    ["_value",locationNull,[locationNull]]
+    ["_force",false,[false]]
 ];
 
-// remove units and composition
-[QEGVAR(main,cleanup),_value getVariable [QGVAR(composition),[]]] call CBA_fnc_localEvent;
-[QEGVAR(main,cleanup),_value getVariable [QGVAR(groups),[]]] call CBA_fnc_localEvent;
+private _value = [GVAR(outposts),_key] call CBA_fnc_hashGet;
 
-// remove tasks
-[_value getVariable [QGVAR(task),""],true] call BIS_fnc_deleteTask;
+if (_force) then {
+    (_value getVariable [QGVAR(groups),[]]) call CBA_fnc_deleteEntity;
+    (_value getVariable [QGVAR(intel),objNull]) call CBA_fnc_deleteEntity;
+    [_value getVariable [QGVAR(task),""],true] call BIS_fnc_deleteTask;
+} else {
+    [QEGVAR(main,cleanup),_value getVariable [QGVAR(groups),[]]] call CBA_fnc_localEvent;
+    [QEGVAR(main,cleanup),_value getVariable [QGVAR(intel),objNull]] call CBA_fnc_localEvent;
+    [_value getVariable [QGVAR(task),""],"SUCCEEDED"] call BIS_fnc_taskSetState;
+};
 
-// remove intel
-[QEGVAR(main,cleanup),_value getVariable [QGVAR(intel),objNull]] call CBA_fnc_localEvent;
+// reset vars
+_value setVariable [QGVAR(status),0];
+_value setVariable [QGVAR(intelStatus),false];
+_value setVariable [QGVAR(intel),objNull];
+_value setVariable [QGVAR(task),""];
+_value setVariable [QGVAR(composition),[]];
+_value setVariable [QGVAR(nodes),[]];
+_value setVariable [QGVAR(groups),[]];
 
 INFO_1("removed outpost: %1",_key);
-
-_value call CBA_fnc_deleteEntity;
 
 nil

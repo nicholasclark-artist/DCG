@@ -59,10 +59,10 @@ private ["_key","_location","_polygon","_safe","_patrolPositions","_patrolCount"
         // _patrolPositions = [[_polygon,1] call EFUNC(main,polygonCenter),_spacing,_length] call EFUNC(main,findPosGrid);
         // _patrolPositions = _patrolPositions select {[_x select 0,_x select 1,0] inPolygon _polygon};
 
-        _location setVariable [QGVAR(status),1];
-        _location setVariable [QGVAR(name),call FUNC(getName)];
-        _location setVariable [QGVAR(task),""];
-        _location setVariable [QGVAR(groups),[]];
+        _location setVariable [QGVAR(status),1]; // 1 = active, 0 = inactive, < 0 = standby
+        _location setVariable [QGVAR(name),call FUNC(getName)]; // area alias
+        _location setVariable [QGVAR(task),""]; // task associated with area
+        _location setVariable [QGVAR(groups),[]]; // groups assigned to area
         // _location setVariable [QGVAR(patrolPositions),_patrolPositions];
 
         // setup area hash

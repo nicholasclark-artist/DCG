@@ -129,6 +129,9 @@ private ["_position","_unitCount","_unitCountBuildings","_unitCountPatrol","_pos
         _intel setDir (random 360);
         [_intel,_intelPos] call EFUNC(main,setPosSafe);
 
+        // remove any default intel actions
+        removeAllActions _intel;
+
         if (isNull GVAR(intel)) then {
             GVAR(intel) = _intel;
         };
@@ -144,7 +147,7 @@ private ["_position","_unitCount","_unitCountBuildings","_unitCountPatrol","_pos
         {
             params ["_intel"];
 
-            [_intel, "Gather Intel", "\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_search_ca.paa", "\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_hack_ca.paa", "true", "true", {}, {}, {[QGVAR(intel),[_this select 0,_this select 1]] call CBA_fnc_serverEvent}, {}, [], 5, 100, true, false, true] call BIS_fnc_holdActionAdd;
+            [_intel, "Gather Intel", "\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_search_ca.paa", "\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_hack_ca.paa", "true", "true", {}, {}, {[QGVAR(intel),[_this select 0]] call CBA_fnc_serverEvent}, {}, [], 5, 100, true, false, true] call BIS_fnc_holdActionAdd;
         }
     ] remoteExecCall [QUOTE(call),0,GVAR(intel)];
 
@@ -153,6 +156,8 @@ private ["_position","_unitCount","_unitCountBuildings","_unitCountPatrol","_pos
     _value setVariable [QGVAR(nodes),_composition select 1];
     _value setVariable [QGVAR(composition),_composition select 2];
     _value setVariable [QGVAR(intel),_intel];
+
+    _intel setVariable [QGVAR(intelKey),_key];
 }] call CBA_fnc_hashEachPair;
 
 nil

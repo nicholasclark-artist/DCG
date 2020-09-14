@@ -34,11 +34,11 @@ if (!isServer) exitWith {};
 
     // runs once intel gathered
     [QGVAR(intel),{
-        params ["_intel","_player"];
+        params ["_intel"];
 
         private _type = parseNumber (_intel isEqualTo GVAR(intel));
 
-        [_intel,_player,_type] call FUNC(handleIntel);
+        [_intel,_type] call FUNC(handleIntel);
     }] call CBA_fnc_addEventHandler;
 
     [FUNC(init),[],10] call CBA_fnc_waitAndExecute;

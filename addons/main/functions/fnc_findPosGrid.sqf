@@ -59,12 +59,12 @@ if (_distObj > 0 || {_water > -1}) then {
     _ret = _ret select {[_x,_distObj,_water] call FUNC(isPosSafe)};
 };
 
-{
-    _mrk = createMarker [format["%1_grid_%2",QUOTE(PREFIX),diag_frameNo + _forEachIndex],_x];
-    _mrk setMarkerType "mil_dot";
-    _mrk setMarkerColor "ColorUNKNOWN";
-    _mrk setMarkerText format["%1",_forEachIndex];
-} forEach _ret;
+// {
+//     _mrk = createMarker [format["%1_grid_%2",QUOTE(PREFIX),diag_frameNo + _forEachIndex],_x];
+//     _mrk setMarkerType "mil_dot";
+//     _mrk setMarkerColor "ColorUNKNOWN";
+//     _mrk setMarkerText format["%1",_forEachIndex];
+// } forEach _ret;
 
 if (_shuffle) then {
     _ret = _ret call BIS_fnc_arrayShuffle;

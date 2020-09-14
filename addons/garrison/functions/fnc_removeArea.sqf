@@ -16,30 +16,36 @@ if !(isServer) exitWith {};
 
 params [
     ["_key","",[""]],
-    ["_value",locationNull,[locationNull]]
+    ["_force",false,[false]]
 ];
 
-// remove units
-[QEGVAR(main,cleanup),_value getVariable [QGVAR(groups),[]]] call CBA_fnc_localEvent;
+private _value = [GVAR(areas),_key] call CBA_fnc_hashGet;
 
-// remove map polygons
+if (_force) then {
+    (_value getVariable [QGVAR(groups),[]]) call CBA_fnc_deleteEntity;
+    [_value getVariable [QGVAR(task),""],true] call BIS_fnc_deleteTask;
+} else {
+    [QEGVAR(main,cleanup),_value getVariable [QGVAR(groups),[]]] call CBA_fnc_localEvent;
+    [_value getVariable [QGVAR(task),""],"SUCCEEDED"] call BIS_fnc_taskSetState;
+};
+
+// remove map polygon
 [
-    [],
+    _key,
     {
         {
             (findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["Draw",_x];
-        } forEach GVAR(polygonDraw);
+        } forEach (missionNamespace getVariable [AO_POLY_ID(_this),""]);
     }
 ] remoteExecCall [QUOTE(call),0,false];
 
-// remove tasks
-[_value getVariable [QGVAR(task),""],true] call BIS_fnc_deleteTask;
-
-// reset score
+// reset vars
 GVAR(score) = 0;
 
-INFO_1("removed area: %1",_key);
+_value setVariable [QGVAR(status),0];
+_value setVariable [QGVAR(task),""];
+_value setVariable [QGVAR(groups),[]];
 
-_value call CBA_fnc_deleteEntity;
+INFO_1("removed area: %1",_key);
 
 nil

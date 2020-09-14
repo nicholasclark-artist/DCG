@@ -16,8 +16,8 @@ __________________________________________________________________*/
 private ["_location","_polygon","_length","_spacing","_positions","_positionsLand","_positionsWater","_grp"];
 
 [GVAR(areas),{
-    _location = [EGVAR(main,locations),_key] call CBA_fnc_hashGet;
-    _polygon = _location getVariable [QEGVAR(main,polygon),[]];
+    // _location = [EGVAR(main,locations),_key] call CBA_fnc_hashGet;
+    _polygon = _value getVariable [QEGVAR(main,polygon),[]];
 
     // get patrol spawn positions
     _length = [_polygon] call EFUNC(main,polygonLength);

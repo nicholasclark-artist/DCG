@@ -8,7 +8,6 @@ PREINIT;
 
 PREP(init);
 PREP(initSettings);
-PREP(handleArea);
 PREP(handleIntel);
 PREP(handlePatrol);
 PREP(setArea);

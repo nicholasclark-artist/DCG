@@ -8,6 +8,8 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
+#define AO_POLY_ID(id) ([QUOTE(PREFIX),"polygonDraw",id] joinString "_")
+
 #define AO_COUNT_P1 2 // phase 1
 #define AO_COUNT_P2 1 // phase 2
 #define GAR_COUNT 1
