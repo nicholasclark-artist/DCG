@@ -31,23 +31,23 @@ params [
 
 private _ret = [];
 
-// get origin in bottom left corner 
-private _pointO = [(_center select 0) - (_length*0.5),(_center select 1) - (_length*0.5)];
+// get origin in bottom left corner
+private _pO = [(_center select 0) - (_length*0.5),(_center select 1) - (_length*0.5)];
 
 // number of points to generate length-wise
 private _count = floor (_length/_spacing);
 
-private ["_pointY","_pointX","_mrk"];
+private ["_pY","_pX","_mrk"];
 
 // generate columns
 for "_i" from 0 to _count do {
-    _pointY = [_pointO select 0,(_pointO select 1) + (_spacing * _i)];
-    _ret pushBack _pointY;
+    _pY = [_pO select 0,(_pO select 1) + (_spacing * _i)];
+    _ret pushBack _pY;
 
     // generate rows
     for "_i" from 1 to _count do {
-        _pointX = [(_pointY select 0) + (_spacing * _i),_pointY select 1];
-        _ret pushBack _pointX;
+        _pX = [(_pY select 0) + (_spacing * _i),_pY select 1];
+        _ret pushBack _pX;
     };
 };
 
@@ -59,15 +59,15 @@ if (_distObj > 0 || {_water > -1}) then {
     _ret = _ret select {[_x,_distObj,_water] call FUNC(isPosSafe)};
 };
 
-// {
-//     _mrk = createMarker [format["%1_grid_%2",QUOTE(PREFIX),diag_frameNo + _forEachIndex],_x];
-//     _mrk setMarkerType "mil_dot";
-//     _mrk setMarkerColor "ColorUNKNOWN";
-//     _mrk setMarkerText format["%1",_forEachIndex];
-// } forEach _ret;
+{
+    _mrk = createMarker [format["%1_grid_%2",QUOTE(PREFIX),diag_frameNo + _forEachIndex],_x];
+    _mrk setMarkerType "mil_dot";
+    _mrk setMarkerColor "ColorUNKNOWN";
+    _mrk setMarkerText format["%1",_forEachIndex];
+} forEach _ret;
 
 if (_shuffle) then {
     _ret = _ret call BIS_fnc_arrayShuffle;
-}; 
+};
 
 _ret

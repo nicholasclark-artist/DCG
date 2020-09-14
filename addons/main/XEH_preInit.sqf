@@ -24,11 +24,13 @@ PREP(findPosGrid);
 PREP(findPosSafe);
 PREP(findPosTerrain);
 PREP(findPosRoadside);
+PREP(findPosDriveby);
 PREP(inBoundingBox);
 PREP(inBuilding);
 PREP(inLOS);
 PREP(inSafezones);
 PREP(isPosSafe);
+PREP(getTargetPlayer);
 PREP(getDirCardinal);
 PREP(getAnimModelData);
 PREP(getNearPlayers);
@@ -124,14 +126,14 @@ PREP_VOR(removeParabola);
 PREP_VOR(finishEdge);
 PREP_VOR(checkCircle);
 
-// headless client variables 
+// headless client variables
 GVAR(HC) = objNull;
 
-// settings variables 
+// settings variables
 GVAR(settingsInitFinished) = false;
 GVAR(runAtSettingsInitialized) = [];
 
-// eventhandlers 
+// eventhandlers
 ["CBA_settingsInitialized",{
     INFO("Settings initialized");
 
@@ -144,16 +146,16 @@ GVAR(runAtSettingsInitialized) = [];
 
         // handle delayed functions,useful for functions that are not called from pre/post init scripts
         INFO_1("%1 delayed functions running",count GVAR(runAtSettingsInitialized));
-        
+
         {
             (_x select 1) call (_x select 0);
         } forEach GVAR(runAtSettingsInitialized);
-        
+
         GVAR(runAtSettingsInitialized) = nil;
     };
 }] call CBA_fnc_addEventHandler;
 
-// headless client exit 
+// headless client exit
 if (!isServer) exitWith {};
 
 [QGVAR(HCConnected),FUNC(handleHCConnected)] call CBA_fnc_addEventHandler;
@@ -169,16 +171,18 @@ GVAR(marines) = [];
 GVAR(radius) = worldSize*0.5;
 GVAR(center) = [GVAR(radius),GVAR(radius)];
 GVAR(center) set [2,ASLZ(GVAR(center))];
-GVAR(grid) = [GVAR(center),worldSize/round(worldSize/1000),worldSize,0,0,0] call FUNC(findPosGrid);
+
+// a grid of safe terrain positions used to dynamically spawn objects mid mission
+GVAR(grid) = [GVAR(center),worldSize/round(worldSize/1000),worldSize,0,2,0] call FUNC(findPosGrid);
 
 // debug variables
 GVAR(debug) = false;
 GVAR(debugMarkers) = [];
 
-// save system variables 
+// save system variables
 GVAR(saveDataScenario) = [];
 
-// safezone variables 
+// safezone variables
 GVAR(safezoneMarkers) = [];
 GVAR(safezoneTriggers) = [];
 
@@ -205,7 +209,7 @@ GVAR(unitsCiv) = [];
 GVAR(vehiclesCiv) = [];
 GVAR(aircraftCiv) = [];
 GVAR(shipsCiv) = [];
-GVAR(officersCiv) = []; 
+GVAR(officersCiv) = [];
 
 // functions required on all machines
 publicVariable QFUNC(setAnim);

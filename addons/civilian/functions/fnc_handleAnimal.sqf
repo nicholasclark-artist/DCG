@@ -24,12 +24,11 @@ private _expressions = [
     [EX_HILL + "* (1 - houses * 2)",["Goat_random_F"]]
 ];
 
-// get player to spawn animals around
-private _player = selectRandom (call CBA_fnc_players);
+private _player = call EFUNC(main,getTargetPlayer);
 
-if (isNil "_player") exitWith {};
-
-if ([_player] call EFUNC(main,inSafezones)) exitWith {};
+if (isNull _player) exitWith {
+    WARNING("cannot find target player for animals");
+};
 
 private _position = getPosATL _player;
 
@@ -46,7 +45,7 @@ private ["_place"];
 // get place with highest value
 _place = [[[],0],[]];
 
-{   
+{
     if (_x select 0 select 1 > _place select 0 select 1) then {
         _place = _x;
     };

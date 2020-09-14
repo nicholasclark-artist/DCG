@@ -12,21 +12,18 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private _players = call CBA_fnc_players;
+private _player = call EFUNC(main,getTargetPlayer);
 
-if !(_players isEqualTo []) then {
-    private _player = selectRandom _players;
-    private _pos = getPosATL _player;
+if (isNull _player) exitWith {
+    WARNING("cannot find target player for hostile civilian");
+};
 
-    if (alive _player && {(_pos select 2) < 20} && {!([_pos] call EFUNC(main,inSafezones))}) then {
-        // convert approval value to hostile probability
-        if (PROBABILITY(AP_CONVERT2(_pos))) then {
-            private _ret = [_player] call FUNC(spawnHostile);
+// convert approval value to hostile probability
+if (PROBABILITY(AP_CONVERT2(getPosATL _player))) then {
+    private _ret = [_player] call FUNC(spawnHostile);
 
-            if (GVAR(hostileHint) && {_ret}) then {
-                ["Aerial recon shows hostile civilian activity in your region!",true] remoteExecCall [QEFUNC(main,displayText),allPlayers,false];
-            };
-        };
+    if (GVAR(hostileHint) && {_ret}) then {
+        ["Aerial recon shows hostile civilian activity in your region!",true] remoteExecCall [QEFUNC(main,displayText),allPlayers,false];
     };
 };
 

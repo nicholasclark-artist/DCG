@@ -25,9 +25,6 @@ params [
     ["_patrol",0.1,[0]]
 ];
 
-// {deleteVehicle _x} forEach arrows;
-// arrows = [];
-
 if !(local _group) exitWith {false};
 
 // clear existing waypoints
@@ -41,14 +38,19 @@ if !(local _group) exitWith {false};
 private _statics = _position nearObjects ["StaticWeapon",_radius];
 private _buildings = _position nearObjects ["House",_radius];
 
-// Filter out occupied statics
+// filter out occupied statics
 _statics = _statics select {!((locked _x) isEqualTo 2) && {(_x emptyPositions "Gunner") > 0}}; 
 
-// Filter out buildings below the size threshold (and store positions for later use)
-private ["_positions"];
+// filter out buildings below the size threshold (and store positions for later use)
+private ["_positions","_exit"];
 
 _buildings = _buildings select {
     _positions = _x buildingPos -1;
+    _exit = _x buildingExit 0;
+
+    if !(_exit isEqualTo [0,0,0]) then {
+        _positions pushBack _exit;
+    };
 
     if (isNil {_x getVariable "CBA_taskDefend_positions"}) then {
         _x setVariable ["CBA_taskDefend_positions",_positions];
@@ -57,18 +59,19 @@ _buildings = _buildings select {
     count _positions >= 1
 };
 
-// If patrolling is enabled then the leader must be free to lead it
+// if patrolling is enabled then the leader must be free to lead it
 private _units = units _group;
 if (_patrol > 0 && {count _units > 1}) then {
     _units deleteAt (_units find (leader _group));
 };
 
-private ["_building","_buildingPositions","_pos"];
+private ["_building","_buildingPositions","_pos","_static"];
 {
     // 31% chance to occupy nearest free static weapon
     if (PROBABILITY(0.31) && {!(_statics isEqualto [])}) then {
-        _x assignAsGunner (_statics deleteAt 0);
-        [_x] orderGetIn true;
+        _static = _statics deleteAt 0;
+        _x assignAsGunner _static;
+        _x moveInGunner _static;
     } else {
         if (!(_buildings isEqualto []) && {!(PROBABILITY(_patrol))}) then {
             _building = selectRandom _buildings;
@@ -77,8 +80,7 @@ private ["_building","_buildingPositions","_pos"];
             if !(_buildingPositions isEqualTo []) then {
                 _pos = _buildingPositions deleteAt (floor (random (count _buildingPositions)));
                 
-                // @todo CBA_taskDefend_positions isn't being updated correctly, multiple units taking same position
-                // If building positions are all taken remove from possible buildings
+                // if building positions are all taken remove from possible buildings
                 if (_buildingPositions isEqualTo []) then {
                     _buildings deleteAt (_buildings find _building);
                     _building setVariable ["CBA_taskDefend_positions",nil];
@@ -86,32 +88,17 @@ private ["_building","_buildingPositions","_pos"];
                     _building setVariable ["CBA_taskDefend_positions",_buildingPositions];
                 };
 
-                _x setVariable [QGVAR(taskDefend_pos),_pos];
-
-                // Wait until AI is in position then force them to stay
                 [_x,_pos] spawn {
                     params ["_unit","_pos"];
 
-                    // _arrow = createVehicle ["Sign_Arrow_F",_pos,[],0,"CAN_COLLIDE"];
-                    // _arrow setPos _pos;
-                    // arrows pushBack _arrow;
-
-                    if (surfaceIsWater _pos) exitwith {};
-
-                    _unit doMove _pos;
-        
-                    waitUntil {unitReady _unit};
-
-                    // snap units into position if necessary
-                    if !(CHECK_DIST(_unit,_pos,1.5)) then {
-                        _unit setPosATL _pos;
-                    };
+                    _unit setPosATL _pos;
 
                     doStop _unit;
 
-                    // This command causes AI to repeatedly attempt to crouch when engaged
-                    // If ever fixed by BI then consider uncommenting
                     _unit setUnitPos "UP";
+                    
+                    // spread out network traffic caused by setPos
+                    sleep 0.1;
 
                     if !(leader group _unit isEqualTo _unit) exitwith {};
 
@@ -141,7 +128,7 @@ private ["_building","_buildingPositions","_pos"];
     };
 } forEach _units;
 
-// Unassigned (or combat reacted) units will patrol
-[_group,_position,_radius,0,"if (0.15 > random 1) then {this spawn CBA_fnc_searchNearby}"] call FUNC(taskPatrol);
+// unassigned (or combat reacted) units will patrol
+[_group,_position,_radius,0] call FUNC(taskPatrol);
 
 true

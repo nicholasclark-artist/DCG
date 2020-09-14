@@ -6,7 +6,7 @@ __________________________________________________________________*/
 
 POSTINIT;
 
-// headless client exit 
+// headless client exit
 if (!isServer) exitWith {};
 
 ["CBA_settingsInitialized",{

@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-initialize garrison addon 
+initialize garrison addon
 
 Arguments:
 0: data loaded from server profile <ARRAY>
@@ -39,10 +39,10 @@ if !(_outpost) exitWith {
     REINIT;
 };
 
-[] spawn FUNC(spawnArea); 
+[] spawn FUNC(spawnArea);
 [] spawn FUNC(spawnOutpost);
 
-// draw ao on map 
+// draw ao on map
 private _polygons = [];
 
 [GVAR(areas),{
@@ -54,14 +54,18 @@ private _polygons = [];
     {
         {
             [_x,[EGVAR(main,enemySide),false] call BIS_fnc_sideColor,"\A3\ui_f\data\map\markerbrushes\bdiagonal_ca.paa",true,findDisplay 12 displayCtrl 51,QGVAR(polygonDraw)] call EFUNC(main,polygonFill);
-        } forEach (_this select 0); 
+        } forEach (_this select 0);
     }
 ] remoteExecCall [QUOTE(call),0,false];
 
-// set tasks 
+// set tasks
 call FUNC(setTask);
 
-// run handler
+// run handlers
+[{
+    [FUNC(handlePatrol),300,[]] call CBA_fnc_addPerFrameHandler;
+},[],60] call CBA_fnc_waitAndExecute;
+
 // [FUNC(handleArea),30] call CBA_fnc_addPerFrameHandler;
 
 nil

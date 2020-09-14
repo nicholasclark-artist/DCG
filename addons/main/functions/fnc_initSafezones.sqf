@@ -30,8 +30,7 @@ if !(toUpper markerShape _marker in ["RECTANGLE","ELLIPSE"]) then {
     _marker setMarkerShape "ELLIPSE";
 };
 
-_marker setMarkerColor ([GVAR(playerSide),true] call BIS_fnc_sideColor); 
-_marker setMarkerAlpha 0;
+_marker setMarkerColor ([GVAR(playerSide),true] call BIS_fnc_sideColor);
 
 private _act = format ["
     {
@@ -43,11 +42,14 @@ private _act = format ["
 
 _trg = createTrigger ["EmptyDetector",getMarkerPos _marker];
 _trg setTriggerActivation [format["%1",GVAR(enemySide)],"PRESENT",true];
-_trg setTriggerStatements ["this",_act,""];  
+_trg setTriggerStatements ["this",_act,""];
 _trg setTriggerArea [(getMarkerSize _marker) select 0,(getMarkerSize _marker) select 1,markerDir _marker,COMPARE_STR(markerShape _marker,"RECTANGLE")];
 
 GVAR(safezoneTriggers) pushBack _trg;
 GVAR(safezoneMarkers) pushBack _marker;
+
+// refresh marker display setting
+["cba_settings_refreshSetting", QGVAR(safezoneMarkersDisplay)] call CBA_fnc_localEvent;
 
 TRACE_1("",GVAR(safezoneTriggers));
 

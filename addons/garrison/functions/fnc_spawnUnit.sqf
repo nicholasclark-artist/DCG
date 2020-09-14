@@ -22,9 +22,9 @@ params [
     ["_ao",locationNull,[locationNull]]
 ];
 
-// get variables 
+// get variables
 private _radius = _location getVariable [QGVAR(radius),0];
-private _position =+ (_location getVariable [QGVAR(positionASL),DEFAULT_SPAWNPOS]); 
+private _position =+ (_location getVariable [QGVAR(positionASL),DEFAULT_SPAWNPOS]);
 _position set [2,0];
 
 private _count = 0;
@@ -60,34 +60,33 @@ private _type = "";
 // PATROLS
 
 // get patrol spawn position in safe area around composition
-// private _posPatrol = [_position,_radius + 10,_radius + 50,2,0,-1,[0,360],_position getPos [_radius + 20,random 360]] call EFUNC(main,findPosSafe);
+private _posPatrol = [_position,_radius + 10,_radius + 50,2,0,-1,[0,360],_position getPos [_radius + 20,random 360]] call EFUNC(main,findPosSafe);
 
 // // spawn infantry patrols, patrols will navigate outpost exterior and investigate nearby buildings
-// private _countPatrol = ceil (_count * 0.65);
+private _countPatrol = ceil (_count * 0.65);
 
-// private ["_grp"];
+private ["_grp"];
 
-// for "_i" from 1 to floor (1 max (_countPatrol / PAT_GRPSIZE)) do {
-//     _grp = [_posPatrol,0,PAT_GRPSIZE,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup);
+for "_i" from 1 to floor (1 max (_countPatrol / PAT_GRPSIZE)) do {
+    _grp = [_posPatrol,0,PAT_GRPSIZE,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
-//     [
-//         {(_this select 0) getVariable [QEGVAR(main,ready),false]},
-//         {
-//             params ["_grp","_location"];
+    [
+        {(_this select 0) getVariable [QEGVAR(main,ready),false]},
+        {
+            params ["_grp","_location"];
 
-//             [QGVAR(updateGroups),[_location,_grp]] call CBA_fnc_localEvent;
+            [QGVAR(updateGroups),[_location,_grp]] call CBA_fnc_localEvent;
 
-//             // set group on patrol
-//             [_grp,getPos _location,random [100,200,500],1,"if (0.15 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,taskPatrol);
-//         },
-//         [_grp,_location],
-//         (SPAWN_DELAY * _countPatrol) * 2
-//     ] call CBA_fnc_waitUntilAndExecute;
-// };
+            [_grp,getPos _location,random [100,200,300],1,"if (0.15 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,taskPatrol);
+        },
+        [_grp,_location],
+        (SPAWN_DELAY * _countPatrol) * 2
+    ] call CBA_fnc_waitUntilAndExecute;
+};
 
 // BUILDING INFANTRY
 
-// spawn building infantry, units will garrison buildings 
+// spawn building infantry, units will garrison buildings
 private _countBuildings = floor (_count * 0.35);
 
 for "_i" from 1 to floor (1 max (_countBuildings / PAT_GRPSIZE)) do {
@@ -97,10 +96,9 @@ for "_i" from 1 to floor (1 max (_countBuildings / PAT_GRPSIZE)) do {
         {(_this select 0) getVariable [QEGVAR(main,ready),false]},
         {
             params ["_grp","_location","_radius"];
-            
+
             [QGVAR(updateGroups),[_location,_grp]] call CBA_fnc_localEvent;
 
-            // set group to defend composition
             [_grp,getPos _location,_radius,0] call EFUNC(main,taskDefend);
         },
         [_grp,_location,_radius],

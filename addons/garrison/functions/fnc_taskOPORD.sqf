@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-format task title and description into operation order (OPORD) 
+format task title and description into operation order (OPORD)
 ref: https://semo.edu/pdf/showmegold-lab_opRedhawk.pdf
 
 Arguments:
@@ -30,17 +30,17 @@ private _OPORD = [];
 private _isArea = [GVAR(areas),_location getVariable [QEGVAR(main,name),""]] call CBA_fnc_hashHasKey;
 
 private _para1 = if (_isArea) then {
-    // get area orientation 
+    // get area orientation
     private _center = [_location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON],1] call EFUNC(main,polygonCenter);
     private _orientation = if (CHECK_DIST2D(_center,EGVAR(main,center),EGVAR(main,radius) * 0.2)) then {
         "central"
     } else {
         [[EGVAR(main,center) getDir (getPos _location)] call EFUNC(main,getDirCardinal),"ern"] joinString ""
     };
-    
+
     // get area km²
     private _A = parseNumber (([_location getVariable [QEGVAR(main,polygon),[]]] call EFUNC(main,polygonArea)) toFixed 1);
- 
+
     // get area elevation
     private _elevation = 0;
     private _elevations =+ (_location getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]);
@@ -49,11 +49,11 @@ private _para1 = if (_isArea) then {
 
     {
         _elevation = _elevation + _x;
-    } forEach _elevations;    
+    } forEach _elevations;
 
     _elevation = round (_elevation / (count _elevations));
 
-    // get area weather 
+    // get area weather
     private _weather = if (CHECK_ADDON_2(weather)) then {
         format ["%1°C high, %2°C low, %3%4 chance of precipitation.",EGVAR(weather,temperatureDay),EGVAR(weather,temperatureNight),parseNumber (EGVAR(weather,precipitation) toFixed 2) * 100,"%"]
     } else {
@@ -128,12 +128,12 @@ private _para4 = if !(_sustainment isEqualTo []) then {
         format ["%1%1%1j. Class X - Misc. supplies - %2",TAB,_sustainmentFormatted select 9],
         format ["%1b. Personnel.",TAB],
         format ["%1%1 1. Transport - %2",TAB,_transport]
-    ] joinString NEWLINE; 
+    ] joinString NEWLINE;
 } else {
     ""
 };
 
-// format paragraph order 
+// format paragraph order
 {
     if !(_x isEqualTo "") then {
         private _formatted = [(count _OPORD) + 1,_x] joinString ". ";

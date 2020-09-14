@@ -47,7 +47,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
     _location = locationNull;
 
     call {
-        if (toLower _type in _typeLocations) exitWith { 
+        if (toLower _type in _typeLocations) exitWith {
             if (!COMPARE_STR(_name,"") && {!([_position] call FUNC(inSafezones))}) then {
                 // get config city center positions if available
                 _nameNoSpace = _name splitString " " joinString "";
@@ -61,13 +61,13 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                 if (isClass _cityCenterA3) then {
                     _position = getArray (_cityCenterA3 >> "position");
                     _position set [2,ASLZ(_position)];
-                }; 
+                };
 
                 // check if config position is safe
                 if !([ASLtoAGL _position,SAFE_DIST,0] call FUNC(isPosSafe)) then {
                     // find new safe position
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
-                    
+
                     if !(_positionSafe isEqualTo _position) then {
                         _position = _positionSafe;
                     } else {
@@ -75,7 +75,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                         WARNING_1("removing location. unsafe position: %1",_name);
                     };
                 };
-                
+
                 // get accurate radius from building density
                 if (_check) then {
                     _radius = [_position] call FUNC(findLocationRadius);
@@ -107,7 +107,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                 if !([ASLtoAGL _position,SAFE_DIST,0] call FUNC(isPosSafe)) then {
                     // find new safe position
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
-                    
+
                     if !(_positionSafe isEqualTo _position) then {
                         _position = _positionSafe;
                     } else {
@@ -138,7 +138,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                 if !([ASLtoAGL _position,SAFE_DIST,0] call FUNC(isPosSafe)) then {
                     // find new safe position
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,0,-1,[0,360],_position] call FUNC(findPosSafe);
-                    
+
                     if !(_positionSafe isEqualTo _position) then {
                         _position = _positionSafe;
                     } else {
@@ -168,7 +168,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
                 if !([ASLtoAGL _position,SAFE_DIST,2] call FUNC(isPosSafe)) then {
                     // find new safe position
                     _positionSafe = [_position,0,SAFE_RADIUS,SAFE_DIST,2,-1,[0,360],_position] call FUNC(findPosSafe);
-                    
+
                     if !(_positionSafe isEqualTo _position) then {
                         _position = _positionSafe;
                     } else {
@@ -195,7 +195,7 @@ for "_i" from 0 to (count _cfgLocations) - 1 do {
     };
 };
 
-// remove unsafe positions 
+// remove unsafe positions
 GVAR(locations) = GVAR(locations) select {!(isNull (_x select INDEX_VALUE))};
 GVAR(locals) = GVAR(locals) select {!(isNull (_x select INDEX_VALUE))};
 GVAR(hills) = GVAR(hills) select {!(isNull (_x select INDEX_VALUE))};
@@ -290,7 +290,7 @@ private _fnc_voronoi = {
         // get locations to the left and right of voronoi edge
         _locationL = [(nearestLocations [_x select 2,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 2) isEqualTo objNull);
         _locationR = [(nearestLocations [_x select 3,_typeLocations,VORONOI_SEARCH_RADIUS]) select 0,locationNull] select ((_x select 3) isEqualTo objNull);
-        
+
         // get name's of locations,same as hash key
         _keyL = text _locationL;
         _keyR = text _locationR;

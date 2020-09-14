@@ -12,12 +12,15 @@ Return:
 boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define SCOPE QGVAR(inSafezones)
 
 params [
     ["_entity",objNull,[objNull,grpNull,locationNull,"",[]]]
 ];
 
-// @todo optimize array case 
+scopeName SCOPE;
+
+// @todo optimize array case
 switch (typeName _entity) do {
     case "ARRAY" : {
         if ((_entity select 0) isEqualType 0) then {
@@ -25,29 +28,31 @@ switch (typeName _entity) do {
         };
 
         {
-            private ["_ret"];
-            private _entity = _x;
-            
-            if !(_entity isEqualType []) then {
-                _ret = [_entity] call FUNC(inSafezones);
+            private ["_inSafezone", "_currentEntity"];
+            _currentEntity = _x;
+
+            if !(_currentEntity isEqualType []) then {
+                _inSafezone = [_currentEntity] call FUNC(inSafezones);
             } else {
-                _ret = (GVAR(safezoneTriggers) findIf {_entity inArea _x}) > -1
+                _inSafezone = GVAR(safezoneTriggers) findIf {_currentEntity inArea _x} > -1
             };
 
-            [false,true] select _ret;
+            if (_inSafezone) exitWith {true breakOut SCOPE};
         } forEach _entity;
+
+        false
     };
     case "OBJECT" : {
-        (GVAR(safezoneTriggers) findIf {_entity inArea _x}) > -1
+        GVAR(safezoneTriggers) findIf {_entity inArea _x} > -1
     };
     case "GROUP" : {
-        (GVAR(safezoneTriggers) findIf {getPos leader _entity inArea _x}) > -1  
+        GVAR(safezoneTriggers) findIf {getPos leader _entity inArea _x} > -1
     };
     case "LOCATION" : {
-        (GVAR(safezoneTriggers) findIf {locationPosition _entity inArea _x}) > -1
+        GVAR(safezoneTriggers) findIf {locationPosition _entity inArea _x} > -1
     };
     case "STRING" : {
-        (GVAR(safezoneTriggers) findIf {getMarkerPos _entity inArea _x}) > -1 
+        GVAR(safezoneTriggers) findIf {getMarkerPos _entity inArea _x} > -1
     };
-    default {};
+    default {false};
 };

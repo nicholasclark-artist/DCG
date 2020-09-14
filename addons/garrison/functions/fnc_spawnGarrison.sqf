@@ -19,14 +19,11 @@ __________________________________________________________________*/
 #define AIR_COUNT_CITY 1
 #define AIR_COUNT_CAP 1
 
-// define scope to break hash loop
 scopeName SCOPE;
 
 [GVAR(garrisons),{
-    // ao location
     private _ao = [GVAR(areas),_key] call CBA_fnc_hashGet;
 
-    // garrison settings
     private _radius = _value getVariable [QGVAR(radius),0];
     private _prefabCount = 0;
     private _prefabObjects = [];
@@ -44,15 +41,14 @@ scopeName SCOPE;
         };
     };
 
-    // simplify outpost position 
-    private _pos =+ (_value getVariable [QGVAR(positionASL),DEFAULT_SPAWNPOS]); 
+    private _pos =+ (_value getVariable [QGVAR(positionASL),DEFAULT_SPAWNPOS]);
     _pos resize 2;
 
     // set blacklists
     EGVAR(civilian,blacklist) pushBack (_ao getVariable [QEGVAR(main,name),""]);
     EGVAR(patrol,blacklist) pushBack [_pos,_radius];
 
-    // destroy buildings
+    // make area look destroyed
     private _buildings = _pos nearObjects ["House",_radius];
 
     if !(_buildings isEqualTo []) then {
@@ -88,15 +84,13 @@ scopeName SCOPE;
             if !(_pos isEqualTo []) then {
                 _prefab = [_pos,"sup_vehicle",_road getRelDir ((roadsConnectedTo _road) select 0),true] call EFUNC(main,spawnComposition);
                 _prefabObjects append (_prefab select 2);
-            };             
+            };
         };
     };
 
-    // save reference to all prefab objects in location
     _value setVariable [QGVAR(prefabs),_prefabObjects];
 
-    // spawn infantry
-    // [_value,_ao] call FUNC(spawnUnit);
+    [_value,_ao] call FUNC(spawnUnit);
 }] call CBA_fnc_hashEachPair;
 
 nil

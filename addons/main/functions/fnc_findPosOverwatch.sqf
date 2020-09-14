@@ -18,15 +18,14 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    "_pos",
+    ["_pos",[],[[]]],
     ["_count",4,[0]],
     ["_min",300,[0]],
     ["_max",1000,[0]],
     ["_height",50,[0]]
 ];
 
-_pos set [2,ASLZ(_pos)];
-
+// @todo fix broken positionASL checks
 private _ret = [];
 private _posArray = [_pos,75,_max,_min,4] call EFUNC(main,findPosGrid);
 

@@ -11,6 +11,7 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define CATEGORY_DYNPAT [COMPONENT_NAME,"Dynamic Patrols"]
 
 [
     QGVAR(enable),
@@ -48,6 +49,32 @@ __________________________________________________________________*/
         10,
         5,
         0
+    ],
+    true,
+    {}
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(enableExternalPatrols),
+    "CHECKBOX",
+    ["External Patrols","Enable dynamic patrols outside areas of operation."],
+    CATEGORY_DYNPAT,
+    false,
+    true,
+    {},
+    true
+] call CBA_Settings_fnc_init;
+
+[
+    QGVAR(vehicleProbability),
+    "SLIDER",
+    ["Vehicle Probability","Probability of dynamic patrol being a vehicle unit."],
+    CATEGORY_DYNPAT,
+    [
+        0,
+        1,
+        0.25,
+        2
     ],
     true,
     {}

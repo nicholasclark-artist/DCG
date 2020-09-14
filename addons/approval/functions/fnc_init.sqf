@@ -22,7 +22,7 @@ private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
 [EGVAR(main,locations),{
     // get approval value from saved data
     if !(_data isEqualTo []) then {
-        // _index = ([GVAR(regions)] call CBA_fnc_hashKeys) find _key; 
+        // _index = ([GVAR(regions)] call CBA_fnc_hashKeys) find _key;
         // _dataKey = (_data select _index select 0);
 
         // // data key and region key must be the same
@@ -45,8 +45,8 @@ private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
 }] call CBA_fnc_hashEachPair;
 
 // start hostile handler after one cooldown cycle
-[{
-    [FUNC(handleHostile),GVAR(hostileCooldown),[]] call CBA_fnc_addPerFrameHandler;
-},[],GVAR(hostileCooldown)] call CBA_fnc_waitAndExecute;
+// [{
+//     [FUNC(handleHostile),GVAR(hostileCooldown),[]] call CBA_fnc_addPerFrameHandler;
+// },[],GVAR(hostileCooldown)] call CBA_fnc_waitAndExecute;
 
 nil

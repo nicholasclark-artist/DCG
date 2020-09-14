@@ -53,11 +53,11 @@ __________________________________________________________________*/
 
     {
         _agent = _x;
-        
+
         // reset moveToCompleted on first cycle
         if !(_agent getVariable [QGVAR(active),false]) then {
             CIV_MOVETO_COMPLETE(_agent);
-            
+
             _agent setVariable [QGVAR(active),true];
             _agent setVariable [QGVAR(patrol),true];
         };
@@ -117,7 +117,7 @@ __________________________________________________________________*/
                                         [_agent] call EFUNC(main,removeAmbientAnim);
                                         CIV_MOVETO_COMPLETE(_agent);
                                     };
-                                };  
+                                };
                             },
                             [_agent],
                             POSEVENT_WAIT
@@ -153,7 +153,7 @@ __________________________________________________________________*/
                                         [_agent] call EFUNC(main,removeAmbientAnim);
                                         CIV_MOVETO_COMPLETE(_agent);
                                     };
-                                };  
+                                };
                             },
                             [_agent],
                             POSEVENT_WAIT
@@ -183,19 +183,19 @@ __________________________________________________________________*/
                                 WARNING_1("timeout. skip position event %1",_this);
                             }
                         ] call CBA_fnc_waitUntilAndExecute;
-                    }; 
-                    
+                    };
+
                     // keep track of unavailable positions
                     _agent setVariable [QGVAR(moveTo),_posMove];
                     _moveToPositions = _location getVariable [QGVAR(moveToPositions),[]];
                     _moveToPositions pushBack _posMove;
                     _location setVariable [QGVAR(moveToPositions),_moveToPositions];
 
-                    TRACE_2("location positions",count _moveToPositions,_moveToPositions);
+                    // TRACE_2("location positions",count _moveToPositions,_moveToPositions);
                 };
-            };     
+            };
         };
     } forEach (_location getVariable [QGVAR(units),[]]);
-},60,_this] call CBA_fnc_addPerFrameHandler; 
+},60,_this] call CBA_fnc_addPerFrameHandler;
 
 nil

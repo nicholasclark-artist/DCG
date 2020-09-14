@@ -6,16 +6,13 @@ __________________________________________________________________*/
 
 POSTINIT;
 
-// headless client exit 
+// headless client exit
 if (!isServer) exitWith {};
 
 ["CBA_settingsInitialized",{
     if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
-    // [QGVAR(updateUnitCount),{
-    //     (_this select 0) setVariable [QGVAR(unitCountCurrent),((_this select 0) getVariable [QGVAR(unitCountCurrent),0]) + (_this select 1)];
-    // }] call CBA_fnc_addEventHandler;
-
+    // @todo clear null groups
     [QGVAR(updateGroups),{
         private _groups = (_this select 0) getVariable [QGVAR(groups),[]];
         _groups pushBack (_this select 1);
@@ -33,6 +30,15 @@ if (!isServer) exitWith {};
         }] call CBA_fnc_hashEachPair;
 
         GVAR(score) = GVAR(score) / (count ([GVAR(areas)] call CBA_fnc_hashKeys));
+    }] call CBA_fnc_addEventHandler;
+
+    // runs once intel gathered
+    [QGVAR(intel),{
+        params ["_intel","_player"];
+
+        private _type = parseNumber (_intel isEqualTo GVAR(intel));
+
+        [_intel,_player,_type] call FUNC(handleIntel);
     }] call CBA_fnc_addEventHandler;
 
     [FUNC(init),[],10] call CBA_fnc_waitAndExecute;

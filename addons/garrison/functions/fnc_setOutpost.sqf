@@ -17,7 +17,9 @@ __________________________________________________________________*/
 if !(isServer) exitWith {};
 
 params [
-    ["_count",1,[0]]
+    ["_count",1,[0]],
+    ["_type","",[""]],
+    ["_intelStatus",true,[false]]
 ];
 
 // define scope to break hash loop
@@ -40,7 +42,7 @@ _outposts = [];
     // get random positions in polygon
     // raise iterations if outpost count is consistently low
     _polygonPositions = [_polygon,20] call EFUNC(main,polygonRandomPos);
-    
+
     // find position based on terrain type
     {
         private _terrainKVP = selectRandom [["meadow",50],["peak",20],["forest",20]];
@@ -49,26 +51,29 @@ _outposts = [];
         // exit when position found
         if (!(_pos isEqualTo []) && {_pos inPolygon _polygon}) exitWith {
             _terrain = _terrainKVP select 0;
-        }; 
+        };
     } forEach _polygonPositions;
 
-    if !(_pos isEqualTo []) then { 
-        // @todo fix water positions 
+    if !(_pos isEqualTo []) then {
+        // @todo fix water positions
         TRACE_3("",_key,_terrain,_pos);
 
         // create outpost location
         _location = createLocation ["Invisible",ASLtoAGL _pos,1,1];
-        
+
         // setvars
-        _location setVariable [QGVAR(status),1];
-        _location setVariable [QGVAR(type),"outpost"];
-        _location setVariable [QGVAR(name),call FUNC(getName)]; 
-        _location setVariable [QGVAR(task),""];
-        _location setVariable [QGVAR(composition),[]];
-        _location setVariable [QGVAR(nodes),[]];
+        _location setVariable [QGVAR(status),1]; // 1 = active, 0 = inactive, < 0 = standby
+        _location setVariable [QGVAR(intelStatus),_intelStatus]; // true = outpost has active intel, false = no intel
+        _location setVariable [QGVAR(intel),objNull];
+        _location setVariable [QGVAR(type),"outpost"]; // type
+        _location setVariable [QGVAR(name),call FUNC(getName)]; // outpost alias
+        _location setVariable [QGVAR(task),""]; // task associated with outpost
+        _location setVariable [QGVAR(composition),[]]; // list of building objects
+        _location setVariable [QGVAR(compositionType),_type]; // used to force composition type
+        _location setVariable [QGVAR(nodes),[]]; // safe spawn positions
         _location setVariable [QGVAR(radius),0]; // will be adjusted based on composition size
-        _location setVariable [QGVAR(terrain),_terrain];
-        _location setVariable [QGVAR(positionASL),_pos];
+        _location setVariable [QGVAR(terrain),_terrain]; // terrain type at outpost
+        _location setVariable [QGVAR(positionASL),_pos]; // outpost position
         _location setVariable [QGVAR(groups),[]]; // groups assigned to outpost
 
         // setup hash
