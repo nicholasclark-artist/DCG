@@ -36,8 +36,8 @@ params [
 scopeName SCOPE;
 
 for "_i" from 1 to ITERATIONS do {
-    _center getPos [floor (random ((_max - _min) + 1)) + _min,floor (random (((_dir select 1) - (_dir select 0)) + 1)) + (_dir select 0)] call {
-        if !([_this,_check,_water,_gradient] call FUNC(isPosSafe)) exitWith {};   
+    _center getPos [[_min,_max] call BIS_fnc_randomNum,[_dir select 0,_dir select 1] call BIS_fnc_randomNum] call {
+        if !([_this,_check,_water,_gradient] call FUNC(isPosSafe)) exitWith {};
         _this set [2,ASLZ(_this)];
         _this select [0,3] breakOut SCOPE;
     };
@@ -47,7 +47,7 @@ WARNING("falling back to default position");
 
 (_water > 0) call {
     if !(_default isEqualTo []) exitWith {_default};
-    
+
     private _pos = getArray (configFile >> "CfgWorlds" >> worldName >> "Armory" >> ["positionStart","positionStartWater"] select _this);
 
     if !(_pos isEqualTo []) exitWith {
@@ -60,7 +60,7 @@ WARNING("falling back to default position");
 
     if !(_pos isEqualTo []) exitWith {
         _pos set [2,ASLZ(_pos)];
-        
+
         _pos
     };
 

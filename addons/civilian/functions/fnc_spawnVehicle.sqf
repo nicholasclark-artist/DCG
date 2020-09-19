@@ -56,7 +56,7 @@ private _grp = [_start,1,1,CIVILIAN,1,0,true] call EFUNC(main,spawnGroup);
         _veh allowCrewInImmobile true;
 
         _veh forceFollowRoad true;
-        _veh limitSpeed SPEED_LIMIT;
+        _veh limitSpeed ([SPEED_LIMIT * 0.5,SPEED_LIMIT] call BIS_fnc_randomInt);
         _grp setBehaviourStrong "CARELESS";
         _driver disableAI "FSM";
         _driver disableAI "TARGET";
@@ -68,7 +68,7 @@ private _grp = [_start,1,1,CIVILIAN,1,0,true] call EFUNC(main,spawnGroup);
         _wp setWaypointTimeout [0,0,0];
         _wp setWaypointStatements [
             format [QUOTE(CHECK_DIST(getPosATL this,%1,COMPLETION_DIST)),_end],
-            format ["%1 deleteAt (%1 find this); ['%2',vehicle this] call CBA_fnc_serverEvent; (vehicle this) setVariable ['%3',true]; diag_log 'route complete!';",QGVAR(drivers),QEGVAR(main,cleanup),QGVAR(complete)]
+            format ["%1 deleteAt (%1 find this); ['%2',vehicle this] call CBA_fnc_serverEvent; (vehicle this) setVariable ['%3',true]; diag_log 'route complete';",QGVAR(drivers),QEGVAR(main,cleanup),QGVAR(complete)]
         ];
 
         // move waypoint position to endpoint once driver is close to midpoint
@@ -102,7 +102,7 @@ private _grp = [_start,1,1,CIVILIAN,1,0,true] call EFUNC(main,spawnGroup);
                 };
             },
             [_veh,_driver],
-            ((((_start distance _end)/1000)/SPEED_LIMIT)*3600)*2
+            ((((_start distance _end)/1000)/SPEED_LIMIT)*3600)*2.5
         ] call CBA_fnc_waitAndExecute;
 
         GVAR(drivers) pushBack _driver;

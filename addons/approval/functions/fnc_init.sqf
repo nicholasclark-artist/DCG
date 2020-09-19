@@ -34,7 +34,7 @@ private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
         _min = AP_DEFAULT - DEFAULT_VARIANCE;
         _max = AP_DEFAULT + DEFAULT_VARIANCE;
 
-        _value setVariable [QGVAR(value),(random (_max - _min)) + _min];
+        _value setVariable [QGVAR(value),[_min,_max] call BIS_fnc_randomNum];
     };
 
     // set default color

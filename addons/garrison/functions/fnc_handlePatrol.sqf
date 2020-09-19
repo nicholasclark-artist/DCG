@@ -112,7 +112,7 @@ if (PROBABILITY(_distProb)) then {
     } else {
         INFO_1("spawning dynamic patrol (infantry) at %1",_pos);
 
-        _grp = [_pos,0,floor ((random (6 - 3)) + 3),EGVAR(main,enemySide),2,0,true] call EFUNC(main,spawnGroup);
+        _grp = [_pos,0,[3,6] call BIS_fnc_randomInt,EGVAR(main,enemySide),2,0,true] call EFUNC(main,spawnGroup);
 
         _posWP = _player getPos [100,random 360];
         if (surfaceIsWater _posWP) then {
