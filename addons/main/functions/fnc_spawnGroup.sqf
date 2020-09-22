@@ -30,6 +30,8 @@ params [
     ["_disableCaching",false,[false]]
 ];
 
+// possible bug: behavior commands do not function when applied to group before all units are created, so apply behaviors after spawns are finished
+
 private _grp = createGroup [_side,true];
 private _check = [];
 private _unitPool = [_side,0] call FUNC(getPool);
@@ -52,6 +54,7 @@ if (_type isEqualTo 0) then {
         _args params ["_pos","_grp","_unitPool","_count","_check"];
 
         if (count _check >= _count) exitWith {
+            _grp setBehaviourStrong "SAFE";
             _grp setVariable [QGVAR(ready),true,false];
             [_idPFH] call CBA_fnc_removePerFrameHandler;
         };
@@ -80,7 +83,7 @@ if (_type isEqualTo 0) then {
         any event that triggers on group creation will run twice
     */
 
-    // use createVehicleCrew to create accurate crew, so DCG's faction/filter settings do not interfere
+    // use createVehicleCrew to create accurate crew so DCG's faction/filter settings do not interfere
     private _grpTemp = createVehicleCrew _veh;
     _grpTemp deleteGroupWhenEmpty true;
 
@@ -110,6 +113,7 @@ if (_type isEqualTo 0) then {
             _args params ["_grp","_unitPool","_veh","_count"];
 
             if (!(alive _veh) || {count crew _veh >= _count}) exitWith {
+                _grp setBehaviourStrong "SAFE";
                 _grp setVariable [QGVAR(ready),true,false];
                 [_idPFH] call CBA_fnc_removePerFrameHandler;
             };
@@ -121,11 +125,9 @@ if (_type isEqualTo 0) then {
             _unit moveInCargo _veh;
         },_delay,[_grp,_unitPool,_veh,(_cargo min MAX_CARGO) + (count crew _veh)]] call CBA_fnc_addPerFrameHandler;
     } else {
+        _grp setBehaviourStrong "SAFE";
         _grp setVariable [QGVAR(ready),true,false];
     };
 };
-
-// possible bug: behavior commands do not function when applied to group before all units are created, so apply default behaviors here, after spawns are finished
-_grp setBehaviourStrong "SAFE";
 
 _grp
