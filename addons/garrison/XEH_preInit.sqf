@@ -11,7 +11,7 @@ PREP(initSettings);
 PREP(handleIntel);
 PREP(handlePatrol);
 PREP(setArea);
-PREP(setGarrison);
+// PREP(setGarrison);
 PREP(setOutpost);
 PREP(setComm);
 PREP(setTask);
@@ -19,8 +19,9 @@ PREP(getName);
 PREP(removeOutpost);
 PREP(removeArea);
 PREP(spawnArea);
-PREP(spawnGarrison);
+// PREP(spawnGarrison);
 PREP(spawnOutpost);
+PREP(spawnComm);
 PREP(spawnPrefab);
 PREP(spawnUnit);
 PREP(taskOPORD);
@@ -28,7 +29,6 @@ PREP(taskOPORD);
 // headless client exit
 if (!isServer) exitWith {};
 
-GVAR(score) = 0;
 GVAR(aliasBlacklist) = [];
 GVAR(intel) = objNull;
 GVAR(patrolGroups) = [];

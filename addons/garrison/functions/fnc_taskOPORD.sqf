@@ -53,19 +53,11 @@ private _para1 = if (_isArea) then {
 
     _elevation = round (_elevation / (count _elevations));
 
-    // get area weather
-    private _weather = if (CHECK_ADDON_2(weather)) then {
-        format ["%1°C high, %2°C low, %3%4 chance of precipitation.",EGVAR(weather,temperatureDay),EGVAR(weather,temperatureNight),parseNumber (EGVAR(weather,precipitation) toFixed 2) * 100,"%"]
-    } else {
-        "Forecast data is unavailable."
-    };
-
     [
         "ORIENTATION",
         format ["%1a. AO %2 is located in the %3 region of %4.",TAB,_location getVariable [QGVAR(name),""],_orientation,[worldName] call CBA_fnc_capitalize],
         format ["%1b. AO %2 covers %3km².",TAB,_location getVariable [QGVAR(name),""],_A],
-        format ["%1c. The average elevation of the area is %2m above sea level.",TAB,_elevation],
-        format ["%1d. Weather: %2",TAB,_weather]
+        format ["%1c. The average elevation of the area is %2m above sea level.",TAB,_elevation]
     ] joinString NEWLINE;
 } else {
     ""
@@ -99,33 +91,36 @@ private _para4 = if !(_sustainment isEqualTo []) then {
 
     // format sustainment classes
     private _sustainmentFormatted = [];
+    private _sustainmentClasses = [
+        format ["%1%1%1a. Class I - Rations -",TAB],
+        format ["%1%1%1b. Class II - Clothing / equipment -",TAB],
+        format ["%1%1%1c. Class III - POL -",TAB],
+        format ["%1%1%1d. Class IV - Construction materials -",TAB],
+        format ["%1%1%1e. Class V - Ammunition -",TAB],
+        format ["%1%1%1f. Class VI - Personal demand items -",TAB],
+        format ["%1%1%1g. Class VII - Major end items -",TAB],
+        format ["%1%1%1h. Class VIII - Medical material -",TAB],
+        format ["%1%1%1i. Class IX - Repair parts -",TAB],
+        format ["%1%1%1j. Class X - Misc. supplies -",TAB]
+    ];
 
     // make sure sustainment is correct length
     _sustainment =+ _sustainment;
     _sustainment resize 10;
 
     {
-        if (isNil "_x" || {COMPARE_STR(_x,"")}) then {
-            _sustainmentFormatted pushBack "None.";
-        } else {
-            _sustainmentFormatted pushBack _x;
+        if (!isNil "_x" && {!COMPARE_STR(_x,"")}) then {
+            _sustainmentFormatted pushBack ([_sustainmentClasses select _forEachIndex,_x] joinString " ");
         };
     } forEach _sustainment;
+
+    _sustainmentFormatted = _sustainmentFormatted joinString NEWLINE;
 
     [
         "SUSTAINMENT",
         format ["%1a. Logistics.",TAB],
         format ["%1%1 1. Classes of supply.",TAB],
-        format ["%1%1%1a. Class I - Rations - %2",TAB,_sustainmentFormatted select 0],
-        format ["%1%1%1b. Class II - Clothing / equipment - %2",TAB,_sustainmentFormatted select 1],
-        format ["%1%1%1c. Class III - POL - %2",TAB,_sustainmentFormatted select 2],
-        format ["%1%1%1d. Class IV - Construction materials - %2",TAB,_sustainmentFormatted select 3],
-        format ["%1%1%1e. Class V - Ammunition - %2",TAB,_sustainmentFormatted select 4],
-        format ["%1%1%1f. Class VI - Personal demand items - %2",TAB,_sustainmentFormatted select 5],
-        format ["%1%1%1g. Class VII - Major end items - %2",TAB,_sustainmentFormatted select 6],
-        format ["%1%1%1h. Class VIII - Medical material - %2",TAB,_sustainmentFormatted select 7],
-        format ["%1%1%1i. Class IX - Repair parts - %2",TAB,_sustainmentFormatted select 8],
-        format ["%1%1%1j. Class X - Misc. supplies - %2",TAB,_sustainmentFormatted select 9],
+        _sustainmentFormatted,
         format ["%1b. Personnel.",TAB],
         format ["%1%1 1. Transport - %2",TAB,_transport]
     ] joinString NEWLINE;

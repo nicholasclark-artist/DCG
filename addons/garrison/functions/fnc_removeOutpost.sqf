@@ -20,6 +20,7 @@ params [
 
 private _value = [GVAR(outposts),_key] call CBA_fnc_hashGet;
 
+// force arg will immediately remove all units and tasks
 if (_force) then {
     (_value getVariable [QGVAR(groups),[]]) call CBA_fnc_deleteEntity;
     (_value getVariable [QGVAR(intel),objNull]) call CBA_fnc_deleteEntity;
@@ -31,7 +32,7 @@ if (_force) then {
 };
 
 // reset vars
-_value setVariable [QGVAR(status),0];
+_value setVariable [QGVAR(status),false];
 _value setVariable [QGVAR(intelStatus),false];
 _value setVariable [QGVAR(intel),objNull];
 _value setVariable [QGVAR(task),""];

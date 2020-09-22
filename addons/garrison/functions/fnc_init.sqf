@@ -12,11 +12,6 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define REINIT \
-        call FUNC(removeOutpost); \
-        call FUNC(removeArea); \
-        [FUNC(init),[],20] call CBA_fnc_waitAndExecute; \
-        WARNING("init failed, retry after cooldown")
 
 if !(isServer) exitWith {nil};
 
@@ -29,7 +24,7 @@ private _ao = [AO_COUNT_P1] call FUNC(setArea);
 
 // retry on fail
 if !(_ao) exitWith {
-    REINIT
+    [QGVAR(reinit),nil] call CBA_fnc_serverEvent;
 };
 
 // find suitable spawn areas
@@ -37,7 +32,7 @@ private _outpost = [OP_COUNT] call FUNC(setOutpost);
 
 // retry on fail
 if !(_outpost) exitWith {
-    REINIT;
+    [QGVAR(reinit),nil] call CBA_fnc_serverEvent;
 };
 
 [] spawn FUNC(spawnArea);

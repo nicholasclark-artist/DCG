@@ -37,7 +37,7 @@ if (_count > (count _keys)) then {
     WARNING("area count param is higher than number of available keys");
 };
 
-private ["_key","_location","_polygon","_safe","_patrolPositions","_patrolCount","_length","_spacing"];
+private ["_key","_location","_polygon","_safe","_patrolCount","_length","_spacing"];
 
 {
     if (count _hash >= _count) exitWith {};
@@ -52,18 +52,11 @@ private ["_key","_location","_polygon","_safe","_patrolPositions","_patrolCount"
     _safe = _hash findIf {COMPARE_STR(_key,_x select 0)} < 0 && {!([_location] call EFUNC(main,inSafezones))};
 
     if (_safe) then {
-        // get patrol spawn positions
-        // _length = [_polygon] call EFUNC(main,polygonLength);
-        // _spacing = _length / round (_length / (PAT_SPACING min (_length * 0.5)));
-
-        // _patrolPositions = [[_polygon,1] call EFUNC(main,polygonCenter),_spacing,_length] call EFUNC(main,findPosGrid);
-        // _patrolPositions = _patrolPositions select {[_x select 0,_x select 1,0] inPolygon _polygon};
-
-        _location setVariable [QGVAR(status),1]; // 1 = active, 0 = inactive, < 0 = standby
+        // setvars
+        _location setVariable [QGVAR(status),true]; // true = active, false = inactive
         _location setVariable [QGVAR(name),call FUNC(getName)]; // area alias
         _location setVariable [QGVAR(task),""]; // task associated with area
         _location setVariable [QGVAR(groups),[]]; // groups assigned to area
-        // _location setVariable [QGVAR(patrolPositions),_patrolPositions];
 
         // setup area hash
         _hash pushBack [_key,_location];

@@ -21,6 +21,7 @@ params [
 
 private _value = [GVAR(areas),_key] call CBA_fnc_hashGet;
 
+// force arg will immediately remove all units and tasks
 if (_force) then {
     (_value getVariable [QGVAR(groups),[]]) call CBA_fnc_deleteEntity;
     [_value getVariable [QGVAR(task),""],true] call BIS_fnc_deleteTask;
@@ -35,14 +36,12 @@ if (_force) then {
     {
         {
             (findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["Draw",_x];
-        } forEach (missionNamespace getVariable [AO_POLY_ID(_this),""]);
+        } forEach (missionNamespace getVariable [AO_POLY_ID(_this),[]]);
     }
 ] remoteExecCall [QUOTE(call),0,false];
 
 // reset vars
-GVAR(score) = 0;
-
-_value setVariable [QGVAR(status),0];
+_value setVariable [QGVAR(status),false];
 _value setVariable [QGVAR(task),""];
 _value setVariable [QGVAR(groups),[]];
 

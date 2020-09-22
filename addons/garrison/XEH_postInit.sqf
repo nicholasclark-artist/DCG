@@ -12,24 +12,23 @@ if (!isServer) exitWith {};
 ["CBA_settingsInitialized",{
     if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
+    [QGVAR(reinit),{
+        [GVAR(outposts),{
+            [_key,true] call FUNC(removeOutpost);
+        }] call CBA_fnc_hashEachPair;
+
+        [GVAR(areas),{
+            [_key,true] call FUNC(removeArea);
+        }] call CBA_fnc_hashEachPair;
+
+        [FUNC(init),[],20] call CBA_fnc_waitAndExecute;
+        WARNING("init failed, retry after cooldown")
+    }] call CBA_fnc_addEventHandler;
+
     // @todo clear null groups
     [QGVAR(updateGroups),{
         private _groups = (_this select 0) getVariable [QGVAR(groups),[]];
         _groups pushBack (_this select 1);
-    }] call CBA_fnc_addEventHandler;
-
-    [QGVAR(updateScore),{
-        // update ao score
-        (_this select 0) setVariable [QGVAR(score),((_this select 0) getVariable [QGVAR(score),0]) + (_this select 1)];
-
-        // update average score
-        GVAR(score) = 0;
-
-        [GVAR(areas),{
-            GVAR(score) = GVAR(score) + (_value getVariable [QGVAR(score),0]);
-        }] call CBA_fnc_hashEachPair;
-
-        GVAR(score) = GVAR(score) / (count ([GVAR(areas)] call CBA_fnc_hashKeys));
     }] call CBA_fnc_addEventHandler;
 
     // runs once intel gathered

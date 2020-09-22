@@ -77,7 +77,7 @@ if (PROBABILITY(_distProb)) then {
     _pos = EGVAR(main,grid) select _pos;
 
     if !([_pos,50] call EFUNC(main,getNearPlayers) isEqualTo []) exitWith {
-        WARNING("players found near dynamic patrol spawn position");
+        WARNING("players found too close to dynamic patrol spawn position");
     };
 
     private ["_grp","_posWP","_wp"];
@@ -92,10 +92,11 @@ if (PROBABILITY(_distProb)) then {
             breakTo SCOPE_MAIN;
         };
 
-        _grp = [_pos,1,1,EGVAR(main,enemySide),1,true,true] call EFUNC(main,spawnGroup);
+        // don't cache patrol groups
+        _grp = [_pos,1,-1,EGVAR(main,enemySide),1,true,true] call EFUNC(main,spawnGroup);
 
         {
-            _wp = _group addWaypoint [_x,0];
+            _wp = _grp addWaypoint [_x,0];
 
             _wp setWaypointType "MOVE";
             _wp setWaypointBehaviour "SAFE";
@@ -104,14 +105,20 @@ if (PROBABILITY(_distProb)) then {
             _wp setWaypointCompletionRadius 10;
         } forEach _roadPositions;
 
-        _wp = _group addWaypoint [(_roadPositions select 0) getPos [20, random 360],0];
+        _wp = _grp addWaypoint [(_roadPositions select 0) getPos [20, random 360],0];
         _wp setWaypointType "CYCLE";
 
-        (vehicle leader _grp) limitSpeed 65;
-        (vehicle leader _grp) forceFollowRoad true;
+        (objectParent leader _grp) limitSpeed 45;
+        // (objectParent leader _grp) forceFollowRoad true;
+
+        // infinite fuel
+        (objectParent leader _grp) addEventHandler ["Fuel",{
+            if !(_this select 1) then {(_this select 0) setFuel 1};
+        }];
     } else {
         INFO_1("spawning dynamic patrol (infantry) at %1",_pos);
 
+        // don't cache patrol groups
         _grp = [_pos,0,[3,6] call BIS_fnc_randomInt,EGVAR(main,enemySide),2,0,true] call EFUNC(main,spawnGroup);
 
         _posWP = _player getPos [100,random 360];

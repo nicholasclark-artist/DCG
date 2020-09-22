@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-spawn garrison, should not be called directly
+spawn garrison, should not be called directly and should run in scheduled environment
 
 Arguments:
 
@@ -90,7 +90,7 @@ scopeName SCOPE;
 
     _value setVariable [QGVAR(prefabs),_prefabObjects];
 
-    [_value,_ao] call FUNC(spawnUnit);
+    // [_value,_ao] call FUNC(spawnUnit);
 }] call CBA_fnc_hashEachPair;
 
 nil

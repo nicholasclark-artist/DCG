@@ -18,11 +18,11 @@ private _garrisons = [];
 private _key = selectRandom ([GVAR(areas)] call CBA_fnc_hashKeys);
 private _ao = [GVAR(areas),_key] call CBA_fnc_hashGet;
 
-// create location 
+// create location
 private _location = createLocation ["Invisible",getPos _ao,1,1];
 
 // set vars
-_location setVariable [QGVAR(status),1];
+_location setVariable [QGVAR(status),true];
 _location setVariable [QGVAR(type),"garrison"];
 _location setVariable [QGVAR(name),call FUNC(getName)];
 _location setVariable [QGVAR(task),""];
@@ -34,9 +34,6 @@ _location setVariable [QGVAR(prefabs),[]];
 
 // setup hash
 _garrisons pushBack [_key,_location];
-
-// update score
-[QGVAR(updateScore),[_location,GAR_SCORE]] call CBA_fnc_localEvent;
 
 // create hash
 GVAR(garrisons) = [_garrisons,locationNull] call CBA_fnc_hashCreate;

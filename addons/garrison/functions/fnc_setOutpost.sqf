@@ -62,7 +62,7 @@ _outposts = [];
         _location = createLocation ["Invisible",ASLtoAGL _pos,1,1];
 
         // setvars
-        _location setVariable [QGVAR(status),1]; // 1 = active, 0 = inactive, < 0 = standby
+        _location setVariable [QGVAR(status),true]; // true = active, false = inactive
         _location setVariable [QGVAR(intelStatus),_intelStatus]; // true = outpost has active intel, false = no intel
         _location setVariable [QGVAR(intel),objNull];
         _location setVariable [QGVAR(type),"outpost"]; // type
@@ -78,9 +78,6 @@ _outposts = [];
 
         // setup hash
         _outposts pushBack [_key,_location];
-
-        // update score
-        [QGVAR(updateScore),[_value,OP_SCORE]] call CBA_fnc_localEvent;
     } else {
         WARNING_1("cannot find suitable position for %1",_key);
     }
