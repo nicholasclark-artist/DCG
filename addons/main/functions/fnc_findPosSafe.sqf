@@ -9,7 +9,7 @@ Arguments:
 0: center position <ARRAY>
 1: min distance from center <NUMBER>
 2: max distance from center <NUMBER>
-3: search radius,minimum distance from objects or object used to calculate search radius <NUMBER,OBJECT>
+3: search radius, minimum distance from objects or object used to calculate search radius <NUMBER,OBJECT>
 4: allow water <NUMBER>
 5: max gradient <NUMBER>
 6: direction min and max <ARRAY>
@@ -43,7 +43,7 @@ for "_i" from 1 to ITERATIONS do {
     };
 };
 
-WARNING("falling back to default position");
+WARNING_1("falling back to default position. failed to find safe position with params: %1",_this);
 
 (_water > 0) call {
     if !(_default isEqualTo []) exitWith {_default};
