@@ -55,12 +55,12 @@ private _grp = [_start,1,1,CIVILIAN,1,0,true] call EFUNC(main,spawnGroup);
         // driver will never exit vehicle unless commandeered
         _veh allowCrewInImmobile true;
 
-        _veh forceFollowRoad true;
+        // _veh forceFollowRoad true;
         _veh limitSpeed ([SPEED_LIMIT * 0.5,SPEED_LIMIT] call BIS_fnc_randomInt);
         _grp setBehaviourStrong "CARELESS";
-        _driver disableAI "FSM";
-        _driver disableAI "TARGET";
-        _driver disableAI "AUTOTARGET";
+        // _driver disableAI "FSM";
+        // _driver disableAI "TARGET";
+        // _driver disableAI "AUTOTARGET";
         // _driver setSkill 0;
 
         // set waypoint to midpoint
