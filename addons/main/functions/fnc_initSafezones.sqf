@@ -32,17 +32,21 @@ if !(toUpper markerShape _marker in ["RECTANGLE","ELLIPSE"]) then {
 
 _marker setMarkerColor ([GVAR(playerSide),true] call BIS_fnc_sideColor);
 
+_trg = createTrigger ["EmptyDetector",getMarkerPos _marker];
+
 private _act = format ["
+    diag_log '%1 activated';
     {
-        if (!isPlayer _x && {!(_x getVariable ['%1',false])}) then {
+        if (!isPlayer _x && {!(_x getVariable ['%2',false])}) then {
             _x call CBA_fnc_deleteEntity;
         };
     } forEach thisList;
-",QGVAR(safezoneKeepEntity)]; // @todo add keep functionality to documentation
+",_trg,QGVAR(safezoneKeepEntity)]; // @todo add keep functionality to documentation
 
-_trg = createTrigger ["EmptyDetector",getMarkerPos _marker];
+private _deact = format [" diag_log '%1 deactivated';",_trg];
+
 _trg setTriggerActivation [format["%1",GVAR(enemySide)],"PRESENT",true];
-_trg setTriggerStatements ["this",_act,""];
+_trg setTriggerStatements ["this",_act,_deact];
 _trg setTriggerArea [(getMarkerSize _marker) select 0,(getMarkerSize _marker) select 1,markerDir _marker,COMPARE_STR(markerShape _marker,"RECTANGLE")];
 
 GVAR(safezoneTriggers) pushBack _trg;
