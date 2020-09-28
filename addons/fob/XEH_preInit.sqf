@@ -13,7 +13,6 @@ PREP(handleAssign);
 PREP(handleCreate);
 PREP(handleDelete);
 PREP(handleTransfer);
-PREP(handleLoadData);
 PREP(handleRecon);
 PREP(getKeybind);
 PREP(getChildren);
@@ -27,7 +26,7 @@ GVAR(curatorExternal) = objNull;
 GVAR(placeCoef) = -0.025;
 GVAR(deleteCoef) = 0.025;
 
-// headless client exit 
+// headless client exit
 if (!isServer) exitWith {};
 
 // define location via remoteExec instead of publicVariable to avoid SimpleSerialization warning

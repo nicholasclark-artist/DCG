@@ -3,12 +3,6 @@
 */
 #include "\a3\3DEN\UI\macros.inc"
 
-#define SAVE_ITEM GVAR(save)
-#define SAVE_TEXT "DCG - Save"
-#define SAVE_ENTITY GVAR(saveEntity)
-#define SAVE_ENTITY_TEXT "Save Entity"
-#define SAVE_ENTITY_TIP "Add entity to save system"
-
 #define SAFEZONE_ITEM GVAR(safezone)
 #define SAFEZONE_TEXT "DCG - Safezone"
 #define SAFEZONE_CREATE GVAR(safezoneCreate)
@@ -53,24 +47,6 @@ class Cfg3DEN {
                         unique = 0;
                         // validate = "number";
                         condition = "1 - (objectAgent + logicModule + objectBrain)";
-                        // typeName = "NUMBER";
-                    };
-                };
-            };
-            class SAVE_ITEM {
-                displayName = SAVE_TEXT;
-                collapsed = 1;
-                class Attributes {
-                    class SAVE_ENTITY {
-                        displayName = SAVE_ENTITY_TEXT;
-                        tooltip = SAVE_ENTITY_TIP;
-                        property = QUOTE(SAVE_ENTITY);
-                        control = "Checkbox";
-                        expression = QUOTE(_this setVariable [ARR_3(QQGVAR(saveEntity),_value,false)]);
-                        defaultValue = "false";
-                        unique = 0;
-                        // validate = "number";
-                        condition = "1 - (objectAgent + logicModule)";
                         // typeName = "NUMBER";
                     };
                 };

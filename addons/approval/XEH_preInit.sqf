@@ -14,18 +14,17 @@ PREP(getValue);
 PREP(getRegion);
 PREP(handleKilled);
 PREP(handleQuestion);
-PREP(handleHostile);
+// PREP(handleHostile);
 PREP(handleHint);
 PREP(handleStop);
-PREP(spawnHostile);
+// PREP(spawnHostile);
 
 GVAR(regions) = [];
 
-// headless client exit 
+// headless client exit
 if (!isServer) exitWith {};
 
 publicVariable QFUNC(handleKilled);
 publicVariable QFUNC(initClient);
 
 SETTINGS_INIT;
-    

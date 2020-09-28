@@ -18,8 +18,8 @@
 #define FOB_CREATE_STATEMENT \
     [player,FOB_CREATE_ANIM] call EFUNC(main,setAnim); \
     [{ \
-        _format = format ["Forward Operating Base Deployed \n \nPress [%1] to start building",call FUNC(getKeybind)]; \
-        [_format,true] call EFUNC(main,displayText); \
+        _format = format ["Forward Operating Base deployed. Press [%1] to start building.",call FUNC(getKeybind)]; \
+        [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[_format,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify); \
         [QGVAR(create),[player]] call CBA_fnc_serverEvent; \
     },[],9] call CBA_fnc_waitAndExecute
 
@@ -32,10 +32,10 @@
 #define FOB_TRANSFER_NAME "Transfer FOB Control"
 #define FOB_TRANSFER_STATEMENT \
     [QGVAR(transfer),[player,cursorTarget]] call CBA_fnc_serverEvent; \
-    [format ["FOB control transferred to %1",name cursorTarget],true] call EFUNC(main,displayText)
+    [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[format ["FOB control transferred to %1.",name cursorTarget],CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify)
 #define FOB_TRANSFER_STATEMENT_ACE \
     [QGVAR(transfer),[player,_target]] call CBA_fnc_serverEvent; \
-    [format ["FOB control transferred to %1",name _target],true] call EFUNC(main,displayText)
+    [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[format ["FOB control transferred to %1.",name _target],CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify)
 #define FOB_TRANSFER_COND FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer cursorTarget} && {cursorTarget isKindOf 'CAManBase'} && {[cursorTarget] call FUNC(isAllowedOwner)}
 #define FOB_TRANSFER_COND_ACE FOB_DEPLOYED && {player isEqualTo getAssignedCuratorUnit GVAR(curator)} && {isPlayer _target} && {_target isKindOf 'CAManBase'} && {[_target] call FUNC(isAllowedOwner)}
 #define FOB_TRANSFER_KEYCODE \
@@ -50,7 +50,7 @@
         {getAssignedCuratorUnit GVAR(curator) isEqualTo player},\
         { \
             call FUNC(curatorEH); \
-            ["You've taken control of the Forward Operating Base",true] call EFUNC(main,displayText) \
+            [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],["You've taken control of the Forward Operating Base.",CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify) \
         },\
         [] \
     ] call CBA_fnc_waitUntilAndExecute
@@ -64,9 +64,12 @@
 #define FOB_DELETE_STATEMENT \
     [ \
         "Are you sure you want to dismantle the Forward Operating Base?",\
-        TITLE,\
-        "Forward Operating Base dismantled.",\
-        {[_this select 0,[]] call CBA_fnc_serverEvent},\
+        COMPONENT_NAME,\
+        "",\
+        { \
+            [_this select 0,[]] call CBA_fnc_serverEvent; \
+            playSound "hint"; \
+        },\
         [QGVAR(delete)] \
     ] spawn EFUNC(main,displayGUIMessage)
 #define FOB_DELETE_COND player isEqualTo getAssignedCuratorUnit GVAR(curator) && {cameraOn isEqualTo player} && {!(visibleMap)}

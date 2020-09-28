@@ -84,11 +84,11 @@
 #define CHECK_INGAME (getClientStateNumber > 9)
 #define CHECK_HC (!hasInterface && !isServer)
 
-// compares 
+// compares
 #define COMPARE_STR(STR1,STR2) ((STR1) == (STR2))
 #define COMPARE_STR_CASE(STR1,STR2) ((STR1) isEqualTo (STR2))
 
-// terrain expressions 
+// terrain expressions
 #define EX_HOUSES "houses * (1 - (waterDepth interpolate [1,30,0,1])) * (1 - sea)"
 #define EX_MEADOW "meadow - (houses + trees + forest + hills + coast + sea)"
 #define EX_FOREST "(forest * trees) - (meadow + houses + sea)"
@@ -136,3 +136,11 @@
 #define AP_CAPITAL ((AP_MAX*0.15)*EGVAR(approval,coef))
 #define AP_CONVERT1(POS) (linearConversion [AP_MIN,AP_MAX,([POS] call EFUNC(approval,getRegion)) getVariable [QEGVAR(approval,value),0],0,1,true])
 #define AP_CONVERT2(POS) ((1 - AP_CONVERT1(POS)) * 0.5)
+
+// CBA notifications
+#define CBAN_TITLE_SIZE 1.3
+#define CBAN_TITLE_COLOR [1,1,1,0.9]
+#define CBAN_SUB_SIZE 0.65
+#define CBAN_SUB_COLOR [1,1,1,0.9]
+#define CBAN_BODY_SIZE 0.85
+#define CBAN_BODY_COLOR [1,1,1,0.9]

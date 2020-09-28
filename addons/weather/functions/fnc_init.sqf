@@ -13,28 +13,15 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define MONTH_CURRENT ((GVAR(date) select 1) - 1)
 
-private _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
-
-// load saved data
-if !(_data isEqualTo []) then {
-    GVAR(overcast) = _data select 0;
-    GVAR(rain) = _data select 1;
-    GVAR(fog) = _data select 2;
-    GVAR(date) = _data select 3;
-
-    GVAR(month) = GVAR(date) select 1;
-    GVAR(hour) = GVAR(date) select 3;
-} else {
-    if (GVAR(month) < 0) then {GVAR(month) = ceil random 12};
-    if (GVAR(hour) < 0) then {GVAR(hour) = floor random 24};
-
-    GVAR(date) = [2020,GVAR(month),ceil random 27,GVAR(hour),floor random 30];
-};
-
 // set date
+if (GVAR(month) < 0) then {GVAR(month) = ceil random 12};
+if (GVAR(hour) < 0) then {GVAR(hour) = floor random 24};
+
+GVAR(date) = [2020,GVAR(month),ceil random 27,GVAR(hour),floor random 30];
+
 setDate GVAR(date);
 
-// get current month data 
+// get current month data
 GVAR(temperatureDay) = GVAR(temperatureDay) select MONTH_CURRENT;
 GVAR(temperatureNight) = GVAR(temperatureNight) select MONTH_CURRENT;
 GVAR(humidity) = GVAR(humidity) select MONTH_CURRENT;
@@ -42,10 +29,10 @@ GVAR(clouds) = GVAR(clouds) select MONTH_CURRENT;
 GVAR(precipitation) = GVAR(precipitation) select MONTH_CURRENT;
 GVAR(rainfall) = GVAR(rainfall) select MONTH_CURRENT;
 
-// update measurements 
+// update measurements
 [QGVAR(updateMeasurements),[]] call CBA_fnc_localEvent;
 
-// initial weather values are out of bounds to force a new forecast, unless loading saved data
+// initial weather values are out of bounds to force a new forecast
 if (GVAR(overcast) < 0 || {GVAR(rain) < 0} || {GVAR(fog) < 0}) then {
     private _forecast = [0] call FUNC(getForecast);
 
@@ -67,7 +54,7 @@ if (GVAR(overcast) < 0 || {GVAR(rain) < 0} || {GVAR(fog) < 0}) then {
 
             TRACE_5("initial forecast",nextWeatherChange,GVAR(overcast),GVAR(rain),GVAR(fog),date);
         };
-        
+
         // handle date changes and measurement updates
         [{
             [QGVAR(updateMeasurements),[]] call CBA_fnc_localEvent;

@@ -36,7 +36,9 @@ _ret = [
 
 if (_ret) then {
     _args call _code;
-    [_confirm,true] call EFUNC(main,displayText);
+    if !(_confirm isEqualTo "") then{
+        [[_confirm, CBAN_BODY_SIZE, CBAN_BODY_COLOR],true] call FUNC(notify);
+    };
 };
 
 nil

@@ -27,7 +27,7 @@ params [
     ["_infilMrk","",[""]]
 ];
 
-// @todo add radio sounds inside heli 
+// @todo add radio sounds inside heli
 
 // refer to requestor by client ID so PVs work if requestor dies
 _requestor = owner _requestor;
@@ -62,7 +62,7 @@ _transport addEventHandler ["Deleted",{
 // send hint to players who get in transport
 _transport addEventHandler ["GetIn",{
     if (isPlayer (_this select 2)) then {
-        [TR_STR_GETIN,false] remoteExecCall [QEFUNC(main,displayText),_this select 2,false];
+        [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_GETIN,CBAN_BODY_SIZE,CBAN_BODY_COLOR],false] remoteExecCall [QEFUNC(main,notify),_this select 2,false];
     };
 }];
 
@@ -94,7 +94,7 @@ _transport lockDriver true;
 
 // move to pick up position
 TR_EXFIL(_transport);
-[TR_STR_ENROUTE,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
+[[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_ENROUTE,CBAN_BODY_SIZE,CBAN_BODY_COLOR],false] remoteExecCall [QEFUNC(main,notify),_requestor,false];
 
 // move to drop off position
 TR_INFIL(_transport);
@@ -110,7 +110,7 @@ TR_INFIL(_transport);
 
     if (isTouchingGround _transport && {!alive _transport || !canMove _transport || fuel _transport isEqualTo 0}) exitWith {
         [_idPFH] call CBA_fnc_removePerFrameHandler;
-        [TR_STR_KILLED,true] remoteExecCall [QEFUNC(main,displayText),_requestor,false];
+        [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_KILLED,CBAN_BODY_SIZE,CBAN_BODY_COLOR],false] remoteExecCall [QEFUNC(main,notify),_requestor,false];
         _transport setVariable [QEGVAR(main,forceCleanup),true];
         [QEGVAR(main,cleanup),_transport] call CBA_fnc_serverEvent;
     };
@@ -128,7 +128,7 @@ TR_INFIL(_transport);
     _stuckPos = _transport getVariable [QGVAR(stuckPos),[0,0,0]];
 
     if (!isTouchingGround _transport && {unitReady _transport} && {CHECK_VECTORDIST(getPosWorld _transport,_stuckPos,3)}) then {
-        _transport setVariable [QEGVAR(main,landAt),-1]; 
+        _transport setVariable [QEGVAR(main,landAt),-1];
 
         if !(_transport getVariable [QGVAR(signal),-1] isEqualTo 1) then {
             TR_EXFIL(_transport);

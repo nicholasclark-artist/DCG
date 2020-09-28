@@ -1,5 +1,5 @@
-#define COMPONENT garrison
-#define COMPONENT_PRETTY Garrison
+#define COMPONENT conflict
+#define COMPONENT_PRETTY Conflict
 
 #include "\d\dcg\addons\main\script_mod.hpp"
 

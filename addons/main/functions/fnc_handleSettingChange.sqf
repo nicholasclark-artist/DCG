@@ -18,7 +18,12 @@ params ["_name"];
 
 if (!isMultiplayer || {CBA_missionTime < 5} ||{!(toLower _name in CBA_settings_needRestart)}) exitWith {};
 
-[format [MSG,_name]] call FUNC(displayText);
+[
+    [COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],
+    [MSG,CBAN_BODY_SIZE,CBAN_BODY_COLOR],
+    false
+] call FUNC(notify);
+
 WARNING_1(MSG_RPT,_name);
 
 nil

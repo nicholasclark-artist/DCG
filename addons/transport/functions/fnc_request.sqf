@@ -2,7 +2,7 @@
 Author:
 Nicholas Clark (SENSEI)
 
-Description: 
+Description:
 player transport request
 
 Arguments:
@@ -15,7 +15,7 @@ __________________________________________________________________*/
 
 GVAR(status) = TR_STATE_WAITING;
 
-[TR_STR_EXFIL,true] call EFUNC(main,displayText);
+[[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_EXFIL,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify);
 
 [QGVAR(exfil),"onMapSingleClick",{
     params [
@@ -28,7 +28,7 @@ GVAR(status) = TR_STATE_WAITING;
 
     if (COMPARE_STR(GVAR(status),TR_STATE_WAITING)) then {
         if (surfaceIsWater _pos) then {
-            [TR_STR_NOTLAND,true] call EFUNC(main,displayText);
+            [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_NOTLAND,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify);
         } else {
             _exfil = _pos isFlatEmpty [TR_CHECKDIST,50,0.45,10,-1,false,player];
 
@@ -40,7 +40,7 @@ GVAR(status) = TR_STATE_WAITING;
                 _exfilMrk setMarkerText format ["EXTRACTION LZ (%1)",name player];
 
                 [QGVAR(exfil),"onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-                [TR_STR_INFIL,true] call EFUNC(main,displayText);
+                [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_INFIL,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify);
 
                 [QGVAR(infil),"onMapSingleClick",{
                     _class = _this select 4;
@@ -49,7 +49,7 @@ GVAR(status) = TR_STATE_WAITING;
 
                     if (COMPARE_STR(GVAR(status),TR_STATE_WAITING)) then {
                         if (surfaceIsWater _pos) then {
-                            [TR_STR_NOTLAND,true] call EFUNC(main,displayText);
+                            [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_NOTLAND,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify);
                         } else {
                             _infil = _pos isFlatEmpty [TR_CHECKDIST,50,0.45,10,-1,false,player];
 
@@ -64,19 +64,19 @@ GVAR(status) = TR_STATE_WAITING;
                                     [QGVAR(infil),"onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
 
                                     [QGVAR(request),[player,_class,_exfil,_infil,_exfilMrk,_infilMrk]] call CBA_fnc_serverEvent;
-                                    
+
                                     GVAR(status) = TR_STATE_NOTREADY;
                                 } else {
-                                    [TR_STR_CLOSE,true] call EFUNC(main,displayText);
+                                    [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_CLOSE,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify);
                                 };
                             } else {
-                                [TR_STR_BADTERRAIN,true] call EFUNC(main,displayText);
+                                [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_BADTERRAIN,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify);
                             };
                         };
                     };
                 },[_class,_exfil,_exfilMrk]] call BIS_fnc_addStackedEventHandler;
             } else {
-                [TR_STR_BADTERRAIN,true] call EFUNC(main,displayText);
+                [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_BADTERRAIN,CBAN_BODY_SIZE,CBAN_BODY_COLOR],false] call EFUNC(main,notify);
             };
         };
     };
@@ -86,7 +86,8 @@ GVAR(status) = TR_STATE_WAITING;
     {
         if !(COMPARE_STR(GVAR(status),TR_STATE_NOTREADY)) then {
             GVAR(status) = TR_STATE_READY;
-            [TR_STR_CANCEL,true] call EFUNC(main,displayText);
+            [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_CANCEL,CBAN_BODY_SIZE,CBAN_BODY_COLOR],false] call EFUNC(main,notify);
+
             [QGVAR(exfil),"onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
             [QGVAR(infil),"onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
             deleteMarker MRK_INFIL(name player);

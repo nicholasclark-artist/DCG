@@ -1,0 +1,1 @@
+#include "\d\dcg\addons\conflict\script_component.hpp"

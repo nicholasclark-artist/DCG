@@ -19,6 +19,7 @@ params [
     ["_sound",true]
 ];
 
+// @todo use CBA_fnc_notify instead
 if (CHECK_ADDON_1(ace_common)) then {
     [_msg,_sound,8,0] call ace_common_fnc_displayText;
 } else {

@@ -74,19 +74,12 @@
                             [QEGVAR(main,cleanup),_this] call CBA_fnc_serverEvent; \
                             _this move DEFAULT_POS; \
                             _this setVariable [QGVAR(status),TR_STATE_WAITING,false]; \
-                            _this animateDoor ["door_R",0]; \
-                            _this animateDoor ["door_L",0]; \
-                            _this animateDoor ["CargoRamp_Open",0]; \
-                            _this animateDoor ["Door_rear_source",0]; \
-                            _this animateDoor ["Door_6_source",0]; \
-                            _this animate ["dvere1_posunZ",0]; \
-                            _this animate ["dvere2_posunZ",0]; \
                         }, \
                         _this, \
                         10 \
                     ] call CBA_fnc_waitAndExecute; \
                 }, \
-                TRANSPORT \
+                _this \
             ] call EFUNC(main,landAt); \
         },\
         TRANSPORT \

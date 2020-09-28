@@ -13,29 +13,15 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define DEFAULT_VARIANCE AP_DEFAULT*0.333
 
-// load saved data
-private _data = [QUOTE(ADDON)] call EFUNC(main,loadDataAddon);
-
 // populate hash values
 private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
 
 [EGVAR(main,locations),{
-    // get approval value from saved data
-    if !(_data isEqualTo []) then {
-        // _index = ([GVAR(regions)] call CBA_fnc_hashKeys) find _key;
-        // _dataKey = (_data select _index select 0);
+    // set starting approval value
+    _min = AP_DEFAULT - DEFAULT_VARIANCE;
+    _max = AP_DEFAULT + DEFAULT_VARIANCE;
 
-        // // data key and region key must be the same
-        // if ([GVAR(regions),_dataKey] call CBA_fnc_hashHasKey) then {
-        //     _newValue pushBack (_data select _index select 1);
-        // };
-    } else {
-        // set starting approval value
-        _min = AP_DEFAULT - DEFAULT_VARIANCE;
-        _max = AP_DEFAULT + DEFAULT_VARIANCE;
-
-        _value setVariable [QGVAR(value),[_min,_max] call BIS_fnc_randomNum];
-    };
+    _value setVariable [QGVAR(value),[_min,_max] call BIS_fnc_randomNum];
 
     // set default color
     _value setVariable [QGVAR(color),DEFAULT_COLOR];

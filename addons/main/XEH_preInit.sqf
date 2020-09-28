@@ -11,10 +11,10 @@ MAIN_ADDON = false;
 PREP(initSettings);
 PREP(initSafezones);
 PREP(initClient);
+PREP(notify);
 PREP(displayText);
 PREP(displayGUIMessage);
 PREP(handleHCConnected);
-PREP(handleLoadData);
 PREP(handleCleanup);
 PREP(handleSettingChange);
 PREP(findLocationRadius);
@@ -70,9 +70,6 @@ PREP(removeAction);
 PREP(removeDebugMarker);
 PREP(removeParticle);
 PREP(removeAmbientAnim);
-PREP(saveData);
-PREP(loadDataScenario);
-PREP(loadDataAddon);
 PREP(armory);
 PREP(cleanup);
 PREP(debug);
@@ -179,9 +176,6 @@ GVAR(grid) = [GVAR(center),worldSize/round(worldSize/1000),worldSize,0,2,0] call
 GVAR(debug) = false;
 GVAR(debugMarkers) = [];
 
-// save system variables
-GVAR(saveDataScenario) = [];
-
 // safezone variables
 GVAR(safezoneMarkers) = [];
 GVAR(safezoneTriggers) = [];
@@ -215,7 +209,8 @@ GVAR(officersCiv) = [];
 publicVariable QFUNC(setAnim);
 publicVariable QFUNC(setAction);
 publicVariable QFUNC(removeAction);
-publicVariable QFUNC(displayText);
+// publicVariable QFUNC(displayText);
+publicVariable QFUNC(notify);
 publicVariable QFUNC(displayGUIMessage);
 publicVariable QFUNC(armory);
 publicVariable QFUNC(initClient);
@@ -226,9 +221,6 @@ publicVariable QFUNC(polygonFill);
 publicVariable QGVAR(radius);
 publicVariable QGVAR(center);
 publicVariable QUOTE(MAIN_ADDON);
-
-// load current scenario data
-call FUNC(loadDataScenario);
 
 // init cba settings
 SETTINGS_INIT;

@@ -22,4 +22,4 @@ if (CHECK_ADDON_1(task_force_radio)) exitWith {
     call FUNC(setRadioTFAR);
 };
 
-["Cannot issue radio. You do not have ACRE2 or TFAR enabled.",true] call EFUNC(main,displayText);
+[[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],["Cannot issue radio. You do not have ACRE2 or TFAR enabled.",CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify);

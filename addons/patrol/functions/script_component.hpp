@@ -1,1 +1,0 @@
-#include "\d\dcg\addons\patrol\script_component.hpp"

@@ -13,11 +13,11 @@ Return:
 nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
-#define SFX_ALARM ""
+#define SFX_ALARM "A3\Sounds_F\sfx\alarmCar.wss"
 
 params [
     ["_location",locationNull,[locationNull]],
-    ["_type","",[""]]   
+    ["_type","",[""]]
 ];
 
 private _position = _location getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS];
@@ -107,7 +107,7 @@ switch _type do {
                 _prefab = [_position,"sup_table",(_road getRelDir ((roadsConnectedTo _road) select 0)) - 90,false] call EFUNC(main,spawnComposition);
                 _location setVariable [QGVAR(prefabPositions),_prefab select 1];
                 _ambientList append (_prefab select 2);
-            };             
+            };
         };
     };
 

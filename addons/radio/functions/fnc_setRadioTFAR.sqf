@@ -86,5 +86,5 @@ LOG_1("TFAR missing classes: %1",_missing);
 
 if !(_missing isEqualTo []) then {
     _missing = _missing joinString ",";
-    [format ["Cannot add the following radios to your inventory: %1",_missing],true] call EFUNC(main,displayText);
+    [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[format ["Cannot add the following radios to your inventory: %1",_missing],CBAN_BODY_SIZE,CBAN_BODY_COLOR],false] call EFUNC(main,notify);
 };

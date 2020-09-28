@@ -6,7 +6,7 @@ __________________________________________________________________*/
 
 POSTINIT;
 
-// headless client exit 
+// headless client exit
 if (!isServer) exitWith {};
 
 ["CBA_settingsInitialized",{
@@ -25,6 +25,5 @@ if (!isServer) exitWith {};
     }];
 
     call FUNC(init);
-    call FUNC(handleLoadData);
     remoteExecCall [QFUNC(initClient),0,true];
 }] call CBA_fnc_addEventHandler;

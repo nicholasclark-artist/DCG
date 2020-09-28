@@ -12,7 +12,6 @@ bool
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define CATEGORY_FACTION [COMPONENT_NAME,"Faction Settings"]
-#define CATEGORY_SAVE [COMPONENT_NAME,"Save System Settings"]
 #define CATEGORY_SAFE [COMPONENT_NAME,"Safezone Settings"]
 #define CATEGORY_HC [COMPONENT_NAME,"Headless Client Settings"]
 
@@ -25,27 +24,6 @@ __________________________________________________________________*/
     true,
     {},
     true
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(loadData),
-    "CHECKBOX",
-    ["Load Mission Data","Load mission data from server profile."],
-    CATEGORY_SAVE,
-    false,
-    true,
-    {},
-    true
-] call CBA_Settings_fnc_init;
-
-[
-    QGVAR(autoSave),
-    "CHECKBOX",
-    ["Autosave Mission Data","Autosave mission data to server profile."],
-    CATEGORY_SAVE,
-    false,
-    true,
-    {}
 ] call CBA_Settings_fnc_init;
 
 [
@@ -89,7 +67,7 @@ __________________________________________________________________*/
     true,
     {
         if (!isServer) exitWith {};
-        
+
         [0] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -103,7 +81,7 @@ __________________________________________________________________*/
     true,
     {
         if (!isServer) exitWith {};
-        
+
         [0] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -117,7 +95,7 @@ __________________________________________________________________*/
     true,
     {
         if (!isServer) exitWith {};
-        
+
         [1] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -131,7 +109,7 @@ __________________________________________________________________*/
     true,
     {
         if (!isServer) exitWith {};
-        
+
         [1] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -145,7 +123,7 @@ __________________________________________________________________*/
     true,
     {
         if (!isServer) exitWith {};
-        
+
         [2] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -159,7 +137,7 @@ __________________________________________________________________*/
     true,
     {
         if (!isServer) exitWith {};
-        
+
         [2] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -173,7 +151,7 @@ __________________________________________________________________*/
     true,
     {
         if (!isServer) exitWith {};
-        
+
         [3] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -187,7 +165,7 @@ __________________________________________________________________*/
     true,
     {
         if (!isServer) exitWith {};
-        
+
         [3] call FUNC(setPool);
     }
 ] call CBA_Settings_fnc_init;
@@ -216,7 +194,7 @@ __________________________________________________________________*/
     true,
     {
         if (!isServer) exitWith {};
-        
+
         switch (_this) do {
             case 0: {
                 GVAR(safezoneMarkers) apply {_x setMarkerAlpha 0};

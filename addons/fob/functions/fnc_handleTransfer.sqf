@@ -39,7 +39,7 @@ params [
 
                 _format = format ["%2 has transferred FOB control to you \n \nPress [%1] to start building",call FUNC(getKeybind),(_this select 0)];
 
-                [_format,true] call EFUNC(main,displayText);
+                [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[_format,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify);
             }
         ] remoteExecCall [QUOTE(call),owner (_this select 0),false];
     },

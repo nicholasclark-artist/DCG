@@ -14,7 +14,7 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define COOLDOWN 300
-#define SEND_MSG(MSG) [MSG] remoteExecCall [QEFUNC(main,displayText),_player,false]
+#define SEND_MSG(NAME,MSG) [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[[NAME + ":",MSG] joinString " ",CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] remoteExecCall [QEFUNC(main,notify),_player,false]
 
 params [
     ["_player",objNull,[objNull]],
@@ -23,20 +23,20 @@ params [
 
 if (diag_tickTime < (_unit getVariable [QGVAR(questioned),COOLDOWN * -1]) + COOLDOWN) exitWith {
     _text = [
-        format ["%1 was questioned recently.",name _unit],
-        format ["You questioned %1 not too long ago.",name _unit],
-        format ["%1 already spoke to you.",name _unit]
+        "I don't have anything else to say.",
+        "I already spoke to you.",
+        "I'm done talking."
     ];
-    SEND_MSG(selectRandom _text);
+    SEND_MSG(name _unit,selectRandom _text);
 };
 
 _unit setVariable [QGVAR(questioned),diag_tickTime,true];
 
 // @todo differentiate a civilian not having info and an unwillingness to talk
 private _text = [
-    format ["%1 doesn't have any relevant information.",name _unit],
-    format ["%1 doesn't know anything.",name _unit],
-    format ["%1 isn't interested in talking right now.",name _unit]
+    "I don't have any relevant information.",
+    "I don't know anything.",
+    "I can't talk right now."
 ];
 
 private _value = AP_CONVERT1(getpos _player);
@@ -55,44 +55,44 @@ if (PROBABILITY(_value)) then {
         _near = _near select {!(side _x isEqualTo EGVAR(main,playerSide)) && {!(side _x isEqualTo CIVILIAN)}};
 
         if (_near isEqualTo []) exitWith {
-            SEND_MSG(selectRandom _text);
+            SEND_MSG(name _unit,selectRandom _text);
         };
 
         private _area = nearestLocations [getposATL (selectRandom _near),["NameCityCapital","NameCity","NameVillage"],1000];
 
         if (_area isEqualTo []) exitWith {
-            SEND_MSG(selectRandom _text);
+            SEND_MSG(name _unit,selectRandom _text);
         };
 
         _text = [
-            format ["%1 saw soldiers around %2 not too long ago.",name _unit,text (_area select 0)],
-            format ["%1 heard about soldiers moving through %2.",name _unit,text (_area select 0)]
+            format ["I saw soldiers around %2 not too long ago.",text (_area select 0)],
+            format ["I heard about soldiers moving through %2.",name _unit,text (_area select 0)]
         ];
 
-        SEND_MSG(selectRandom _text);
+        SEND_MSG(name _unit,selectRandom _text);
     };
 
     if (_type isEqualTo 1) exitWith {
         {
             if (CHECK_VECTORDIST(getPosASL _x,getPosASL _unit,1200) && {!(_x getVariable [QGVAR(iedMarked),false])}) exitWith {
                 _text = [
-                    format ["%1 spotted a suspicious device alongside the road a few hours ago. He marked it on your map.",name _unit],
-                    format ["%1 saw a man burying something in the road a while ago. He marked the position on your map.",name _unit]
+                    "I saw something buried alongside the road a few hours ago. I'll point it out on your map.",
+                    "I saw a man burying something in the road a while ago. I'll show you the location on your map."
                 ];
 
                 _x setVariable [QGVAR(iedMarked),true];
 
-                _mrk = createMarker [format ["%1_%2",QUOTE(ADDON),diag_tickTime],getpos _x]; 
+                _mrk = createMarker [format ["%1_%2",QUOTE(ADDON),diag_tickTime],getpos _x];
                 _mrk setMarkerType "hd_warning";
                 _mrk setMarkerSize [0.75,0.75];
                 _mrk setMarkerColor "ColorRed";
             };
         } forEach (EGVAR(ied,list));
 
-        SEND_MSG(selectRandom _text);
+        SEND_MSG(name _unit,selectRandom _text);
     };
 } else {
-    SEND_MSG(selectRandom _text);
+    SEND_MSG(name _unit,selectRandom _text);
 };
 
 nil

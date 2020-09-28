@@ -3,10 +3,9 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-initialize garrison addon
+initialize addon
 
 Arguments:
-0: data loaded from server profile <ARRAY>
 
 Return:
 nothing
@@ -14,10 +13,6 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 if !(isServer) exitWith {nil};
-
-params [
-    ["_data",[],[[]]]
-];
 
 // find initial areas
 private _ao = [AO_COUNT_P1] call FUNC(setArea);
