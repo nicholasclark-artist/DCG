@@ -31,10 +31,16 @@ POSTINIT;
     if (!isServer) exitWith {};
 
     // eventhandlers
-    [QGVAR(cleanup),{_this call FUNC(cleanup)}] call CBA_fnc_addEventHandler;
+    [QGVAR(cleanup),{
+        _this call FUNC(cleanup)
+    }] call CBA_fnc_addEventHandler;
 
     [QGVAR(debugMarkers),{
         if (GVAR(debug)) then {[1] call FUNC(debug)};
+    }] call CBA_fnc_addEventHandler;
+
+    [QGVAR(report),{
+        _this call FUNC(handleReport)
     }] call CBA_fnc_addEventHandler;
 
     // per frame handlers

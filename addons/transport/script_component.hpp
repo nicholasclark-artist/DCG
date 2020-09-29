@@ -30,6 +30,7 @@
 #define TR_STATE_NOTREADY "NOT READY"
 
 #define TR_COOLDOWN(REQUESTOR) \
+    {GVAR(status) = TR_STATE_WAITING} remoteExecCall [QUOTE(call),_this,false]; \
     [ \
         { \
             {GVAR(status) = TR_STATE_READY} remoteExecCall [QUOTE(call),_this,false]; \

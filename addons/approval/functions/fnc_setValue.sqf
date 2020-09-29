@@ -21,11 +21,14 @@ params [
 
 private _region = [_position] call FUNC(getRegion);
 
-// calculate new value 
-// private _newValue = ([_region] call FUNC(getValue)) + _add;
-private _newValue = 0 + _add;
+// calculate new value
+private _newValue = (_region getVariable [QGVAR(value),0]) + _add;
+// private _newValue = 0 + _add;
+
 _region setVariable [QGVAR(value),_newValue];
-// TRACE_2("",_region,_newValue);
+
+TRACE_2("",_region,_newValue);
+
 // calculate new color,[R,G,B,A]
 private _colorValue = linearConversion [AP_MIN,AP_MAX,_newValue,0,1,true];
 private _newColor = [1 - _colorValue,_colorValue,0,1];

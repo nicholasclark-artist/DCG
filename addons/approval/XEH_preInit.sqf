@@ -10,14 +10,11 @@ PREP(initSettings);
 PREP(init);
 PREP(initClient);
 PREP(setValue);
-PREP(getValue);
 PREP(getRegion);
 PREP(handleKilled);
 PREP(handleQuestion);
-// PREP(handleHostile);
 PREP(handleHint);
 PREP(handleStop);
-// PREP(spawnHostile);
 
 GVAR(regions) = [];
 

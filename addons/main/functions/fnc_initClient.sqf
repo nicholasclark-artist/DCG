@@ -19,6 +19,7 @@ if (!hasInterface) exitWith {};
     _x call EFUNC(main,setAction);
 } forEach [
     [QGVARMAIN(actions),format["%1 Actions",toUpper QUOTE(PREFIX)],{},{true},{},[],player,1,["ACE_SelfActions"]],
+    [QGVAR(report),REPORT_NAME,{REPORT_STATEMENT},{REPORT_COND},{},[],player,1,["ACE_SelfActions",QGVARMAIN(actions)]]
 ];
 
 // setting restart warning

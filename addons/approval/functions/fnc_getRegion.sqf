@@ -6,7 +6,7 @@ Description:
 get region from position
 
 Arguments:
-0: position <ARRAY>
+0: positionASL <ARRAY>
 
 Return:
 location

@@ -14,7 +14,7 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define COOLDOWN 300
-#define SEND_MSG(NAME,MSG) [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[[NAME + ":",MSG] joinString " ",CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] remoteExecCall [QEFUNC(main,notify),_player,false]
+#define SEND_MSG(NAME,MSG) [[[NAME,":"] joinString "",CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[MSG,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] remoteExecCall [QEFUNC(main,notify),_player,false]
 
 params [
     ["_player",objNull,[objNull]],

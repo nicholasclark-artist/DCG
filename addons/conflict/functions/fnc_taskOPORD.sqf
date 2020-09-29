@@ -84,7 +84,7 @@ private _para3 = if !(_mission isEqualTo "") then {
 private _para4 = if !(_sustainment isEqualTo []) then {
     // get CASEVAC status
     private _transport = if (CHECK_ADDON_2(transport)) then {
-        "CASEVAC is available upon request."
+        "Available upon request."
     } else {
         "None."
     };

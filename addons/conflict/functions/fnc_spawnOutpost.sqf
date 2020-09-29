@@ -39,7 +39,7 @@ private ["_unitCount","_unitCountBuildings","_unitCountPatrol","_groups","_intel
             {(_this select 0) getVariable [QEGVAR(main,ready),false]},
             {
                 [_this select 0,getPos (_this select 1),50,0] call EFUNC(main,taskDefend);
-                [QEGVAR(cache,enableGroup),_this] call CBA_fnc_serverEvent;
+                [QEGVAR(cache,enableGroup),_this select 0] call CBA_fnc_serverEvent;
             },
             [_x,_value],
             10

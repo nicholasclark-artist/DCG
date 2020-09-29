@@ -30,9 +30,4 @@ private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
     [_value getVariable [QEGVAR(main,positionASL),DEFAULT_POS],0] call FUNC(setValue);
 }] call CBA_fnc_hashEachPair;
 
-// start hostile handler after one cooldown cycle
-// [{
-//     [FUNC(handleHostile),GVAR(hostileCooldown),[]] call CBA_fnc_addPerFrameHandler;
-// },[],GVAR(hostileCooldown)] call CBA_fnc_waitAndExecute;
-
 nil

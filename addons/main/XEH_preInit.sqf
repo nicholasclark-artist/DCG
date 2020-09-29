@@ -16,6 +16,7 @@ PREP(displayText);
 PREP(displayGUIMessage);
 PREP(handleHCConnected);
 PREP(handleCleanup);
+PREP(handleReport);
 PREP(handleSettingChange);
 PREP(findLocationRadius);
 PREP(findPosBuilding);

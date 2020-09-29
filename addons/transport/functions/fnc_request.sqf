@@ -13,6 +13,7 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
+// set status on requestor
 GVAR(status) = TR_STATE_WAITING;
 
 [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[TR_STR_EXFIL,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify);
