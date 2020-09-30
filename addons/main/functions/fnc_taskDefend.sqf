@@ -5,7 +5,7 @@ Rommel,SilentSpike,Nicholas Clark (SENSEI)
 Description:
 set group to defend area. Modified version of CBA_fnc_taskDefend
 
-if buildings in defended area are spawned after mission start, the group must exist and initialize before said buildings in order for pathing to function
+if buildings in the defended area are spawned after mission start, the group must exist and initialize prior to said buildings. Otherwise, the group's pathing will not take into account the spawned buildings.
 
 Arguments:
 0: group <GROUP>
@@ -27,6 +27,11 @@ params [
 
 if !(local _group) exitWith {false};
 
+if (isNull _group) exitWith {
+    WARNING("group does not exist");
+    false
+};
+
 // clear existing waypoints
 [_group] call CBA_fnc_clearWaypoints;
 
@@ -39,7 +44,7 @@ private _statics = _position nearObjects ["StaticWeapon",_radius];
 private _buildings = _position nearObjects ["House",_radius];
 
 // filter out occupied statics
-_statics = _statics select {!((locked _x) isEqualTo 2) && {(_x emptyPositions "Gunner") > 0}}; 
+_statics = _statics select {!((locked _x) isEqualTo 2) && {(_x emptyPositions "Gunner") > 0}};
 
 // filter out buildings below the size threshold (and store positions for later use)
 private ["_positions","_exit"];
@@ -79,7 +84,7 @@ private ["_building","_buildingPositions","_pos","_static"];
 
             if !(_buildingPositions isEqualTo []) then {
                 _pos = _buildingPositions deleteAt (floor (random (count _buildingPositions)));
-                
+
                 // if building positions are all taken remove from possible buildings
                 if (_buildingPositions isEqualTo []) then {
                     _buildings deleteAt (_buildings find _building);
@@ -96,7 +101,7 @@ private ["_building","_buildingPositions","_pos","_static"];
                     doStop _unit;
 
                     _unit setUnitPos "UP";
-                    
+
                     // spread out network traffic caused by setPos
                     sleep 0.1;
 

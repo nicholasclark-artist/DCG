@@ -64,7 +64,7 @@ private _grp = [_start,1,1,CIVILIAN,1,0,true] call EFUNC(main,spawnGroup);
         // _driver setSkill 0;
 
         // set waypoint to midpoint
-        private _wp = _grp addWaypoint [_mid,-1];
+        private _wp = _grp addWaypoint [ATLtoASL _mid,-1];
         _wp setWaypointTimeout [0,0,0];
         _wp setWaypointStatements [
             format [QUOTE(CHECK_DIST(getPosATL this,%1,COMPLETION_DIST)),_end],

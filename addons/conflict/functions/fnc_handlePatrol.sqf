@@ -95,21 +95,14 @@ if (PROBABILITY(_distProb)) then {
         // don't cache patrol groups
         _grp = [_pos,1,-1,EGVAR(main,enemySide),1,true,true] call EFUNC(main,spawnGroup);
 
-        {
-            _wp = _grp addWaypoint [_x,0];
-
-            _wp setWaypointType "MOVE";
-            _wp setWaypointBehaviour "SAFE";
-            _wp setWaypointCombatMode "YELLOW";
-            _wp setWaypointTimeout [0,15,30];
-            _wp setWaypointCompletionRadius 10;
-        } forEach _roadPositions;
-
-        _wp = _grp addWaypoint [(_roadPositions select 0) getPos [20, random 360],0];
-        _wp setWaypointType "CYCLE";
-
-        (objectParent leader _grp) limitSpeed 45;
-        // (objectParent leader _grp) forceFollowRoad true;
+        [
+            {(_this select 0) getVariable [QEGVAR(main,ready),false]},
+            {
+                [_this select 0,_this select 1,DYNPAT_RADIUS,0] call EFUNC(main,taskPatrol);
+            },
+            [_grp,_pos],
+            60
+        ] call CBA_fnc_waitUntilAndExecute;
 
         // infinite fuel
         (objectParent leader _grp) addEventHandler ["Fuel",{
@@ -126,13 +119,23 @@ if (PROBABILITY(_distProb)) then {
             _posWP = getPos _player;
         };
 
-        _wp = _grp addWaypoint [_posWP,0];
-        _wp setWaypointBehaviour "SAFE";
-        _wp setWaypointSpeed "LIMITED";
-        _wp setWaypointStatements [
-            "!(behaviour this isEqualTo ""COMBAT"")",
-            format ["[group this,getPosATL this,400,0] call %1",QEFUNC(main,taskPatrol)]
-        ];
+        [
+            {(_this select 0) getVariable [QEGVAR(main,ready),false]},
+            {
+                _wp = (_this select 0) addWaypoint [_this select 1,0];
+                _wp setWaypointType "MOVE";
+                _wp setWaypointBehaviour "SAFE";
+                _wp setWaypointSpeed "LIMITED";
+                _wp setWaypointStatements [
+                    "!(behaviour this isEqualTo ""COMBAT"")",
+                    format ["[group this,getPos this,%1,0] call %2",DYNPAT_RADIUS,QEFUNC(main,taskPatrol)]
+                ];
+            },
+            [_grp,_posWP],
+            60
+        ] call CBA_fnc_waitUntilAndExecute;
+
+
     };
 
     GVAR(patrolGroups) pushBack _grp;

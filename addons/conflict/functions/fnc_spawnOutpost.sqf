@@ -42,7 +42,7 @@ private ["_unitCount","_unitCountBuildings","_unitCountPatrol","_groups","_intel
                 [QEGVAR(cache,enableGroup),_this select 0] call CBA_fnc_serverEvent;
             },
             [_x,_value],
-            10
+            60
         ] call CBA_fnc_waitUntilAndExecute;
 
         sleep 0.2
@@ -53,10 +53,10 @@ private ["_unitCount","_unitCountBuildings","_unitCountPatrol","_groups","_intel
         [
             {_this getVariable [QEGVAR(main,ready),false]},
             {
-                [_this,getPosATL leader _this,random [100,200,500],1,"if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,taskPatrol);
+                [_this,getPos leader _this,random [100,200,500],1,"if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,taskPatrol);
             },
             _x,
-            10
+            60
         ] call CBA_fnc_waitUntilAndExecute;
 
         sleep 0.2;
@@ -67,10 +67,10 @@ private ["_unitCount","_unitCountBuildings","_unitCountPatrol","_groups","_intel
         [
             {_this getVariable [QEGVAR(main,ready),false]},
             {
-                [_this,getPosATL leader _this,400,0] call EFUNC(main,taskPatrol);
+                [_this,getPos leader _this,400,0] call EFUNC(main,taskPatrol);
             },
             _x,
-            10
+            60
         ] call CBA_fnc_waitUntilAndExecute;
 
         sleep 0.2;

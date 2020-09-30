@@ -19,6 +19,8 @@ if (!isServer) exitWith {};
     }] call CBA_fnc_addEventHandler;
 
     [QGVAR(reinit),{
+        WARNING("init failed, retry after cooldown");
+
         [GVAR(outposts),{
             [_key,true] call FUNC(removeOutpost);
         }] call CBA_fnc_hashEachPair;
@@ -28,7 +30,6 @@ if (!isServer) exitWith {};
         }] call CBA_fnc_hashEachPair;
 
         [FUNC(init),[],20] call CBA_fnc_waitAndExecute;
-        WARNING("init failed, retry after cooldown")
     }] call CBA_fnc_addEventHandler;
 
     // runs once intel gathered

@@ -15,6 +15,8 @@ __________________________________________________________________*/
 
 if (GVAR(cleanup) isEqualTo []) exitWith {};
 
+TRACE_1("",GVAR(cleanup));
+
 private _cleanupNow = [];
 private _cleanupLater = [];
 
@@ -36,25 +38,25 @@ private _cleanupLater = [];
                 } else {
                     _cleanupLater pushBack _x;
                 };
-            };            
+            };
         };
         case "LOCATION": {
             if !(isNull _x) then {
                 _cleanupNow pushBack _x;
-            };            
+            };
         };
         case "STRING": {
             if (CHECK_MARKER(_x)) then {
-               _cleanupNow pushBack _x; 
+               _cleanupNow pushBack _x;
             };
         };
-        default { 
-            WARNING_1("bad type passed to cleanup handler: %1",typeName _x);    
+        default {
+            WARNING_1("bad type passed to cleanup handler: %1",typeName _x);
         };
     };
 } forEach GVAR(cleanup);
 
-TRACE_4("",count GVAR(cleanup),count _cleanupNow,count _cleanupLater,GVAR(cleanup));
+TRACE_3("",count GVAR(cleanup),count _cleanupNow,count _cleanupLater);
 
 _cleanupNow call CBA_fnc_deleteEntity;
 

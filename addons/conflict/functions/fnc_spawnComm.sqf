@@ -31,7 +31,7 @@ private ["_unitCount","_groups","_composition"];
                 [QEGVAR(cache,enableGroup),_this select 0] call CBA_fnc_serverEvent;
             },
             [_x,_value],
-            10
+            60
         ] call CBA_fnc_waitUntilAndExecute;
 
         sleep 0.2

@@ -7,7 +7,7 @@ set group on patrol
 
 Arguments:
 0: patrol group <GROUP>
-1: patrol center position <ARRAY>
+1: patrol center positionAGL <ARRAY>
 2: distance from center position <NUMBER>
 3: patrol type <NUMBER>
 4: waypoint completion statement <STRING>
@@ -17,6 +17,7 @@ Return:
 boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define ROAD_SEARCH_DIST 500
 
 params [
     ["_group",grpNull,[grpNull]],
@@ -27,7 +28,7 @@ params [
     ["_blacklist",[],[[]]]
 ];
 
-/* 
+/*
     types
         0: group patrols in and around area
         1: group patrols perimeter of area
@@ -66,8 +67,7 @@ if (_groupVehicle isKindOf "Air") exitWith {
     true
 };
 
-// count increases with radius
-private _count = (round (_radius / 64) max 3) min 6;
+private _count = [3,6] call BIS_fnc_randomInt;
 private _wpPositions = [];
 
 private ["_angle","_a","_b","_roads"];
@@ -77,8 +77,8 @@ for "_i" from 0 to _count - 1 do {
     _a = (_position select 0) + (sin _angle * _radius);
     _b = (_position select 1) + (cos _angle * _radius);
 
-    if (_groupVehicle isKindOf "Land") then {
-        _roads = [_a,_b] nearRoads 200;
+    if (_groupVehicle isKindOf "LandVehicle") then {
+        _roads = [_a,_b] nearRoads ROAD_SEARCH_DIST;
 
         if (_roads isEqualTo []) exitWith {};
 
@@ -110,23 +110,23 @@ if (_type isEqualTo 0) then {
 private "_wp";
 
 {
-    _wp = _group addWaypoint [_x,[-1,0] select (isNull (objectParent (leader _group)))];
+    _wp = _group addWaypoint [_x,[-1,0] select (isNull objectParent leader _group)];
 
     _wp setWaypointType "MOVE";
     _wp setWaypointBehaviour "SAFE";
     _wp setWaypointCombatMode "YELLOW";
-    _wp setWaypointSpeed (["NORMAL","LIMITED"] select (isNull (objectParent (leader _group)))); 
+    _wp setWaypointSpeed (["NORMAL","LIMITED"] select (isNull objectParent leader _group));
     _wp setWaypointFormation _formation;
     _wp setWaypointStatements ["TRUE",_onComplete];
     _wp setWaypointTimeout [0,5,16];
-    _wp setWaypointCompletionRadius (10 + (_radius / 5));
+    _wp setWaypointCompletionRadius (10 + (_radius * 0.1));
 } forEach _wpPositions;
 
 // close patrol loop
-_wp = _group addWaypoint [_position,_radius];
+_wp = _group addWaypoint [_position,0];
 
 _wp setWaypointType "CYCLE";
 _wp setWaypointStatements ["TRUE",_onComplete];
-_wp setWaypointCompletionRadius (10 + (_radius / 5));
+_wp setWaypointCompletionRadius (10 + (_radius * 0.1));
 
 true

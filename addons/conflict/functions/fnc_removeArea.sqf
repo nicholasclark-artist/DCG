@@ -21,6 +21,9 @@ params [
 
 private _value = [GVAR(areas),_key] call CBA_fnc_hashGet;
 
+// remove from hash
+[GVAR(areas),_key] call CBA_fnc_hashRem;
+
 // force arg will immediately remove all units and tasks
 if (_force) then {
     (_value getVariable [QGVAR(groups),[]]) call CBA_fnc_deleteEntity;
