@@ -13,7 +13,7 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define SPAWN_DELAY 1
 
-private ["_location","_polygon","_length","_spacing","_positions","_positionsLand","_positionsWater","_grp"];
+private ["_location","_polygon","_length","_spacing","_positions","_positionsLand","_positionsWater","_grp","_composition","_prefabs","_type"];
 
 // areas don't use FUNC(spawnUnit) because they need specific spawn positions
 [GVAR(areas),{
@@ -23,6 +23,7 @@ private ["_location","_polygon","_length","_spacing","_positions","_positionsLan
     _length = [_polygon] call EFUNC(main,polygonLength);
     _spacing = _length / round (_length / (AO_INF_GRPSPACING min (_length * 0.5)));
 
+    // get grid of positions inside polygon
     _positions = [[_polygon,1] call EFUNC(main,polygonCenter),_spacing,_length] call EFUNC(main,findPosGrid);
     _positions = _positions select {[_x select 0,_x select 1,0] inPolygon _polygon};
 
@@ -86,6 +87,25 @@ private ["_location","_polygon","_length","_spacing","_positions","_positionsLan
         // wait until entire group is spawned before moving to next group
         sleep (SPAWN_DELAY * AO_SHIP_CARGO);
     } forEach _positionsWater;
+
+    // prefabs
+    {
+        if (PROBABILITY(0.5)) then {
+            _type = selectRandom ["mil_cp"];
+            _composition = [_x,_type] call FUNC(spawnPrefab);
+
+            if !(_composition isEqualTo []) then {
+                _prefabs = _value getVariable [QGVAR(prefabs),[]];
+                _prefabs pushBack _composition;
+
+                _mrk = createMarker [format["%1",_forEachIndex + (random 10000)],getPos (_composition select 2 select 0)];
+                _mrk setMarkerType "mil_dot";
+                _mrk setMarkerColor "ColorGREEN";
+            };
+        };
+
+        sleep SPAWN_DELAY;
+    } forEach _positionsLand;
 }] call CBA_fnc_hashEachPair;
 
 nil

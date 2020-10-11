@@ -70,27 +70,20 @@ TRACE_1("dynamic patrol probability",_distProb);
 if (PROBABILITY(_distProb)) then {
     private _pos = EGVAR(main,grid) findIf {CHECK_DIST(_player,_x,DYNPAT_SPAWNRANGE)};
 
-    if (EGVAR(main,grid) isEqualTo [] || {_pos < 0}) exitWith {
+    if (_pos < 0) exitWith {
         WARNING("cannot find suitable position for dynamic patrol");
     };
 
     _pos = EGVAR(main,grid) select _pos;
 
     if !([_pos,50] call EFUNC(main,getNearPlayers) isEqualTo []) exitWith {
-        WARNING("players found too close to dynamic patrol spawn position");
+        WARNING("players found close to dynamic patrol spawn position");
     };
 
     private ["_grp","_posWP","_wp"];
 
     if (PROBABILITY(GVAR(vehicleProbability))) then {
         INFO_1("spawning dynamic patrol (vehicle) at %1",_pos);
-
-        private _roadPositions = [getPos _player,3000] call EFUNC(main,findPosDriveby);
-
-        if (_roadPositions isEqualTo []) then {
-            WARNING("cannot find road positions for dynamic patrol");
-            breakTo SCOPE_MAIN;
-        };
 
         // don't cache patrol groups
         _grp = [_pos,1,-1,EGVAR(main,enemySide),1,true,true] call EFUNC(main,spawnGroup);
@@ -134,8 +127,6 @@ if (PROBABILITY(_distProb)) then {
             [_grp,_posWP],
             60
         ] call CBA_fnc_waitUntilAndExecute;
-
-
     };
 
     GVAR(patrolGroups) pushBack _grp;

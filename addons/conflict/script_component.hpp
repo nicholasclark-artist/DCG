@@ -10,9 +10,8 @@
 
 #define AO_POLY_ID(id) ([QUOTE(PREFIX),"polygonDraw",id] joinString "_")
 
-#define AO_COUNT_P1 2 // phase 1
-#define AO_COUNT_P2 1 // phase 2
-#define OP_COUNT 2
+#define AO_COUNT 3
+#define OP_COUNT 3
 
 #define AO_INF_GRPSIZE 4 // number of units in group
 #define AO_INF_GRPSPACING 750 // distance in meters between patrol groups

@@ -19,7 +19,7 @@ if (!isServer) exitWith {};
     }] call CBA_fnc_addEventHandler;
 
     [QGVAR(reinit),{
-        WARNING("init failed, retry after cooldown");
+        ERROR("init failed, retry after cooldown");
 
         [GVAR(outposts),{
             [_key,true] call FUNC(removeOutpost);
@@ -42,4 +42,9 @@ if (!isServer) exitWith {};
     }] call CBA_fnc_addEventHandler;
 
     [FUNC(init),[],10] call CBA_fnc_waitAndExecute;
+
+    // run handlers
+    [{
+        [FUNC(handlePatrol),300,[]] call CBA_fnc_addPerFrameHandler;
+    },[],60] call CBA_fnc_waitAndExecute;
 }] call CBA_fnc_addEventHandler;

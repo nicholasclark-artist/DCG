@@ -15,7 +15,7 @@ __________________________________________________________________*/
 if !(isServer) exitWith {nil};
 
 // find initial areas
-private _ao = [AO_COUNT_P1] call FUNC(setArea);
+private _ao = [AO_COUNT] call FUNC(setArea);
 
 // retry on fail
 if !(_ao) exitWith {
@@ -34,7 +34,6 @@ if !(_outpost) exitWith {
 [] spawn FUNC(spawnOutpost);
 
 // draw ao on map
-
 [GVAR(areas),{
     [
         [_key,[_value getVariable [QEGVAR(main,polygon),DEFAULT_POLYGON]]],
@@ -48,10 +47,5 @@ if !(_outpost) exitWith {
 
 // set tasks
 call FUNC(setTask);
-
-// run handlers
-[{
-    [FUNC(handlePatrol),300,[]] call CBA_fnc_addPerFrameHandler;
-},[],60] call CBA_fnc_waitAndExecute;
 
 nil

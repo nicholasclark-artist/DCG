@@ -7,6 +7,7 @@ set outpost locations
 
 Arguments:
 0: outpost count <NUMBER>
+1: composition type <STRING>
 
 Return:
 boolean
@@ -18,8 +19,7 @@ if !(isServer) exitWith {};
 
 params [
     ["_count",1,[0]],
-    ["_type","",[""]],
-    ["_intelStatus",true,[false]]
+    ["_type","",[""]]
 ];
 
 // define scope to break hash loop
@@ -27,6 +27,8 @@ scopeName SCOPE;
 
 private ["_polygon","_outposts","_pos","_polygonPositions","_terrain","_location"];
 
+// cap outpost count at ao count
+_count = _count min count ([GVAR(areas)] call CBA_fnc_hashKeys);
 _outposts = [];
 
 [GVAR(areas),{
@@ -62,14 +64,13 @@ _outposts = [];
         _location = createLocation ["Invisible",ASLtoAGL _pos,1,1];
 
         // setvars
-        _location setVariable [QGVAR(status),true]; // true = active, false = inactive
-        _location setVariable [QGVAR(intelStatus),_intelStatus]; // true = outpost has active intel, false = no intel
+        _location setVariable [QGVAR(status),true]; // true = active
         _location setVariable [QGVAR(intel),objNull];
-        _location setVariable [QGVAR(type),"outpost"]; // type
+        _location setVariable [QGVAR(type),"outpost"]; // location type
         _location setVariable [QGVAR(name),call FUNC(getName)]; // outpost alias
         _location setVariable [QGVAR(task),""]; // task associated with outpost
         _location setVariable [QGVAR(composition),[]]; // list of building objects
-        _location setVariable [QGVAR(compositionType),_type]; // used to force composition type
+        _location setVariable [QGVAR(compositionType),_type]; // accepts classnames from cfgCompositions, "" = random composition, "none" = do not spawn composition
         _location setVariable [QGVAR(nodes),[]]; // safe spawn positions
         _location setVariable [QGVAR(radius),0]; // will be adjusted based on composition size
         _location setVariable [QGVAR(terrain),_terrain]; // terrain type at outpost

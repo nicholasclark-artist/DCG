@@ -68,8 +68,8 @@ scopeName SCOPE;
     // get prefab positions
     private _roads = _pos nearRoads _radius * 0.75;
 
-    // remove intersections
-    _roads = _roads select {count (roadsConnectedTo _x) < 3};
+    // remove unsuitable roads and intersections
+    _roads = _roads select {!((roadsConnectedTo _x) isEqualTo []) && count (roadsConnectedTo _x) < 3};
 
     if !(_roads isEqualTo []) then {
         _roads = _roads call BIS_fnc_arrayShuffle;

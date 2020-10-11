@@ -36,11 +36,12 @@ if (_force) then {
 
 // reset vars
 _value setVariable [QGVAR(status),false];
-_value setVariable [QGVAR(intelStatus),false];
 _value setVariable [QGVAR(intel),objNull];
 _value setVariable [QGVAR(task),""];
 _value setVariable [QGVAR(composition),[]];
+_value setVariable [QGVAR(compositionType),""];
 _value setVariable [QGVAR(nodes),[]];
+_value setVariable [QGVAR(radius),0];
 _value setVariable [QGVAR(groups),[]];
 
 INFO_1("removed outpost: %1",_key);
