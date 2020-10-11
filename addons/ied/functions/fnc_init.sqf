@@ -16,7 +16,7 @@ __________________________________________________________________*/
 #define VANILLA_TYPES ["IEDUrbanBig_F","IEDUrbanSmall_F"]
 
 {
-    private _roads = _x nearRoads 200;
+    private _roads = _x nearRoads 50;
 
     if !(_roads isEqualTo []) then {
         _road = selectRandom _roads;

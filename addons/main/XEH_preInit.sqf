@@ -171,7 +171,15 @@ GVAR(center) = [GVAR(radius),GVAR(radius)];
 GVAR(center) set [2,ASLZ(GVAR(center))];
 
 // a grid of safe terrain positions used to dynamically spawn objects mid mission
-GVAR(grid) = [GVAR(center),worldSize/round(worldSize/1000),worldSize,0,2,0] call FUNC(findPosGrid);
+GVAR(grid) = [GVAR(center),worldSize/round(worldSize/500),worldSize,0,2,0] call FUNC(findPosGrid);
+
+// grid debug
+{
+    _mrk = createMarker [format["%1",_forEachIndex + (random 10000)],_x];
+    _mrk setMarkerType "mil_dot";
+    _mrk setMarkerColor "ColorWHITE";
+    _mrk setMarkerAlpha 0.4;
+} forEach GVAR(grid);
 
 // debug variables
 GVAR(debug) = false;
