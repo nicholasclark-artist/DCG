@@ -73,7 +73,8 @@ __________________________________________________________________*/
             // select position to move to
             switch (selectRandom _types) do {
                 case "random": { // random position
-                    _posMove = _position getPos [(random (_radius - (_radius * 0.2))) + (_radius * 0.2),random 360];
+
+                    _posMove = _position getPos [[_radius * 0.2,_radius] call BIS_fnc_randomNum,random 360];
                     _posMove = [_posMove,nil] select (surfaceIsWater _posMove);
 
                     // if !(isNil "_posMove") then {
@@ -100,12 +101,12 @@ __________________________________________________________________*/
                     _posEvent = {
                         params ["_agent","_obj"];
 
-                        TRACE_1("pos event",_this);
+                        // TRACE_1("pos event",_this);
 
                         _agent setVariable [QGVAR(patrol),false];
                         [_agent,"object",_obj] call EFUNC(main,setAmbientAnim);
 
-                        // stand up
+                        // stand up after some time
                         [
                             {
                                 params ["_agent"];
@@ -136,12 +137,12 @@ __________________________________________________________________*/
                     _posEvent = {
                         params ["_agent"];
 
-                        TRACE_1("pos event",_this);
+                        // TRACE_1("pos event",_this);
 
                         _agent setVariable [QGVAR(patrol),false];
                         [_agent] call EFUNC(main,setAmbientAnim);
 
-                        // release from prefab
+                        // release from prefab after some time
                         [
                             {
                                 params ["_agent"];
