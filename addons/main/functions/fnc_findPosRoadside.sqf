@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-find positionASL at roadside 
+find positionASL at roadside
 
 Arguments:
 0: road <OBJECT>
@@ -17,6 +17,7 @@ params [
     ["_road",objNull,[objNull]]
 ];
 
+// @todo roadsConnectedTo will be empty in some cases, fix with new getRoadInfo command
 private _pos = [];
 private _dir = _road getRelDir ((roadsConnectedTo _road) select 0);
 _dir = _dir + (180 * round (random 1));

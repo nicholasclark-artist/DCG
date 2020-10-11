@@ -29,8 +29,8 @@ switch _type do {
         private _roads = _position nearRoads _radius;
         private _count = _location getVariable [QGVAR(vehicleCount),-1];
 
-        // remove intersections
-        _roads = _roads select {count (roadsConnectedTo _x) < 3};
+        // remove unsuitable roads and intersections
+        _roads = _roads select {!((roadsConnectedTo _x) isEqualTo []) && count (roadsConnectedTo _x) < 3};
 
         if (_roads isEqualTo []) exitWith {};
 
@@ -90,8 +90,8 @@ switch _type do {
         private _roads = _position nearRoads _radius * 0.75;
         private _count = _location getVariable [QGVAR(prefabCount),-1];
 
-        // remove intersections
-        _roads = _roads select {count (roadsConnectedTo _x) < 3};
+        // remove unsuitable roads and intersections
+        _roads = _roads select {!((roadsConnectedTo _x) isEqualTo []) && count (roadsConnectedTo _x) < 3};
 
         if (_roads isEqualTo []) exitWith {};
 
@@ -105,7 +105,7 @@ switch _type do {
 
             if !(_position isEqualTo []) then {
                 _prefab = [_position,"sup_table",(_road getRelDir ((roadsConnectedTo _road) select 0)) - 90,false] call EFUNC(main,spawnComposition);
-                _location setVariable [QGVAR(prefabPositions),_prefab select 1];
+                _location setVariable [QGVAR(prefabPositions),_prefab select 3];
                 _ambientList append (_prefab select 2);
             };
         };
