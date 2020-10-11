@@ -13,7 +13,6 @@ PREP(setValue);
 PREP(getRegion);
 PREP(handleKilled);
 PREP(handleQuestion);
-PREP(handleHint);
 PREP(handleStop);
 
 GVAR(regions) = [];
