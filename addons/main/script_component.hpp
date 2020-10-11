@@ -22,4 +22,5 @@
 // scenario report action
 #define REPORT_NAME "Scenario Report"
 #define REPORT_STATEMENT [QGVAR(report),[player]] call CBA_fnc_serverEvent
-#define REPORT_COND cameraOn isEqualTo player
+#define REPORT_COND true
+// #define REPORT_COND cameraOn isEqualTo player
