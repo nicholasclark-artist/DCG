@@ -64,7 +64,7 @@ if (_clear && {isServer}) then {
         _x allowDamage false;
     } forEach _objectsTerrain;
 
-    // save reference to terrain objects in pivot 
+    // save reference to terrain objects in pivot
     _pivot setVariable [QGVARMAIN(objectsTerrain),_objectsTerrain];
 
     // restore objects when pivot deleted
@@ -73,7 +73,7 @@ if (_clear && {isServer}) then {
             _x hideObjectGlobal false;
             _x allowDamage true;
         } forEach ((_this select 0) getVariable [QGVARMAIN(objectsTerrain),[]]);
-    }];  
+    }];
 };
 
 // spawn objects
@@ -86,7 +86,7 @@ for "_i" from 0 to count _objData - 1 do {
 
     _relPos = parseSimpleArray _relPos;
     _dirOffset = parseNumber _dirOffset;
-    
+
     _obj = if (_simple < 1) then {
         createVehicle [_type,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
     } else {
@@ -105,7 +105,7 @@ for "_i" from 0 to count _objData - 1 do {
     _obj setDir DIR_OFFSET(_dirOffset);
     _obj setPosASL _pos;
 
-    // if default up vector is not forced,align to terrain normal 
+    // if default up vector is not forced,align to terrain normal
     if (_vectorUp < 1) then {
         _obj setVectorUp surfaceNormal getPosASL _obj;
     };
@@ -134,11 +134,12 @@ for "_i" from 0 to count _objData - 1 do {
 
             // TRACE_1("intersection",_x);
         };
-    } forEach _intersect; 
+    } forEach _intersect;
 } forEach _intersects;
 
 // get node data
 private _nodeData = parseSimpleArray (getText (_composition >> "nodes"));
+// private "_bp";
 
 for "_i" from 0 to count _nodeData - 1 do {
     (_nodeData select _i) params ["_relPos","_z","_radius"];
@@ -147,11 +148,15 @@ for "_i" from 0 to count _nodeData - 1 do {
     _radius = parseNumber _radius;
 
     _pos = POS_RELATIVE(_relPos);
-    
+
     // set height above terrain
     _pos set [2,parseNumber _z];
+
+    // make node compatible with CBA building positions
+    // _bp = createVehicle ["CBA_buildingPos",_pos,[],0,"CAN_COLLIDE"];
+    // _objects pushBack _bp;
 
     _nodes pushBack [_pos,_radius];
 };
 
-[getNumber (_composition >> "radius"),_nodes,_objects,configName _composition]
+[configName _composition,getNumber (_composition >> "radius"),_objects,_nodes]
