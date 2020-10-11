@@ -43,6 +43,9 @@ if (isNull _group) exitWith {
 private _statics = _position nearObjects ["StaticWeapon",_radius];
 private _buildings = _position nearObjects ["House",_radius];
 
+// add custom buildings
+_buildings append (_position nearObjects ["CBA_buildingPos",_radius]);
+
 // filter out occupied statics
 _statics = _statics select {!((locked _x) isEqualTo 2) && {(_x emptyPositions "Gunner") > 0}};
 
@@ -134,6 +137,6 @@ private ["_building","_buildingPositions","_pos","_static"];
 } forEach _units;
 
 // unassigned (or combat reacted) units will patrol
-[_group,_position,_radius,0] call FUNC(taskPatrol);
+[_group,_position,_radius max 50,0] call FUNC(taskPatrol);
 
 true
