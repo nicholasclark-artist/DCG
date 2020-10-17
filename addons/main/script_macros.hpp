@@ -15,7 +15,7 @@
 #define MSG_EXIT QUOTE(Exiting: ADDON version: VERSION)
 
 #define PREINIT if (!isServer && {hasInterface}) exitWith {}; LOG(MSG_INIT)
-#define POSTINIT if (!isMultiplayer || {!isServer && hasInterface}) exitWith {}
+#define POSTINIT if (!isMultiplayer || {!isServer && hasInterface} || {worldName isEqualTo "VR"}) exitWith {}
 
 // variable macros
 #define GETVAR_SYS(var1,var2) getVariable [ARR_2(QUOTE(var1),var2)]
@@ -43,7 +43,7 @@
 // heaps
 // Author: mrCurry (https://forums.bohemia.net/profile/759255-mrcurry/)
 
-// Min/max switch,comment for a min heap,uncomment for a max heap
+// Min/max switch, comment for a min heap, uncomment for a max heap
 #define MAX_HEAP
 
 #define HEAP_NODEPARAMS(x) (x) params ["_key","_value"]
