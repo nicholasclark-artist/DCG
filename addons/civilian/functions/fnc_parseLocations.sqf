@@ -12,10 +12,8 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_locations"];
-
 // get locations for unit spawns
-_locations = [];
+private _locations = [];
 
 // get data from main location hashes
 [
@@ -46,14 +44,14 @@ private _onCreate = {
     _this setVariable [QEGVAR(main,HCBlacklist),true];
     _this setVariable ["acex_headless_blacklist",true];
 
-    // behaviors 
+    // behaviors
     _this setSkill 0.1;
     _this setUnitPos "UP";
     _this forceSpeed (_this getSpeed "SLOW");
     _this setBehaviourStrong "CARELESS";
 
     {_this disableAI _x} forEach ["FSM","AUTOTARGET","TARGET","WEAPONAIM","AIMINGERROR","SUPPRESSION","CHECKVISIBLE","COVER","AUTOCOMBAT","MINEDETECTION"];
-    
+
     // animations
     _this setAnimSpeedCoef (0.8 + random 0.2);
 
@@ -71,20 +69,18 @@ private _onDelete = {
     nil
 };
 
-private ["_location","_name","_position","_radius","_buildingPositions","_mrk"];
-
 for "_i" from 0 to (count _locations - 1) do {
-    _location = _locations select _i;
-    _name = _location getVariable [QEGVAR(main,name),""];
-    _position = _location getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS];
-    _radius = _location getVariable [QEGVAR(main,radius),0];
+    private _location = _locations select _i;
+    private _name = _location getVariable [QEGVAR(main,name),""];
+    private _position = _location getVariable [QEGVAR(main,positionASL),DEFAULT_SPAWNPOS];
+    private _radius = _location getVariable [QEGVAR(main,radius),0];
 
-    // find houses with building positions 
+    // find houses with building positions
     // @todo add eventhandler to buildings to remove house from buildingPos array when destroyed
-    _buildingPositions = (ASLToAGL _position nearObjects ["House",_radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
+    private _buildingPositions = (ASLToAGL _position nearObjects ["House",_radius min 300]) apply {_x buildingPos -1} select {count _x > 0};
 
     if (count _buildingPositions > 1) then {
-        // get ambient anim objects 
+        // get ambient anim objects
         private _animObjects = nearestTerrainObjects [ASLToAGL _position,["HIDE"],_radius,false];
         _animObjects = _animObjects select {((getModelInfo _x) select 0) find "chair" > -1 || ((getModelInfo _x) select 0) find "bench" > -1};
 
@@ -109,15 +105,15 @@ for "_i" from 0 to (count _locations - 1) do {
         _location setVariable [QGVAR(ambients),[]];
 
         // debug markers
-        _mrk = createMarker [[QUOTE(PREFIX),_name] joinString "_",_position];
+        private _mrk = createMarker [[QUOTE(PREFIX),_name] joinString "_",_position];
         _mrk setMarkerColor ([CIVILIAN,true] call BIS_fnc_sideColor);
         _mrk setMarkerShape "ELLIPSE";
         _mrk setMarkerBrush "Border";
         _mrk setMarkerSize [_radius + GVAR(spawnDist),_radius + GVAR(spawnDist)];
-        [_mrk] call EFUNC(main,setDebugMarker);     
+        [_mrk] call EFUNC(main,setDebugMarker);
 
         // add to location hash
-        _hash pushBack [_name,_location];     
+        _hash pushBack [_name,_location];
     } else {
         WARNING_3("unsuitable spawn location: %1: %2: %3",_name,_position,count _buildingPositions);
     };

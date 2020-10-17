@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-parse cfgVehicles to get classes of a specific side and faction 
+parse cfgVehicles to get classes of a specific side and faction
 
 0 = East
 1 = West
@@ -37,10 +37,10 @@ _filters = _filters apply {toLower _x};
 _factions = _factions apply {toUpper _x};
 
 // parse CfgVehicles for desired configs
-private _factionCfg = format [" 
-    (getNumber (_x >> 'scope') > 1) &&  
-    {getNumber (_x >> 'side') isEqualTo %1} && 
-    {toUpper getText (_x >> 'faction') in %2} && 
+private _factionCfg = format ["
+    (getNumber (_x >> 'scope') > 1) &&
+    {getNumber (_x >> 'side') isEqualTo %1} &&
+    {toUpper getText (_x >> 'faction') in %2} &&
     {getText (_x >> 'vehicleClass') != 'Autonomous'} &&
     {getText (_x >> 'vehicleClass') != 'Submarine'} &&
     {configName _x isKindOf 'CAManBase' || configName _x isKindOf 'Car' || configName _x isKindOf 'Tank' || configName _x isKindOf 'Ship' || configName _x isKindOf 'Air'}
@@ -48,7 +48,7 @@ private _factionCfg = format ["
 
 // apply filter to configs
 _factionCfg = _factionCfg select {
-    _class = _x;
+    private _class = _x;
     _filters findIf {toLower getText(_class >> "displayName") find _x > -1} < 0
 };
 
@@ -69,7 +69,7 @@ private _officers = if (_side isEqualTo 3) then {
 private _snipers = _units select {toLower getText (CONFIGTOPARSE >> _x >> "displayName") find "sniper" > -1};
 
 // remove special classes from units
-_units = _units - _officers; 
+_units = _units - _officers;
 _units = _units - _snipers;
 
 if (_units isEqualTo []) then {WARNING_1("empty unit pool: side %1",_side)};

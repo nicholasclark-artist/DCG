@@ -49,7 +49,7 @@ __________________________________________________________________*/
         WARNING_1("no patrol types for %1",_location);
     };
 
-    private ["_agent"];
+    private "_agent";
 
     {
         _agent = _x;

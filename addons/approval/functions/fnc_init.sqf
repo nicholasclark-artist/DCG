@@ -13,13 +13,10 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define DEFAULT_VARIANCE AP_DEFAULT*0.333
 
-// populate hash values
-private ["_newValue","_position","_dataKey","_min","_max","_polygon","_index"];
-
 [EGVAR(main,locations),{
     // set starting approval value
-    _min = AP_DEFAULT - DEFAULT_VARIANCE;
-    _max = AP_DEFAULT + DEFAULT_VARIANCE;
+    private _min = AP_DEFAULT - DEFAULT_VARIANCE;
+    private _max = AP_DEFAULT + DEFAULT_VARIANCE;
 
     _value setVariable [QGVAR(value),[_min,_max] call BIS_fnc_randomNum];
 

@@ -25,11 +25,9 @@ params [
 // define scope to break hash loop
 scopeName SCOPE;
 
-private ["_polygon","_outposts","_pos","_polygonPositions","_terrain","_location"];
-
 // cap outpost count at ao count
 _count = _count min count ([GVAR(areas)] call CBA_fnc_hashKeys);
-_outposts = [];
+private _outposts = [];
 
 [GVAR(areas),{
     // exit when outpost count reached
@@ -38,12 +36,12 @@ _outposts = [];
     };
 
     _polygon = _value getVariable [QEGVAR(main,polygon),[]];
-    _pos = [];
-    _terrain = "";
+    private _pos = [];
+    private _terrain = "";
 
     // get random positions in polygon
     // raise iterations if outpost count is consistently low
-    _polygonPositions = [_polygon,20] call EFUNC(main,polygonRandomPos);
+    private _polygonPositions = [_polygon,20] call EFUNC(main,polygonRandomPos);
 
     // find position based on terrain type
     {
@@ -61,7 +59,7 @@ _outposts = [];
         TRACE_3("",_key,_terrain,_pos);
 
         // create outpost location
-        _location = createLocation ["Invisible",ASLtoAGL _pos,1,1];
+        private _location = createLocation ["Invisible",ASLtoAGL _pos,1,1];
 
         // setvars
         _location setVariable [QGVAR(status),true]; // true = active

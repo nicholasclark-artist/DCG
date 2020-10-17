@@ -33,7 +33,7 @@ if (isNull _player) exitWith {
 private _position = getPosATL _player;
 
 // find all places for given expression
-private ["_place"];
+private "_place";
 
 {
     _place = selectBestPlaces [_position,ANIMAL_SPAWNDIST,_x select 0,50,1];

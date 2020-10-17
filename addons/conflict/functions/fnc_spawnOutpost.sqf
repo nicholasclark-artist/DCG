@@ -12,18 +12,18 @@ nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
-private ["_unitCount","_unitCountBuildings","_unitCountPatrol","_groups","_intelNodes","_intelObjects","_intelPos","_intel","_type","_composition","_size","_task"];
-
 [GVAR(outposts),{
-    _unitCount = [12,48,GVAR(countCoef)] call EFUNC(main,getUnitCount);
-    _unitCountBuildings = ceil (_unitCount * 0.6);
-    _unitCountPatrol = floor (_unitCount - _unitCountBuildings);
+    private _unitCount = [16,32,GVAR(countCoef)] call EFUNC(main,getUnitCount);
+    private _unitCountBuildings = ceil (_unitCount * 0.6);
+    private _unitCountPatrol = floor (_unitCount - _unitCountBuildings);
 
-    _groups = [_value,EGVAR(main,enemySide),_unitCountBuildings,_unitCountPatrol, round random 1] call FUNC(spawnUnit);
+    private _groups = [_value,EGVAR(main,enemySide),_unitCountBuildings,_unitCountPatrol, round random 1] call FUNC(spawnUnit);
 
     sleep _unitCount;
 
-    _type = _value getVariable [QGVAR(compositionType),""];
+    private _type = _value getVariable [QGVAR(compositionType),""];
+
+    private ["_composition","_intel"];
 
     if !(COMPARE_STR(_type,"none")) then {
         if (COMPARE_STR(_type,"")) then {
@@ -46,12 +46,12 @@ private ["_unitCount","_unitCountBuildings","_unitCountPatrol","_groups","_intel
         private "_intelSurface";
 
         // check outpost composition for intel placement or spawn intel composition
-        _intelObjects = (_composition select 2) select {toLower typeOf _x in INTEL_SURFACES};
+        private _intelObjects = (_composition select 2) select {toLower typeOf _x in INTEL_SURFACES};
 
         if !(_intelObjects isEqualTo []) then {
             _intelSurface = selectRandom _intelObjects;
         } else {
-            _intelNodes = (_composition select 3) select {(_x select 1) >= 1};
+            private _intelNodes = (_composition select 3) select {(_x select 1) >= 1};
 
             if (_intelNodes isEqualTo []) exitWith {};
 
@@ -62,9 +62,9 @@ private ["_unitCount","_unitCountBuildings","_unitCountPatrol","_groups","_intel
 
         // create intel item
         if !(isNil "_intelSurface") then {
-            _size = [_intelSurface] call EFUNC(main,getObjectSize);
+            private _size = [_intelSurface] call EFUNC(main,getObjectSize);
 
-            _intelPos = getPosASL _intelSurface;
+            private _intelPos = getPosASL _intelSurface;
             _intelPos = _intelPos vectorAdd [0,0,(_size select 1) + 0.01];
 
             _intel = createVehicle [selectRandom INTEL_ITEMS,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
@@ -74,12 +74,9 @@ private ["_unitCount","_unitCountBuildings","_unitCountPatrol","_groups","_intel
             [_intel,_intelPos] call EFUNC(main,setPosSafe);
 
             // remove any default intel actions
-            removeAllActions _intel;
+            [_intel] remoteExecCall [QUOTE(removeAllActions),0,false];
 
-            // only assign primary intel before task phase
-            _task = _value getVariable [QGVAR(task),""];
-
-            if (isNull GVAR(intel) && {COMPARE_STR(_task,"")}) then {
+            if (isNull GVAR(intel)) then {
                 GVAR(intel) = _intel;
             };
         } else {
@@ -105,6 +102,7 @@ private ["_unitCount","_unitCountBuildings","_unitCountPatrol","_groups","_intel
             {(_this select 0) getVariable [QEGVAR(main,ready),false]},
             {
                 [_this select 0,getPos (_this select 1),50,0] call EFUNC(main,taskDefend);
+                sleep 0.2;
                 [QEGVAR(cache,enableGroup),_this select 0] call CBA_fnc_serverEvent;
             },
             [_x,_value],
@@ -149,6 +147,13 @@ private ["_unitCount","_unitCountBuildings","_unitCountPatrol","_groups","_intel
     _value setVariable [QGVAR(intel),_intel];
 
     _intel setVariable [QGVAR(intelKey),_key];
+
+    private _mrk = createMarker [format["%1%2",_key,_value getVariable [QGVAR(type),""]],getPos _value];
+    _mrk setMarkerType "o_installation";
+    _mrk setMarkerColor ([EGVAR(main,enemySide),true] call BIS_fnc_sideColor);
+    _mrk setMarkerSize [0.75,0.75];
+    _mrk setMarkerText (_composition select 0);
+    [_mrk] call EFUNC(main,setDebugMarker);
 }] call CBA_fnc_hashEachPair;
 
 nil

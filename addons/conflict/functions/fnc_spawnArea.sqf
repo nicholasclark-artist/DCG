@@ -13,23 +13,20 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 #define SPAWN_DELAY 1
 
-private ["_location","_polygon","_length","_spacing","_positions","_positionsLand","_positionsWater","_grp","_composition","_prefabs","_type"];
-
-// areas don't use FUNC(spawnUnit) because they need specific spawn positions
 [GVAR(areas),{
-    _polygon = _value getVariable [QEGVAR(main,polygon),[]];
+    private _polygon = _value getVariable [QEGVAR(main,polygon),[]];
 
     // get patrol spawn positions
-    _length = [_polygon] call EFUNC(main,polygonLength);
-    _spacing = _length / round (_length / (AO_INF_GRPSPACING min (_length * 0.5)));
+    private _length = [_polygon] call EFUNC(main,polygonLength);
+    private _spacing = _length / round (_length / (AO_INF_GRPSPACING min (_length * 0.5)));
 
     // get grid of positions inside polygon
-    _positions = [[_polygon,1] call EFUNC(main,polygonCenter),_spacing,_length] call EFUNC(main,findPosGrid);
+    private _positions = [[_polygon,1] call EFUNC(main,polygonCenter),_spacing,_length] call EFUNC(main,findPosGrid);
     _positions = _positions select {[_x select 0,_x select 1,0] inPolygon _polygon};
 
     // get land and water positions
-    _positionsLand = _positions select {!(surfaceIsWater _x)};
-    _positionsWater = _positions select {surfaceIsWater _x && {(getTerrainHeightASL _x) <= -10}};
+    private _positionsLand = _positions select {!(surfaceIsWater _x)};
+    private _positionsWater = _positions select {surfaceIsWater _x && {(getTerrainHeightASL _x) <= -10}};
 
     _positionsLand = _positionsLand call BIS_fnc_arrayShuffle;
     _positionsWater = _positionsWater call BIS_fnc_arrayShuffle;
@@ -39,7 +36,7 @@ private ["_location","_polygon","_length","_spacing","_positions","_positionsLan
 
     // infantry patrols
     {
-        _grp = [_x,0,AO_INF_GRPSIZE,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup);
+        private _grp = [_x,0,AO_INF_GRPSIZE,EGVAR(main,enemySide),SPAWN_DELAY] call EFUNC(main,spawnGroup);
 
         [QGVAR(updateGroups),[_value,_grp]] call CBA_fnc_localEvent;
 
@@ -62,7 +59,7 @@ private ["_location","_polygon","_length","_spacing","_positions","_positionsLan
 
     // ship patrols
     {
-        _grp = [_x,1,-1,EGVAR(main,enemySide),SPAWN_DELAY,AO_SHIP_CARGO] call EFUNC(main,spawnGroup);
+        private _grp = [_x,1,-1,EGVAR(main,enemySide),SPAWN_DELAY,AO_SHIP_CARGO] call EFUNC(main,spawnGroup);
 
         [QGVAR(updateGroups),[_value,_grp]] call CBA_fnc_localEvent;
 
@@ -91,16 +88,19 @@ private ["_location","_polygon","_length","_spacing","_positions","_positionsLan
     // prefabs
     {
         if (PROBABILITY(0.5)) then {
-            _type = selectRandom ["mil_cp"];
-            _composition = [_x,_type] call FUNC(spawnPrefab);
+            private _type = selectRandom ["mil_cp"];
+            private _prefab = [_value,_x,_type] call FUNC(spawnPrefab);
 
-            if !(_composition isEqualTo []) then {
-                _prefabs = _value getVariable [QGVAR(prefabs),[]];
-                _prefabs pushBack _composition;
+            if !(_prefab isEqualTo []) then {
+                private _composition = _value getVariable [QGVAR(composition),[]];
+                _composition append (_prefab select 2);
 
-                _mrk = createMarker [format["%1",_forEachIndex + (random 10000)],getPos (_composition select 2 select 0)];
+                private _mrk = createMarker [format["%1",_forEachIndex + (random 10000)],getPos (_prefab select 2 select 0)];
                 _mrk setMarkerType "mil_dot";
-                _mrk setMarkerColor "ColorGREEN";
+                _mrk setMarkerColor ([EGVAR(main,enemySide),true] call BIS_fnc_sideColor);
+                _mrk setMarkerSize [0.75,0.75];
+                _mrk setMarkerText (_prefab select 0);
+                [_mrk] call EFUNC(main,setDebugMarker);
             };
         };
 
