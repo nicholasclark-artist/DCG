@@ -29,7 +29,7 @@ switch _type do {
         private _roads = _position nearRoads _radius;
         private _count = _location getVariable [QGVAR(vehicleCount),-1];
 
-        // remove unsuitable roads and intersections
+        // remove unsuitable roads
         _roads = _roads select {!((roadsConnectedTo _x) isEqualTo []) && count (roadsConnectedTo _x) < 3};
 
         if (_roads isEqualTo []) exitWith {};
@@ -90,7 +90,7 @@ switch _type do {
         private _roads = _position nearRoads _radius * 0.75;
         private _count = _location getVariable [QGVAR(prefabCount),-1];
 
-        // remove unsuitable roads and intersections
+        // remove unsuitable roads
         _roads = _roads select {!((roadsConnectedTo _x) isEqualTo []) && count (roadsConnectedTo _x) < 3};
 
         if (_roads isEqualTo []) exitWith {};
