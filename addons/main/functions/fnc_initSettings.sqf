@@ -105,7 +105,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["West Filters","Exclude entities by listing display names. Names must be separated by a comma and partial names are allowed."],
     CATEGORY_FACTION,
-    "diver,vr ,pilot,survivor,crew,rifleman (unarmed),competitor,rangemaster,spotter",
+    "diver,vr ,pilot,survivor,crew,rifleman (unarmed),competitor,range master,spotter",
     true,
     {
         if (!isServer) exitWith {};
