@@ -19,7 +19,7 @@ __________________________________________________________________*/
 #define PIVOT_CHECK(ENTITY) (typeOf ENTITY isEqualTo "Sign_Arrow_F")
 #define NODE_CHECK(ENTITY) (typeOf ENTITY isEqualTo "CBA_BuildingPos")
 #define NODE_MAXDIST 51
-#define GET_INS(ENTITY) (["",typeOf ((lineIntersectsSurfaces [getPosASL ENTITY,(getPosASL ENTITY) vectorAdd [0,0,-0.1],ENTITY,objNull,true,1,"GEOM","NONE"]) select 0 select 2)] select (ATTRIBUTE_SNAP(ENTITY) isEqualTo 1))
+#define GET_INS(ENTITY) (["",typeOf ((lineIntersectsSurfaces [getPosASL ENTITY,(getPosASL ENTITY) vectorAdd [0,0,(((getPosATL ENTITY) select 2) + 0.1) * -1],ENTITY,objNull,true,1,"GEOM","NONE"]) select 0 select 2)] select (ATTRIBUTE_SNAP(ENTITY) isEqualTo 1))
 #define GET_POS_RELATIVE(ENTITY) (_pivot worldToModel (getPosATL ENTITY))
 #define GET_DIR_OFFSET(ENTITY) (((getDir ENTITY) - (getDir _pivot)) mod 360)
 #define GET_DATA(ENTITY) _composition pushBack [typeOf ENTITY,str GET_POS_RELATIVE(ENTITY),str ((getPosATL ENTITY) select 2),GET_INS(ENTITY),str GET_DIR_OFFSET(ENTITY),ATTRIBUTE_VECTORUP(ENTITY),ATTRIBUTE_SIMPLE(ENTITY)]
@@ -52,7 +52,7 @@ private _tab = "    ";
         _pivot setPosATL [(getPosATL _pivot) select 0,(getPosATL _pivot) select 1,0];
         _pivot setVectorDirAndUp [[0,1,0],[0,0,1]];
 
-        // get composition id,ids may overlap if compositions are exported from multiple missions 
+        // get composition id,ids may overlap if compositions are exported from multiple missions
         _id = get3DENEntityID _pivot;
     };
 } forEach _selected;
@@ -97,9 +97,10 @@ TRACE_1("",_nodes);
 {
     if (!NODE_CHECK(_x) && {!PIVOT_CHECK(_x)} && {!(_x isKindOf "Man")}) then {
         // save raw z value separately as model-space z value is inaccurate
+        // GET_INS will cause error if snap is true while no intersection is detected
         GET_DATA(_x);
         // update max radius
-        _r = (ceil ((getPosASL _x) vectorDistance (getPosASL _pivot))) max _r; 
+        _r = (ceil ((getPosASL _x) vectorDistance (getPosASL _pivot))) max _r;
     };
 } forEach _selected;
 
@@ -107,7 +108,7 @@ TRACE_1("",_nodes);
 [_br,_tab,_composition,_nodes,_r,_id] spawn {
     params ["_br","_tab","_composition","_nodes","_r","_id"];
 
-    closeDialog 2; 
+    closeDialog 2;
 
     private _display = findDisplay 313 createDisplay "RscDisplayEmpty";
     uiNamespace setVariable [QGVAR(compExportDisplay),_display];
@@ -131,7 +132,7 @@ TRACE_1("",_nodes);
 
     _dropdown ctrlAddEventHandler ["LBSelChanged",{
         params ["_control","_selectedIndex"];
-        
+
         (uiNamespace getVariable [QGVAR(compExportDisplay),displayNull]) closeDisplay 1;
         GVAR(compExportSel) = _control lbData (lbCurSel _control);
     }];
@@ -154,7 +155,7 @@ TRACE_1("",_nodes);
             copyToClipboard _compiledEntry;
 
             private _msg = format ["Exporting %1 composition (%2) to clipboard: radius: %3, nodes: %4",_cfgName,_id,_r,count _nodes];
-            PRINT_MSG(_msg);  
+            PRINT_MSG(_msg);
         };
     };
 };
