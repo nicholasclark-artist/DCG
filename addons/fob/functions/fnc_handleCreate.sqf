@@ -107,10 +107,10 @@ clearBackpackCargoGlobal GVAR(anchor);
                 [_unit]
             ] call CBA_fnc_waitUntilAndExecute;
 
-            [FOB_POSITION,AP_FOB] call EFUNC(approval,addValue);
+            [QEGVAR(approval,add),[FOB_POSITION,AP_FOB]] call CBA_fnc_serverEvent;
         };
 
-        [true,FOB_POSITION] call FUNC(handleRecon);
+        [true,FOB_POSITION] call FUNC(setRecon);
     },
     [_unit,_points]
 ] call CBA_fnc_waitUntilAndExecute;

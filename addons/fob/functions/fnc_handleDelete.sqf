@@ -28,7 +28,7 @@ private _unit = getAssignedCuratorUnit GVAR(curator);
 GVAR(curator) removeCuratorEditableObjects [curatorEditableObjects GVAR(curator),true];
 
 [QEGVAR(approval,add),[FOB_POSITION,AP_FOB*-1]] call CBA_fnc_serverEvent;
-[false] call FUNC(handleRecon);
+[false] call FUNC(setRecon);
 GVAR(respawnPos) call BIS_fnc_removeRespawnPosition;
 deleteVehicle GVAR(anchor);
 
