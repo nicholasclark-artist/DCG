@@ -20,9 +20,9 @@ _cost = 0;
 call {
     _vehClass = toLower getText (configFile >> "CfgVehicles" >> (_this select 0) >> "vehicleClass");
 
-    if (_vehClass in ["men","menstory","menrecon","mendiver","mensniper","mensupport"]) exitWith {
-        _cost = FOB_COST_MAN
-    };
+    // if (_vehClass in ["men","menstory","menrecon","mendiver","mensniper","mensupport"]) exitWith {
+    //     _cost = FOB_COST_MAN
+    // };
     if (_vehClass in ["car","support"]) exitWith {
         _cost = FOB_COST_CAR
     };
