@@ -13,7 +13,7 @@ PREP(handleAssign);
 PREP(handleCreate);
 PREP(handleDelete);
 PREP(handleTransfer);
-PREP(handleRecon);
+PREP(setRecon);
 PREP(getKeybind);
 PREP(getChildren);
 PREP(getCuratorCost);
