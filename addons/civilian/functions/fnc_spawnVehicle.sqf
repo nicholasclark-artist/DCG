@@ -34,7 +34,7 @@ private _grp = [_start,1,1,CIVILIAN,1,0,true] call EFUNC(main,spawnGroup);
             if (hasInterface) then {
                 params ["_veh"];
 
-                private _action = [
+                [
                     QGVAR(commandeer),
                     "Commandeer Vehicle",
                     {
