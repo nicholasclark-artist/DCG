@@ -26,12 +26,16 @@ for "_i" from 0 to ((_location getVariable [QGVAR(unitCount),0]) - 1) do {
     _position = selectRandom (selectRandom (_location getVariable [QGVAR(buildingPositions),[]]));
 
     _agent = createAgent [selectRandom EGVAR(main,unitsCiv),DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
+
+    // civs won't wake other AI
+    _agent triggerDynamicSimulation false;
+
     // @todo fix buildingPos positions,wiki says AGL is returned,but it's ATL
-    _agent setPosASL (AGLToASL _position); 
+    _agent setPosASL (AGLToASL _position);
 
     // init code
     _agent call (_location getVariable [QGVAR(onCreate),{}]);
-    _agent addEventHandler ["Deleted",_location getVariable [QGVAR(onDelete),{}]]; 
+    _agent addEventHandler ["Deleted",_location getVariable [QGVAR(onDelete),{}]];
 
     // panic event
     // @todo add panic check for unit approval questioning
@@ -40,7 +44,7 @@ for "_i" from 0 to ((_location getVariable [QGVAR(unitCount),0]) - 1) do {
 
         if !(_unit getVariable [QGVAR(panic),false]) then {
             [QGVAR(panic),[_unit,1]] call CBA_fnc_localEvent;
-        };  
+        };
     }];
     _units pushBack _agent;
 };
