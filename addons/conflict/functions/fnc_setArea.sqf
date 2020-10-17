@@ -57,7 +57,7 @@ private ["_key","_location","_polygon","_safe","_patrolCount","_length","_spacin
         _location setVariable [QGVAR(name),call FUNC(getName)]; // area alias
         _location setVariable [QGVAR(task),""]; // task associated with area
         _location setVariable [QGVAR(groups),[]]; // groups assigned to area
-        _location setVariable [QGVAR(prefabs),[]]; // area prefabs like roadside checkpoints
+        _location setVariable [QGVAR(composition),[]]; // area objects like roadside checkpoints
 
         // setup area hash
         _hash pushBack [_key,_location];

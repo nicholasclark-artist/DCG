@@ -12,9 +12,15 @@ if (!isServer) exitWith {};
 ["CBA_settingsInitialized",{
     if (!EGVAR(main,enable) || {!GVAR(enable)}) exitWith {LOG(MSG_EXIT)};
 
-    // @todo clear null groups
+    // update groups for given location
     [QGVAR(updateGroups),{
         private _groups = (_this select 0) getVariable [QGVAR(groups),[]];
+
+        {
+            _groups deleteAt (_groups find _x);
+            _x call CBA_fnc_deleteEntity;
+        } forEach (_groups select {isNull _x});
+
         _groups pushBack (_this select 1);
     }] call CBA_fnc_addEventHandler;
 
@@ -29,7 +35,17 @@ if (!isServer) exitWith {};
             [_key,true] call FUNC(removeArea);
         }] call CBA_fnc_hashEachPair;
 
-        [FUNC(init),[],20] call CBA_fnc_waitAndExecute;
+        // @todo remove comms
+        [FUNC(init),[],10] call CBA_fnc_waitAndExecute;
+    }] call CBA_fnc_addEventHandler;
+
+    // @todo add reinforcement EH to all outpost units
+    // @todo add switch EH to comm array
+    [QGVAR(disableComm),{
+        params ["_key","_switch"];
+
+        // @todo play power down sfx
+        _switch animateSource ["switchposition",0];
     }] call CBA_fnc_addEventHandler;
 
     // runs once intel gathered
@@ -41,6 +57,7 @@ if (!isServer) exitWith {};
         [_intel,_type] call FUNC(handleIntel);
     }] call CBA_fnc_addEventHandler;
 
+    // init addon
     [FUNC(init),[],10] call CBA_fnc_waitAndExecute;
 
     // run handlers
