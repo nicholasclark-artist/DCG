@@ -46,7 +46,7 @@ __________________________________________________________________*/
         private "_intelSurface";
 
         // check outpost composition for intel placement or spawn intel composition
-        private _intelObjects = (_composition select 2) select {toLower typeOf _x in INTEL_SURFACES};
+        private _intelObjects = (_composition select 2) select {toLower typeOf _x in INTEL_S_CLASSES};
 
         if !(_intelObjects isEqualTo []) then {
             _intelSurface = selectRandom _intelObjects;
@@ -55,7 +55,7 @@ __________________________________________________________________*/
 
             if (_intelNodes isEqualTo []) exitWith {};
 
-            _intelSurface = createSimpleObject [selectRandom INTEL_SURFACES,DEFAULT_SPAWNPOS];
+            _intelSurface = createSimpleObject [selectRandom INTEL_S_CLASSES,DEFAULT_SPAWNPOS];
             _intelSurface setDir (random 360);
             [_intelSurface,ATLtoASL ((selectRandom _intelNodes) select 0)] call EFUNC(main,setPosSafe);
         };
@@ -67,7 +67,7 @@ __________________________________________________________________*/
             private _intelPos = getPosASL _intelSurface;
             _intelPos = _intelPos vectorAdd [0,0,(_size select 1) + 0.01];
 
-            _intel = createVehicle [selectRandom INTEL_ITEMS,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
+            _intel = createVehicle [selectRandom INTEL_CLASSES,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
             _intel enableSimulationGlobal false;
 
             _intel setDir (random 360);
@@ -80,7 +80,7 @@ __________________________________________________________________*/
                 GVAR(intel) = _intel;
             };
         } else {
-            WARNING_1("%1 does not have a suitable intel surface",_composition select 0);
+            ERROR_1("%1 does not have a suitable intel surface",_composition select 0);
 
             // @todo add intel at default position
         };

@@ -24,7 +24,7 @@ GVAR(curator) setVariable ["Forced",0,true];
 
 publicVariable QGVAR(curator);
 
-// edge case,curator may be deleted some time after init,killed eventhandler is a workaround
+// edge case, curator may be deleted some time after init, killed eventhandler is a workaround
 GVAR(curator) addEventHandler ["killed",{
     TRACE_1("Curator handleKilled",_this);
     call FUNC(init);

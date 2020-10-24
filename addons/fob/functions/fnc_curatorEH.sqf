@@ -34,7 +34,7 @@ FUNC(curatorRegistered) = {
 };
 
 FUNC(curatorPlaced) = {
-    if (typeOf (_this select 1) in FOB_MED) then {
+    if (typeOf (_this select 1) in FOB_MED_CLASSES) then {
         (_this select 1) setVariable ["ace_medical_isMedicalFacility",true,true];
     };
 

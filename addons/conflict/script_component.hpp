@@ -26,5 +26,5 @@
 
 #define COMM_ITEMS ["land_transferswitch_01_f"]
 
-#define INTEL_ITEMS ["intel_file1_f","intel_file2_f","land_document_01_f","land_laptop_f"]
-#define INTEL_SURFACES ["land_campingtable_f","land_campingtable_small_f","land_campingtable_small_white_f","land_campingtable_white_f","land_tableplastic_01_f","land_woodentable_large_f","land_woodentable_small_f","officetable_01_new_f","officetable_01_old_f","land_portabledesk_01_olive_f"]
+#define INTEL_CLASSES ["intel_file1_f","intel_file2_f","land_document_01_f","land_laptop_f"]
+#define INTEL_S_CLASSES ["land_campingtable_f","land_campingtable_small_f","land_campingtable_small_white_f","land_campingtable_white_f","land_tableplastic_01_f","land_woodentable_large_f","land_woodentable_small_f","officetable_01_new_f","officetable_01_old_f","land_portabledesk_01_olive_f"]
