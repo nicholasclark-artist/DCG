@@ -39,16 +39,15 @@ private _vehPool = [_side,1] call FUNC(getPool);
 private _airPool = [_side,2] call FUNC(getPool);
 private _shipPool = [_side,3] call FUNC(getPool);
 
-// check for disable caching
-if (_disableCaching) then {
-    [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
-};
-
 // don't consider height to simplify spawning
 _pos =+ _pos;
 _pos resize 2;
 
 if (_type isEqualTo 0) then {
+    if (_disableCaching) then {
+        [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
+    };
+
     [{
         params ["_args","_idPFH"];
         _args params ["_pos","_grp","_unitPool","_count","_check"];
@@ -69,7 +68,6 @@ if (_type isEqualTo 0) then {
     if (_type isEqualTo 1) then {
         if (surfaceIsWater _pos) then {
             _veh = (selectRandom _shipPool) createVehicle _pos;
-
         } else {
             _veh = (selectRandom _vehPool) createVehicle _pos;
             _veh setVectorUp surfaceNormal getPosATL _veh;
@@ -87,13 +85,18 @@ if (_type isEqualTo 0) then {
     private _grpTemp = createVehicleCrew _veh;
     _grpTemp deleteGroupWhenEmpty true;
 
-    // vehicle units are created in temp group, we must force caching for actual group
-    [QEGVAR(cache,enableGroup),_grp] call CBA_fnc_serverEvent;
-
     crew _veh joinSilent _grp;
     _grp addVehicle _veh;
     _grp selectLeader (effectiveCommander _veh);
     _veh setUnloadInCombat [true,true];
+
+    // always disable caching on aircraft
+    if (_disableCaching || {_type isEqualTo 2}) then {
+        [QEGVAR(cache,disableGroup),_grp] call CBA_fnc_serverEvent;
+    } else {
+        // vehicle units are created in temp group, we must force caching for actual group
+        [QEGVAR(cache,enableGroup),_grp] call CBA_fnc_serverEvent;
+    };
 
     if (_cargo isEqualType false) then { // get cargo count if boolean passed
         _cargo = if (_cargo) then {
