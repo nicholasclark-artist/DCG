@@ -29,7 +29,6 @@ __________________________________________________________________*/
             {(_this select 0) getVariable [QEGVAR(main,ready),false]},
             {
                 [_this select 0,getPos (_this select 1),50,0] call EFUNC(main,taskDefend);
-                sleep 0.2;
                 [QEGVAR(cache,enableGroup),_this select 0] call CBA_fnc_serverEvent;
             },
             [_x,_value],

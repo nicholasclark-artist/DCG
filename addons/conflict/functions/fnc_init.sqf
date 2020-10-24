@@ -17,7 +17,6 @@ if !(isServer) exitWith {nil};
 // find initial areas
 private _ao = [AO_COUNT] call FUNC(setArea);
 
-// retry on fail
 if !(_ao) exitWith {
     [QGVAR(reinit),nil] call CBA_fnc_serverEvent;
 };
@@ -25,13 +24,23 @@ if !(_ao) exitWith {
 // find suitable spawn areas
 private _outpost = [OP_COUNT] call FUNC(setOutpost);
 
-// retry on fail
 if !(_outpost) exitWith {
     [QGVAR(reinit),nil] call CBA_fnc_serverEvent;
 };
 
+// find dynamic task
+/*
+
+*/
+
+private _comm = call FUNC(setComm);
+
 [] spawn FUNC(spawnArea);
 [] spawn FUNC(spawnOutpost);
+[] spawn FUNC(spawnComm);
+
+// run handlers
+// call FUNC(handleComm);
 
 // draw ao on map
 [GVAR(areas),{

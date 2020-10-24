@@ -102,7 +102,6 @@ __________________________________________________________________*/
             {(_this select 0) getVariable [QEGVAR(main,ready),false]},
             {
                 [_this select 0,getPos (_this select 1),50,0] call EFUNC(main,taskDefend);
-                sleep 0.2;
                 [QEGVAR(cache,enableGroup),_this select 0] call CBA_fnc_serverEvent;
             },
             [_x,_value],
@@ -117,7 +116,7 @@ __________________________________________________________________*/
         [
             {_this getVariable [QEGVAR(main,ready),false]},
             {
-                [_this,getPos leader _this,random [100,200,400],1,"if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,taskPatrol);
+                [_this,getPos leader _this,random [100,150,300],1,"if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,taskPatrol);
             },
             _x,
             60
@@ -131,6 +130,12 @@ __________________________________________________________________*/
         [
             {_this getVariable [QEGVAR(main,ready),false]},
             {
+                // disable waking cached units on air patrols
+                if (vehicle leader _this isKindOf "Air") then {
+                    {
+                        _x triggerDynamicSimulation false;
+                    } forEach units _this;
+                };
                 [_this,getPos leader _this,300,0] call EFUNC(main,taskPatrol);
             },
             _x,
