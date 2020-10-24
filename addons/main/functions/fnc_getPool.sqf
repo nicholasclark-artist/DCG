@@ -3,7 +3,7 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-get unit pool 
+get unit pool
 
 Arguments:
 0: side <SIDE>
@@ -24,13 +24,13 @@ if (_side isEqualTo EAST) exitWith {
 };
 
 if (_side isEqualTo WEST) exitWith {
-    [GVAR(unitsWest),GVAR(vehiclesWest),GVAR(aircraftWest),GVAR(shipsEast),GVAR(officersWest),GVAR(snipersWest)] select _type;
-}; 
+    [GVAR(unitsWest),GVAR(vehiclesWest),GVAR(aircraftWest),GVAR(shipsWest),GVAR(officersWest),GVAR(snipersWest)] select _type;
+};
 
 if (_side isEqualTo INDEPENDENT) exitWith {
-    [GVAR(unitsInd),GVAR(vehiclesInd),GVAR(aircraftInd),GVAR(shipsEast),GVAR(officersInd),GVAR(snipersInd)] select _type;
-}; 
+    [GVAR(unitsInd),GVAR(vehiclesInd),GVAR(aircraftInd),GVAR(shipsInd),GVAR(officersInd),GVAR(snipersInd)] select _type;
+};
 
 if (_side isEqualTo CIVILIAN) exitWith {
-    [GVAR(unitsCiv),GVAR(vehiclesCiv),GVAR(aircraftCiv),GVAR(shipsEast),[],[]] select _type;
-}; 
+    [GVAR(unitsCiv),GVAR(vehiclesCiv),GVAR(aircraftCiv),GVAR(shipsCiv),[],[]] select _type;
+};

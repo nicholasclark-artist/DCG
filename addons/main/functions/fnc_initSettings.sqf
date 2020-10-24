@@ -133,7 +133,7 @@ __________________________________________________________________*/
     "EDITBOX",
     ["Independent Filters","Exclude entities by listing display names. Names must be separated by a comma and partial names are allowed."],
     CATEGORY_FACTION,
-    "diver,vr ,pilot,survivor,crew,rifleman (unarmed),competitor,spotter",
+    "diver,vr ,pilot,survivor,crew,rifleman (unarmed),competitor,spotter,dr.,akhanteros,kyros",
     true,
     {
         if (!isServer) exitWith {};
