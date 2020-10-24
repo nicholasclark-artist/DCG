@@ -78,11 +78,11 @@ scopeName SCOPE;
 
         for "_i" from 0 to (count _roads min _prefabCount) - 1 do {
             _road = _roads select _i;
-            private _pos = [_road] call EFUNC(main,findPosRoadside);
+            private _pos = [_road,-1] call EFUNC(main,findPosRoadside);
 
             // spawn supply vehicle prefabs
             if !(_pos isEqualTo []) then {
-                _prefab = [_pos,"sup_vehicle",_road getRelDir ((roadsConnectedTo _road) select 0),true] call EFUNC(main,spawnComposition);
+                _prefab = [_pos,"civ_cp",_road getRelDir ((roadsConnectedTo _road) select 0),true] call EFUNC(main,spawnComposition);
                 _prefabObjects append (_prefab select 2);
             };
         };

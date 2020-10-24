@@ -104,7 +104,7 @@ switch _type do {
             _position = [_road] call EFUNC(main,findPosRoadside);
 
             if !(_position isEqualTo []) then {
-                _prefab = [_position,"sup_table",(_road getRelDir ((roadsConnectedTo _road) select 0)) - 90,false] call EFUNC(main,spawnComposition);
+                _prefab = [_position,"civ_cache",(_road getRelDir ((roadsConnectedTo _road) select 0)) - 90,false] call EFUNC(main,spawnComposition);
                 _location setVariable [QGVAR(prefabPositions),_prefab select 3];
                 _ambientList append (_prefab select 2);
             };
