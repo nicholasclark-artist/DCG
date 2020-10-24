@@ -17,6 +17,7 @@ Return:
 boolean
 __________________________________________________________________*/
 #include "script_component.hpp"
+#define AIR_RADIUS_MIN 800
 #define ROAD_SEARCH_DIST 500
 
 params [
@@ -56,15 +57,9 @@ private _formation = selectRandom ["STAG COLUMN","WEDGE","ECH LEFT","ECH RIGHT",
     _x enableAI "PATH";
 } forEach units _group;
 
-if (_groupVehicle isKindOf "Air") exitWith {
-    _radius = _radius max 1000;
-
-    private _wp = _group addWaypoint [_position,0];
-    _wp setWaypointType "LOITER";
-    _wp setWaypointLoiterType "CIRCLE_L";
-    _wp setWaypointLoiterRadius _radius;
-
-    true
+// make sure air patrol radius is large enough
+if (_groupVehicle isKindOf "Air") then {
+    _radius = _radius max AIR_RADIUS_MIN;
 };
 
 private _count = [3,6] call BIS_fnc_randomInt;
@@ -87,7 +82,7 @@ for "_i" from 0 to _count - 1 do {
         _b = (getPosATL _roads) select 1;
     };
 
-    if (_groupVehicle isKindOf "Land" && !(surfaceIsWater [_a,_b]) || {_groupVehicle isKindOf "Ship" && surfaceIsWater [_a,_b]}) then {
+    if (_groupVehicle isKindOf "Land" && !(surfaceIsWater [_a,_b]) || {_groupVehicle isKindOf "Ship" && surfaceIsWater [_a,_b]} || {_groupVehicle isKindOf "Air"}) then {
         // check if position in blacklist
         // if (_blacklist findIf {[_a,_b,0] inPolygon _x} < 0) then {
         //     _wpPositions pushBack [_a,_b,0];
@@ -118,7 +113,7 @@ private "_wp";
     _wp setWaypointSpeed (["NORMAL","LIMITED"] select (isNull objectParent leader _group));
     _wp setWaypointFormation _formation;
     _wp setWaypointStatements ["TRUE",_onComplete];
-    _wp setWaypointTimeout [0,5,16];
+    _wp setWaypointTimeout ([[0,5,16],[0,0,0]] select (_groupVehicle isKindOf "Air"));
     _wp setWaypointCompletionRadius (10 + (_radius * 0.1));
 } forEach _wpPositions;
 
