@@ -75,8 +75,9 @@ if (_patrol > 0 && {count _units > 1}) then {
 
 private ["_building","_buildingPositions","_pos","_static"];
 {
-    // 31% chance to occupy nearest free static weapon
-    if (PROBABILITY(0.31) && {!(_statics isEqualto [])}) then {
+    TRACE_1("",_x);
+    // chance to occupy nearest free static weapon
+    if (PROBABILITY(0.3) && {!(_statics isEqualto [])}) then {
         _static = _statics deleteAt 0;
         _x assignAsGunner _static;
         _x moveInGunner _static;
@@ -97,6 +98,8 @@ private ["_building","_buildingPositions","_pos","_static"];
                 };
 
                 [_x,_pos] spawn {
+                    // TRACE_1("",_this);
+
                     params ["_unit","_pos"];
 
                     _unit setPosATL _pos;
