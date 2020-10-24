@@ -34,21 +34,25 @@ call {
     };
 };
 
-call {
-    if (EGVAR(main,playerSide) isEqualTo WEST) exitWith {
-        _type = "B_cargoNet_01_ammo_F";
-    };
-    if (EGVAR(main,playerSide) isEqualTo EAST) exitWith {
-        _type = "O_cargoNet_01_ammo_F"
-    };
-    if (EGVAR(main,playerSide) isEqualTo INDEPENDENT) exitWith {
-        _type = "I_cargoNet_01_ammo_F"
-    };
-    _type = "B_cargoNet_01_ammo_F";
+private _composition = [_pos,"mil_cache",random 360,false] call EFUNC(main,spawnComposition);
+private _anchorObjects = (_composition select 2) select {toLower typeOf _x in FOB_CLASSES};
+
+if !(_anchorObjects isEqualTo []) then {
+    GVAR(anchor) = selectRandom _anchorObjects;
+} else {
+    private _nodes = (_composition select 3) select {(_x select 1) >= 1};
+
+    if (_nodes isEqualTo []) exitWith {};
+
+    GVAR(anchor) = createSimpleObject ["B_cargoNet_01_ammo_F",DEFAULT_SPAWNPOS];
+    GVAR(anchor) setDir (random 360);
+    [GVAR(anchor),ATLtoASL ((selectRandom _nodes) select 0)] call EFUNC(main,setPosSafe);
 };
 
-GVAR(anchor) = _type createVehicle DEFAULT_SPAWNPOS;
-GVAR(anchor) setPos _pos;
+if (isNil QGVAR(anchor)) exitWith {
+    ERROR_1("%1 does not have a suitable anchor",_composition select 0);
+};
+
 publicVariable QGVAR(anchor);
 GVAR(anchor) allowDamage false;
 clearWeaponCargoGlobal GVAR(anchor);

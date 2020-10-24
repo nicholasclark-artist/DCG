@@ -11,7 +11,8 @@
 #define FOB_COST_MULTIPIER 0.5
 #define FOB_DEPLOYED !(GVAR(location) isEqualTo locationNull)
 #define FOB_POSITION (getPos GVAR(location))
-#define FOB_MED ["Land_Medevac_house_V1_F","Land_Medevac_HQ_V1_F","B_Slingload_01_Medevac_F"]
+#define FOB_CLASSES []
+#define FOB_MED_CLASSES ["Land_Medevac_house_V1_F","Land_Medevac_HQ_V1_F","B_Slingload_01_Medevac_F"]
 
 #define FOB_CREATE_NAME "Deploy FOB"
 #define FOB_CREATE_ANIM 'AinvPknlMstpSnonWnonDnon_medic4'

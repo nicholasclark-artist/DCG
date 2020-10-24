@@ -40,7 +40,7 @@ if (_status) then {
     } forEach crew GVAR(uav);
 
     GVAR(uav) lockDriver true;
-    GVAR(uav) flyInHeight 200;
+    GVAR(uav) flyInHeight 300;
 
     GVAR(uav) addEventHandler ["Fuel",{
         if !(_this select 1) then {(_this select 0) setFuel 1};
@@ -49,7 +49,7 @@ if (_status) then {
     private _wp = group GVAR(uav) addWaypoint [_position,0];
     _wp setWaypointType "LOITER";
     _wp setWaypointLoiterType "CIRCLE_L";
-    _wp setWaypointLoiterRadius (GVAR(range)*2);
+    _wp setWaypointLoiterRadius (GVAR(range)*3);
 } else {
     GVAR(uav) call CBA_fnc_deleteEntity;
 };
