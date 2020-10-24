@@ -19,11 +19,9 @@ __________________________________________________________________*/
     private _roads = _x nearRoads 50;
 
     if !(_roads isEqualTo []) then {
-        _road = selectRandom _roads;
-        private _pos = getPos _road;
+        private _pos = [selectRandom _roads,-1.5] call EFUNC(main,findPosRoadside);
 
-        if (!([_pos] call EFUNC(main,inSafezones)) && {isOnRoad _pos}) then {
-            _pos = _pos getPos [5,random 360];
+        if !([_pos] call EFUNC(main,inSafezones)) then {
             _pos set [2,0];
 
             // let ace handle ied if enabled
