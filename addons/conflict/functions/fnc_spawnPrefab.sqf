@@ -35,7 +35,9 @@ switch _type do {
         private _roadPos = getPos _road;
 
         private _unitCount = [4,8,GVAR(countCoef)] call EFUNC(main,getUnitCount);
-        private _groups = [_location,EGVAR(main,enemySide),_unitCount] call FUNC(spawnUnit);
+        private _grp = [_roadPos getPos [20,0],0,_unitCount,EGVAR(main,enemySide),1,0,true] call EFUNC(main,spawnGroup);
+
+        [QGVAR(updateGroups),[_location,_grp]] call CBA_fnc_localEvent;
 
         // spawn composition after units so units are aware of buildings
         private _dir = _road getRelDir ((roadsConnectedTo _road) select 0);
@@ -51,19 +53,15 @@ switch _type do {
         } forEach (_ret select 3);
 
         // set groups to defend
-        {
-            [
-                {(_this select 0) getVariable [QEGVAR(main,ready),false]},
-                {
-                    [_this select 0,_this select 1,15,0] call EFUNC(main,taskDefend);
-                    [QEGVAR(cache,enableGroup),_this select 0] call CBA_fnc_serverEvent;
-                },
-                [_x,_roadPos],
-                _unitCount * 2
-            ] call CBA_fnc_waitUntilAndExecute;
-
-            sleep 0.2;
-        } forEach (_groups select 0);
+        [
+            {(_this select 0) getVariable [QEGVAR(main,ready),false]},
+            {
+                [_this select 0,_this select 1,30,0] call EFUNC(main,taskDefend);
+                [QEGVAR(cache,enableGroup),_this select 0] call CBA_fnc_serverEvent;
+            },
+            [_grp,_roadPos],
+            _unitCount * 2
+        ] call CBA_fnc_waitUntilAndExecute;
 
         _ret
     };

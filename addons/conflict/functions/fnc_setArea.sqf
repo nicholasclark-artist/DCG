@@ -54,6 +54,7 @@ private ["_key","_location","_polygon","_safe","_patrolCount","_length","_spacin
     if (_safe) then {
         // setvars
         _location setVariable [QGVAR(status),true]; // true = active, false = inactive
+        _location setVariable [QGVAR(positionASL),_location getVariable [QEGVAR(main,positionASL),DEFAULT_POS]]; // copy main hash position for consistency
         _location setVariable [QGVAR(name),call FUNC(getName)]; // area alias
         _location setVariable [QGVAR(task),""]; // task associated with area
         _location setVariable [QGVAR(groups),[]]; // groups assigned to area

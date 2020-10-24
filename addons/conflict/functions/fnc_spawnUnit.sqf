@@ -29,7 +29,7 @@ _garrisonGroups = [];
 _patrolGroups = [];
 _vehicleGroups = [];
 
-_position =+ (_location getVariable [QGVAR(positionASL),DEFAULT_SPAWNPOS]);
+_position =+ (_location getVariable [QGVAR(positionASL),DEFAULT_POS]);
 _position set [2,0];
 
 /*

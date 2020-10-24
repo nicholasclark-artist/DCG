@@ -3,10 +3,11 @@ Author:
 Nicholas Clark (SENSEI)
 
 Description:
-find positionASL at roadside
+find positionAGL at roadside
 
 Arguments:
 0: road <OBJECT>
+1: offset distance from roadside <NUMBER>
 
 Return:
 position
@@ -14,21 +15,12 @@ __________________________________________________________________*/
 #include "script_component.hpp"
 
 params [
-    ["_road",objNull,[objNull]]
+    ["_road",objNull,[objNull]],
+    ["_offset",0,[0]]
 ];
 
-// @todo roadsConnectedTo will be empty in some cases, fix with new getRoadInfo command
-private _pos = [];
-private _dir = _road getRelDir ((roadsConnectedTo _road) select 0);
+private _info = getRoadInfo _road;
+private _dir = (_info select 6) getDir (_info select 7);
 _dir = _dir + (180 * round (random 1));
 
-// find new position until position at edge of road
-for "_i" from 3 to 10 do {
-    if !(isOnRoad [((getPosATL _road) select 0) + (_i * sin (_dir + 90)),((getPosATL _road) select 1) + (_i * cos (_dir + 90))]) exitWith {
-        _pos = [((getPosATL _road) select 0) + ((_i - 1) * sin (_dir + 90)),((getPosATL _road) select 1) + ((_i - 1) * cos (_dir + 90))];
-
-        _pos pushBack (ASLZ(_pos));
-    };
-};
-
-_pos
+_road getRelPos [((_info select 1) * 0.5) + _offset, _dir + 90];
