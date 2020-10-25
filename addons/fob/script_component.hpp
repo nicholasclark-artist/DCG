@@ -8,11 +8,10 @@
 
 #include "\d\dcg\addons\main\script_macros.hpp"
 
-#define FOB_COST_MULTIPIER 0.5
 #define FOB_DEPLOYED !(GVAR(location) isEqualTo locationNull)
 #define FOB_POSITION (getPos GVAR(location))
-#define FOB_CLASSES []
-#define FOB_MED_CLASSES ["Land_Medevac_house_V1_F","Land_Medevac_HQ_V1_F","B_Slingload_01_Medevac_F"]
+#define FOB_CLASSES ["virtualreammobox_camonet_f"]
+#define FOB_MED_CLASSES ["land_medevac_house_v1_f","land_medevac_hq_v1_f","b_slingload_01_medevac_f"]
 
 #define FOB_CREATE_NAME "Deploy FOB"
 #define FOB_CREATE_ANIM 'AinvPknlMstpSnonWnonDnon_medic4'
@@ -23,7 +22,6 @@
         [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[_format,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify); \
         [QGVAR(create),[player]] call CBA_fnc_serverEvent; \
     },[],9] call CBA_fnc_waitAndExecute
-
 #define FOB_CREATE_COND !(FOB_DEPLOYED) && {isNull getAssignedCuratorUnit GVAR(curator)} && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {!(COMPARE_STR(animationState player,FOB_CREATE_ANIM))} && {[player] call FUNC(isAllowedOwner)} && {!((getpos player isFlatEmpty  [6,-1,-1,-1,0,false,player]) isEqualTo [])}
 #define FOB_CREATE_KEYCODE \
     if (FOB_CREATE_COND) then { \

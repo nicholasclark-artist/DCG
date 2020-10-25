@@ -77,6 +77,34 @@ if (CHECK_ADDON_2(transport)) then {
     _text append _textAddon;
 };
 
+// @todo replace static AP_FOB bonus with scalable bonus based on spent points
+if (CHECK_ADDON_2(fob)) then {
+    private _name = if !(isNull getAssignedCuratorUnit EGVAR(fob,curator)) then {
+        name getAssignedCuratorUnit EGVAR(fob,curator);
+    } else {
+        "None"
+    };
+
+    private "_bonus";
+    if !(EGVAR(fob,location) isEqualTo locationNull) then {
+        _bonus = AP_FOB;
+        {
+            _bonus = _bonus + ([typeOf _x] call EFUNC(fob,getCuratorCost))*FOB_COST_MULTIPIER;
+        } forEach (curatorEditableObjects EGVAR(fob,curator));
+    } else {
+        _bonus = 0;
+    };
+
+    _textAddon = [
+        ["FOB",TITLE_SIZE,CBAN_TITLE_COLOR],
+        [format ["Controller: %1",_name],BODY_SIZE,CBAN_BODY_COLOR],
+        [format ["Approval Bonus: %1",_bonus toFixed 2],BODY_SIZE,CBAN_BODY_COLOR],
+        ""
+    ];
+
+    _text append _textAddon;
+};
+
 if (CHECK_ADDON_2(approval)) then {
     scopeName "approval";
 
@@ -111,7 +139,7 @@ if (CHECK_ADDON_2(approval)) then {
     }] call CBA_fnc_hashEachPair;
 
     _textAddon = [
-        [format ["Region %1",_id],TITLE_SIZE,CBAN_TITLE_COLOR],
+        [format ["Approval Region %1",_id],TITLE_SIZE,CBAN_TITLE_COLOR],
         ["Open map to view region border",CBAN_SUB_SIZE,CBAN_SUB_COLOR],
         "",
         [format ["Region approval: %1/%2",(_region getVariable [QEGVAR(approval,value),0]) toFixed 2,AP_MAX],BODY_SIZE,CBAN_BODY_COLOR],

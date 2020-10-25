@@ -108,34 +108,35 @@
 #define ACTIONPATH [QUOTE(DOUBLES(ACE,SelfActions)),QGVARMAIN(actions),QUOTE(ADDON)]
 #define SETTINGS_INIT publicVariable QFUNC(initSettings); remoteExecCall [QFUNC(initSettings),-2,true]; call FUNC(initSettings)
 
+// approval
+#define AP_MIN 0
+#define AP_MAX 100
+#define AP_DEFAULT AP_MAX*0.1
+#define AP_CAR ((AP_MAX*0.01)*EGVAR(approval,coef))
+#define AP_TANK ((AP_MAX*0.05)*EGVAR(approval,coef))
+#define AP_AIR ((AP_MAX*0.1)*EGVAR(approval,coef))
+#define AP_SHIP ((AP_MAX*0.01)*EGVAR(approval,coef))
+#define AP_MAN ((AP_MAX*0.005)*EGVAR(approval,coef))
+#define AP_CIV ((AP_MAX*0.05)*EGVAR(approval,coef))
+#define AP_FOB ((AP_MAX*0.05)*EGVAR(approval,coef))
+// #define AP_VILLAGE ((AP_MAX*0.1)*EGVAR(approval,coef))
+// #define AP_CITY ((AP_MAX*0.2)*EGVAR(approval,coef))
+// #define AP_CAPITAL ((AP_MAX*0.3)*EGVAR(approval,coef))
+#define AP_CONVERT1(POS) (linearConversion [AP_MIN,AP_MAX,([POS] call EFUNC(approval,getRegion)) getVariable [QEGVAR(approval,value),0],0,1,true])
+#define AP_CONVERT2(POS) ((1 - AP_CONVERT1(POS)) * 0.5)
+
 // fob cost
+#define FOB_COST_MULTIPIER 0.5
 #define FOB_COST_MAN 2
-#define FOB_COST_CAR 7
+#define FOB_COST_CAR 5
 #define FOB_COST_TANK 10
-#define FOB_COST_AIR 14
-#define FOB_COST_SHIP 7
+#define FOB_COST_AIR 15
+#define FOB_COST_SHIP 5
 #define FOB_COST_AMMO 0.1
 #define FOB_COST_STRUCT 2
 #define FOB_COST_ITEM 0.1
 #define FOB_COST_FORT 0.2
 #define FOB_COST_SIGN 0.1
-
-// approval
-#define AP_MIN 0
-#define AP_MAX 100
-#define AP_DEFAULT AP_MAX*0.1
-#define AP_CAR ((AP_MAX*0.005)*EGVAR(approval,coef))
-#define AP_TANK ((AP_MAX*0.0075)*EGVAR(approval,coef))
-#define AP_AIR ((AP_MAX*0.01)*EGVAR(approval,coef))
-#define AP_SHIP ((AP_MAX*0.005)*EGVAR(approval,coef))
-#define AP_MAN ((AP_MAX*0.001)*EGVAR(approval,coef))
-#define AP_CIV ((AP_MAX*0.05)*EGVAR(approval,coef))
-#define AP_FOB ((AP_MAX*0.0025)*EGVAR(approval,coef))
-#define AP_VILLAGE ((AP_MAX*0.05)*EGVAR(approval,coef))
-#define AP_CITY ((AP_MAX*0.1)*EGVAR(approval,coef))
-#define AP_CAPITAL ((AP_MAX*0.15)*EGVAR(approval,coef))
-#define AP_CONVERT1(POS) (linearConversion [AP_MIN,AP_MAX,([POS] call EFUNC(approval,getRegion)) getVariable [QEGVAR(approval,value),0],0,1,true])
-#define AP_CONVERT2(POS) ((1 - AP_CONVERT1(POS)) * 0.5)
 
 // CBA notifications
 #define CBAN_TITLE_SIZE 1.3

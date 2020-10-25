@@ -23,18 +23,20 @@ private _unit = objNull;
 private _pos = [];
 private _type = "";
 
-call {
-    if (_center isEqualType objNull) exitWith {
+switch (typeName _center) do {
+    case "OBJECT": {
         _unit = _center;
         _pos = _center modelToWorld [0,3,0];
     };
-    if (_center isEqualType []) exitWith {
-        _unit = objNull;
+    case "ARRAY": {
         _pos = _center;
+    };
+    default {
+        _pos = DEFAULT_POS
     };
 };
 
-private _composition = [_pos,"mil_cache",random 360,false] call EFUNC(main,spawnComposition);
+private _composition = [_pos,"mil_cache",_center getDir _pos,false] call EFUNC(main,spawnComposition);
 private _anchorObjects = (_composition select 2) select {toLower typeOf _x in FOB_CLASSES};
 
 if !(_anchorObjects isEqualTo []) then {
@@ -44,7 +46,7 @@ if !(_anchorObjects isEqualTo []) then {
 
     if (_nodes isEqualTo []) exitWith {};
 
-    GVAR(anchor) = createSimpleObject ["B_cargoNet_01_ammo_F",DEFAULT_SPAWNPOS];
+    GVAR(anchor) = "virtualreammobox_camonet_f" createVehicle DEFAULT_SPAWNPOS;
     GVAR(anchor) setDir (random 360);
     [GVAR(anchor),ATLtoASL ((selectRandom _nodes) select 0)] call EFUNC(main,setPosSafe);
 };
@@ -59,6 +61,9 @@ clearWeaponCargoGlobal GVAR(anchor);
 clearMagazineCargoGlobal GVAR(anchor);
 clearItemCargoGlobal GVAR(anchor);
 clearBackpackCargoGlobal GVAR(anchor);
+
+// save composition to anchor
+GVAR(anchor) setVariable [QGVAR(composition),_composition select 2];
 
 // setup anchor and location on all machines
 [[],{
@@ -76,7 +81,7 @@ clearBackpackCargoGlobal GVAR(anchor);
 
 // make sure setup occurs at correct position
 [
-    {!(FOB_POSITION isEqualTo [0,0,0])},
+    {!(FOB_POSITION isEqualTo DEFAULT_POS)},
     {
         params ["_unit","_points"];
 

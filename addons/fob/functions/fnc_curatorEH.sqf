@@ -14,7 +14,7 @@ __________________________________________________________________*/
 
 INFO_1("Running curator eventhandlers on %1.",getAssignedCuratorUnit GVAR(curator));
 
-// save event code to variable,give eventhandler less code to compile,https://feedback.bistudio.com/T123355
+// save event code to variable, give eventhandler less code to compile, https://feedback.bistudio.com/T123355
 FUNC(curatorRegistered) = {
     _costs = [];
     {
@@ -34,11 +34,11 @@ FUNC(curatorRegistered) = {
 };
 
 FUNC(curatorPlaced) = {
-    if (typeOf (_this select 1) in FOB_MED_CLASSES) then {
+    if (toLower typeOf (_this select 1) in FOB_MED_CLASSES) then {
         (_this select 1) setVariable ["ace_medical_isMedicalFacility",true,true];
     };
 
-    if (EGVAR(approval,enable) isEqualTo 1) then {
+    if (CHECK_ADDON_2(approval)) then {
         _cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
         _cost = _cost*FOB_COST_MULTIPIER;
 
@@ -47,7 +47,7 @@ FUNC(curatorPlaced) = {
 };
 
 FUNC(curatorDeleted) = {
-    if (EGVAR(approval,enable) isEqualTo 1) then {
+    if (CHECK_ADDON_2(approval)) then {
         _cost = [typeOf (_this select 1)] call FUNC(getCuratorCost);
         _cost = _cost*FOB_COST_MULTIPIER;
 

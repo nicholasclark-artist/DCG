@@ -15,8 +15,8 @@ __________________________________________________________________*/
 private _unit = getAssignedCuratorUnit GVAR(curator);
 
 {
-    // ignore units in vehicles,only subtract cost of vehicle
-    if (EGVAR(approval,enable) isEqualTo 1 && {!(_x isKindOf "Man") || (_x isKindOf "Man" && (isNull objectParent _x))}) then {
+    // remove approval bonus, ignore units in vehicles, only subtract cost of vehicle
+    if (CHECK_ADDON_2(approval) && {!(_x isKindOf "Man") || (_x isKindOf "Man" && (isNull objectParent _x))}) then {
         _cost = [typeOf _x] call FUNC(getCuratorCost);
         _cost = _cost*FOB_COST_MULTIPIER;
         [QEGVAR(approval,add),[FOB_POSITION,_cost*-1]] call CBA_fnc_serverEvent;
@@ -24,14 +24,17 @@ private _unit = getAssignedCuratorUnit GVAR(curator);
     [QEGVAR(main,cleanup),_x] call CBA_fnc_serverEvent;
 } forEach (curatorEditableObjects GVAR(curator));
 
+// remove approval bonus
+[QEGVAR(approval,add),[FOB_POSITION,AP_FOB*-1]] call CBA_fnc_serverEvent;
+
 // remove objects from editable array so objects are not part of new FOB if placed in same position
 GVAR(curator) removeCuratorEditableObjects [curatorEditableObjects GVAR(curator),true];
 
-[QEGVAR(approval,add),[FOB_POSITION,AP_FOB*-1]] call CBA_fnc_serverEvent;
-[false] call FUNC(setRecon);
 GVAR(respawnPos) call BIS_fnc_removeRespawnPosition;
-deleteVehicle GVAR(anchor);
+[false] call FUNC(setRecon);
 
+{deleteVehicle _x} forEach (GVAR(anchor) getVariable [QGVAR(composition),[]]);
+deleteVehicle GVAR(anchor);
 {deleteLocation GVAR(location)} remoteExecCall [QUOTE(call),0,false];
 
 // reassign previous curator
