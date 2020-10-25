@@ -18,11 +18,10 @@ if (GVAR(list) isEqualTo []) exitWith {
 
 {
     _near = _x nearEntities [["CAManBase","LandVehicle"],4];
-    _near = _near select {isPlayer _x};
 
-    if !(_near isEqualTo []) then {
+    if (_near findIf {isPlayer _x} >= 0) then {
         GVAR(list) deleteAt (GVAR(list) find _x);
-        (selectRandom TYPE_EXP) createVehicle (getPosATL _x);
+        (selectRandom ["R_TBG32V_F","HelicopterExploSmall"]) createVehicle (getPosATL _x);
         deleteVehicle _x;
     };
 } forEach GVAR(list);
