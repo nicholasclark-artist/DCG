@@ -45,11 +45,10 @@ private ["_key","_location","_polygon","_safe","_patrolCount","_length","_spacin
     _key = _x;
 
     _location = [EGVAR(main,locations),_key] call CBA_fnc_hashGet;
-    // _polygon = _location getVariable [QEGVAR(main,polygon),[]];
+    _polygon = _location getVariable [QEGVAR(main,polygon),[]];
 
     // check if ao is suitable
-    // @todo improve safezone & polygon intersection check, currently only checking if location is in safezone not entire polygon
-    _safe = _hash findIf {COMPARE_STR(_key,_x select 0)} < 0 && {!([_location] call EFUNC(main,inSafezones))};
+    _safe = _hash findIf {COMPARE_STR(_key,_x select 0)} < 0 && {!([_polygon] call EFUNC(main,inSafezones))};
 
     if (_safe) then {
         // setvars
