@@ -78,6 +78,7 @@ PREP(splitGroup);
 PREP(landAt);
 PREP(parseFactions);
 PREP(parseMapLocations);
+PREP(polygonIntersect);
 PREP(polygonArea);
 PREP(polygonCenter);
 PREP(polygonFill);
