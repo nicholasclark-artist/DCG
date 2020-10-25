@@ -66,7 +66,7 @@ __________________________________________________________________*/
                     2
                 ] call EFUNC(main,setAction);
             };
-        }] remoteExecCall [QUOTE(call),0];
+        }] remoteExecCall [QUOTE(BIS_fnc_call),0];
     } else {
         ERROR_1("%1 is missing a suitable switch object",_composition select 0);
     };

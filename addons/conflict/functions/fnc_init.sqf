@@ -51,7 +51,7 @@ private _comm = call FUNC(setComm);
                 [_x,[EGVAR(main,enemySide),false] call BIS_fnc_sideColor,"\A3\ui_f\data\map\markerbrushes\bdiagonal_ca.paa",true,findDisplay 12 displayCtrl 51,AO_POLY_ID(_this select 0)] call EFUNC(main,polygonFill);
             } forEach (_this select 1);
         }
-    ] remoteExecCall [QUOTE(call),0,false];
+    ] remoteExecCall [QUOTE(BIS_fnc_call),0,false];
 }] call CBA_fnc_hashEachPair;
 
 // set tasks

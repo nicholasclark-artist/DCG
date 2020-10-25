@@ -93,7 +93,7 @@ __________________________________________________________________*/
 
                 [_intel, "Gather Intel", "\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_search_ca.paa", "\a3\ui_f\data\IGUI\Cfg\holdactions\holdAction_hack_ca.paa", "true", "true", {}, {}, {[QGVAR(intel),[_this select 0]] call CBA_fnc_serverEvent}, {}, [], 5, 100, true, false, true] call BIS_fnc_holdActionAdd;
             }
-        ] remoteExecCall [QUOTE(call),0,_intel];
+        ] remoteExecCall [QUOTE(BIS_fnc_call),0,_intel];
     };
 
     // set groups to defend composition

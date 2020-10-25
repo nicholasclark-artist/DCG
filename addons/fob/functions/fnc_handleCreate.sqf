@@ -77,7 +77,7 @@ GVAR(anchor) setVariable [QGVAR(composition),_composition select 2];
 
     GVAR(location) = createLocation ["NameCity",getPos GVAR(anchor),GVAR(range),GVAR(range)];
     GVAR(location) setText "Forward Operating Base";
-}] remoteExecCall [QUOTE(call),0,GVAR(anchor)];
+}] remoteExecCall [QUOTE(BIS_fnc_call),0,GVAR(anchor)];
 
 // make sure setup occurs at correct position
 [

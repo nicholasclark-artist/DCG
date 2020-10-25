@@ -50,7 +50,7 @@ private _grp = [_start,1,1,CIVILIAN,1,0,true] call EFUNC(main,spawnGroup);
                     30
                 ] call EFUNC(main,setAction);
             };
-        }] remoteExecCall [QUOTE(call),0];
+        }] remoteExecCall [QUOTE(BIS_fnc_call),0];
 
         // driver will never exit vehicle unless commandeered
         _veh allowCrewInImmobile true;

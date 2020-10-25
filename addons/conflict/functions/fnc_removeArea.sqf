@@ -41,7 +41,7 @@ if (_force) then {
             (findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["Draw",_x];
         } forEach (missionNamespace getVariable [AO_POLY_ID(_this),[]]);
     }
-] remoteExecCall [QUOTE(call),0,false];
+] remoteExecCall [QUOTE(BIS_fnc_call),0,false];
 
 // reset vars
 _value setVariable [QGVAR(status),false];

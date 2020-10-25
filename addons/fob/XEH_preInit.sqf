@@ -32,7 +32,7 @@ if (!isServer) exitWith {};
 // define location via remoteExec instead of publicVariable to avoid SimpleSerialization warning
 [[],{
     GVAR(location) = locationNull;
-}] remoteExecCall [QUOTE(call),0];
+}] remoteExecCall [QUOTE(BIS_fnc_call),0];
 
 publicVariable QFUNC(getKeybind);
 publicVariable QFUNC(getChildren);

@@ -172,8 +172,8 @@ if (CHECK_ADDON_2(approval)) then {
                 [_map,_id,CBA_missionTime]
             ] call CBA_fnc_waitUntilAndExecute;
         }
-    ] remoteExecCall [QUOTE(call),_player,false];
+    ] remoteExecCall [QUOTE(BIS_fnc_call),_player,false];
 };
 
 // send to player
-[_text,{_this call FUNC(notify)}] remoteExecCall [QUOTE(call),_player,false];
+[_text,{_this call FUNC(notify)}] remoteExecCall [QUOTE(BIS_fnc_call),_player,false];

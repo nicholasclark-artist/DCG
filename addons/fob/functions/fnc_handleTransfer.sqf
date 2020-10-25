@@ -41,7 +41,7 @@ params [
 
                 [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[_format,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify);
             }
-        ] remoteExecCall [QUOTE(call),owner (_this select 0),false];
+        ] remoteExecCall [QUOTE(BIS_fnc_call),owner (_this select 0),false];
     },
     [_new,_old,_handleNew]
 ] call CBA_fnc_waitUntilAndExecute;
