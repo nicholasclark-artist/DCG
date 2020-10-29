@@ -26,7 +26,7 @@ if (isNull _killer || {_unit isEqualTo _killer}) then {
     _killer = _unit getVariable ["ace_medical_lastDamageSource",_killer];
 };
 
-if (isNull _unit || {isNull _killer} || {_killer isEqualTo _unit} || {side _killer isEqualTo CIVILIAN}) exitWith {
+if (isNull _unit || {_unit getVariable [QGVAR(disable),false]} || {_killer isEqualTo _unit} || {!(side _killer isEqualTo EGVAR(main,playerSide))}) exitWith {
     TRACE_2("exit handleKilled",_killer,_unit);
     false
 };

@@ -21,9 +21,15 @@
 #define AP_STOP_NAME "Stop Person"
 #define AP_STOP_STATEMENT [QGVAR(stop),[player,cursorTarget],cursorTarget] call CBA_fnc_targetEvent
 #define AP_STOP_STATEMENT_ACE [QGVAR(stop),[player,_target],_target] call CBA_fnc_targetEvent
-#define AP_STOP_COND cursorTarget isKindOf "CAManBase" && {side cursorTarget isEqualTo CIVILIAN} && {!(isPlayer cursorTarget)} && {alive cursorTarget} && {CHECK_VECTORDIST(getPosASL player,getPosASL cursorTarget,10)} && {!(cursorTarget getVariable [QGVAR(isStopped),false])}
+#define AP_STOP_COND cursorTarget isKindOf "CAManBase" && {side cursorTarget isEqualTo CIVILIAN} && {!(isPlayer cursorTarget)} && {alive cursorTarget} && {CHECK_VECTORDIST(getPosASL player,getPosASL cursorTarget,10)} && {!(cursorTarget getVariable [QGVAR(isStopped),false])} && {!(cursorTarget getVariable [QGVAR(disable),false])}
+
 #define AP_STOP_COND_ACE _target isKindOf "CAManBase" && {side _target isEqualTo CIVILIAN} && {!(isPlayer _target)} && {alive _target} && {CHECK_VECTORDIST(getPosASL player,getPosASL _target,10)} && {!(_target getVariable [QGVAR(isStopped),false])}
 #define AP_STOP_KEYCODE \
     if (AP_STOP_COND) then { \
         AP_STOP_STATEMENT \
     }
+
+#define AP_AID_TASKS []
+#define AP_AID_VEHICLES ["b_truck_01_flatbed_f"]
+#define AP_AID_ITEMS_SM []
+#define AP_AID_ITEMS_LG []
