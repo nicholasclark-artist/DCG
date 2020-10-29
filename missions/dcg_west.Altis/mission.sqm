@@ -5,7 +5,7 @@ class EditorData
 	angleGridStep=0.08726646;
 	scaleGridStep=1;
 	autoGroupingDist=10;
-	toggles=513;
+	toggles=521;
 	class ItemIDProvider
 	{
 		nextID=2792;
@@ -20,10 +20,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={14251.426,65.09874,16245.374};
-		dir[]={-0.51323563,-0.28666514,0.80911326};
-		up[]={-0.15367721,0.95797044,0.24227268};
-		aside[]={0.84452438,-7.8883022e-007,0.53569973};
+		pos[]={15319.97,22.347523,15833.691};
+		dir[]={-0.26657385,-0.16458401,0.94979465};
+		up[]={-0.044543657,0.98632938,0.15870726};
+		aside[]={0.96288496,-6.9011003e-007,0.27024835};
 	};
 };
 binarizationWanted=0;
@@ -2513,7 +2513,7 @@ class Mission
 					{
 						skill=0.2;
 						ammo=0;
-						init="this setBehaviour ""CARELESS"";  " \n "this setCaptive true;  " \n "this disableAI ""MOVE""; " \n "[""dcg_VVSDepotLand"",""Open Depot Station"",{[""dcg_depotLand"",""Depot""] spawn VVS_fnc_openVVS;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;" \n "(createLocation [""Name"", getpos this, 30, 30]) setText ""Vehicle Depot"";";
+						init="call{this setBehaviour ""CARELESS"";  " \n "this setCaptive true;  " \n "this disableAI ""MOVE""; " \n "this setVariable [""dcg_approval_disable"",true];" \n "[""dcg_VVSDepotLand"",""Open Depot Station"",{[""dcg_depotLand"",""Depot""] spawn VVS_fnc_openVVS;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;" \n "(createLocation [""Name"", getpos this, 30, 30]) setText ""Vehicle Depot"";}";
 						class Inventory
 						{
 							class uniform
@@ -2615,7 +2615,7 @@ class Mission
 					{
 						skill=0.2;
 						ammo=0;
-						init="this setBehaviour ""CARELESS"";  " \n "this setCaptive true;  " \n "this disableAI ""MOVE""; " \n "[""dcg_VVSDepotAir"",""Open Depot Station"",{[""dcg_depotAir"",""Air""] spawn VVS_fnc_openVVS;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;" \n "(createLocation [""Name"", getpos this, 30, 30]) setText ""Aircraft Depot"";";
+						init="call{this setBehaviour ""CARELESS"";  " \n "this setCaptive true;  " \n "this disableAI ""MOVE""; " \n "this setVariable [""dcg_approval_disable"",true];" \n "[""dcg_VVSDepotAir"",""Open Depot Station"",{[""dcg_depotAir"",""Air""] spawn VVS_fnc_openVVS;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;" \n "(createLocation [""Name"", getpos this, 30, 30]) setText ""Aircraft Depot"";}";
 						class Inventory
 						{
 							class uniform
@@ -2717,7 +2717,7 @@ class Mission
 					{
 						skill=0.2;
 						ammo=0;
-						init="this setBehaviour ""CARELESS"";  " \n "this setCaptive true;  " \n "this disableAI ""MOVE""; " \n "[""dcg_VVSDepotShip"",""Open Depot Station"",{[""dcg_depotShip"",""Ship""] spawn VVS_fnc_openVVS;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;" \n "(createLocation [""Name"", getpos this, 30, 30]) setText ""Ship Depot"";";
+						init="call{this setBehaviour ""CARELESS"";  " \n "this setCaptive true;  " \n "this disableAI ""MOVE""; " \n "this setVariable [""dcg_approval_disable"",true];" \n "[""dcg_VVSDepotShip"",""Open Depot Station"",{[""dcg_depotShip"",""Ship""] spawn VVS_fnc_openVVS;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;" \n "(createLocation [""Name"", getpos this, 30, 30]) setText ""Ship Depot"";}";
 						class Inventory
 						{
 							class uniform
@@ -2793,8 +2793,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14164.069,20.272354,16250.556};
-						angles[]={0,3.8460379,0};
+						position[]={14164.069,20.271864,16250.556};
+						angles[]={0,3.8460424,0};
 					};
 					side="Civilian";
 					flags=1;
@@ -2802,7 +2802,7 @@ class Mission
 					{
 						skill=0.2;
 						ammo=0;
-						init="this setBehaviour ""CARELESS"";  " \n "this setCaptive true; " \n "this disableAI ""MOVE""; " \n "[this] call dcg_main_fnc_armory;" \n "(createLocation [""Name"", getpos this, 30, 30]) setText ""Armory"";";
+						init="call{this setBehaviour ""CARELESS"";  " \n "this setCaptive true; " \n "this disableAI ""MOVE""; " \n "this setVariable [""dcg_approval_disable"",true];" \n "[this] call dcg_main_fnc_armory;" \n "(createLocation [""Name"", getpos this, 30, 30]) setText ""Armory"";}";
 						class Inventory
 						{
 							class uniform
@@ -2828,7 +2828,7 @@ class Mission
 					};
 					id=2517;
 					type="C_Marshal_F";
-					atlOffset=0.68548775;
+					atlOffset=0.68499756;
 					class CustomAttributes
 					{
 						class Attribute0
@@ -2941,7 +2941,7 @@ class Mission
 					flags=7;
 					class Attributes
 					{
-						init="call{this setBehaviour ""CARELESS"";    " \n "this setCaptive true;    " \n "this disableAI ""ALL"";   " \n "this setVariable [""ace_medical_allowDamage"",false];     " \n "if (isClass (configfile >> ""CfgPatches"" >> ""ace_medical"")) then {    " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{[10,[],{[objNull, player] call ace_medical_fnc_treatmentAdvanced_fullHealLocal; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{},""Providing Medical Attention...""] call ace_common_fnc_progressBar;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;    " \n "} else {       " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{player setDamage 0; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;      " \n "}; }";
+						init="call{this setBehaviour ""CARELESS"";    " \n "this setCaptive true;    " \n "this disableAI ""MOVE""; " \n "this setVariable [""dcg_approval_disable"",true];  " \n "this setVariable [""ace_medical_allowDamage"",false];     " \n "if (isClass (configfile >> ""CfgPatches"" >> ""ace_medical"")) then {    " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{[10,[],{[objNull, player] call ace_medical_fnc_treatmentAdvanced_fullHealLocal; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{},""Providing Medical Attention...""] call ace_common_fnc_progressBar;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;    " \n "} else {       " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{player setDamage 0; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;      " \n "}; }";
 						class Inventory
 						{
 							class uniform
@@ -3050,7 +3050,7 @@ class Mission
 					flags=5;
 					class Attributes
 					{
-						init="call{this setBehaviour ""CARELESS"";    " \n "this setCaptive true;    " \n "this disableAI ""ALL"";   " \n "this setVariable [""ace_medical_allowDamage"",false];     " \n "if (isClass (configfile >> ""CfgPatches"" >> ""ace_medical"")) then {    " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{[10,[],{[objNull, player] call ace_medical_fnc_treatmentAdvanced_fullHealLocal; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{},""Providing Medical Attention...""] call ace_common_fnc_progressBar;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;    " \n "} else {       " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{player setDamage 0; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;      " \n "}; }";
+						init="call{this setBehaviour ""CARELESS"";    " \n "this setCaptive true;    " \n "this disableAI ""MOVE""; " \n "this setVariable [""dcg_approval_disable"",true];  " \n "this setVariable [""ace_medical_allowDamage"",false];     " \n "if (isClass (configfile >> ""CfgPatches"" >> ""ace_medical"")) then {    " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{[10,[],{[objNull, player] call ace_medical_fnc_treatmentAdvanced_fullHealLocal; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{},""Providing Medical Attention...""] call ace_common_fnc_progressBar;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;    " \n "} else {       " \n "    [format [""doctor_%1"",this],""Provide Medical Attention"",{player setDamage 0; [""You're good to go soldier! Try to be more careful next time!"",true] call dcg_main_fnc_displayText;},{true},{},[],this,0,[""ACE_MainActions""]] call dcg_main_fnc_setAction;      " \n "}; }";
 						class Inventory
 						{
 							class uniform
@@ -3321,8 +3321,8 @@ class Mission
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={14152.701,21.645456,16357.76};
-				angles[]={0.011990411,2.3067844,0.0066671576};
+				position[]={14152.701,20.314276,16357.76};
+				angles[]={0,2.3067844,0};
 			};
 			side="Empty";
 			flags=4;
@@ -3333,7 +3333,7 @@ class Mission
 			};
 			id=2445;
 			type="Land_Shed_Big_F";
-			atlOffset=-0.00091171265;
+			atlOffset=-1.3320923;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -3522,14 +3522,15 @@ class Mission
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={14311.716,20.915817,16345.348};
-				angles[]={0.012007865,3.7709062,6.2658539};
+				position[]={14299.456,21.203999,16341.749};
+				angles[]={0.0053265258,3.7709062,6.2698536};
 			};
 			side="Empty";
 			flags=4;
 			class Attributes
 			{
 				lock="LOCKED";
+				createAsSimpleObject=1;
 				dynamicSimulation=1;
 			};
 			id=2514;
@@ -3812,8 +3813,8 @@ class Mission
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={14310.444,19.330374,16340.12};
-				angles[]={0.0080009829,5.3459864,6.2645216};
+				position[]={14298.185,19.663818,16336.521};
+				angles[]={0.031990308,5.3459864,6.2432065};
 			};
 			side="Empty";
 			flags=4;
@@ -3854,8 +3855,8 @@ class Mission
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={14308.237,19.640224,16345.5};
-				angles[]={0.011995304,0.70281082,0.0066592805};
+				position[]={14295.978,19.957972,16341.901};
+				angles[]={0.0053265258,0.70281082,6.2698536};
 			};
 			side="Empty";
 			flags=4;
@@ -3866,7 +3867,6 @@ class Mission
 			};
 			id=2533;
 			type="Land_DieselGroundPowerUnit_01_F";
-			atlOffset=-1.5258789e-005;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -3896,21 +3896,19 @@ class Mission
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={14173.19,20.837511,16365.65};
-				angles[]={0.010664274,2.4270723,0.02666023};
+				position[]={14173.19,20.837509,16365.65};
+				angles[]={0.010663962,2.4270723,0.026668631};
 			};
 			side="Empty";
 			flags=4;
 			class Attributes
 			{
 				lock="LOCKED";
-				init="this setvariable [""ACE_isRepairVehicle"",1];";
 				createAsSimpleObject=1;
 				dynamicSimulation=1;
 			};
 			id=2534;
 			type="C_Truck_02_box_F";
-			atlOffset=1.9073486e-006;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -4876,7 +4874,7 @@ class Mission
 			};
 			id=2511;
 			type="B_G_Offroad_01_armed_F";
-			atlOffset=-0.0014228821;
+			atlOffset=-0.070583344;
 			class CustomAttributes
 			{
 				class Attribute0
@@ -5531,6 +5529,7 @@ class Mission
 			class Attributes
 			{
 				lock="LOCKED";
+				createAsSimpleObject=1;
 				dynamicSimulation=1;
 			};
 			id=2666;
@@ -5592,6 +5591,7 @@ class Mission
 			class Attributes
 			{
 				lock="LOCKED";
+				createAsSimpleObject=1;
 				dynamicSimulation=1;
 			};
 			id=2669;
@@ -5956,7 +5956,7 @@ class Mission
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={14266.017,21.293518,16212.705};
+				position[]={14266.005,21.293837,16212.638};
 				angles[]={0.0039967569,0.95042986,6.2791886};
 			};
 			side="Empty";
@@ -6291,7 +6291,7 @@ class Mission
 			type="ellipse";
 			a=1110.661;
 			b=807.44202;
-			angle=314.80594;
+			angle=314.80591;
 			id=2714;
 			atlOffset=1.8519115;
 			class CustomAttributes
