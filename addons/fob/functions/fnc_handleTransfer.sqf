@@ -11,7 +11,7 @@ Arguments:
 2: if new unit needs client setup <BOOL>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

@@ -9,7 +9,7 @@ Arguments:
 0: armory object <OBJECT>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define PACK QUOTE(ACRE_PRC117F)

@@ -8,7 +8,7 @@ adds radios to player inventory
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

@@ -9,7 +9,7 @@ Arguments:
 1: range to search for particles <NUMBER>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

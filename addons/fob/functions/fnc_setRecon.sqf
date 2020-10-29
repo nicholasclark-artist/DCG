@@ -11,7 +11,7 @@ Arguments:
 2: side of recon UAV <SIDE>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

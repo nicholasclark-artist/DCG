@@ -8,7 +8,7 @@ assigns TFAR radio and channels
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define ID_SLEEP 6

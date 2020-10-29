@@ -11,7 +11,7 @@ Arguments:
 2: saved weapon <ARRAY>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

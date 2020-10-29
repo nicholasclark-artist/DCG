@@ -8,7 +8,7 @@ set radio settings,must be ran globally
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 #define PRESET QGVARMAIN(preset)

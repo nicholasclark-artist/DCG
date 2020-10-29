@@ -11,7 +11,7 @@ Arguments:
 2: animation priority <NUMBER>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

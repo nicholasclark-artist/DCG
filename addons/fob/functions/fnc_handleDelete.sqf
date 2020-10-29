@@ -8,7 +8,7 @@ delete FOB on server
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

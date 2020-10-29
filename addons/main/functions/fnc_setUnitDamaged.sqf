@@ -9,7 +9,7 @@ Arguments:
 0: unit to receive damage <ARRAY>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

@@ -10,7 +10,7 @@ Arguments:
 1: curator points <NUMBER>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

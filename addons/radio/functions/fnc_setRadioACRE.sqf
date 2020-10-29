@@ -8,7 +8,7 @@ assigns ACRE2 radio and channels
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

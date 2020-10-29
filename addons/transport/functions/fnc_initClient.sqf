@@ -8,7 +8,7 @@ handle client setup
 Arguments:
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 

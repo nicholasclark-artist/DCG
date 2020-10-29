@@ -10,7 +10,7 @@ Arguments:
 1: unit <OBJECT>
 
 Return:
-none
+nothing
 __________________________________________________________________*/
 #include "script_component.hpp"
 
