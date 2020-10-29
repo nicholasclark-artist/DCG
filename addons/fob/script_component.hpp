@@ -22,7 +22,7 @@
         [[COMPONENT_NAME,CBAN_TITLE_SIZE,CBAN_TITLE_COLOR],[_format,CBAN_BODY_SIZE,CBAN_BODY_COLOR],true] call EFUNC(main,notify); \
         [QGVAR(create),[player]] call CBA_fnc_serverEvent; \
     },[],9] call CBA_fnc_waitAndExecute
-#define FOB_CREATE_COND !(FOB_DEPLOYED) && {isNull getAssignedCuratorUnit GVAR(curator)} && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {!(COMPARE_STR(animationState player,FOB_CREATE_ANIM))} && {[player] call FUNC(isAllowedOwner)} && {!((getpos player isFlatEmpty  [6,-1,-1,-1,0,false,player]) isEqualTo [])}
+#define FOB_CREATE_COND !(FOB_DEPLOYED) && {isNull getAssignedCuratorUnit GVAR(curator)} && {isNull (objectParent player)} && {((getPosATL player) select 2) < 10} && {!(COMPARE_STR(animationState player,FOB_CREATE_ANIM))} && {[player] call FUNC(isAllowedOwner)} && {!((getpos player isFlatEmpty  [4,-1,0.4,10,0,false,player]) isEqualTo [])}
 #define FOB_CREATE_KEYCODE \
     if (FOB_CREATE_COND) then { \
         FOB_CREATE_STATEMENT \

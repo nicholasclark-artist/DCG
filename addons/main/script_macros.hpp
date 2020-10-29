@@ -101,7 +101,7 @@
 // misc
 #define DEFAULT_POS [0,0,0]
 #define DEFAULT_SPAWNPOS [0,0,worldsize]
-#define DEFAULT_POLYGON [[0,0,0],[0,0,0],[0,0,0]]
+#define DEFAULT_POLYGON [[0,0,0],[100,0,0],[0,100,0]]
 #define DEFAULT_COLOR [0,0,0,1]
 #define ASLZ(POS) ((getTerrainHeightASL POS) max 0)
 #define PROBABILITY(CHANCE) (((CHANCE min 1) max 0) > random 1)
@@ -114,11 +114,12 @@
 #define AP_DEFAULT AP_MAX*0.1
 #define AP_CAR ((AP_MAX*0.01)*EGVAR(approval,coef))
 #define AP_TANK ((AP_MAX*0.05)*EGVAR(approval,coef))
-#define AP_AIR ((AP_MAX*0.1)*EGVAR(approval,coef))
+#define AP_AIR ((AP_MAX*0.05)*EGVAR(approval,coef))
 #define AP_SHIP ((AP_MAX*0.01)*EGVAR(approval,coef))
 #define AP_MAN ((AP_MAX*0.005)*EGVAR(approval,coef))
-#define AP_CIV ((AP_MAX*0.05)*EGVAR(approval,coef))
+#define AP_CIV ((AP_MAX*0.1)*EGVAR(approval,coef))
 #define AP_FOB ((AP_MAX*0.05)*EGVAR(approval,coef))
+#define AP_AID ((AP_MAX*0.05)*EGVAR(approval,coef))
 // #define AP_VILLAGE ((AP_MAX*0.1)*EGVAR(approval,coef))
 // #define AP_CITY ((AP_MAX*0.2)*EGVAR(approval,coef))
 // #define AP_CAPITAL ((AP_MAX*0.3)*EGVAR(approval,coef))
