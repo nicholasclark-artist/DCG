@@ -36,17 +36,16 @@ switch _type do {
 
         _roads = _roads call BIS_fnc_arrayShuffle;
 
-        private ["_road","_dir","_class","_path","_temp","_veh"];
-
         for "_i" from 0 to (count _roads min _count) - 1 do {
-            _road = _roads select _i;
-            _dir = _road getRelDir ((roadsConnectedTo _road) select 0);
+            private _road = _roads select _i;
 
+            private _dir = _road getRelDir ((roadsConnectedTo _road) select 0);
             _dir = _dir + (180 * round (random 1));
-            _position = [((getPosATL _road) select 0) + (3.75 * sin (_dir + 90)),((getPosATL _road) select 1) + (3.75 * cos (_dir + 90)),0];
 
-            _class = selectRandom EGVAR(main,vehiclesCiv);
-            _path = getText (configfile >> "CfgVehicles" >> _class >> "model");
+            _position = [_road] call FUNC(findPosRoadside);
+
+            private _class = selectRandom EGVAR(main,vehiclesCiv);
+            private _path = getText (configfile >> "CfgVehicles" >> _class >> "model");
 
             if (_path select [0,1] == "\") then {
                 _path = _path select [1];
@@ -56,17 +55,16 @@ switch _type do {
                 _path = _path + ".p3d";
             };
 
-            _temp = createSimpleObject [_path,DEFAULT_SPAWNPOS,true];
+            private _temp = createSimpleObject [_path,DEFAULT_SPAWNPOS,true];
             _temp setDir _dir;
 
             if ([_position,_temp,0] call EFUNC(main,isPosSafe)) then {
-                _veh = createVehicle [_class,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
+                private _veh = createVehicle [_class,DEFAULT_SPAWNPOS,[],0,"CAN_COLLIDE"];
                 _veh setDir _dir;
                 _veh setPosATL _position;
                 _veh setFuel (0.1 + random 0.5);
 
                 // alarm eventhandlers
-                // @todo find alarm sfx
                 _veh addEventHandler ["GetIn",{
                     if (isPlayer (_this select 2) && {!((_this select 0) getVariable [QGVAR(alarm),false])}) then {
                         (_this select 0) setVariable [QGVAR(alarm),true];
@@ -100,8 +98,8 @@ switch _type do {
         private ["_road","_prefab","_nodes"];
 
         for "_i" from 0 to (count _roads min _count) - 1 do {
-            _road = _roads select _i;
-            _position = [_road] call EFUNC(main,findPosRoadside);
+            private _road = _roads select _i;
+            private _position = [_road] call EFUNC(main,findPosRoadside);
 
             if !(_position isEqualTo []) then {
                 _prefab = [_position,"civ_cache",(_road getRelDir ((roadsConnectedTo _road) select 0)) - 90,false] call EFUNC(main,spawnComposition);
