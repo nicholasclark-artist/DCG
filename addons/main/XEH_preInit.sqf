@@ -57,6 +57,8 @@ PREP(setVehDamaged);
 PREP(setPosSafe);
 PREP(setPool);
 PREP(setDebugMarker);
+PREP(setPatrol);
+PREP(setDefend);
 PREP(spawnComposition);
 PREP(spawnGroup);
 PREP(spawnReinforcements);
@@ -87,8 +89,6 @@ PREP(polygonTriangulate);
 PREP(polygonRandomPos);
 PREP(polygonIsConvex);
 PREP(polygonLength);
-PREP(taskPatrol);
-PREP(taskDefend);
 
 // heap functions
 PREP(heapSwap);

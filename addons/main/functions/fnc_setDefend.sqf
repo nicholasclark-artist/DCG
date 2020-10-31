@@ -140,6 +140,6 @@ private ["_building","_buildingPositions","_pos","_static"];
 } forEach _units;
 
 // unassigned (or combat reacted) units will patrol
-[_group,_position,_radius max 50,0] call FUNC(taskPatrol);
+[_group,_position,_radius max 50,0] call FUNC(setPatrol);
 
 true

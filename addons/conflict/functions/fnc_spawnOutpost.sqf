@@ -101,7 +101,7 @@ __________________________________________________________________*/
         [
             {(_this select 0) getVariable [QEGVAR(main,ready),false]},
             {
-                [_this select 0,getPos (_this select 1),50,0] call EFUNC(main,taskDefend);
+                [_this select 0,getPos (_this select 1),50,0] call EFUNC(main,setDefend);
                 [QEGVAR(cache,enableGroup),_this select 0] call CBA_fnc_serverEvent;
             },
             [_x,_value],
@@ -116,7 +116,7 @@ __________________________________________________________________*/
         [
             {_this getVariable [QEGVAR(main,ready),false]},
             {
-                [_this,getPos leader _this,random [100,150,300],1,"if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,taskPatrol);
+                [_this,getPos leader _this,random [100,150,300],1,"if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,setPatrol);
             },
             _x,
             60
@@ -136,7 +136,7 @@ __________________________________________________________________*/
                         _x triggerDynamicSimulation false;
                     } forEach units _this;
                 };
-                [_this,getPos leader _this,300,0] call EFUNC(main,taskPatrol);
+                [_this,getPos leader _this,300,0] call EFUNC(main,setPatrol);
             },
             _x,
             60

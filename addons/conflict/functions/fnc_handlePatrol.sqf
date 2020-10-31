@@ -91,7 +91,7 @@ if (PROBABILITY(_distProb)) then {
         [
             {(_this select 0) getVariable [QEGVAR(main,ready),false]},
             {
-                [_this select 0,_this select 1,DYNPAT_RADIUS,0] call EFUNC(main,taskPatrol);
+                [_this select 0,_this select 1,DYNPAT_RADIUS,0] call EFUNC(main,setPatrol);
             },
             [_grp,_pos],
             60
@@ -121,7 +121,7 @@ if (PROBABILITY(_distProb)) then {
                 _wp setWaypointSpeed "LIMITED";
                 _wp setWaypointStatements [
                     "!(behaviour this isEqualTo ""COMBAT"")",
-                    format ["[group this,getPos this,%1,0] call %2",DYNPAT_RADIUS,QEFUNC(main,taskPatrol)]
+                    format ["[group this,getPos this,%1,0] call %2",DYNPAT_RADIUS,QEFUNC(main,setPatrol)]
                 ];
             },
             [_grp,_posWP],

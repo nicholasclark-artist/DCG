@@ -43,7 +43,7 @@ __________________________________________________________________*/
         [
             {_this getVariable [QEGVAR(main,ready),false]},
             {
-                [_this,getPos leader _this,AO_INF_GRPSPACING * 0.6,0,"if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,taskPatrol);
+                [_this,getPos leader _this,AO_INF_GRPSPACING * 0.6,0,"if (0.1 > random 1) then {this spawn CBA_fnc_searchNearby}"] call EFUNC(main,setPatrol);
             },
             _grp,
             (SPAWN_DELAY * AO_INF_GRPSIZE) * 2
@@ -71,7 +71,7 @@ __________________________________________________________________*/
         [
             {_this getVariable [QEGVAR(main,ready),false]},
             {
-                [_this,getPos leader _this,1000,0] call EFUNC(main,taskPatrol);
+                [_this,getPos leader _this,1000,0] call EFUNC(main,setPatrol);
             },
             _grp,
             (SPAWN_DELAY * ((count _positionsWater) max 1)) * 2

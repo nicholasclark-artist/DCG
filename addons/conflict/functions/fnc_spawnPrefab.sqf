@@ -56,7 +56,7 @@ switch _type do {
         [
             {(_this select 0) getVariable [QEGVAR(main,ready),false]},
             {
-                [_this select 0,_this select 1,30,0] call EFUNC(main,taskDefend);
+                [_this select 0,_this select 1,30,0] call EFUNC(main,setDefend);
                 [QEGVAR(cache,enableGroup),_this select 0] call CBA_fnc_serverEvent;
             },
             [_grp,_roadPos],
